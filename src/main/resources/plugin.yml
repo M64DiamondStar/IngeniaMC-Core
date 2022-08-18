@@ -1,0 +1,6 @@
+name: IngeniaMC-Core
+version: '${project.version}'
+main: me.m64diamondstar.ingeniamccore.Main
+api-version: 1.19
+authors: [ M64DiamondStar ]
+description: The Core plugin of IngeniaMC.
