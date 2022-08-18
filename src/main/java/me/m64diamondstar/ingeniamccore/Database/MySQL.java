@@ -18,7 +18,7 @@ public class MySQL {
         assert false;
         host = plugin.getConfig().getString("MySQL.Host");
     }
-    
+
     private final String port = plugin.getConfig().getString("MySQL.Port");
     private final String database = plugin.getConfig().getString("MySQL.Database");
     private final String username = plugin.getConfig().getString("MySQL.Username");
