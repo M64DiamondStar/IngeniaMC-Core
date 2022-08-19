@@ -10,21 +10,38 @@ import java.sql.SQLException;
 
 public class MySQL {
 
-    private Main plugin;
-
     private final String host;
-
-    {
-        assert false;
-        host = plugin.getConfig().getString("MySQL.Host");
-    }
-
-    private final String port = plugin.getConfig().getString("MySQL.Port");
-    private final String database = plugin.getConfig().getString("MySQL.Database");
-    private final String username = plugin.getConfig().getString("MySQL.Username");
-    private final String password = plugin.getConfig().getString("MySQL.Password");
+    private final String port;
+    private final String database;
+    private final String username;
+    private final String password;
 
     private Connection connection;
+
+    public MySQL(Main main){
+
+        port = main.getConfig().getString("MySQL.Port");
+        database = main.getConfig().getString("MySQL.Database");
+        username = main.getConfig().getString("MySQL.Username");
+        password = main.getConfig().getString("MySQL.Password");
+        host = main.getConfig().getString("MySQL.Host");
+
+        try {
+            this.connect();
+        } catch (SQLException e) {
+            Bukkit.getLogger().info("------------------------");
+            Bukkit.getLogger().info("Database not connected!");
+            Bukkit.getLogger().info("------------------------");
+        }
+
+        if(this.isConnected()){
+            Bukkit.getLogger().info("------------------------");
+            Bukkit.getLogger().info("Database is connected!");
+            Bukkit.getLogger().info("------------------------");
+        }
+
+
+    }
 
     public boolean isConnected(){
         return (connection != null);
@@ -43,26 +60,6 @@ public class MySQL {
         }catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-    }
-
-    public MySQL(Main main){
-        plugin = main;
-
-        try {
-            this.connect();
-        } catch (SQLException e) {
-            Bukkit.getLogger().info("------------------------");
-            Bukkit.getLogger().info(Color.RED + " Database not connected!");
-            Bukkit.getLogger().info("------------------------");
-        }
-
-        if(this.isConnected()){
-            Bukkit.getLogger().info("------------------------");
-            Bukkit.getLogger().info(Color.GREEN + " Database is connected!");
-            Bukkit.getLogger().info("------------------------");
-        }
-
-
     }
 
 }
