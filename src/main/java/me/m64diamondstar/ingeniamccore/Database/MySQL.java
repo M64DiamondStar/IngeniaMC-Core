@@ -2,7 +2,6 @@ package me.m64diamondstar.ingeniamccore.Database;
 
 import me.m64diamondstar.ingeniamccore.Main;
 import org.bukkit.Bukkit;
-import org.bukkit.Color;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -10,11 +9,11 @@ import java.sql.SQLException;
 
 public class MySQL {
 
-    private String host;
-    private String port;
-    private String database;
-    private String username;
-    private String password;
+    final private String host;
+    final private String port;
+    final private String database;
+    final private String username;
+    final private String password;
 
     private Connection connection;
 
@@ -29,15 +28,11 @@ public class MySQL {
         try {
             this.connect();
         } catch (SQLException e) {
-            Bukkit.getLogger().info("------------------------");
-            Bukkit.getLogger().info("Database not connected!");
-            Bukkit.getLogger().info("------------------------");
+            Bukkit.getLogger().info("Database not connected ✗");
         }
 
         if(this.isConnected()){
-            Bukkit.getLogger().info("------------------------");
-            Bukkit.getLogger().info("Database is connected!");
-            Bukkit.getLogger().info("------------------------");
+            Bukkit.getLogger().info("Database is connected ✓");
         }
 
 
@@ -60,6 +55,10 @@ public class MySQL {
         }catch (SQLException throwables) {
             throwables.printStackTrace();
         }
+    }
+
+    public Connection getConnection(){
+        return this.connection;
     }
 
 }
