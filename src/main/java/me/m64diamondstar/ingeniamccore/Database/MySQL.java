@@ -1,5 +1,6 @@
 package me.m64diamondstar.ingeniamccore.Database;
 
+import me.m64diamondstar.ingeniamccore.Database.Tables.Player.Exp;
 import me.m64diamondstar.ingeniamccore.Main;
 import org.bukkit.Bukkit;
 

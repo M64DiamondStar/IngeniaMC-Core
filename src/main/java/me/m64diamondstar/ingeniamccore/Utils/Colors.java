@@ -1,5 +1,7 @@
 package me.m64diamondstar.ingeniamccore.Utils;
 
+import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import net.md_5.bungee.api.ChatColor;
 
 import java.util.regex.Matcher;
@@ -16,19 +18,16 @@ public class Colors {
             msg = msg.replace(color, ChatColor.of(color) + "");
             match = pattern.matcher(msg);
         }
-        return ChatColor.translateAlternateColorCodes('&', msg);
+        return ChatColor.translateAlternateColorCodes('&', msg).replace(":gs:", "✪");
     }
 
     public static String format(String msg, MessageType messageType) {
-        switch (messageType){
-            case ERROR:
-                return format("#bd4d4d" + msg);
-            case BACKGROUND:
-                return format("#858585" + msg);
-            case SUCCESS:
-                return format("#53bd4d" + msg);
-        }
-        return ChatColor.translateAlternateColorCodes('&', msg);
+        return switch (messageType) {
+            case ERROR -> format("#bd4d4d" + msg);
+            case BACKGROUND -> format("#858585" + msg);
+            case SUCCESS -> format("#53bd4d" + msg);
+            case INFO -> format("#6ac4c1" + msg);
+        };
     }
 
 }

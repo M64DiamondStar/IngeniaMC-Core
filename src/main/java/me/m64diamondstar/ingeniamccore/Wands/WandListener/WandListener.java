@@ -1,5 +1,6 @@
 package me.m64diamondstar.ingeniamccore.Wands.WandListener;
 
+import io.papermc.paper.event.block.TargetHitEvent;
 import me.m64diamondstar.ingeniamccore.Main;
 import me.m64diamondstar.ingeniamccore.Wands.Cooldowns;
 import me.m64diamondstar.ingeniamccore.Wands.Wands.*;
@@ -95,28 +96,25 @@ public class WandListener implements Listener {
         if(entity instanceof FallingBlock) {
             if(!(entity.getCustomName() == null)) {
                 switch (entity.getCustomName()) {
-                    case "FallingBlockWand":
+                    case "FallingBlockWand" -> {
                         entity.getWorld().spawnParticle(Particle.LAVA, entity.getLocation(), 20);
                         e.setCancelled(true);
-                        break;
-                    case "TnTWand":
+                    }
+                    case "TnTWand" -> {
                         entity.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, entity.getLocation(), 10);
                         Location loc = entity.getLocation().add(0, -1, 0);
                         Block block = loc.getBlock();
                         e.setCancelled(true);
-
                         for (int i = 0; i < 6; i++) {
                             FallingBlock fb = entity.getWorld().spawnFallingBlock(entity.getLocation(), block.getBlockData());
                             fb.setVelocity(new Vector(Math.random() * (0.2 + 0.2) - 0.2, Math.random() * (0.6 - 0.85) + 0.85, Math.random() * (0.2 + 0.2) - 0.2));
                             fb.setDropItem(false);
                             fb.setCustomName("TnTWandBlock");
                         }
-                        break;
-                    case "SEWand":
-
+                    }
+                    case "SEWand" -> {
                         entity.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, entity.getLocation(), 10);
                         e.setCancelled(true);
-
                         for (int i = 0; i < 20; i++) {
                             Snowball sb = entity.getWorld().spawn(entity.getLocation(), Snowball.class);
                             sb.setVelocity(new Vector(Math.random() * (0.2 + 0.2) - 0.2, Math.random() * (0.6 - 0.85) + 0.85, Math.random() * (0.2 + 0.2) - 0.2));
@@ -130,14 +128,9 @@ public class WandListener implements Listener {
 
                             }.runTaskTimer(Main.getPlugin(Main.class), 0L, 1);
                         }
-
-                        break;
-                    case "TnTWandBlock":
-                        e.setCancelled(true);
-                        break;
-                    case "igwandsearthwand":
-                        e.setCancelled(true);
-                        break;
+                    }
+                    case "TnTWandBlock" -> e.setCancelled(true);
+                    case "igwandsearthwand" -> e.setCancelled(true);
                 }
             }
         }
@@ -145,19 +138,13 @@ public class WandListener implements Listener {
 
 
 
-
-
-
-
-
-
     public static List<Player> gliding = new ArrayList<>();
+
 
     @EventHandler
     public void onPlayerToggleGlide(EntityToggleGlideEvent e){
-        if(!(e.getEntity() instanceof Player)) return;
+        if(!(e.getEntity() instanceof Player player)) return;
 
-        Player player = (Player) e.getEntity();
         if(gliding.contains(player))
             e.setCancelled(true);
 
