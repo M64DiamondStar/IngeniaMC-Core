@@ -18,7 +18,9 @@ public class ExpSubcommand {
     }
 
 
-
+    /**
+     * Execute the command
+     */
     public void execute(){
         if(args.length <= 2){
             sender.sendMessage(Colors.format(Messages.commandUsage("ig exp <add/set/subtract/get> <player> [amount]")));
@@ -28,6 +30,10 @@ public class ExpSubcommand {
 
             if(args[1].equalsIgnoreCase("get")){
                 IngeniaPlayer target = new IngeniaPlayer(Bukkit.getPlayer(args[2]));
+                if(target.getPlayer() == null){
+                    sender.sendMessage(Messages.invalidPlayer());
+                    return;
+                }
                 sender.sendMessage(Colors.format(target.getName() + " has " + target.getExp() + " exp.", MessageType.INFO));
             }else{
                 sender.sendMessage(Colors.format(Messages.commandUsage("ig exp <add/set/subtract/get> <player> [amount]")));
@@ -46,16 +52,19 @@ public class ExpSubcommand {
                 return;
             }
 
+            IngeniaPlayer target = new IngeniaPlayer(Bukkit.getPlayer(args[2]));
+            if(target.getPlayer() == null){
+                sender.sendMessage(Messages.invalidPlayer());
+                return;
+            }
+
             if(args[1].equalsIgnoreCase("add")){
-                IngeniaPlayer target = new IngeniaPlayer(Bukkit.getPlayer(args[2]));
                 target.addExp(exp);
                 sender.sendMessage(Colors.format("Successfully added " + exp + " to " + target.getName() + ".", MessageType.SUCCESS));
             }else if(args[1].equalsIgnoreCase("set")){
-                IngeniaPlayer target = new IngeniaPlayer(Bukkit.getPlayer(args[2]));
                 target.setExp(exp);
                 sender.sendMessage(Colors.format("Successfully set " + target.getName() + "'s exp to " + exp + ".", MessageType.SUCCESS));
             }else if(args[1].equalsIgnoreCase("subtract")){
-                IngeniaPlayer target = new IngeniaPlayer(Bukkit.getPlayer(args[2]));
                 target.addExp(-exp);
                 sender.sendMessage(Colors.format("Successfully subtracted " + exp + " exp from " + target.getName() + ".", MessageType.SUCCESS));
             }else{
