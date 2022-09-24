@@ -2,7 +2,8 @@ package me.m64diamondstar.ingeniamccore;
 
 import me.m64diamondstar.ingeniamccore.Database.MySQL;
 import me.m64diamondstar.ingeniamccore.General.Commands.GamemodeCmd;
-import me.m64diamondstar.ingeniamccore.General.Commands.Ingenia.IngeniaCmd;
+import me.m64diamondstar.ingeniamccore.General.Commands.Ingenia.IngeniaCommand;
+import me.m64diamondstar.ingeniamccore.General.Listeners.JoinListener;
 import me.m64diamondstar.ingeniamccore.Wands.WandListener.WandListener;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -65,7 +66,7 @@ public final class Main extends JavaPlugin {
         Objects.requireNonNull(this.getCommand("gma")).setExecutor(new GamemodeCmd());
         Objects.requireNonNull(this.getCommand("gmsp")).setExecutor(new GamemodeCmd());
 
-        Objects.requireNonNull(this.getCommand("ingenia")).setExecutor(new IngeniaCmd());
+        Objects.requireNonNull(this.getCommand("ingenia")).setExecutor(new IngeniaCommand());
     }
 
     private void loadTabCompleters(){
@@ -74,6 +75,7 @@ public final class Main extends JavaPlugin {
 
     private void loadEventListeners(){
         Bukkit.getServer().getPluginManager().registerEvents(new WandListener(), this);
+        Bukkit.getServer().getPluginManager().registerEvents(new JoinListener(), this);
     }
 
 }
