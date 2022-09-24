@@ -87,15 +87,21 @@ public class IngeniaPlayer {
         gs.addBal(player, l);
     }
 
-    public void showBoard(){
-        scoreboard = new Scoreboard(this);
-        scoreboard.createBoard();
-        scoreboard.startUpdating();
-        scoreboard.showBoard();
+    public void setScoreboard(boolean on){
+        if(scoreboard == null)
+            scoreboard = new Scoreboard(this);
+
+        if(on) {
+            scoreboard.createBoard();
+            scoreboard.startUpdating();
+            scoreboard.showBoard();
+        }else{
+            scoreboard.hideBoard();
+        }
     }
 
-    public void hideBoard(){
-        scoreboard.hideBoard();
+    public boolean isOnline(){
+        return player.isOnline();
     }
 
 
