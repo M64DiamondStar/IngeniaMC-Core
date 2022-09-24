@@ -2,7 +2,6 @@ package me.m64diamondstar.ingeniamccore.General.Commands.Ingenia;
 
 import me.m64diamondstar.ingeniamccore.General.Player.IngeniaPlayer;
 import me.m64diamondstar.ingeniamccore.Utils.Colors;
-import me.m64diamondstar.ingeniamccore.Utils.MessageType;
 import me.m64diamondstar.ingeniamccore.Utils.Messages;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
