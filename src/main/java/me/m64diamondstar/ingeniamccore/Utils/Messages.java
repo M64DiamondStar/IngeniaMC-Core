@@ -18,4 +18,8 @@ public class Messages {
         return Colors.format("Please use a valid argument. To get help, use: '/" + command + " help'.", MessageType.ERROR);
     }
 
+    public static String invalidPlayer(){
+        return Colors.format("Please enter a valid player.", MessageType.ERROR);
+    }
+
 }
