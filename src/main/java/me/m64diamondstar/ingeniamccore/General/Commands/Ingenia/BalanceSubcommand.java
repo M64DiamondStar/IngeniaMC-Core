@@ -17,6 +17,9 @@ public class BalanceSubcommand {
         this.args = args;
     }
 
+    /**
+     * Execute the command
+     */
     public void execute(){
         if(args.length <= 2){
             sender.sendMessage(Colors.format(Messages.commandUsage("ig balance <add/set/subtract/get> <player> [amount]")));
@@ -26,6 +29,10 @@ public class BalanceSubcommand {
 
             if(args[1].equalsIgnoreCase("get")){
                 IngeniaPlayer target = new IngeniaPlayer(Bukkit.getPlayer(args[2]));
+                if(target.getPlayer() == null){
+                    sender.sendMessage(Messages.invalidPlayer());
+                    return;
+                }
                 sender.sendMessage(Colors.format(target.getName() + " has " + target.getBal() + ":gs:.", MessageType.INFO));
             }else{
                 sender.sendMessage(Colors.format(Messages.commandUsage("ig balance <add/set/subtract/get> <player> [amount]")));
@@ -44,16 +51,19 @@ public class BalanceSubcommand {
                 return;
             }
 
+            IngeniaPlayer target = new IngeniaPlayer(Bukkit.getPlayer(args[2]));
+            if(target.getPlayer() == null){
+                sender.sendMessage(Messages.invalidPlayer());
+                return;
+            }
+
             if(args[1].equalsIgnoreCase("add")){
-                IngeniaPlayer target = new IngeniaPlayer(Bukkit.getPlayer(args[2]));
                 target.addBal(gs);
                 sender.sendMessage(Colors.format("Successfully added " + gs + ":gs: to " + target.getName() + ".", MessageType.SUCCESS));
             }else if(args[1].equalsIgnoreCase("set")){
-                IngeniaPlayer target = new IngeniaPlayer(Bukkit.getPlayer(args[2]));
                 target.setBal(gs);
                 sender.sendMessage(Colors.format("Successfully set " + target.getName() + "'s balance to " + gs + ":gs:.", MessageType.SUCCESS));
             }else if(args[1].equalsIgnoreCase("subtract")){
-                IngeniaPlayer target = new IngeniaPlayer(Bukkit.getPlayer(args[2]));
                 target.addBal(-gs);
                 sender.sendMessage(Colors.format("Successfully subtracted " + gs + ":gs: from " + target.getName() + ".", MessageType.SUCCESS));
             }else{

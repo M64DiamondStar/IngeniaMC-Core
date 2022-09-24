@@ -6,7 +6,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
-public class IngeniaCmd implements CommandExecutor {
+public class IngeniaCommand implements CommandExecutor {
 
 
     @Override
@@ -35,6 +35,7 @@ public class IngeniaCmd implements CommandExecutor {
                 ScoreboardSubcommand scoreboard = new ScoreboardSubcommand(sender, args);
                 scoreboard.execute();
             }
+
             default -> sender.sendMessage(Messages.invalidSubcommand("ig"));
         }
 
