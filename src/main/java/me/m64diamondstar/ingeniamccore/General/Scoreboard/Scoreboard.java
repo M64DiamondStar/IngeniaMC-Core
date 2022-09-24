@@ -5,9 +5,10 @@ import me.m64diamondstar.ingeniamccore.Main;
 import me.m64diamondstar.ingeniamccore.Utils.Colors;
 import me.m64diamondstar.ingeniamccore.Utils.MessageType;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.*;
+
+import java.util.Objects;
 
 public class Scoreboard {
 
@@ -57,6 +58,11 @@ public class Scoreboard {
             @Override
             public void run() {
 
+                if(player.getPlayer().getScoreboard() != scoreboard){
+                    this.cancel();
+                    return;
+                }
+
                 bal.setPrefix(Colors.format("#f4b734 » Golden Stars: &r" + player.getBal() + ":gs:"));
                 objective.getScore(Colors.format("&2")).setScore(3);
 
@@ -68,7 +74,7 @@ public class Scoreboard {
     }
 
     public void hideBoard(){
-
+        player.getPlayer().setScoreboard(Objects.requireNonNull(Bukkit.getScoreboardManager()).getNewScoreboard());
     }
 
 }
