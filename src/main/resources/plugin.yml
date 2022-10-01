@@ -24,4 +24,10 @@ commands:
     description: Base command for a LOT of subcommands.
     aliases:
       - ig
+  cosmetics:
+    permission: ingenia.admin.cosmetics
+    description: Manage the server cosmetics.
+    aliases:
+      - cosmetic
+
 

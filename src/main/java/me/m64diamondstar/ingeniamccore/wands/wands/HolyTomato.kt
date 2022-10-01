@@ -1,42 +1,43 @@
-package me.m64diamondstar.ingeniamccore.Wands.Wands;
+package me.m64diamondstar.ingeniamccore.wands.wands
 
-import me.m64diamondstar.ingeniamccore.Main;
-import me.m64diamondstar.ingeniamccore.Wands.Cooldowns;
-import org.bukkit.*;
-import org.bukkit.entity.Item;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
+import me.m64diamondstar.ingeniamccore.Main
+import me.m64diamondstar.ingeniamccore.wands.Cooldowns
+import org.bukkit.Bukkit
+import org.bukkit.Color
+import org.bukkit.Material
+import org.bukkit.Particle
+import org.bukkit.entity.Player
+import org.bukkit.inventory.ItemStack
 
-public class HolyTomato {
-
-    public HolyTomato(Player player){
-        Location loc = player.getLocation().add(0,1,0);
-
-        ItemStack item = new ItemStack(Material.BAKED_POTATO);
-        ItemMeta meta = item.getItemMeta();
-
-        player.getWorld().spawnParticle(Particle.REDSTONE, loc, 100, 1, 1, 1, 0D, new Particle.DustOptions(Color.RED, 1));
-
-        assert meta != null;
-        meta.setCustomModelData(1);
-        item.setItemMeta(meta);
-
-        final int schedule = Bukkit.getScheduler().scheduleSyncRepeatingTask(Main.getPlugin(Main.class), () -> player.getWorld().spawnParticle(Particle.REDSTONE, loc, 50, 1, 1, 1, 0D, new Particle.DustOptions(Color.RED, 1)), 0L, 10L);
-
-        for (int i = 0; i < 15; i++) {
-
-            Item ti = player.getWorld().dropItem(loc, item);
-            ti.setPickupDelay(Integer.MAX_VALUE);
-            Bukkit.getScheduler().scheduleSyncDelayedTask(Main.getPlugin(Main.class), () -> {
-                player.getWorld().spawnParticle(Particle.CLOUD, ti.getLocation(), 1, 0, 0, 0, 0D);
-                ti.remove();
-                Bukkit.getScheduler().cancelTask(schedule);
-            }, 40L);
-
+class HolyTomato(player: Player) {
+    init {
+        val loc = player.location.add(0.0, 1.0, 0.0)
+        val item = ItemStack(Material.BAKED_POTATO)
+        val meta = item.itemMeta
+        player.world.spawnParticle(Particle.REDSTONE, loc, 100, 1.0, 1.0, 1.0, 0.0, Particle.DustOptions(Color.RED, 1F))
+        assert(meta != null)
+        meta!!.setCustomModelData(1)
+        item.itemMeta = meta
+        val schedule = Bukkit.getScheduler().scheduleSyncRepeatingTask(
+            Main.plugin, {
+                player.world.spawnParticle(
+                    Particle.REDSTONE, loc, 50, 1.0, 1.0, 1.0, 0.0, Particle.DustOptions(
+                        Color.RED, 1F
+                    )
+                )
+            }, 0L, 10L
+        )
+        for (i in 0..14) {
+            val ti = player.world.dropItem(loc, item)
+            ti.pickupDelay = Int.MAX_VALUE
+            Bukkit.getScheduler().scheduleSyncDelayedTask(
+                Main.plugin, {
+                    player.world.spawnParticle(Particle.CLOUD, ti.location, 1, 0.0, 0.0, 0.0, 0.0)
+                    ti.remove()
+                    Bukkit.getScheduler().cancelTask(schedule)
+                }, 40L
+            )
         }
-
-        Cooldowns.addPlayer(player, 1000L, 3000L, 4000L, 6000L);
+        Cooldowns.addPlayer(player, 1000L, 3000L, 4000L, 6000L)
     }
-
 }

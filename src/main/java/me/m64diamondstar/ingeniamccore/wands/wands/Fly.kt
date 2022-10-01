@@ -1,27 +1,26 @@
-package me.m64diamondstar.ingeniamccore.Wands.Wands;
+package me.m64diamondstar.ingeniamccore.wands.wands
 
-import me.m64diamondstar.ingeniamccore.Main;
-import me.m64diamondstar.ingeniamccore.Wands.Cooldowns;
-import org.bukkit.Bukkit;
-import org.bukkit.Particle;
-import org.bukkit.entity.Player;
+import me.m64diamondstar.ingeniamccore.Main
+import me.m64diamondstar.ingeniamccore.wands.Cooldowns
+import org.bukkit.Bukkit
+import org.bukkit.Particle
+import org.bukkit.entity.Player
 
-public class Fly {
-
-    public Fly(Player player){
-        player.setGravity(false);
-        final int schedule = Bukkit.getScheduler().scheduleSyncRepeatingTask(Main.getPlugin(Main.class), () -> {
-            player.setVelocity(player.getLocation().getDirection().multiply(0.5));
-            player.getWorld().spawnParticle(Particle.CLOUD, player.getLocation(), 3, 0D, 0D, 0D, 0D);
-        }, 0L, 1L);
-
-
-        Bukkit.getScheduler().scheduleSyncDelayedTask(Main.getPlugin(Main.class), () -> {
-            Bukkit.getScheduler().cancelTask(schedule);
-            player.setGravity(true);
-        }, 160L);
-
-        Cooldowns.addPlayer(player, 8000L, 9000L, 12000L, 15000L);
+class Fly(player: Player) {
+    init {
+        player.setGravity(false)
+        val schedule = Bukkit.getScheduler().scheduleSyncRepeatingTask(
+            Main.plugin, {
+                player.velocity = player.location.direction.multiply(0.5)
+                player.world.spawnParticle(Particle.CLOUD, player.location, 3, 0.0, 0.0, 0.0, 0.0)
+            }, 0L, 1L
+        )
+        Bukkit.getScheduler().scheduleSyncDelayedTask(
+            Main.plugin, {
+                Bukkit.getScheduler().cancelTask(schedule)
+                player.setGravity(true)
+            }, 160L
+        )
+        Cooldowns.addPlayer(player, 8000L, 9000L, 12000L, 15000L)
     }
-
 }

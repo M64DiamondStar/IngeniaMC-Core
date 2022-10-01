@@ -1,81 +1,70 @@
-package me.m64diamondstar.ingeniamccore;
+package me.m64diamondstar.ingeniamccore
 
-import me.m64diamondstar.ingeniamccore.Database.MySQL;
-import me.m64diamondstar.ingeniamccore.General.Commands.GamemodeCmd;
-import me.m64diamondstar.ingeniamccore.General.Commands.Ingenia.IngeniaCommand;
-import me.m64diamondstar.ingeniamccore.General.Listeners.JoinListener;
-import me.m64diamondstar.ingeniamccore.Wands.WandListener.WandListener;
-import org.bukkit.Bukkit;
-import org.bukkit.plugin.java.JavaPlugin;
+import me.m64diamondstar.ingeniamccore.database.MySQL
+import me.m64diamondstar.ingeniamccore.general.commands.GamemodeCmd
+import me.m64diamondstar.ingeniamccore.general.commands.ingenia.IngeniaCommand
+import me.m64diamondstar.ingeniamccore.wands.wandlistener.WandListener
+import me.m64diamondstar.ingeniamccore.general.listeners.JoinListener
+import org.bukkit.Bukkit
+import org.bukkit.plugin.java.JavaPlugin
+import java.util.*
 
-import java.util.Objects;
+class Main : JavaPlugin() {
+    @JvmField
 
-public final class Main extends JavaPlugin {
+    var sql: MySQL? = null
 
-    public MySQL SQL;
-
-    @Override
-    public void onEnable() {
-        Bukkit.getLogger().info("---------------------------");
-        Bukkit.getLogger().info("Started loading IngeniaMC-Core!");
-        Bukkit.getLogger().info(" ");
-
-        loadMainInstances();
-        Bukkit.getLogger().info("Main instances loaded ✓");
-
-        this.saveDefaultConfig();
-        this.reloadConfig();
-        Bukkit.getLogger().info("Config (re)loaded ✓");
-        this.SQL = new MySQL(this);
-
-
-        this.loadCommandExecutors();
-        Bukkit.getLogger().info("Commands loaded ✓");
-
-        this.loadTabCompleters();
-        Bukkit.getLogger().info("Tab Completers loaded ✓");
-
-        this.loadEventListeners();
-        Bukkit.getLogger().info("Event Listeners loaded ✓");
-
-        Bukkit.getLogger().info("Scoreboard Library loaded ✓");
-
-        Bukkit.getLogger().info(" ");
-        Bukkit.getLogger().info("Finished loading, IngeniaMC-Core is enabled!");
-        Bukkit.getLogger().info("---------------------------");
+    companion object {
+        lateinit var plugin: Main
     }
 
+    override fun onEnable() {
 
+        plugin = this
 
-    @Override
-    public void onDisable() {
-        SQL.disconnect();
+        Bukkit.getLogger().info("---------------------------")
+        Bukkit.getLogger().info("Started loading IngeniaMC-Core!")
+        Bukkit.getLogger().info(" ")
+
+        loadMainInstances()
+        Bukkit.getLogger().info("Main instances loaded ✓")
+
+        saveDefaultConfig()
+        reloadConfig()
+        Bukkit.getLogger().info("Config (re)loaded ✓")
+
+        sql = MySQL(this)
+
+        loadCommandExecutors()
+        Bukkit.getLogger().info("Commands loaded ✓")
+
+        loadTabCompleters()
+        Bukkit.getLogger().info("Tab Completers loaded ✓")
+
+        loadEventListeners()
+        Bukkit.getLogger().info("Event Listeners loaded ✓")
+
+        Bukkit.getLogger().info(" ")
+        Bukkit.getLogger().info("Finished loading, IngeniaMC-Core is enabled!")
+        Bukkit.getLogger().info("---------------------------")
     }
 
-
-
-
-
-    private void loadMainInstances(){
-
+    override fun onDisable() {
+        sql!!.disconnect()
     }
 
-    private void loadCommandExecutors(){
-        Objects.requireNonNull(this.getCommand("gmc")).setExecutor(new GamemodeCmd());
-        Objects.requireNonNull(this.getCommand("gms")).setExecutor(new GamemodeCmd());
-        Objects.requireNonNull(this.getCommand("gma")).setExecutor(new GamemodeCmd());
-        Objects.requireNonNull(this.getCommand("gmsp")).setExecutor(new GamemodeCmd());
-
-        Objects.requireNonNull(this.getCommand("ingenia")).setExecutor(new IngeniaCommand());
+    private fun loadMainInstances() {}
+    private fun loadCommandExecutors() {
+        Objects.requireNonNull(getCommand("gmc"))?.setExecutor(GamemodeCmd())
+        Objects.requireNonNull(getCommand("gms"))?.setExecutor(GamemodeCmd())
+        Objects.requireNonNull(getCommand("gma"))?.setExecutor(GamemodeCmd())
+        Objects.requireNonNull(getCommand("gmsp"))?.setExecutor(GamemodeCmd())
+        Objects.requireNonNull(getCommand("ingenia"))?.setExecutor(IngeniaCommand())
     }
 
-    private void loadTabCompleters(){
-
+    private fun loadTabCompleters() {}
+    private fun loadEventListeners() {
+        Bukkit.getServer().pluginManager.registerEvents(WandListener(), this)
+        Bukkit.getServer().pluginManager.registerEvents(JoinListener(), this)
     }
-
-    private void loadEventListeners(){
-        Bukkit.getServer().getPluginManager().registerEvents(new WandListener(), this);
-        Bukkit.getServer().getPluginManager().registerEvents(new JoinListener(), this);
-    }
-
 }
