@@ -17,8 +17,7 @@ class ScoreboardSubcommand(private val sender: CommandSender, private val args: 
             return
         }
         if (args[1].equals("show", ignoreCase = true) || args[1].equals("true", ignoreCase = true)) {
-            val player: IngeniaPlayer
-            player = if (args.size == 3) {
+            val player: IngeniaPlayer = if (args.size == 3) {
                 IngeniaPlayer(Bukkit.getPlayer(args[2]))
             } else {
                 IngeniaPlayer(sender as Player)
