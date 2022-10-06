@@ -6,10 +6,16 @@ import me.m64diamondstar.ingeniamccore.general.scoreboard.Scoreboard;
 import me.m64diamondstar.ingeniamccore.utils.Colors;
 import me.m64diamondstar.ingeniamccore.utils.MessageLocation;
 import me.m64diamondstar.ingeniamccore.utils.MessageType;
+import me.m64diamondstar.ingeniamccore.wands.Wands;
+import me.m64diamondstar.ingeniamccore.wands.wands.Wand;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.GameMode;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.List;
 
 public class IngeniaPlayer {
 
@@ -48,6 +54,10 @@ public class IngeniaPlayer {
     public void setGameMode(GameMode gameMode){
         player.setGameMode(gameMode);
         this.sendMessage("Your gamemode has changed to: " + gameMode.toString().toLowerCase(), MessageType.BACKGROUND);
+    }
+
+    public void sendMessage(String s, String color) {
+        this.sendMessage(Colors.format(color + s));
     }
 
     public long getExp(){
@@ -97,6 +107,15 @@ public class IngeniaPlayer {
         }else{
             scoreboard.hideBoard();
         }
+    }
+
+    public List<ItemStack> getWands(){
+        return Wands.getAccessibleWands(player);
+    }
+
+    public void setWand(ItemStack item){
+        player.getInventory().setItem(5, item);
+        player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 2F, 1.5F);
     }
 
 }
