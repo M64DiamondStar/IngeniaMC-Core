@@ -31,8 +31,7 @@ class Scoreboard(private val player: IngeniaPlayer) {
         ip = scoreboard!!.registerNewTeam("ip")
         ip!!.addEntry(Colors.format("&0"))
         ip!!.prefix = Colors.format(
-            "   play.IngeniaMC.net",
-            MessageType.BACKGROUND
+            MessageType.BACKGROUND + "   play.IngeniaMC.net"
         )
         objective!!.getScore(Colors.format("&0")).score = 0
     }

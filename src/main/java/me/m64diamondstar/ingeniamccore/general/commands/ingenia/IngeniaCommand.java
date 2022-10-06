@@ -1,9 +1,11 @@
 package me.m64diamondstar.ingeniamccore.general.commands.ingenia;
 
+import me.m64diamondstar.ingeniamccore.cosmetics.CosmeticsInventory;
 import me.m64diamondstar.ingeniamccore.utils.Messages;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class IngeniaCommand implements CommandExecutor {
@@ -34,6 +36,12 @@ public class IngeniaCommand implements CommandExecutor {
             case "scoreboard" -> {
                 ScoreboardSubcommand scoreboard = new ScoreboardSubcommand(sender, args);
                 scoreboard.execute();
+            }
+
+
+            case "menu" -> {
+                CosmeticsInventory inventory = new CosmeticsInventory((Player) sender);
+                inventory.openInventory();
             }
 
             default -> sender.sendMessage(Messages.invalidSubcommand("ig"));

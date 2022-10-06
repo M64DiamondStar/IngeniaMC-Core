@@ -22,7 +22,7 @@ class BalanceSubcommand(private val sender: CommandSender, private val args: Arr
                     sender.sendMessage(Messages.invalidPlayer())
                     return
                 }
-                sender.sendMessage(Colors.format(target.name + " has " + target.bal + ":gs:.", MessageType.INFO))
+                sender.sendMessage(Colors.format(MessageType.INFO + target.name + " has " + target.bal + ":gs:."))
             } else {
                 sender.sendMessage(Colors.format(Messages.commandUsage("ig balance <add/set/subtract/get> <player> [amount]")))
             }
@@ -43,24 +43,21 @@ class BalanceSubcommand(private val sender: CommandSender, private val args: Arr
                 target.addBal(gs)
                 sender.sendMessage(
                     Colors.format(
-                        "Successfully added " + gs + ":gs: to " + target.name + ".",
-                        MessageType.SUCCESS
+                        MessageType.SUCCESS + "Successfully added " + gs + ":gs: to " + target.name + "."
                     )
                 )
             } else if (args[1].equals("set", ignoreCase = true)) {
                 target.bal = gs
                 sender.sendMessage(
                     Colors.format(
-                        "Successfully set " + target.name + "'s balance to " + gs + ":gs:.",
-                        MessageType.SUCCESS
+                        MessageType.SUCCESS + "Successfully set " + target.name + "'s balance to " + gs + ":gs:."
                     )
                 )
             } else if (args[1].equals("subtract", ignoreCase = true)) {
                 target.addBal(-gs)
                 sender.sendMessage(
                     Colors.format(
-                        "Successfully subtracted " + gs + ":gs: from " + target.name + ".",
-                        MessageType.SUCCESS
+                        MessageType.SUCCESS + "Successfully subtracted " + gs + ":gs: from " + target.name + "."
                     )
                 )
             } else {

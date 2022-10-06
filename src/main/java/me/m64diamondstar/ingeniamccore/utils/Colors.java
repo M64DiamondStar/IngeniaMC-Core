@@ -20,12 +20,7 @@ public class Colors {
     }
 
     public static String format(String msg, MessageType messageType) {
-        return switch (messageType) {
-            case ERROR -> format("#bd4d4d" + msg);
-            case BACKGROUND -> format("#858585" + msg);
-            case SUCCESS -> format("#53bd4d" + msg);
-            case INFO -> format("#6ac4c1" + msg);
-        };
+        return messageType + msg;
     }
 
 }
