@@ -1,6 +1,7 @@
 package me.m64diamondstar.ingeniamccore.wands.wands
 
 import me.m64diamondstar.ingeniamccore.Main
+import me.m64diamondstar.ingeniamccore.utils.Colors
 import me.m64diamondstar.ingeniamccore.wands.Cooldowns
 import org.bukkit.Bukkit
 import org.bukkit.Material
@@ -11,8 +12,26 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import java.util.*
 
-class Music(player: Player) {
+class Music(player: Player): Wand {
+    private var player: Player
+
     init {
+        this.player = player
+    }
+
+    override fun getDisplayName(): String{
+        return Colors.format("#9d0fff&lM#9310e9&lu#8910d3&ls#7f11bd&li#7512a7&lc #6a1291&lW#60137b&la#561365&ln#4c144f&ld")
+    }
+
+    override fun getCustomModelData(): Int {
+        return 4
+    }
+
+    override fun hasPermission(): Boolean {
+        return player.hasPermission("ingeniawands.music")
+    }
+
+    override fun run() {
         player.world.spawnParticle(Particle.NOTE, player.location, 50, 2.0, 1.0, 2.0)
         val disc = ItemStack(Material.MUSIC_DISC_CAT)
         val db = player.world.spawnEntity(player.location.add(0.0, 2.5, 0.0), EntityType.ARMOR_STAND) as ArmorStand

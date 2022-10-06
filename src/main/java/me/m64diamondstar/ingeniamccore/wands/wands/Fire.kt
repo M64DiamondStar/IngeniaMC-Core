@@ -1,24 +1,53 @@
 package me.m64diamondstar.ingeniamccore.wands.wands
 
 import me.m64diamondstar.ingeniamccore.Main
+import me.m64diamondstar.ingeniamccore.utils.Colors
 import me.m64diamondstar.ingeniamccore.wands.Cooldowns
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.entity.Player
+import kotlin.math.cos
+import kotlin.math.sin
 
-class Fire(player: Player) {
+class Fire(player: Player): Wand {
+    private var player: Player
+
     init {
+        this.player = player
+    }
+
+    override fun getDisplayName(): String{
+        return Colors.format("#a80000&lF#a90d02&li#a91b03&lr#aa2805&le #ab3607&lW#ac4309&la#ac510a&ln#ad5e0c&ld")
+    }
+
+    override fun getCustomModelData(): Int {
+        return 13
+    }
+
+    override fun hasPermission(): Boolean {
+        return player.hasPermission("ingeniawands.fire")
+    }
+
+    override fun run() {
+
+        val nLoc = player.location
+
+        val s = Bukkit.getScheduler().scheduleSyncRepeatingTask(
+            Main.plugin, {
+                player.teleport(nLoc)
+            }, 0L, 1L
+        )
+
         Bukkit.getScheduler().scheduleSyncDelayedTask(
             Main.plugin, {
                 val location1 = player.eyeLocation
                 val particles = 50
                 val radius = 0.7f
                 for (i in 0 until particles) {
-                    var angle: Double
                     var x: Double
                     var z: Double
-                    angle = 2 * Math.PI * i / particles
+                    val angle: Double = 2 * Math.PI * i / particles
                     x = Math.cos(angle) * radius
                     z = Math.sin(angle) * radius
                     location1.add(x, 0.0, z)
@@ -33,10 +62,9 @@ class Fire(player: Player) {
                 val particles = 50
                 val radius = 0.7f
                 for (i in 0 until particles) {
-                    var angle: Double
                     var x: Double
                     var z: Double
-                    angle = 2 * Math.PI * i / particles
+                    val angle: Double = 2 * Math.PI * i / particles
                     x = Math.cos(angle) * radius
                     z = Math.sin(angle) * radius
                     location2.add(x, -0.66, z)
@@ -51,10 +79,9 @@ class Fire(player: Player) {
                 val particles = 50
                 val radius = 0.7f
                 for (i in 0 until particles) {
-                    var angle: Double
                     var x: Double
                     var z: Double
-                    angle = 2 * Math.PI * i / particles
+                    val angle: Double = 2 * Math.PI * i / particles
                     x = Math.cos(angle) * radius
                     z = Math.sin(angle) * radius
                     location3.add(x, -1.33, z)
@@ -65,6 +92,7 @@ class Fire(player: Player) {
         )
         Bukkit.getScheduler().scheduleSyncDelayedTask(
             Main.plugin, {
+                Bukkit.getScheduler().cancelTask(s)
                 val block = player.getTargetBlock(null, 21)
                 player.world.spawnParticle(Particle.CLOUD, player.location, 150, 0.35, 0.7, 0.35, 0.0)
                 player.world.spawnParticle(Particle.LAVA, player.location, 30, 0.2, 0.7, 0.2, 0.0)

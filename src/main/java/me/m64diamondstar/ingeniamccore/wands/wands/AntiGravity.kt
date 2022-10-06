@@ -1,6 +1,7 @@
 package me.m64diamondstar.ingeniamccore.wands.wands
 
 import me.m64diamondstar.ingeniamccore.Main
+import me.m64diamondstar.ingeniamccore.utils.Colors
 import java.lang.Runnable
 import me.m64diamondstar.ingeniamccore.wands.Cooldowns
 import org.bukkit.Bukkit
@@ -15,10 +16,30 @@ import org.bukkit.util.EulerAngle
 import org.bukkit.util.Vector
 import java.util.*
 
-class AntiGravity(player: Player) {
+class AntiGravity(player: Player): Wand {
     private val stands: MutableList<ArmorStand> = ArrayList()
 
+    private var player: Player
+
     init {
+        this.player = player
+    }
+
+    override fun getDisplayName(): String{
+        return Colors.format("#bd5ebc&lA#b85abc&ln#b256bd&lt#ad53bd&li" +
+                " #a74fbe&lG#a24bbe&lr#9c47bf&la#9744bf&lv#9240bf&li#8c3cc0&lt#8738c0&ly" +
+                " #8134c1&lW#7c31c1&la#762dc2&ln#7129c2&ld")
+    }
+
+    override fun hasPermission(): Boolean {
+        return player.hasPermission("ingeniawands.antigravity")
+    }
+
+    override fun getCustomModelData(): Int {
+        return 16
+    }
+
+    override fun run() {
         player.setGravity(false)
         player.velocity = Vector(player.velocity.x, 0.2, player.velocity.z)
         for (i in 0..17) {

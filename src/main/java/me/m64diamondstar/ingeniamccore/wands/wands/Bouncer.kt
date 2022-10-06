@@ -1,6 +1,7 @@
 package me.m64diamondstar.ingeniamccore.wands.wands
 
 import me.m64diamondstar.ingeniamccore.Main
+import me.m64diamondstar.ingeniamccore.utils.Colors
 import java.lang.Runnable
 import me.m64diamondstar.ingeniamccore.wands.Cooldowns
 import org.bukkit.Bukkit
@@ -14,12 +15,31 @@ import org.bukkit.potion.PotionEffectType
 import org.bukkit.util.EulerAngle
 import java.util.*
 
-class Bouncer(player: Player) {
+class Bouncer(player: Player): Wand {
     private val stands1: MutableList<ArmorStand> = ArrayList()
     private val stands2: MutableList<ArmorStand> = ArrayList()
     private var y = 0
 
+    private var player: Player
+
     init {
+        this.player = player
+    }
+
+    override fun getDisplayName(): String{
+        return Colors.format("#428017&lB#458722&lo#478d2c&lu#4a9437&ln#4d9a42&lc#50a14d&le#52a857&lr" +
+                " #55ae62&lW#58b56d&la#5abb77&ln#5dc282&ld")
+    }
+
+    override fun getCustomModelData(): Int {
+        return 17
+    }
+
+    override fun hasPermission(): Boolean {
+        return player.hasPermission("ingeniawands.bouncer")
+    }
+
+    override fun run() {
         player.addPotionEffect(PotionEffectType.JUMP.createEffect(200, 5))
         for (i in 0..1) {
             val loc = player.location.add(0.0, -0.5, 0.0)

@@ -1,6 +1,7 @@
 package me.m64diamondstar.ingeniamccore.wands.wands
 
 import me.m64diamondstar.ingeniamccore.Main
+import me.m64diamondstar.ingeniamccore.utils.Colors
 import me.m64diamondstar.ingeniamccore.wands.Cooldowns
 import org.bukkit.Bukkit
 import org.bukkit.Color
@@ -9,8 +10,27 @@ import org.bukkit.Particle
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 
-class HolyTomato(player: Player) {
+class HolyTomato(player: Player): Wand {
+    private var player: Player
+
     init {
+        this.player = player
+    }
+
+    override fun getDisplayName(): String{
+        return Colors.format("#630b0b&lH#710d0d&lo#7f0f0f&ll#8e1111&ly #9c1212&lT#aa1414&lo#b81616&lm#630b0b&la#710d0d&lt#7f0f0f&lo" +
+                " #8e1111&lW#9c1212&la#aa1414&ln#b81616&ld")
+    }
+
+    override fun getCustomModelData(): Int {
+        return 6
+    }
+
+    override fun hasPermission(): Boolean {
+        return player.hasPermission("ingeniawands.holytomato")
+    }
+
+    override fun run() {
         val loc = player.location.add(0.0, 1.0, 0.0)
         val item = ItemStack(Material.BAKED_POTATO)
         val meta = item.itemMeta

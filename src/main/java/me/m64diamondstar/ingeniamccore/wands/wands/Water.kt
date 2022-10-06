@@ -11,8 +11,26 @@ import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.bukkit.scheduler.BukkitRunnable
 
-class Water(player: Player) {
+class Water(player: Player): Wand {
+    private var player: Player
+
     init {
+        this.player = player
+    }
+
+    override fun getDisplayName(): String{
+        return Colors.format("#1ca6ff&lW#1790e4&la#137aca&lt#0e63af&le#094d94&lr #1085ff&lW#107ade&la#1170bd&ln#11659c&ld")
+    }
+
+    override fun getCustomModelData(): Int {
+        return 11
+    }
+
+    override fun hasPermission(): Boolean {
+        return player.hasPermission("ingeniawands.water")
+    }
+
+    override fun run() {
         properInit(player)
     }
 
@@ -92,4 +110,5 @@ class Water(player: Player) {
         }.runTaskTimer(Main.plugin, 50L, 1L)
         Cooldowns.addPlayer(player, 7500L, 8500L, 9500L, 12000L)
     }
+
 }

@@ -1,6 +1,7 @@
 package me.m64diamondstar.ingeniamccore.wands.wands
 
 import me.m64diamondstar.ingeniamccore.Main
+import me.m64diamondstar.ingeniamccore.utils.Colors
 import org.bukkit.craftbukkit.v1_19_R1.entity.CraftPlayer
 import me.m64diamondstar.ingeniamccore.wands.Cooldowns
 import net.md_5.bungee.api.ChatMessageType
@@ -21,7 +22,30 @@ import org.bukkit.util.EulerAngle
 import org.bukkit.util.Vector
 import java.util.*
 
-class Sled(player: Player) {
+class Sled(player: Player): Wand {
+
+    private var player: Player
+
+    init {
+        this.player = player
+    }
+
+    override fun run() {
+        properInit(player)
+    }
+
+    override fun getDisplayName(): String{
+        return Colors.format("#7d4f11&lS#8b5a1e&ll#9a662b&le#a87138&ld #a87138&lW#9a662b&la#8b5a1e&ln#7d4f11&ld")
+    }
+
+    override fun getCustomModelData(): Int {
+        return 19
+    }
+
+    override fun hasPermission(): Boolean {
+        return player.hasPermission("ingeniawands.sled")
+    }
+
     private fun south(sled: ArmorStand, seat: ArmorStand, player: Player) {
         object : BukkitRunnable() {
             var c = 0
@@ -565,10 +589,6 @@ class Sled(player: Player) {
                 }
             }.runTaskTimer(Main.plugin, 0L, 1L)
         }
-    }
-
-    init {
-        properInit(player)
     }
 
     private fun properInit(player: Player) {

@@ -22,7 +22,7 @@ class ExpSubcommand(private val sender: CommandSender, private val args: Array<S
                     sender.sendMessage(Messages.invalidPlayer())
                     return
                 }
-                sender.sendMessage(Colors.format(target.name + " has " + target.exp + " exp.", MessageType.INFO))
+                sender.sendMessage(Colors.format(MessageType.INFO + target.name + " has " + target.exp + " exp."))
             } else {
                 sender.sendMessage(Colors.format(Messages.commandUsage("ig exp <add/set/subtract/get> <player> [amount]")))
             }
@@ -43,24 +43,21 @@ class ExpSubcommand(private val sender: CommandSender, private val args: Array<S
                 target.addExp(exp)
                 sender.sendMessage(
                     Colors.format(
-                        "Successfully added " + exp + " to " + target.name + ".",
-                        MessageType.SUCCESS
+                        MessageType.SUCCESS + "Successfully added " + exp + " to " + target.name + "."
                     )
                 )
             } else if (args[1].equals("set", ignoreCase = true)) {
                 target.exp = exp
                 sender.sendMessage(
                     Colors.format(
-                        "Successfully set " + target.name + "'s exp to " + exp + ".",
-                        MessageType.SUCCESS
+                        MessageType.SUCCESS + "Successfully set " + target.name + "'s exp to " + exp + "."
                     )
                 )
             } else if (args[1].equals("subtract", ignoreCase = true)) {
                 target.addExp(-exp)
                 sender.sendMessage(
                     Colors.format(
-                        "Successfully subtracted " + exp + " exp from " + target.name + ".",
-                        MessageType.SUCCESS
+                        MessageType.SUCCESS + "Successfully subtracted " + exp + " exp from " + target.name + "."
                     )
                 )
             } else {

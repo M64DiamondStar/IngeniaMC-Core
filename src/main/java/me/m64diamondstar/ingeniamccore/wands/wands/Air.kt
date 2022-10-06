@@ -1,6 +1,7 @@
 package me.m64diamondstar.ingeniamccore.wands.wands
 
 import me.m64diamondstar.ingeniamccore.Main
+import me.m64diamondstar.ingeniamccore.utils.Colors
 import me.m64diamondstar.ingeniamccore.wands.wandlistener.WandListener
 import org.bukkit.craftbukkit.v1_19_R1.entity.CraftPlayer
 import me.m64diamondstar.ingeniamccore.wands.Cooldowns
@@ -10,8 +11,27 @@ import org.bukkit.entity.Player
 import org.bukkit.scheduler.BukkitRunnable
 import org.bukkit.util.Vector
 
-class Air(player: Player) {
+class Air(player: Player): Wand {
+
+    private var player: Player
+
     init {
+        this.player = player
+    }
+
+    override fun getDisplayName(): String{
+        return Colors.format("#ffffff&lA#d8e9f5&li#b1d4eb&lr #8abee1&lW#63a8d6&la#3c93cc&ln#157dc2&ld")
+    }
+
+    override fun getCustomModelData(): Int {
+        return 12
+    }
+
+    override fun hasPermission(): Boolean {
+        return player.hasPermission("ingeniawands.air")
+    }
+
+    override fun run() {
         player.velocity = Vector(0, 1, 0)
         player.world.spawnParticle(Particle.SPELL, player.location, 100, 0.5, 0.5, 0.5, 0.01)
         Bukkit.getScheduler().scheduleSyncDelayedTask(
@@ -26,7 +46,7 @@ class Air(player: Player) {
             override fun run() {
                 if (!(player as CraftPlayer).isOnGround) player.getWorld()
                     .spawnParticle(Particle.SPELL, player.getLocation(), 30, 0.1, 0.1, 0.1, 0.0)
-                if (c == 300 || player.isOnGround) {
+                if (c == 300 || (player as CraftPlayer).isOnGround) {
                     WandListener.gliding.remove(player)
                     cancel()
                     return

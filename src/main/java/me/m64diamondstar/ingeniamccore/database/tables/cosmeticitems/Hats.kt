@@ -33,7 +33,7 @@ class Hats {
      * Add a cosmetic item to the database.
      * Please use the name param to create a simple name for easy access to the item.
      */
-    fun createItem(item: ItemStack?, name: String?) {
+    fun createItem(item: ItemStack, name: String?) {
         try {
             assert(plugin.sql != null)
             plugin.sql!!.connect()
@@ -91,7 +91,7 @@ class Hats {
      * Return the item from the given name.
      * @return ItemStack with the given name.
      */
-    fun getItem(name: String?): ItemStack? {
+    fun getItem(name: String): ItemStack? {
         try {
             assert(plugin.sql != null)
             plugin.sql!!.connect()
@@ -102,7 +102,7 @@ class Hats {
             if (results != null) {
                 if (results.next()) {
                     val decoder = ItemDecoder(results.getString("ENCODEDITEM"))
-                    item = decoder.decodedItem()
+                    item = decoder.decodedItem()!!
                     return item
                 }
             }

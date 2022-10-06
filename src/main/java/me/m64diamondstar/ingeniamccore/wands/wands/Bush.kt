@@ -1,6 +1,7 @@
 package me.m64diamondstar.ingeniamccore.wands.wands
 
 import me.m64diamondstar.ingeniamccore.Main
+import me.m64diamondstar.ingeniamccore.utils.Colors
 import me.m64diamondstar.ingeniamccore.wands.Cooldowns
 import org.bukkit.Bukkit
 import org.bukkit.Material
@@ -11,8 +12,26 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import java.util.*
 
-class Bush(player: Player) {
+class Bush(player: Player):Wand {
+    private var player: Player
+
     init {
+        this.player = player
+    }
+
+    override fun getDisplayName(): String{
+        return Colors.format("#188c00&lB#179b00&lu#15ab00&ls#14ba00&lh #14ba00&lW#15ab00&la#179b00&ln#188c00&ld")
+    }
+
+    override fun getCustomModelData(): Int {
+        return 9
+    }
+
+    override fun hasPermission(): Boolean {
+        return player.hasPermission("ingeniawands.bush")
+    }
+
+    override fun run() {
         val helmet = Objects.requireNonNull(player.equipment)?.helmet
         for (i in 0..64) {
             val as1 = player.world.spawnEntity(
