@@ -7,6 +7,8 @@ description: The Core plugin of IngeniaMC.
 commands:
   wand:
     description: Open the wand selection menu.
+    aliases:
+      - wands
   gmc:
     permission: ingenia.admin.gmc
     description: Change gamemode to creative.
@@ -25,8 +27,7 @@ commands:
     aliases:
       - ig
   cosmetics:
-    permission: ingenia.admin.cosmetics
-    description: Manage the server cosmetics.
+    description: Open the cosmetic menu.
     aliases:
       - cosmetic
 
