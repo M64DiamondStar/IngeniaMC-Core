@@ -1,8 +1,12 @@
 package me.m64diamondstar.ingeniamccore
 
+import me.m64diamondstar.ingeniamccore.cosmetics.CosmeticsInventory
+import me.m64diamondstar.ingeniamccore.cosmetics.CosmeticsListener
 import me.m64diamondstar.ingeniamccore.database.MySQL
+import me.m64diamondstar.ingeniamccore.general.commands.CosmeticCommand
 import me.m64diamondstar.ingeniamccore.general.commands.GamemodeCmd
 import me.m64diamondstar.ingeniamccore.general.commands.ingenia.IngeniaCommand
+import me.m64diamondstar.ingeniamccore.general.commands.ingenia.WandCommand
 import me.m64diamondstar.ingeniamccore.wands.wandlistener.WandListener
 import me.m64diamondstar.ingeniamccore.general.listeners.JoinListener
 import org.bukkit.Bukkit
@@ -54,17 +58,25 @@ class Main : JavaPlugin() {
     }
 
     private fun loadMainInstances() {}
+
     private fun loadCommandExecutors() {
         Objects.requireNonNull(getCommand("gmc"))?.setExecutor(GamemodeCmd())
         Objects.requireNonNull(getCommand("gms"))?.setExecutor(GamemodeCmd())
         Objects.requireNonNull(getCommand("gma"))?.setExecutor(GamemodeCmd())
         Objects.requireNonNull(getCommand("gmsp"))?.setExecutor(GamemodeCmd())
+
         Objects.requireNonNull(getCommand("ingenia"))?.setExecutor(IngeniaCommand())
+
+        Objects.requireNonNull(getCommand("cosmetics"))?.setExecutor(CosmeticCommand())
+
+        Objects.requireNonNull(getCommand("wand"))?.setExecutor(WandCommand())
     }
 
     private fun loadTabCompleters() {}
+
     private fun loadEventListeners() {
         Bukkit.getServer().pluginManager.registerEvents(WandListener(), this)
         Bukkit.getServer().pluginManager.registerEvents(JoinListener(), this)
+        Bukkit.getServer().pluginManager.registerEvents(CosmeticsListener(), this)
     }
 }
