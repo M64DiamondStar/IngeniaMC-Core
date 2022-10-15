@@ -1,17 +1,16 @@
 package me.m64diamondstar.ingeniamccore.general.player;
 
-import me.m64diamondstar.ingeniamccore.database.tables.player.Exp;
-import me.m64diamondstar.ingeniamccore.database.tables.player.GoldenStars;
+import me.m64diamondstar.ingeniamccore.data.files.PlayerConfig;
 import me.m64diamondstar.ingeniamccore.general.scoreboard.Scoreboard;
 import me.m64diamondstar.ingeniamccore.utils.Colors;
 import me.m64diamondstar.ingeniamccore.utils.MessageLocation;
 import me.m64diamondstar.ingeniamccore.utils.MessageType;
 import me.m64diamondstar.ingeniamccore.wands.Wands;
-import me.m64diamondstar.ingeniamccore.wands.wands.Wand;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.GameMode;
 import org.bukkit.Sound;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -21,9 +20,11 @@ public class IngeniaPlayer {
 
     private final Player player;
     private Scoreboard scoreboard;
+    private PlayerConfig config;
 
     public IngeniaPlayer (Player player){
         this.player = player;
+        this.config = new PlayerConfig(player.getUniqueId());
     }
 
     public Player getPlayer(){
@@ -61,39 +62,33 @@ public class IngeniaPlayer {
     }
 
     public long getExp(){
-        Exp exp = new Exp();
-        exp.createPlayer(player);
-        return exp.getExp(player);
+        this.config = new PlayerConfig(player.getUniqueId());
+        return config.getExp();
     }
 
     public void setExp(long l){
-        Exp exp = new Exp();
-        exp.createPlayer(player);
-        exp.setExp(player, l);
+        this.config = new PlayerConfig(player.getUniqueId());
+        config.setExp(l);
     }
 
     public void addExp(long l){
-        Exp exp = new Exp();
-        exp.createPlayer(player);
-        exp.addExp(player, l);
+        this.config = new PlayerConfig(player.getUniqueId());
+        config.setExp(l + getExp());
     }
 
     public long getBal(){
-        GoldenStars gs = new GoldenStars();
-        gs.createPlayer(player);
-        return gs.getBal(player);
+        this.config = new PlayerConfig(player.getUniqueId());
+        return config.getBal();
     }
 
     public void setBal(long l){
-        GoldenStars gs = new GoldenStars();
-        gs.createPlayer(player);
-        gs.setBal(player, l);
+        this.config = new PlayerConfig(player.getUniqueId());
+        config.setBal(l);
     }
 
     public void addBal(long l){
-        GoldenStars gs = new GoldenStars();
-        gs.createPlayer(player);
-        gs.addBal(player, l);
+        this.config = new PlayerConfig(player.getUniqueId());
+        config.setBal(l + getBal());
     }
 
     public void setScoreboard(boolean on){
