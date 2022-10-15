@@ -44,6 +44,7 @@ class Air(player: Player): Wand {
         object : BukkitRunnable() {
             var c = 0
             override fun run() {
+
                 if (!(player as CraftPlayer).isOnGround) player.getWorld()
                     .spawnParticle(Particle.SPELL, player.getLocation(), 30, 0.1, 0.1, 0.1, 0.0)
                 if (c == 300 || (player as CraftPlayer).isOnGround) {
