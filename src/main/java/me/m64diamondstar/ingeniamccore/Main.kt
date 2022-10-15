@@ -1,8 +1,6 @@
 package me.m64diamondstar.ingeniamccore
 
-import me.m64diamondstar.ingeniamccore.cosmetics.CosmeticsInventory
 import me.m64diamondstar.ingeniamccore.cosmetics.CosmeticsListener
-import me.m64diamondstar.ingeniamccore.database.MySQL
 import me.m64diamondstar.ingeniamccore.general.commands.CosmeticCommand
 import me.m64diamondstar.ingeniamccore.general.commands.GamemodeCmd
 import me.m64diamondstar.ingeniamccore.general.commands.ingenia.IngeniaCommand
@@ -14,9 +12,6 @@ import org.bukkit.plugin.java.JavaPlugin
 import java.util.*
 
 class Main : JavaPlugin() {
-    @JvmField
-
-    var sql: MySQL? = null
 
     companion object {
         lateinit var plugin: Main
@@ -37,8 +32,6 @@ class Main : JavaPlugin() {
         reloadConfig()
         Bukkit.getLogger().info("Config (re)loaded ✓")
 
-        sql = MySQL(this)
-
         loadCommandExecutors()
         Bukkit.getLogger().info("Commands loaded ✓")
 
@@ -54,7 +47,7 @@ class Main : JavaPlugin() {
     }
 
     override fun onDisable() {
-        sql!!.disconnect()
+
     }
 
     private fun loadMainInstances() {}
