@@ -1,8 +1,8 @@
 package me.m64diamondstar.ingeniamccore.general.commands;
 
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer;
-import me.m64diamondstar.ingeniamccore.utils.MessageType;
-import me.m64diamondstar.ingeniamccore.utils.Messages;
+import me.m64diamondstar.ingeniamccore.utils.messages.MessageType;
+import me.m64diamondstar.ingeniamccore.utils.messages.Messages;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.command.Command;
@@ -10,6 +10,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Objects;
 
 public class GamemodeCmd implements CommandExecutor {
 
@@ -42,12 +44,13 @@ public class GamemodeCmd implements CommandExecutor {
 
         else if(args.length == 1){
 
-            if(Bukkit.getPlayer(args[0]) == null){
+            IngeniaPlayer target = new IngeniaPlayer(Objects.requireNonNull(Bukkit.getPlayer(args[0])));
+
+            if(target.getPlayer() == null){
                 player.sendMessage("This player is not online!", MessageType.ERROR);
                 return;
             }
 
-            IngeniaPlayer target = new IngeniaPlayer(Bukkit.getPlayer(args[0]));
             target.setGameMode(gameMode);
             player.sendMessage("Successfully changed " + args[0] + "'s gamemode to " + gameMode.toString().toLowerCase(), MessageType.SUCCESS);
 
