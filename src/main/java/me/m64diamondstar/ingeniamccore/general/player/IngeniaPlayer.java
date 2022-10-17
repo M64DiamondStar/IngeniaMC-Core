@@ -2,15 +2,14 @@ package me.m64diamondstar.ingeniamccore.general.player;
 
 import me.m64diamondstar.ingeniamccore.data.files.PlayerConfig;
 import me.m64diamondstar.ingeniamccore.general.scoreboard.Scoreboard;
-import me.m64diamondstar.ingeniamccore.utils.Colors;
-import me.m64diamondstar.ingeniamccore.utils.MessageLocation;
-import me.m64diamondstar.ingeniamccore.utils.MessageType;
+import me.m64diamondstar.ingeniamccore.utils.messages.Colors;
+import me.m64diamondstar.ingeniamccore.utils.messages.MessageLocation;
+import me.m64diamondstar.ingeniamccore.utils.messages.MessageType;
 import me.m64diamondstar.ingeniamccore.wands.Wands;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.GameMode;
 import org.bukkit.Sound;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -25,6 +24,10 @@ public class IngeniaPlayer {
     public IngeniaPlayer (Player player){
         this.player = player;
         this.config = new PlayerConfig(player.getUniqueId());
+    }
+
+    public void startUp(){
+        player.setCollidable(false);
     }
 
     public Player getPlayer(){

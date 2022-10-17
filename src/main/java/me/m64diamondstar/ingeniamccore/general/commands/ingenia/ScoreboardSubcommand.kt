@@ -1,8 +1,8 @@
 package me.m64diamondstar.ingeniamccore.general.commands.ingenia
 
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
-import me.m64diamondstar.ingeniamccore.utils.Colors
-import me.m64diamondstar.ingeniamccore.utils.Messages
+import me.m64diamondstar.ingeniamccore.utils.messages.Colors
+import me.m64diamondstar.ingeniamccore.utils.messages.Messages
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -38,5 +38,16 @@ class ScoreboardSubcommand(private val sender: CommandSender, private val args: 
         } else {
             sender.sendMessage(Colors.format(Messages.commandUsage("ig scoreboard <show/hide> [player]")))
         }
+    }
+
+    fun getTabCompleters(): ArrayList<String>{
+        val tabs = ArrayList<String>()
+
+        if(args.size == 2){
+            tabs.add("show")
+            tabs.add("hide")
+        }
+
+        return tabs
     }
 }

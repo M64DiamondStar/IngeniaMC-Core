@@ -1,14 +1,12 @@
 package me.m64diamondstar.ingeniamccore.wands.wands
 
 import me.m64diamondstar.ingeniamccore.Main
-import me.m64diamondstar.ingeniamccore.utils.Colors
+import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.wands.Cooldowns
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.entity.Player
-import kotlin.math.cos
-import kotlin.math.sin
 
 class Fire(player: Player): Wand {
     private var player: Player

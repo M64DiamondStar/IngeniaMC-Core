@@ -1,4 +1,4 @@
-package me.m64diamondstar.ingeniamccore.utils
+package me.m64diamondstar.ingeniamccore.utils.messages
 
 interface MessageType {
     companion object {

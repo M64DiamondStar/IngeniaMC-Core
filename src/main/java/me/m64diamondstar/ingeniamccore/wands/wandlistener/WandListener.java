@@ -8,10 +8,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.FallingBlock;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Snowball;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -77,6 +74,8 @@ public class WandListener implements Listener {
                     new SnowExplosion(player).run();
                 if(player.getInventory().getItemInMainHand().getItemMeta().getCustomModelData() == 19)
                     new Sled(player).run();
+                if(player.getInventory().getItemInMainHand().getItemMeta().getCustomModelData() == 20)
+                    new Grapple(player).run();
             }
         }
     }

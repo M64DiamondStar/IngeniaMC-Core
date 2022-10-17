@@ -1,7 +1,7 @@
 package me.m64diamondstar.ingeniamccore.general.commands
 
-import me.m64diamondstar.ingeniamccore.cosmetics.CosmeticsInventory
-import me.m64diamondstar.ingeniamccore.utils.Messages.noPlayer
+import me.m64diamondstar.ingeniamccore.cosmetics.inventory.CosmeticsInventory
+import me.m64diamondstar.ingeniamccore.utils.messages.Messages.noPlayer
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender

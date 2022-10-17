@@ -1,7 +1,7 @@
 package me.m64diamondstar.ingeniamccore.wands.wands
 
 import me.m64diamondstar.ingeniamccore.Main
-import me.m64diamondstar.ingeniamccore.utils.Colors
+import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.wands.wandlistener.WandListener
 import org.bukkit.craftbukkit.v1_19_R1.entity.CraftPlayer
 import me.m64diamondstar.ingeniamccore.wands.Cooldowns

@@ -1,17 +1,11 @@
-package me.m64diamondstar.ingeniamccore.cosmetics
+package me.m64diamondstar.ingeniamccore.cosmetics.inventory
 
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
-import me.m64diamondstar.ingeniamccore.utils.Colors
-import me.m64diamondstar.ingeniamccore.utils.MessageType
+import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.entity.Player
-import org.bukkit.event.EventHandler
-import org.bukkit.event.Listener
-import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.Inventory
-import org.bukkit.inventory.ItemStack
-import org.bukkit.inventory.meta.SkullMeta
 
 class CosmeticsInventory(private var player: Player) {
 

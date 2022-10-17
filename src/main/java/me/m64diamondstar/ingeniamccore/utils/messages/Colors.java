@@ -1,4 +1,4 @@
-package me.m64diamondstar.ingeniamccore.utils;
+package me.m64diamondstar.ingeniamccore.utils.messages;
 
 import net.md_5.bungee.api.ChatColor;
 

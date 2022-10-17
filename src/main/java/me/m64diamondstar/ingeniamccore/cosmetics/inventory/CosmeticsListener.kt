@@ -1,4 +1,4 @@
-package me.m64diamondstar.ingeniamccore.cosmetics
+package me.m64diamondstar.ingeniamccore.cosmetics.inventory
 
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import org.bukkit.entity.Player

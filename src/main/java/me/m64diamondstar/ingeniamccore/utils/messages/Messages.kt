@@ -1,4 +1,4 @@
-package me.m64diamondstar.ingeniamccore.utils
+package me.m64diamondstar.ingeniamccore.utils.messages
 
 object Messages {
     @JvmStatic
@@ -12,7 +12,7 @@ object Messages {
     }
 
     fun invalidNumber(): String {
-        return Colors.format(MessageType.ERROR+ "Please use a valid number.")
+        return Colors.format(MessageType.ERROR + "Please use a valid number.")
     }
 
     @JvmStatic

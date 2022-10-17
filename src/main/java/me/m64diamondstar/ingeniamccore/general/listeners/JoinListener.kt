@@ -10,6 +10,7 @@ class JoinListener : Listener {
     fun onPlayerJoin(e: PlayerJoinEvent) {
         val bukkitPlayer = e.player
         val player = IngeniaPlayer(bukkitPlayer)
+        player.startUp()
         player.setScoreboard(true)
     }
 }

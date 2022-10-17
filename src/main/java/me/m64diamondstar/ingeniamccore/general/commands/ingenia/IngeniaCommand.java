@@ -1,7 +1,7 @@
 package me.m64diamondstar.ingeniamccore.general.commands.ingenia;
 
-import me.m64diamondstar.ingeniamccore.cosmetics.CosmeticsInventory;
-import me.m64diamondstar.ingeniamccore.utils.Messages;
+import me.m64diamondstar.ingeniamccore.cosmetics.inventory.CosmeticsInventory;
+import me.m64diamondstar.ingeniamccore.utils.messages.Messages;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -14,6 +14,11 @@ public class IngeniaCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
 
+
+        if(args.length == 0) {
+            
+            return false;
+        }
 
         switch (args[0]) {
 
@@ -37,7 +42,6 @@ public class IngeniaCommand implements CommandExecutor {
                 ScoreboardSubcommand scoreboard = new ScoreboardSubcommand(sender, args);
                 scoreboard.execute();
             }
-
 
             case "menu" -> {
                 CosmeticsInventory inventory = new CosmeticsInventory((Player) sender);

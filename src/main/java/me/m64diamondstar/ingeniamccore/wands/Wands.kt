@@ -1,9 +1,8 @@
 package me.m64diamondstar.ingeniamccore.wands
 
-import me.m64diamondstar.ingeniamccore.utils.Colors
-import me.m64diamondstar.ingeniamccore.utils.MessageType
+import me.m64diamondstar.ingeniamccore.utils.messages.Colors
+import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
 import me.m64diamondstar.ingeniamccore.wands.wands.*
-import org.bukkit.BlockChangeDelegate
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
@@ -39,6 +38,7 @@ object Wands {
         if(Earth(player).hasPermission()) accessibleWands.add(getAsItemStack(Earth(player)))
         if(Fire(player).hasPermission()) accessibleWands.add(getAsItemStack(Fire(player)))
         if(Fly(player).hasPermission()) accessibleWands.add(getAsItemStack(Fly(player)))
+        if(Grapple(player).hasPermission()) accessibleWands.add(getAsItemStack(Grapple(player)))
         if(Happiness(player).hasPermission()) accessibleWands.add(getAsItemStack(Happiness(player)))
         if(HolyTomato(player).hasPermission()) accessibleWands.add(getAsItemStack(HolyTomato(player)))
         if(Launch(player).hasPermission()) accessibleWands.add(getAsItemStack(Launch(player)))

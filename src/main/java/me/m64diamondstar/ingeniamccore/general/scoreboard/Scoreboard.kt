@@ -2,13 +2,12 @@ package me.m64diamondstar.ingeniamccore.general.scoreboard
 
 import me.m64diamondstar.ingeniamccore.Main
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
-import me.m64diamondstar.ingeniamccore.utils.Colors
-import me.m64diamondstar.ingeniamccore.utils.MessageType
+import me.m64diamondstar.ingeniamccore.utils.messages.Colors
+import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
 import org.bukkit.Bukkit
 import org.bukkit.scheduler.BukkitRunnable
 import org.bukkit.scoreboard.*
 import org.bukkit.scoreboard.Scoreboard
-import java.util.*
 
 class Scoreboard(private val player: IngeniaPlayer) {
     private var objective: Objective? = null
@@ -53,7 +52,7 @@ class Scoreboard(private val player: IngeniaPlayer) {
                     Colors.format("#f4b734 » Online Players: &r" + Bukkit.getOnlinePlayers().size)
                 objective!!.getScore(Colors.format("&1")).score = 2
             }
-        }.runTaskTimer(Main.plugin, 0L, 20L)
+        }.runTaskTimerAsynchronously(Main.plugin, 0L, 10L)
     }
 
     fun hideBoard() {
