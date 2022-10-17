@@ -10,4 +10,4 @@ For more information, contact us on Discord: https://discord.gg/qv2vsAsDs8
 > 
 > ***This project is under MIT license. Make sure to check: https://github.com/M64DiamondStar/IngeniaMC-Core/blob/master/LICENSE.txt***
 
-![This is an image](https://ingeniamc.net/images/whitelogo.png)
+![This is an image](https://ingeniamc.net/images/Discord-Banner.png)
