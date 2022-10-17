@@ -1,20 +1,24 @@
 package me.m64diamondstar.ingeniamccore
 
-import me.m64diamondstar.ingeniamccore.cosmetics.CosmeticsListener
+import me.m64diamondstar.ingeniamccore.cosmetics.inventory.CosmeticsListener
 import me.m64diamondstar.ingeniamccore.general.commands.CosmeticCommand
 import me.m64diamondstar.ingeniamccore.general.commands.GamemodeCmd
 import me.m64diamondstar.ingeniamccore.general.commands.ingenia.IngeniaCommand
 import me.m64diamondstar.ingeniamccore.general.commands.ingenia.WandCommand
+import me.m64diamondstar.ingeniamccore.general.commands.tabcompleters.IngeniaTabCompleter
 import me.m64diamondstar.ingeniamccore.wands.wandlistener.WandListener
 import me.m64diamondstar.ingeniamccore.general.listeners.JoinListener
+import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
 import java.util.*
+import javax.swing.text.StyledEditorKit
 
 class Main : JavaPlugin() {
 
     companion object {
         lateinit var plugin: Main
+        var isDisabling: Boolean = false
     }
 
     override fun onEnable() {
@@ -41,13 +45,19 @@ class Main : JavaPlugin() {
         loadEventListeners()
         Bukkit.getLogger().info("Event Listeners loaded ✓")
 
+        for(player in Bukkit.getOnlinePlayers()){
+            val ingeniaPlayer = IngeniaPlayer(player)
+            ingeniaPlayer.setScoreboard(true)
+        }
+        Bukkit.getLogger().info("Player Scoreboards loaded ✓")
+
         Bukkit.getLogger().info(" ")
         Bukkit.getLogger().info("Finished loading, IngeniaMC-Core is enabled!")
         Bukkit.getLogger().info("---------------------------")
     }
 
     override fun onDisable() {
-
+        isDisabling = true
     }
 
     private fun loadMainInstances() {}
@@ -65,7 +75,9 @@ class Main : JavaPlugin() {
         Objects.requireNonNull(getCommand("wand"))?.setExecutor(WandCommand())
     }
 
-    private fun loadTabCompleters() {}
+    private fun loadTabCompleters() {
+        Objects.requireNonNull(getCommand("ig")?.setTabCompleter(IngeniaTabCompleter()))
+    }
 
     private fun loadEventListeners() {
         Bukkit.getServer().pluginManager.registerEvents(WandListener(), this)
