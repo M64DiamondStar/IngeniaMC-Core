@@ -1,6 +1,8 @@
 package me.m64diamondstar.ingeniamccore.general.commands.ingenia;
 
 import me.m64diamondstar.ingeniamccore.cosmetics.inventory.CosmeticsInventory;
+import me.m64diamondstar.ingeniamccore.general.inventory.MainInventory;
+import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer;
 import me.m64diamondstar.ingeniamccore.utils.messages.Messages;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -10,13 +12,10 @@ import org.jetbrains.annotations.NotNull;
 
 public class IngeniaCommand implements CommandExecutor {
 
-
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
 
-
         if(args.length == 0) {
-            
             return false;
         }
 
@@ -44,13 +43,18 @@ public class IngeniaCommand implements CommandExecutor {
             }
 
             case "menu" -> {
-                CosmeticsInventory inventory = new CosmeticsInventory((Player) sender);
-                inventory.openInventory();
+
+                if(!(sender instanceof Player player)){
+                    sender.sendMessage(Messages.noPlayer());
+                    return false;
+                }
+
+                MainInventory inv = new MainInventory(new IngeniaPlayer(player));
+                inv.open();
             }
 
             default -> sender.sendMessage(Messages.invalidSubcommand("ig"));
         }
-
 
         return false;
     }
