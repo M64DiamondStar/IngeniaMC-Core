@@ -11,15 +11,19 @@ import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.GameMode;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
+import java.util.Objects;
 
 public class IngeniaPlayer {
 
     private final Player player;
     private Scoreboard scoreboard;
     private PlayerConfig config;
+    private Inventory previousInventory;
 
     public IngeniaPlayer (Player player){
         this.player = player;
@@ -114,6 +118,33 @@ public class IngeniaPlayer {
     public void setWand(ItemStack item){
         player.getInventory().setItem(5, item);
         player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 2F, 1.5F);
+    }
+
+    public void setJoinMessage(String msg){
+        config.setJoinMessage(msg);
+    }
+
+    public String getJoinMessage(){
+        return Objects.requireNonNull(config.getJoinMessage()).replace("%player%", Colors.format(config.getJoinColor() + player.getName() + "#ababab"));
+    }
+
+    public void setLeaveMessage(String msg){
+        config.setLeaveMessage(msg);
+    }
+
+    public String getLeaveMessage(){
+        return Objects.requireNonNull(config.getLeaveMessage()).replace("%player%", Colors.format(config.getJoinColor() + player.getName() + "#ababab"));
+    }
+
+    public Inventory getPreviousInventory(){
+        return this.previousInventory;
+    }
+
+    public void openInventory(Inventory inventory){
+        if(player.getOpenInventory().getType() != InventoryType.CRAFTING)
+            this.previousInventory = player.getOpenInventory().getTopInventory();
+
+        player.openInventory(inventory);
     }
 
 }

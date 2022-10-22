@@ -4,14 +4,15 @@ import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
+import org.bukkit.event.player.PlayerQuitEvent
 
-class JoinListener : Listener {
+class LeaveListener : Listener {
     @EventHandler
-    fun onPlayerJoin(e: PlayerJoinEvent) {
+    fun onPlayerLeave(e: PlayerQuitEvent) {
         val bukkitPlayer = e.player
         val player = IngeniaPlayer(bukkitPlayer)
         player.startUp()
         player.setScoreboard(true)
-        e.joinMessage = player.joinMessage
+        e.quitMessage = player.leaveMessage
     }
 }
