@@ -31,7 +31,7 @@ abstract class Gui(ingeniaPlayer: IngeniaPlayer) : InventoryHolder{
 
     abstract fun setSize(): Int
 
-    abstract fun handleInventory(e: InventoryClickEvent)
+    abstract fun handleInventory(event: InventoryClickEvent)
 
     abstract fun setInventoryItems()
 

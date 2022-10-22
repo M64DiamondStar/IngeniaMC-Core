@@ -20,7 +20,7 @@ class MainInventory(player: IngeniaPlayer): Gui(player) {
         inventory.setItem(1, ItemStack(Material.ACTIVATOR_RAIL))
     }
 
-    override fun handleInventory(e: InventoryClickEvent) {
+    override fun handleInventory(event: InventoryClickEvent) {
 
     }
 
