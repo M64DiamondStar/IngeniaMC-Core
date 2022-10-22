@@ -6,7 +6,7 @@ import org.bukkit.configuration.file.YamlConfiguration
 import java.io.File
 import java.lang.Exception
 
-open class Configuration (path: String, name: String,resource: Boolean) {
+abstract class Configuration (path: String, name: String,resource: Boolean) {
 
     private lateinit var config: FileConfiguration
     private var path: File
