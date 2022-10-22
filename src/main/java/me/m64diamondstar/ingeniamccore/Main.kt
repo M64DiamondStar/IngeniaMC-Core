@@ -8,7 +8,9 @@ import me.m64diamondstar.ingeniamccore.general.commands.ingenia.WandCommand
 import me.m64diamondstar.ingeniamccore.general.commands.tabcompleters.IngeniaTabCompleter
 import me.m64diamondstar.ingeniamccore.wands.wandlistener.WandListener
 import me.m64diamondstar.ingeniamccore.general.listeners.JoinListener
+import me.m64diamondstar.ingeniamccore.general.listeners.LeaveListener
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
+import me.m64diamondstar.ingeniamccore.utils.gui.GuiListener
 import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
 import java.util.*
@@ -80,8 +82,23 @@ class Main : JavaPlugin() {
     }
 
     private fun loadEventListeners() {
+        /*
+            All wand events
+         */
         Bukkit.getServer().pluginManager.registerEvents(WandListener(), this)
+
+        /*
+            Join/leave events
+         */
         Bukkit.getServer().pluginManager.registerEvents(JoinListener(), this)
+        Bukkit.getServer().pluginManager.registerEvents(LeaveListener(), this)
+
+
         Bukkit.getServer().pluginManager.registerEvents(CosmeticsListener(), this)
+
+        /*
+            All GUI events
+         */
+        Bukkit.getServer().pluginManager.registerEvents(GuiListener(), this)
     }
 }
