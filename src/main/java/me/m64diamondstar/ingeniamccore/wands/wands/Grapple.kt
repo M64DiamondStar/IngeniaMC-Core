@@ -2,6 +2,7 @@ package me.m64diamondstar.ingeniamccore.wands.wands
 
 import me.m64diamondstar.ingeniamccore.Main
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
+import me.m64diamondstar.ingeniamccore.utils.entities.LeashablePacketEntity
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageLocation
 import me.m64diamondstar.ingeniamccore.wands.Cooldowns
@@ -13,6 +14,7 @@ import net.minecraft.world.entity.Entity
 import net.minecraft.world.phys.Vec3D
 import org.bukkit.*
 import org.bukkit.Particle.DustOptions
+import org.bukkit.craftbukkit.v1_19_R1.CraftWorld
 import org.bukkit.craftbukkit.v1_19_R1.entity.CraftEntity
 import org.bukkit.craftbukkit.v1_19_R1.entity.CraftPlayer
 import org.bukkit.entity.EntityType
@@ -50,20 +52,12 @@ class Grapple(player: Player): Wand {
         val ingeniaPlayer = IngeniaPlayer(player)
         ingeniaPlayer.sendMessage("&8Press &7shift &8while looking at a block to start!", MessageLocation.HOTBAR)
 
-        val hook: Slime = player.world.spawnEntity(player.location, EntityType.SLIME) as Slime
-
-        hook.size = 1
-        hook.isInvulnerable = true
-        hook.isInvisible = true
-        hook.setGravity(false)
-        hook.setAI(false)
-        hook.isCollidable = false
-
         object: BukkitRunnable(){
 
             var lastVelocity: Vector = player.velocity
             lateinit var hookLocation: Location
             var isHooked: Boolean = false
+            var leashableEntity = LeashablePacketEntity((player.world as CraftWorld).handle, player.location, player)
 
             var c: Int = 0
 
@@ -71,7 +65,7 @@ class Grapple(player: Player): Wand {
 
                 if(c == 400 || Main.isDisabling){
                     Bukkit.getScheduler().callSyncMethod(Main.plugin) {
-                        hook.remove()
+                        leashableEntity.despawn()
                     }
                     cancel()
                     return
@@ -80,17 +74,16 @@ class Grapple(player: Player): Wand {
                 if(player.isSneaking){
 
                     if(!isHooked) {
-                        hookLocation = player.getTargetBlock(null, 40).location
+                        hookLocation = player.getTargetBlock(null, 40).location.add(0.5, 0.5, 0.5)
                         if(hookLocation.block.type == Material.AIR)
                             return
 
                         isHooked = true
 
                         Bukkit.getScheduler().callSyncMethod(Main.plugin) {
-                            hook.teleport(hookLocation)
+                            leashableEntity = LeashablePacketEntity((player.world as CraftWorld).handle, hookLocation, player)
+                            leashableEntity.spawn()
                         }
-                        for(onl in Bukkit.getOnlinePlayers())
-                            (onl as CraftPlayer).handle.b.a(PacketPlayOutAttachEntity((hook as CraftEntity).handle, (player as CraftPlayer).handle))
 
                     }
 
@@ -109,7 +102,7 @@ class Grapple(player: Player): Wand {
                 }else{
                     isHooked = false
                     Bukkit.getScheduler().callSyncMethod(Main.plugin) {
-                        hook.teleport(player.location)
+                        leashableEntity.despawn()
                     }
                 }
 
