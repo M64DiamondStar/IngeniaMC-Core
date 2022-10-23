@@ -17,8 +17,8 @@ class CosmeticCommand : CommandExecutor {
 
         val player: Player = sender
 
-        val inv = CosmeticsInventory(player)
-        inv.openInventory()
+        val inv = CosmeticsInventory(player, "國")
+        inv.open()
 
         return false
     }

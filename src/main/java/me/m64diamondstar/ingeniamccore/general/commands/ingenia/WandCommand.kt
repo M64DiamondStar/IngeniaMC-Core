@@ -16,8 +16,8 @@ class WandCommand: CommandExecutor {
         }
 
         val player: Player = sender
-        val inv = CosmeticsInventory(player)
-        inv.openInventory("圖")
+        val inv = CosmeticsInventory(player, "圖")
+        inv.open()
 
         return false
     }
