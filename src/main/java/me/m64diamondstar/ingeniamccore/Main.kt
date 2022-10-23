@@ -1,6 +1,5 @@
 package me.m64diamondstar.ingeniamccore
 
-import me.m64diamondstar.ingeniamccore.cosmetics.inventory.CosmeticsListener
 import me.m64diamondstar.ingeniamccore.general.commands.CosmeticCommand
 import me.m64diamondstar.ingeniamccore.general.commands.GamemodeCmd
 import me.m64diamondstar.ingeniamccore.general.commands.ingenia.IngeniaCommand
@@ -14,7 +13,6 @@ import me.m64diamondstar.ingeniamccore.utils.gui.GuiListener
 import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
 import java.util.*
-import javax.swing.text.StyledEditorKit
 
 class Main : JavaPlugin() {
 
@@ -92,9 +90,6 @@ class Main : JavaPlugin() {
          */
         Bukkit.getServer().pluginManager.registerEvents(JoinListener(), this)
         Bukkit.getServer().pluginManager.registerEvents(LeaveListener(), this)
-
-
-        Bukkit.getServer().pluginManager.registerEvents(CosmeticsListener(), this)
 
         /*
             All GUI events
