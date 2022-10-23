@@ -11,7 +11,7 @@ class GuiListener : Listener {
         val holder = e.inventory.holder
         if(holder is Gui) {
             e.isCancelled = true
-            if (e.currentItem == null || e.slot == -999) return
+            if (e.slot == -999) return
             holder.handleInventory(e)
         }
     }
