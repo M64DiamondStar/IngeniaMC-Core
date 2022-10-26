@@ -13,8 +13,6 @@ class GuiListener : Listener {
             e.isCancelled = true
             if (e.slot == -999) return
             holder.handleInventory(e)
-
-            e.whoClicked.sendMessage("DEBUG: slot: ${e.slot}")
         }
     }
 }
