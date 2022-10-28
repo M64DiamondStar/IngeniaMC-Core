@@ -2,6 +2,7 @@ package me.m64diamondstar.ingeniamccore.general.commands.tabcompleters
 
 import me.m64diamondstar.ingeniamccore.general.commands.ingenia.BalanceSubcommand
 import me.m64diamondstar.ingeniamccore.general.commands.ingenia.ExpSubcommand
+import me.m64diamondstar.ingeniamccore.general.commands.ingenia.MenuSubcommand
 import me.m64diamondstar.ingeniamccore.general.commands.ingenia.ScoreboardSubcommand
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
@@ -11,7 +12,7 @@ class IngeniaTabCompleter: TabCompleter {
 
     private val tc = ArrayList<String>()
 
-    override fun onTabComplete(sender: CommandSender, command: Command, label: String, args: Array<String>): MutableList<String>? {
+    override fun onTabComplete(sender: CommandSender, command: Command, label: String, args: Array<String>): MutableList<String> {
 
 
         if(args.size == 1) {
@@ -19,6 +20,7 @@ class IngeniaTabCompleter: TabCompleter {
             tc.add("balance")
             tc.add("scoreboard")
             tc.add("exp")
+            tc.add("menu")
         }else if(args.size > 1){
 
             tc.clear()
@@ -31,6 +33,9 @@ class IngeniaTabCompleter: TabCompleter {
                 tc.addAll(sub.getTabCompleters())
             }else if(args[0].equals("exp", true)) {
                 val sub = ExpSubcommand(sender, args)
+                tc.addAll(sub.getTabCompleters())
+            }else if(args[0].equals("menu", true)) {
+                val sub = MenuSubcommand(sender, args)
                 tc.addAll(sub.getTabCompleters())
             }
 
