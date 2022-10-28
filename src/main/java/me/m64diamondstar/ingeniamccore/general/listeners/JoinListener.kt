@@ -13,5 +13,7 @@ class JoinListener : Listener {
         player.startUp()
         player.setScoreboard(true)
         e.joinMessage = player.joinMessage
+
+        player.giveMenuItem()
     }
 }
