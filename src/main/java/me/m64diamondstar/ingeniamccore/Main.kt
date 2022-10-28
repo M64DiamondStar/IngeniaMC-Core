@@ -5,9 +5,12 @@ import me.m64diamondstar.ingeniamccore.general.commands.GamemodeCmd
 import me.m64diamondstar.ingeniamccore.general.commands.ingenia.IngeniaCommand
 import me.m64diamondstar.ingeniamccore.general.commands.ingenia.WandCommand
 import me.m64diamondstar.ingeniamccore.general.commands.tabcompleters.IngeniaTabCompleter
+import me.m64diamondstar.ingeniamccore.general.listeners.InteractListener
+import me.m64diamondstar.ingeniamccore.general.listeners.InventoryListener
 import me.m64diamondstar.ingeniamccore.wands.wandlistener.WandListener
 import me.m64diamondstar.ingeniamccore.general.listeners.JoinListener
 import me.m64diamondstar.ingeniamccore.general.listeners.LeaveListener
+import me.m64diamondstar.ingeniamccore.general.listeners.helpers.BonemealListener
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.utils.gui.GuiListener
 import org.bukkit.Bukkit
@@ -92,8 +95,19 @@ class Main : JavaPlugin() {
         Bukkit.getServer().pluginManager.registerEvents(LeaveListener(), this)
 
         /*
+            Inventory/GUI open events
+         */
+        Bukkit.getServer().pluginManager.registerEvents(InteractListener(), this)
+        Bukkit.getServer().pluginManager.registerEvents(InventoryListener(), this)
+
+        /*
             All GUI events
          */
         Bukkit.getServer().pluginManager.registerEvents(GuiListener(), this)
+
+        /*
+            Help Events
+         */
+        Bukkit.getServer().pluginManager.registerEvents(BonemealListener(), this)
     }
 }
