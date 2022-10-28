@@ -1,5 +1,6 @@
 package me.m64diamondstar.ingeniamccore.general.player;
 
+import kotlin.collections.ArrayDeque;
 import me.m64diamondstar.ingeniamccore.data.files.PlayerConfig;
 import me.m64diamondstar.ingeniamccore.general.scoreboard.Scoreboard;
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors;
@@ -9,12 +10,16 @@ import me.m64diamondstar.ingeniamccore.wands.Wands;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -145,6 +150,17 @@ public class IngeniaPlayer {
             this.previousInventory = player.getOpenInventory().getTopInventory();
 
         player.openInventory(inventory);
+    }
+
+    public void giveMenuItem(){
+        ItemStack itemStack = new ItemStack(Material.NETHER_STAR);
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        assert itemMeta != null;
+        itemMeta.setDisplayName(Colors.format("#f4b734&lIngeniaMC"));
+        itemMeta.setLore(List.of(Colors.format(MessageType.LORE + "Click to open the IngeniaMC menu.")));
+        itemStack.setItemMeta(itemMeta);
+
+        player.getInventory().setItem(4, itemStack);
     }
 
 }
