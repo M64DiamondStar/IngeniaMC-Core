@@ -3,11 +3,10 @@ package me.m64diamondstar.ingeniamccore.cosmetics.inventory
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.utils.gui.Gui
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
-import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
-import org.bukkit.inventory.Inventory
+import org.bukkit.event.inventory.InventoryType
 
 class CosmeticsInventory(private var player: Player, private var selected: String): Gui(IngeniaPlayer(player)) {
 
@@ -26,6 +25,7 @@ class CosmeticsInventory(private var player: Player, private var selected: Strin
         val ingeniaPlayer = IngeniaPlayer(player)
 
         if(event.slot == -999 || !event.view.title.contains("田")) return
+        if(event.clickedInventory?.type == InventoryType.PLAYER) return
 
 
         if(event.slot in 1..7 && event.slot != 4) {
