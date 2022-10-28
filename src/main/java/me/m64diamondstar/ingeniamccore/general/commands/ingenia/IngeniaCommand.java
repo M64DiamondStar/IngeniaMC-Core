@@ -1,5 +1,6 @@
 package me.m64diamondstar.ingeniamccore.general.commands.ingenia;
 
+import me.m64diamondstar.ingeniamccore.Main;
 import me.m64diamondstar.ingeniamccore.cosmetics.inventory.CosmeticsInventory;
 import me.m64diamondstar.ingeniamccore.general.inventory.MainInventory;
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer;
@@ -7,7 +8,10 @@ import me.m64diamondstar.ingeniamccore.utils.messages.Messages;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
 public class IngeniaCommand implements CommandExecutor {
@@ -44,14 +48,35 @@ public class IngeniaCommand implements CommandExecutor {
 
             case "menu" -> {
 
+                MenuSubcommand menuSubcommand = new MenuSubcommand(sender, args);
+                menuSubcommand.execute();
+            }
+
+            /*case "pt" -> {
+
                 if(!(sender instanceof Player player)){
                     sender.sendMessage(Messages.noPlayer());
                     return false;
                 }
 
-                MainInventory inv = new MainInventory(new IngeniaPlayer(player));
-                inv.open();
-            }
+                ArmorStand stand = (ArmorStand) player.getWorld().spawnEntity(player.getLocation(), EntityType.ARMOR_STAND);
+                stand.setMarker(true);
+                stand.setBasePlate(false);
+                stand.setInvisible(true);
+
+                new BukkitRunnable(){
+
+                    @Override
+                    public void run(){
+                        stand.setRotation(player.getLocation().getYaw(), 0);
+
+                    }
+
+                }.runTaskTimer(Main.getPlugin(Main.class), 0L, 1L);
+
+                player.addPassenger(stand);
+
+            }*/
 
             default -> sender.sendMessage(Messages.invalidSubcommand("ig"));
         }
