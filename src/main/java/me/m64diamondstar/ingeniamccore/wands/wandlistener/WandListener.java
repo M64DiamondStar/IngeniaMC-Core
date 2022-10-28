@@ -154,25 +154,4 @@ public class WandListener implements Listener {
         }
     }
 
-    @EventHandler()
-    public void onItemMove(InventoryClickEvent e) {
-        if(e.getCurrentItem() == null) return;
-        if(e.getSlot() == -999) return;
-        if(Objects.requireNonNull(e.getClickedInventory()).getType().equals(InventoryType.PLAYER)) {
-            if(e.getCurrentItem().getType().equals(Material.BLAZE_ROD)) {
-                if(e.getSlot() == 5) {
-                    e.getWhoClicked().setItemOnCursor(new ItemStack(Material.AIR));
-                    e.setCancelled(true);
-                }
-            }
-        }
-    }
-
-    @EventHandler
-    public void onItemSwap(PlayerSwapHandItemsEvent e) {
-        if(Objects.requireNonNull(e.getOffHandItem()).getType() == Material.BLAZE_ROD && Objects.requireNonNull(e.getOffHandItem().getItemMeta()).hasCustomModelData()) {
-            e.setCancelled(true);
-        }
-    }
-
 }
