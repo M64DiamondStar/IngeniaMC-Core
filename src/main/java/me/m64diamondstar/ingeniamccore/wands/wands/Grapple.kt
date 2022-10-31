@@ -111,7 +111,7 @@ class Grapple(player: Player): Wand {
 
         }.runTaskTimerAsynchronously(Main.plugin, 0L, 1L)
 
-        Cooldowns.addPlayer(player, 20000L, 22000L, 25000L, 30000L)
+        Cooldowns.addPlayer(player, 20500L, 22000L, 25000L, 30000L)
 
     }
 
