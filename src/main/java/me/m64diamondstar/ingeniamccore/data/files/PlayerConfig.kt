@@ -6,7 +6,7 @@ import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import java.util.*
 
-class PlayerConfig(uuid: UUID) : Configuration("data/player", uuid.toString(), false) {
+class PlayerConfig(uuid: UUID) : Configuration("data/player", uuid.toString(), false, true) {
 
     private var player: Player
 
