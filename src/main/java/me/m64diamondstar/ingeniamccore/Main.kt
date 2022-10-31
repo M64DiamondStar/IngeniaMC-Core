@@ -1,9 +1,9 @@
 package me.m64diamondstar.ingeniamccore
 
 import me.m64diamondstar.ingeniamccore.general.commands.CosmeticCommand
-import me.m64diamondstar.ingeniamccore.general.commands.GamemodeCmd
+import me.m64diamondstar.ingeniamccore.general.commands.GamemodeCommand
 import me.m64diamondstar.ingeniamccore.general.commands.ingenia.IngeniaCommand
-import me.m64diamondstar.ingeniamccore.general.commands.ingenia.WandCommand
+import me.m64diamondstar.ingeniamccore.general.commands.WandCommand
 import me.m64diamondstar.ingeniamccore.general.commands.tabcompleters.IngeniaTabCompleter
 import me.m64diamondstar.ingeniamccore.general.listeners.InteractListener
 import me.m64diamondstar.ingeniamccore.general.listeners.InventoryListener
@@ -66,10 +66,10 @@ class Main : JavaPlugin() {
     private fun loadMainInstances() {}
 
     private fun loadCommandExecutors() {
-        Objects.requireNonNull(getCommand("gmc"))?.setExecutor(GamemodeCmd())
-        Objects.requireNonNull(getCommand("gms"))?.setExecutor(GamemodeCmd())
-        Objects.requireNonNull(getCommand("gma"))?.setExecutor(GamemodeCmd())
-        Objects.requireNonNull(getCommand("gmsp"))?.setExecutor(GamemodeCmd())
+        Objects.requireNonNull(getCommand("gmc"))?.setExecutor(GamemodeCommand())
+        Objects.requireNonNull(getCommand("gms"))?.setExecutor(GamemodeCommand())
+        Objects.requireNonNull(getCommand("gma"))?.setExecutor(GamemodeCommand())
+        Objects.requireNonNull(getCommand("gmsp"))?.setExecutor(GamemodeCommand())
 
         Objects.requireNonNull(getCommand("ingenia"))?.setExecutor(IngeniaCommand())
 
