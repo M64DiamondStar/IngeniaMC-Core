@@ -27,7 +27,7 @@ The Core plugin of IngeniaMC.
 
 
 
-<sup>This repository is public for edicational reasons only, and is not a resource.</sup>
+<sup>This repository is public for educational reasons only, and is not a resource.</sup>
 <sup>This project is under MIT license. [Make sure to check the license.](LICENSE.txt)</sup>
 
 ![This is an image](https://ingeniamc.net/images/Discord-Banner.png)
