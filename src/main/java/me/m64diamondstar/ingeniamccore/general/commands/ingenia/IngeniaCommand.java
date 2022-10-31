@@ -1,17 +1,9 @@
 package me.m64diamondstar.ingeniamccore.general.commands.ingenia;
 
-import me.m64diamondstar.ingeniamccore.Main;
-import me.m64diamondstar.ingeniamccore.cosmetics.inventory.CosmeticsInventory;
-import me.m64diamondstar.ingeniamccore.general.inventory.MainInventory;
-import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer;
 import me.m64diamondstar.ingeniamccore.utils.messages.Messages;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
 public class IngeniaCommand implements CommandExecutor {
@@ -52,7 +44,13 @@ public class IngeniaCommand implements CommandExecutor {
                 menuSubcommand.execute();
             }
 
-            /*case "pt" -> {
+            case "attraction" -> {
+                AttractionSubcommand attractionSubcommand = new AttractionSubcommand(sender, args);
+                attractionSubcommand.execute();
+            }
+
+
+            /*case "backpack" -> {
 
                 if(!(sender instanceof Player player)){
                     sender.sendMessage(Messages.noPlayer());
