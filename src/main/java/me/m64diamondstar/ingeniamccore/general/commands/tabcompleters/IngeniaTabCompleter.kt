@@ -1,9 +1,6 @@
 package me.m64diamondstar.ingeniamccore.general.commands.tabcompleters
 
-import me.m64diamondstar.ingeniamccore.general.commands.ingenia.BalanceSubcommand
-import me.m64diamondstar.ingeniamccore.general.commands.ingenia.ExpSubcommand
-import me.m64diamondstar.ingeniamccore.general.commands.ingenia.MenuSubcommand
-import me.m64diamondstar.ingeniamccore.general.commands.ingenia.ScoreboardSubcommand
+import me.m64diamondstar.ingeniamccore.general.commands.ingenia.*
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.command.TabCompleter
@@ -21,6 +18,7 @@ class IngeniaTabCompleter: TabCompleter {
             tc.add("scoreboard")
             tc.add("exp")
             tc.add("menu")
+            tc.add("attraction")
         }else if(args.size > 1){
 
             tc.clear()
@@ -36,6 +34,9 @@ class IngeniaTabCompleter: TabCompleter {
                 tc.addAll(sub.getTabCompleters())
             }else if(args[0].equals("menu", true)) {
                 val sub = MenuSubcommand(sender, args)
+                tc.addAll(sub.getTabCompleters())
+            }else if(args[0].equals("attraction", true)){
+                val sub = AttractionSubcommand(sender, args)
                 tc.addAll(sub.getTabCompleters())
             }
 
