@@ -6,7 +6,7 @@ import org.bukkit.configuration.file.YamlConfiguration
 import java.io.File
 import java.lang.Exception
 
-abstract class Configuration (path: String, name: String,resource: Boolean) {
+abstract class Configuration (path: String, name: String, resource: Boolean, instantCreation: Boolean) {
 
     private lateinit var config: FileConfiguration
     private var path: File
@@ -26,7 +26,8 @@ abstract class Configuration (path: String, name: String,resource: Boolean) {
 
         this.path.mkdirs()
 
-        create()
+        if(instantCreation)
+            create()
 
     }
 
@@ -58,9 +59,18 @@ abstract class Configuration (path: String, name: String,resource: Boolean) {
     }
 
     /**
+     * Check if the configuration file exists
+     * @return Boolean
+     */
+    fun exists(): Boolean{
+        file = File(path, "$name.yml")
+        return file.exists()
+    }
+
+    /**
      * Create file if it doesn't exist
      */
-    private fun create(){
+    fun create(){
 
         file = File(path, "$name.yml")
 
