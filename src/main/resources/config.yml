@@ -1,8 +1,0 @@
-##MySQL Information for logging into the database
-##  ! IMPORTANT !
-MySQL:
-  Host: 'localhost'
-  Port: '3306'
-  Database: 'database'
-  Username: 'username'
-  Password: 'password'
