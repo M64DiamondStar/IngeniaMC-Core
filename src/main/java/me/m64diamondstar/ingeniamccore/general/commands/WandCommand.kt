@@ -1,4 +1,4 @@
-package me.m64diamondstar.ingeniamccore.general.commands.ingenia
+package me.m64diamondstar.ingeniamccore.general.commands
 
 import me.m64diamondstar.ingeniamccore.cosmetics.inventory.CosmeticsInventory
 import me.m64diamondstar.ingeniamccore.utils.messages.Messages.noPlayer
