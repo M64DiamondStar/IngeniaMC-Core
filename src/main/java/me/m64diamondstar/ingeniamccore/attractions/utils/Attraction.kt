@@ -5,6 +5,7 @@ import me.m64diamondstar.ingeniamccore.data.Configuration
 import me.m64diamondstar.ingeniamccore.utils.entities.EntityRegistry
 import me.m64diamondstar.ingeniamccore.utils.entities.LeaderboardPacketEntity
 import me.m64diamondstar.ingeniamccore.utils.leaderboard.Leaderboard
+import me.m64diamondstar.ingeniamccore.utils.leaderboard.LeaderboardRegistry
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import net.minecraft.core.BlockPosition
 import net.minecraft.core.EnumDirection
@@ -31,7 +32,7 @@ open class Attraction(category: String, name: String): Configuration("rides/$cat
     init {
         this.name = name
         this.category = category
-        create()
+        createConfig()
     }
 
     /**
@@ -66,7 +67,7 @@ open class Attraction(category: String, name: String): Configuration("rides/$cat
         comments.add("DO NOT EDIT ANYTHING UNDER THIS EXCEPT WHEN IT IS REALLY NECESSARY")
         comments.add("-----------------------------------------")
 
-        this.getConfig().set("Data.RidecountID", 0)
+        this.getConfig().set("Data", " ")
         this.getConfig().setComments("Data", comments)
 
         val header = ArrayList<String>()
@@ -81,7 +82,7 @@ open class Attraction(category: String, name: String): Configuration("rides/$cat
 
         this.getConfig().options().setHeader(header)
 
-        this.reload()
+        this.reloadConfig()
     }
 
     /**
@@ -99,7 +100,7 @@ open class Attraction(category: String, name: String): Configuration("rides/$cat
     }
 
     fun getDisplayName(): String{
-        if(!this.exists()){
+        if(!this.existsConfig()){
             Bukkit.getLogger().warning("The configuration of $name in $category has not been created yet! Using Name as DisplayName")
             return name
         }
@@ -112,7 +113,7 @@ open class Attraction(category: String, name: String): Configuration("rides/$cat
     fun getWorld(): World? {
         if(this.getConfig().getString("World") == null){
             this.getConfig().set("World", "world")
-            this.reload()
+            this.reloadConfig()
         }
 
         return Bukkit.getWorld(this.getConfig().getString("World")!!)!!
@@ -136,7 +137,7 @@ open class Attraction(category: String, name: String): Configuration("rides/$cat
      */
     fun setLeaderboardLocation(x: Int, y: Int, z: Int){
         this.getConfig().set("Leaderboard.Location", "$x, $y, $z")
-        this.reload()
+        this.reloadConfig()
     }
 
     /**
@@ -144,7 +145,7 @@ open class Attraction(category: String, name: String): Configuration("rides/$cat
      */
     fun setLeaderboardEnabled(enabled: Boolean){
         this.getConfig().set("Leaderboard.Enabled", enabled)
-        this.reload()
+        this.reloadConfig()
     }
 
     /**
@@ -165,7 +166,7 @@ open class Attraction(category: String, name: String): Configuration("rides/$cat
 
 
         this.getConfig().set("Leaderboard.Face", realDirection)
-        this.reload()
+        this.reloadConfig()
     }
 
     /**
@@ -189,7 +190,7 @@ open class Attraction(category: String, name: String): Configuration("rides/$cat
      */
     fun spawnRidecountSign(player: Player){
 
-        if(!this.exists()){
+        if(!this.existsConfig()){
             Bukkit.getLogger().warning("The configuration of $name in $category has not been created yet! Cannot spawn frame without needed data. " +
                     "Please create this file first.")
             return
@@ -201,14 +202,12 @@ open class Attraction(category: String, name: String): Configuration("rides/$cat
         val leaderboard = Leaderboard(getRidecountInMap(), getLeaderboardBackgroundColor(), getLeaderboardOutlineColor(),
         getLeaderboardTitleColor(), getLeaderboardPositionColor(), getLeaderboardNameColor(), getLeaderboardLineColor())
 
-        despawnRidecountSign()
+        despawnRidecountSign(player)
 
         val leaderboardPacketEntity = LeaderboardPacketEntity(leaderboard, getNMSWorld(),
             getLeaderboardLocation(), getLeaderboardDirection())
-        Bukkit.getScheduler().scheduleSyncDelayedTask(Main.plugin,  { leaderboardPacketEntity.spawn(player) }, 1L)
-
-        this.getConfig().set("Data.RidecountID", leaderboardPacketEntity.ae())
-        this.reload()
+        leaderboardPacketEntity.spawn(player)
+        LeaderboardRegistry.setBoard(player, leaderboardPacketEntity.ae())
     }
 
     /**
@@ -221,12 +220,12 @@ open class Attraction(category: String, name: String): Configuration("rides/$cat
     /**
      * Despawn the leaderboard for everyone on the server.
      */
-    private fun despawnRidecountSign(){
-        if(this.getConfig().get("Data.RidecountID") != null)
-            if(EntityRegistry.containsId(this.getConfig().getInt("Data.RidecountID")))
-                Bukkit.getOnlinePlayers().forEach {
-                    (it as CraftPlayer).handle.b.a(PacketPlayOutEntityDestroy(this.getConfig().getInt("Data.RidecountID") /*ID*/))
-                }
+    private fun despawnRidecountSign(player: Player){
+        if(LeaderboardRegistry.getBoards().containsKey(player.uniqueId))
+            (player as CraftPlayer).handle.b.a(LeaderboardRegistry.getBoards()[player.uniqueId]?.let {
+                PacketPlayOutEntityDestroy(
+                    it /*ID*/)
+            })
     }
 
     /**
@@ -239,7 +238,7 @@ open class Attraction(category: String, name: String): Configuration("rides/$cat
             return map
 
         for(key in this.getConfig().getConfigurationSection("Data.Ridecount")?.getKeys(false)!!){
-            map[Bukkit.getOfflinePlayer(UUID.fromString(key)).name!!] = this.getConfig().getInt("Data.Ridecount.$key")
+            map[Bukkit.getOfflinePlayer(UUID.fromString(key)).name!!] = this.getConfig().getInt("Data.Ridecount.$key.Count")
         }
 
         return map
@@ -251,7 +250,7 @@ open class Attraction(category: String, name: String): Configuration("rides/$cat
     private fun getLeaderboardBackgroundColor(): Color{
         if(this.getConfig().getString("Leaderboard.Colors.Background") == null){
             this.getConfig().set("Leaderboard.Colors.Background", "49, 49, 49")
-            this.reload()
+            this.reloadConfig()
         }
         return Colors.getJavaColorFromString(this.getConfig().getString("Leaderboard.Colors.Background")!!)
     }
@@ -262,7 +261,7 @@ open class Attraction(category: String, name: String): Configuration("rides/$cat
     private fun getLeaderboardOutlineColor(): Color{
         if(this.getConfig().getString("Leaderboard.Colors.Outline") == null){
             this.getConfig().set("Leaderboard.Colors.Outline", "60, 60, 60")
-            this.reload()
+            this.reloadConfig()
         }
         return Colors.getJavaColorFromString(this.getConfig().getString("Leaderboard.Colors.Outline")!!)
     }
@@ -273,7 +272,7 @@ open class Attraction(category: String, name: String): Configuration("rides/$cat
     private fun getLeaderboardTitleColor(): Color{
         if(this.getConfig().getString("Leaderboard.Colors.Title") == null){
             this.getConfig().set("Leaderboard.Colors.Title", "153, 153, 153")
-            this.reload()
+            this.reloadConfig()
         }
         return Colors.getJavaColorFromString(this.getConfig().getString("Leaderboard.Colors.Title")!!)
     }
@@ -284,7 +283,7 @@ open class Attraction(category: String, name: String): Configuration("rides/$cat
     private fun getLeaderboardPositionColor(): Color{
         if(this.getConfig().getString("Leaderboard.Colors.PositionRidecount") == null){
             this.getConfig().set("Leaderboard.Colors.PositionRidecount", "180, 180, 180")
-            this.reload()
+            this.reloadConfig()
         }
         return Colors.getJavaColorFromString(this.getConfig().getString("Leaderboard.Colors.PositionRidecount")!!)
     }
@@ -295,7 +294,7 @@ open class Attraction(category: String, name: String): Configuration("rides/$cat
     private fun getLeaderboardNameColor(): Color{
         if(this.getConfig().getString("Leaderboard.Colors.Name") == null){
             this.getConfig().set("Leaderboard.Colors.Name", "250, 250, 250")
-            this.reload()
+            this.reloadConfig()
         }
         return Colors.getJavaColorFromString(this.getConfig().getString("Leaderboard.Colors.Name")!!)
     }
@@ -306,7 +305,7 @@ open class Attraction(category: String, name: String): Configuration("rides/$cat
     private fun getLeaderboardLineColor(): Color{
         if(this.getConfig().getString("Leaderboard.Colors.Line") == null){
             this.getConfig().set("Leaderboard.Colors.Line", "210, 210, 210")
-            this.reload()
+            this.reloadConfig()
         }
         return Colors.getJavaColorFromString(this.getConfig().getString("Leaderboard.Colors.Line")!!)
     }

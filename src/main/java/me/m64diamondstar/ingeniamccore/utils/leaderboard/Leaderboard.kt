@@ -110,14 +110,12 @@ class Leaderboard (scores: Map<String, Int>, backgroundColor: Color, outlineColo
 
         if(sortedScores().isNotEmpty())
 
-        for(place in 0..sortedScores().size){
+        for(place in 0 until sortedScores().size){
             if(sortedScores()[place].key == player.name) {
                 writeName(place + 1, sortedScores()[place].value, sortedScores()[place].key, true)
                 break
             }
         }
-        
-        Bukkit.broadcastMessage("${sortedScores()[0].key}: ${sortedScores()[0].value}")
 
         return bufferedImage
     }

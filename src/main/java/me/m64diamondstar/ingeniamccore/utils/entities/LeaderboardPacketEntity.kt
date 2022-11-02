@@ -1,10 +1,10 @@
 package me.m64diamondstar.ingeniamccore.utils.entities
 
 import me.m64diamondstar.ingeniamccore.utils.leaderboard.Leaderboard
+import me.m64diamondstar.ingeniamccore.utils.leaderboard.LeaderboardRegistry
 import me.m64diamondstar.ingeniamccore.utils.leaderboard.LeaderboardRenderer
 import net.minecraft.core.BlockPosition
 import net.minecraft.core.EnumDirection
-import net.minecraft.network.protocol.game.PacketPlayOutEntityDestroy
 import net.minecraft.network.protocol.game.PacketPlayOutEntityMetadata
 import net.minecraft.network.protocol.game.PacketPlayOutSpawnEntity
 import net.minecraft.world.entity.EntityTypes
@@ -38,19 +38,6 @@ class LeaderboardPacketEntity(leaderboard: Leaderboard, world: World?, blockPosi
             directionInt = 4
         if(direction == EnumDirection.f)
             directionInt = 5
-
-        val mapView = world?.let { Bukkit.createMap(it.world) }
-        mapView?.renderers?.clear()
-
-        Bukkit.getOnlinePlayers().forEach {
-
-            val renderer = LeaderboardRenderer(leaderboard, it)
-            mapView!!.addRenderer(renderer)
-
-            it.sendMap(mapView)
-
-        }
-
     }
 
     fun spawn(player: Player){
