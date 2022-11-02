@@ -8,7 +8,7 @@ import java.util.UUID;
 
 public class LeaderboardRegistry {
 
-    private static Map<UUID, Integer> boards = new HashMap<>();
+    private static final Map<UUID, Integer> boards = new HashMap<>();
 
     public static Map<UUID, Integer> getBoards(){
         return boards;
