@@ -15,7 +15,7 @@ class PlayerConfig(uuid: UUID) : Configuration("data/player", uuid.toString(), f
 
         getConfig().set("Username", Bukkit.getOfflinePlayer(uuid).name)
 
-        reload()
+        reloadConfig()
     }
 
     fun getBal(): Long {
@@ -27,7 +27,7 @@ class PlayerConfig(uuid: UUID) : Configuration("data/player", uuid.toString(), f
 
     fun setBal(bal: Long){
         getConfig().set("Economy.Golden-Stars", bal)
-        reload()
+        reloadConfig()
     }
 
     fun getExp(): Long {
@@ -43,7 +43,7 @@ class PlayerConfig(uuid: UUID) : Configuration("data/player", uuid.toString(), f
         expComments.add("The level of the player will be automatically calculated.")
         getConfig().setComments("Levels", expComments)*/
         getConfig().set("Levels.Exp", bal)
-        reload()
+        reloadConfig()
     }
 
 
@@ -62,7 +62,7 @@ class PlayerConfig(uuid: UUID) : Configuration("data/player", uuid.toString(), f
      */
     fun setJoinMessage(msg: String){
         getConfig().set("Messages.Join", msg)
-        reload()
+        reloadConfig()
     }
 
     /**
@@ -80,7 +80,7 @@ class PlayerConfig(uuid: UUID) : Configuration("data/player", uuid.toString(), f
      */
     fun setJoinColor(color: String){
         getConfig().set("Messages.JoinColor", color)
-        reload()
+        reloadConfig()
     }
 
 
@@ -100,7 +100,7 @@ class PlayerConfig(uuid: UUID) : Configuration("data/player", uuid.toString(), f
      */
     fun setLeaveMessage(msg: String){
         getConfig().set("Messages.Leave", msg)
-        reload()
+        reloadConfig()
     }
 
     /**
@@ -118,7 +118,7 @@ class PlayerConfig(uuid: UUID) : Configuration("data/player", uuid.toString(), f
      */
     fun setLeaveColor(color: String){
         getConfig().set("Messages.LeaveColor", color)
-        reload()
+        reloadConfig()
     }
 
 }

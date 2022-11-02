@@ -27,7 +27,7 @@ abstract class Configuration (path: String, name: String, resource: Boolean, ins
         this.path.mkdirs()
 
         if(instantCreation)
-            create()
+            createConfig()
 
     }
 
@@ -41,7 +41,7 @@ abstract class Configuration (path: String, name: String, resource: Boolean, ins
     /**
      * Saves the file
      */
-    private fun save() {
+    private fun saveConfig() {
         try{
             config.save(file)
         } catch (e: Exception){
@@ -53,8 +53,8 @@ abstract class Configuration (path: String, name: String, resource: Boolean, ins
      * Reloads config
      * @return FileConfiguration
      */
-    fun reload(): FileConfiguration {
-        save()
+    fun reloadConfig(): FileConfiguration {
+        saveConfig()
         return config
     }
 
@@ -62,7 +62,7 @@ abstract class Configuration (path: String, name: String, resource: Boolean, ins
      * Check if the configuration file exists
      * @return Boolean
      */
-    fun exists(): Boolean{
+    fun existsConfig(): Boolean{
         file = File(path, "$name.yml")
         return file.exists()
     }
@@ -70,7 +70,7 @@ abstract class Configuration (path: String, name: String, resource: Boolean, ins
     /**
      * Create file if it doesn't exist
      */
-    fun create(){
+    fun createConfig(){
 
         file = File(path, "$name.yml")
 
@@ -79,7 +79,7 @@ abstract class Configuration (path: String, name: String, resource: Boolean, ins
             file.createNewFile()
             config = YamlConfiguration()
 
-            save()
+            saveConfig()
         }else{
             config = YamlConfiguration.loadConfiguration(file)
         }
