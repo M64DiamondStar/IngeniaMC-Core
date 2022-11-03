@@ -2,6 +2,8 @@ package me.m64diamondstar.ingeniamccore.general.inventory
 
 import me.m64diamondstar.ingeniamccore.cosmetics.inventory.CosmeticsInventory
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
+import me.m64diamondstar.ingeniamccore.general.warps.AttractionInventory
+import me.m64diamondstar.ingeniamccore.general.warps.ShopInventory
 import me.m64diamondstar.ingeniamccore.utils.gui.Gui
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
@@ -108,6 +110,16 @@ class MainInventory(player: IngeniaPlayer): Gui(player) {
         if(wardrobeSlots.contains(event.slot)){
             val cosmeticsInventory = CosmeticsInventory(getPlayer().player, "國")
             cosmeticsInventory.open()
+        }
+
+        if(ridesSlots.contains(event.slot)){
+            val attractionInventory = AttractionInventory(getPlayer())
+            attractionInventory.open()
+        }
+
+        if(shopsSlots.contains(event.slot)){
+            val shopInventory = ShopInventory(getPlayer())
+            shopInventory.open()
         }
 
     }

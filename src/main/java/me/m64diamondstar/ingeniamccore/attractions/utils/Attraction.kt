@@ -4,6 +4,8 @@ import me.m64diamondstar.ingeniamccore.Main
 import me.m64diamondstar.ingeniamccore.data.Configuration
 import me.m64diamondstar.ingeniamccore.utils.entities.EntityRegistry
 import me.m64diamondstar.ingeniamccore.utils.entities.LeaderboardPacketEntity
+import me.m64diamondstar.ingeniamccore.utils.items.ItemDecoder
+import me.m64diamondstar.ingeniamccore.utils.items.ItemEncoder
 import me.m64diamondstar.ingeniamccore.utils.leaderboard.Leaderboard
 import me.m64diamondstar.ingeniamccore.utils.leaderboard.LeaderboardRegistry
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
@@ -11,11 +13,13 @@ import net.minecraft.core.BlockPosition
 import net.minecraft.core.EnumDirection
 import net.minecraft.network.protocol.game.PacketPlayOutEntityDestroy
 import org.bukkit.Bukkit
+import org.bukkit.Location
 import org.bukkit.World
 import org.bukkit.configuration.ConfigurationSection
 import org.bukkit.craftbukkit.v1_19_R1.CraftWorld
 import org.bukkit.craftbukkit.v1_19_R1.entity.CraftPlayer
 import org.bukkit.entity.Player
+import org.bukkit.inventory.ItemStack
 import java.awt.Color
 import java.util.*
 import kotlin.collections.ArrayList
@@ -44,6 +48,8 @@ open class Attraction(category: String, name: String): Configuration("rides/$cat
         this.getConfig().set("Name", getName())
         this.getConfig().set("DisplayName", "&c${getName()}")
         this.getConfig().set("World", world.name)
+
+        this.getConfig().set("Warp.Enabled", false)
 
         this.getConfig().set("Show.Enabled", false)
         this.getConfig().set("Show.Category", null)
@@ -99,14 +105,6 @@ open class Attraction(category: String, name: String): Configuration("rides/$cat
         return category
     }
 
-    fun getDisplayName(): String{
-        if(!this.existsConfig()){
-            Bukkit.getLogger().warning("The configuration of $name in $category has not been created yet! Using Name as DisplayName")
-            return name
-        }
-        return this.getConfig().getString("DisplayName")!!
-    }
-
     /**
      * Returns the world of the attraction
      */
@@ -146,6 +144,66 @@ open class Attraction(category: String, name: String): Configuration("rides/$cat
     fun setLeaderboardEnabled(enabled: Boolean){
         this.getConfig().set("Leaderboard.Enabled", enabled)
         this.reloadConfig()
+    }
+
+    /**
+     * Set the warp location
+     * @return is last setting to enable warp?
+     */
+    fun setWarpLocation(location: Location): Boolean{
+        this.getConfig().set("Warp.Location", "${location.x}, ${location.y}, ${location.z}, ${location.yaw}, ${location.pitch}")
+        if(this.getConfig().get("Warp.Item") != null) {
+            this.getConfig().set("warp.Enabled", true)
+            this.reloadConfig()
+            return true
+        }
+
+        this.reloadConfig()
+        return false
+    }
+
+    /**
+     * Set the warp item
+     * @return is last setting to enable warp?
+     */
+    fun setWarpItem(itemStack: ItemStack): Boolean{
+        this.getConfig().set("Warp.Item", "${ItemEncoder(itemStack).encodedItem()}")
+        if(this.getConfig().get("Warp.Location") != null) {
+            this.getConfig().set("warp.Enabled", true)
+            this.reloadConfig()
+            return true
+        }
+
+        this.reloadConfig()
+        return false
+    }
+
+    /**
+     * Get the warp location
+     */
+    fun getWarpLocation(): Location?{
+        if(this.getConfig().get("Warp.Location") == null)
+            return null
+
+        val args = this.getConfig().getString("Warp.Location")?.split(", ")
+        val x = args?.get(0)?.toDouble()!!
+        val y = args[1].toDouble()
+        val z = args[2].toDouble()
+
+        val yaw = args[3].toFloat()
+        val pitch = args[4].toFloat()
+
+        return Location(getWorld(), x, y, z, yaw, pitch)
+    }
+
+    /**
+     * Get the warp item that displays in the warp menu
+     */
+    fun getWarpItem(): ItemStack?{
+        if(this.getConfig().get("Warp.Item") == null)
+            return null
+
+        return ItemDecoder(this.getConfig().getString("Warp.Item")!!).decodedItem()
     }
 
     /**
@@ -229,9 +287,9 @@ open class Attraction(category: String, name: String): Configuration("rides/$cat
     }
 
     /**
-     * Returns the ridecount list
+     * Returns the ridecount list with player names
      */
-    private fun getRidecountInMap(): Map<String, Int>{
+    fun getRidecountInMap(): Map<String, Int>{
         val map: MutableMap<String, Int> = HashMap()
 
         if(this.getConfig().getConfigurationSection("Data.Ridecount") == null)
@@ -239,6 +297,22 @@ open class Attraction(category: String, name: String): Configuration("rides/$cat
 
         for(key in this.getConfig().getConfigurationSection("Data.Ridecount")?.getKeys(false)!!){
             map[Bukkit.getOfflinePlayer(UUID.fromString(key)).name!!] = this.getConfig().getInt("Data.Ridecount.$key.Count")
+        }
+
+        return map
+    }
+
+    /**
+     * Returns the ridecount list with player uuids
+     */
+    fun getRidecountInMapUuid(): Map<UUID, Int>{
+        val map: MutableMap<UUID, Int> = HashMap()
+
+        if(this.getConfig().getConfigurationSection("Data.Ridecount") == null)
+            return map
+
+        for(key in this.getConfig().getConfigurationSection("Data.Ridecount")?.getKeys(false)!!){
+            map[UUID.fromString(key)] = this.getConfig().getInt("Data.Ridecount.$key.Count")
         }
 
         return map
