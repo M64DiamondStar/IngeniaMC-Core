@@ -1,10 +1,9 @@
 package me.m64diamondstar.ingeniamccore.general.commands.ingenia
 
-import com.google.protobuf.Message
 import me.m64diamondstar.ingeniamccore.attractions.utils.AttractionType
-import me.m64diamondstar.ingeniamccore.attractions.custom.FreeFall
 import me.m64diamondstar.ingeniamccore.attractions.utils.Attraction
 import me.m64diamondstar.ingeniamccore.attractions.utils.AttractionUtils
+import me.m64diamondstar.ingeniamccore.general.commands.ingenia.attraction.FreefallSubcommand
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
 import me.m64diamondstar.ingeniamccore.utils.messages.Messages
@@ -15,7 +14,6 @@ import org.bukkit.command.CommandSender
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.ItemFrame
 import org.bukkit.entity.Player
-import org.bukkit.util.Vector
 import java.lang.NumberFormatException
 import java.util.*
 import kotlin.collections.ArrayList
@@ -43,7 +41,7 @@ class AttractionSubcommand(private val sender: CommandSender, private val args: 
 
                 val attraction = Attraction(args[2], args[3])
                 attraction.createAttraction(AttractionType.valueOf(args[4]), player.world)
-                player.sendMessage(MessageType.SUCCESS + "Attraction has been created!")
+                player.sendMessage(Colors.format(MessageType.SUCCESS + "Attraction has been created!"))
 
             }else
                 player.sendMessage(Messages.commandUsage("ig attraction create <category> <name> <type>"))
@@ -226,6 +224,15 @@ class AttractionSubcommand(private val sender: CommandSender, private val args: 
                     player.sendMessage(Colors.format(MessageType.INFO + "All the details are set. The warp has automatically been enabled."))
             }
         }
+
+        /*
+        Attraction Settings
+        Set the settings for custom attractions like freefall towers or top spins
+         */
+        if(args[1].equals("freefall", ignoreCase = true)){
+            val freefallSubcommand = FreefallSubcommand(sender, args, player)
+            freefallSubcommand.execute()
+        }
     }
 
     fun getTabCompleters(): ArrayList<String> {
@@ -237,14 +244,31 @@ class AttractionSubcommand(private val sender: CommandSender, private val args: 
             tabs.add("leaderboard")
             tabs.add("ridecount")
             tabs.add("warp")
+            tabs.add("freefall")
         }
 
+        //Global tab completer for attraction categories and names except for create and delete subcommand
         if(args.size == 3 && !(args[1].equals("create", true) || args[1].equals("delete", true)))
             AttractionUtils.getCategories().forEach { tabs.add(it.name) }
 
-        if(args.size == 4 && !(args[1].equals("create", true) || args[1].equals("delete", true)))
+        if(args.size == 4 && !(args[1].equals("create", true) || args[1].equals("delete", true) || args[1].equals("freefall", true)))
             AttractionUtils.getAttractions(args[2]).forEach { tabs.add(it.name) }
 
+        //FreeFall tab completer to make sure only freefall attractions get added
+        if(args.size == 4 && args[1].equals("freefall", ignoreCase = true)) {
+            var exists = false
+            AttractionUtils.getAttractions(args[2]).forEach {
+                val attraction = Attraction(args[2], it.name)
+                if (attraction.getType() == AttractionType.FREEFALL) {
+                    tabs.add(it.name)
+                    exists = true
+                }
+            }
+            if(!exists)
+                tabs.add("none")
+        }
+
+        //Subcommands after the category and name
         if (args.size == 5) {
             if(args[1].equals("leaderboard", ignoreCase = true)){
                 tabs.add("reload")
@@ -265,6 +289,12 @@ class AttractionSubcommand(private val sender: CommandSender, private val args: 
             if(args[1].equals("warp", ignoreCase = true)){
                 tabs.add("setlocation")
                 tabs.add("setitem")
+            }
+
+            if(args[1].equals("freefall", ignoreCase = true)){
+                tabs.add("setspawn")
+                tabs.add("spawn")
+                tabs.add("despawn")
             }
         }
 
