@@ -1,7 +1,24 @@
 package me.m64diamondstar.ingeniamccore.attractions.utils
 
-abstract class CustomAttraction(name: String, category: String): Attraction(name, category) {
+import org.bukkit.Location
+import org.bukkit.entity.ArmorStand
 
-    abstract fun run()
+interface CustomAttraction {
+
+    fun spawn()
+
+    fun despawn()
+
+    fun getSeats(): List<ArmorStand>
+
+    fun hasPassengers(): Boolean
+
+    fun registerSeats()
+
+    fun getSpawnLocation(): Location?
+
+    fun setSpawnLocation(location: Location)
+
+    fun run()
 
 }
