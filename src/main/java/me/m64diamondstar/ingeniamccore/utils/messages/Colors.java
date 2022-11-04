@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 
 public class Colors {
 
-    private static Pattern pattern = Pattern.compile("#[a-fA-F0-9]{6}");
+    private static final Pattern pattern = Pattern.compile("#[a-fA-F0-9]{6}");
 
     public static String format(String msg) {
         Matcher match = pattern.matcher(msg);

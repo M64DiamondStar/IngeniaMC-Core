@@ -7,5 +7,6 @@ interface MessageType {
         const val SUCCESS = "#53bd4d"
         const val INFO = "#6ac4c1"
         const val LORE = "#878787"
+        const val PLAYER_UPDATE = "#f7d145"
     }
 }

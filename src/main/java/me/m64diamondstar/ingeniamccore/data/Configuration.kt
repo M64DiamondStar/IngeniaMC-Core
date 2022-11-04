@@ -70,7 +70,7 @@ abstract class Configuration (path: String, name: String, resource: Boolean, ins
     /**
      * Create file if it doesn't exist
      */
-    fun createConfig(){
+    private fun createConfig(){
 
         file = File(path, "$name.yml")
 

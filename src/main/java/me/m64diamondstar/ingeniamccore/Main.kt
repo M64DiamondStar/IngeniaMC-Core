@@ -1,5 +1,6 @@
 package me.m64diamondstar.ingeniamccore
 
+import me.m64diamondstar.ingeniamccore.attractions.listeners.PlayerInteractEntityListener
 import me.m64diamondstar.ingeniamccore.general.commands.CosmeticCommand
 import me.m64diamondstar.ingeniamccore.general.commands.GamemodeCommand
 import me.m64diamondstar.ingeniamccore.general.commands.ingenia.IngeniaCommand
@@ -109,5 +110,10 @@ class Main : JavaPlugin() {
             Help Events
          */
         Bukkit.getServer().pluginManager.registerEvents(BonemealListener(), this)
+
+        /*
+            Attraction Events
+         */
+        Bukkit.getServer().pluginManager.registerEvents(PlayerInteractEntityListener(), this)
     }
 }

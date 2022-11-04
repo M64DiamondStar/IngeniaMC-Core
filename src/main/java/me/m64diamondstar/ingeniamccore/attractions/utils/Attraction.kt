@@ -14,6 +14,7 @@ import net.minecraft.core.EnumDirection
 import net.minecraft.network.protocol.game.PacketPlayOutEntityDestroy
 import org.bukkit.Bukkit
 import org.bukkit.Location
+import org.bukkit.OfflinePlayer
 import org.bukkit.World
 import org.bukkit.configuration.ConfigurationSection
 import org.bukkit.craftbukkit.v1_19_R1.CraftWorld
@@ -25,7 +26,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
-open class Attraction(category: String, name: String): Configuration("rides/$category", name.replace(".yml", ""), false, false) {
+open class Attraction(category: String, name: String): Configuration("rides/$category", name.replace(".yml", ""), false, true) {
 
     private val name: String
     private val category: String
@@ -36,7 +37,6 @@ open class Attraction(category: String, name: String): Configuration("rides/$cat
     init {
         this.name = name
         this.category = category
-        createConfig()
     }
 
     /**
@@ -92,10 +92,17 @@ open class Attraction(category: String, name: String): Configuration("rides/$cat
     }
 
     /**
-     * Returns the name of the attraction
+     * @return the name of the attraction
      */
     fun getName(): String{
         return name
+    }
+
+    /**
+     * @return the type of the attraction
+     */
+    fun getType(): AttractionType? {
+        return this.getConfig().getString("Type")?.let { AttractionType.valueOf(it) }
     }
 
     /**
@@ -273,6 +280,22 @@ open class Attraction(category: String, name: String): Configuration("rides/$cat
      */
     fun spawnRidecountSign(){
         Bukkit.getOnlinePlayers().forEach { spawnRidecountSign(it) }
+    }
+
+    /**
+     * Set the ridecount of a specific player.
+     */
+    fun setRidecount(player: OfflinePlayer, count: Int){
+        this.getConfig().set("Data.Ridecount.${player.uniqueId}.Count", count)
+        this.reloadConfig()
+    }
+
+    fun addRidecount(player: OfflinePlayer, count: Int){
+        setRidecount(player, getRidecount(player) + count)
+    }
+
+    fun getRidecount(player: OfflinePlayer): Int{
+        return this.getConfig().getInt("Data.Ridecount.${player.uniqueId}.Count")
     }
 
     /**
