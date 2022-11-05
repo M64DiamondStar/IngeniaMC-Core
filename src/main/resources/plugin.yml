@@ -4,6 +4,8 @@ main: me.m64diamondstar.ingeniamccore.Main
 api-version: 1.19
 authors: [ M64DiamondStar ]
 description: The Core plugin of IngeniaMC.
+softdepend:
+  - ProtocolLib
 commands:
   wand:
     description: Open the wand selection menu.
@@ -30,5 +32,13 @@ commands:
     description: Open the cosmetic menu.
     aliases:
       - cosmetic
+  msg:
+    description: Send a private message to someone on the server.
+    aliases:
+      - tell
+  react:
+    description: React to the last player that messaged you.
+    aliases:
+      - r
 
 
