@@ -32,6 +32,10 @@ class AttractionSubcommand(private val sender: CommandSender, private val args: 
 
         val player = sender
 
+        if(args.size < 2){
+            player.sendMessage(Colors.format(MessageType.ERROR + "Please use a valid sub-command! Check the auto tab-completion!"))
+        }
+
         /*
         Create subcommand
         Create new attractions or/and new categories
