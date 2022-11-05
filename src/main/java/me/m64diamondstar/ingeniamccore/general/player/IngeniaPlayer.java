@@ -1,14 +1,16 @@
 package me.m64diamondstar.ingeniamccore.general.player;
 
-import kotlin.collections.ArrayDeque;
+import me.m64diamondstar.ingeniamccore.Main;
 import me.m64diamondstar.ingeniamccore.data.files.PlayerConfig;
 import me.m64diamondstar.ingeniamccore.general.scoreboard.Scoreboard;
+import me.m64diamondstar.ingeniamccore.general.tablist.TabList;
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors;
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageLocation;
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType;
 import me.m64diamondstar.ingeniamccore.wands.Wands;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -37,6 +39,18 @@ public class IngeniaPlayer {
 
     public void startUp(){
         player.setCollidable(false);
+
+        if(player.isOp())
+            player.setPlayerListName(Colors.format("#c43535&lLead #ffdede" + getName()));
+        else if(player.hasPermission("ingenia.team"))
+            player.setPlayerListName(Colors.format("#4180bf&lTeam #deefff" + getName()));
+        else if(player.hasPermission("ingenia.vip+"))
+            player.setPlayerListName(Colors.format("#9054b0VIP+ #f9deff" + getName()));
+        else if(player.hasPermission("ingenia.vip"))
+            player.setPlayerListName(Colors.format("#54b0b0VIP #defdff" + getName()));
+        else
+            player.setPlayerListName(Colors.format("#a1a1a1Visitor #cccccc" + getName()));
+
     }
 
     public Player getPlayer(){
@@ -45,6 +59,19 @@ public class IngeniaPlayer {
 
     public String getName(){
         return player.getName();
+    }
+
+    public String getPrefix(){
+        if(player.isOp())
+            return Colors.format("#c43535&lLead");
+        else if(player.hasPermission("ingenia.team"))
+            return Colors.format("#4180bf&lTeam");
+        else if(player.hasPermission("ingenia.vip+"))
+            return Colors.format("#9054b0VIP+");
+        else if(player.hasPermission("ingenia.vip"))
+            return Colors.format("#54b0b0VIP");
+        else
+        return Colors.format("#a1a1a1Visitor");
     }
 
     public void sendMessage(String string){
@@ -113,6 +140,29 @@ public class IngeniaPlayer {
             scoreboard.showBoard();
         }else{
             scoreboard.hideBoard();
+        }
+    }
+
+    public void setTablist(boolean on){
+        if(on) {
+            TabList tabList = new TabList(Main.plugin);
+            for (String header : Objects.requireNonNull(Main.plugin.getConfig().getConfigurationSection("Tablist")).getStringList("Header")) {
+                tabList.addHeader(header, player);
+            }
+
+            for (String footer : Objects.requireNonNull(Main.plugin.getConfig().getConfigurationSection("Tablist")).getStringList("Footer")) {
+                tabList.addFooter(
+                        footer.replace(
+                                "%online%", Bukkit.getOnlinePlayers().size() + ""
+                        )
+                );
+            }
+            tabList.showTab(player);
+        }else{
+            TabList tabList = new TabList(Main.plugin);
+            tabList.clearHeader();
+            tabList.clearFooter();
+            tabList.showTab(player);
         }
     }
 
