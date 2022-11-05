@@ -1,16 +1,16 @@
 package me.m64diamondstar.ingeniamccore
 
+import com.comphenix.protocol.ProtocolLibrary
+import com.comphenix.protocol.ProtocolManager
 import me.m64diamondstar.ingeniamccore.attractions.listeners.PlayerInteractEntityListener
 import me.m64diamondstar.ingeniamccore.general.commands.CosmeticCommand
 import me.m64diamondstar.ingeniamccore.general.commands.GamemodeCommand
+import me.m64diamondstar.ingeniamccore.general.commands.MessageCommand
 import me.m64diamondstar.ingeniamccore.general.commands.ingenia.IngeniaCommand
 import me.m64diamondstar.ingeniamccore.general.commands.WandCommand
 import me.m64diamondstar.ingeniamccore.general.commands.tabcompleters.IngeniaTabCompleter
-import me.m64diamondstar.ingeniamccore.general.listeners.InteractListener
-import me.m64diamondstar.ingeniamccore.general.listeners.InventoryListener
+import me.m64diamondstar.ingeniamccore.general.listeners.*
 import me.m64diamondstar.ingeniamccore.wands.wandlistener.WandListener
-import me.m64diamondstar.ingeniamccore.general.listeners.JoinListener
-import me.m64diamondstar.ingeniamccore.general.listeners.LeaveListener
 import me.m64diamondstar.ingeniamccore.general.listeners.helpers.BonemealListener
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.utils.gui.GuiListener
@@ -20,6 +20,8 @@ import java.util.*
 
 class Main : JavaPlugin() {
 
+    private lateinit var protocolManager: ProtocolManager
+
     companion object {
         lateinit var plugin: Main
         var isDisabling: Boolean = false
@@ -28,12 +30,12 @@ class Main : JavaPlugin() {
     override fun onEnable() {
 
         plugin = this
+        protocolManager = ProtocolLibrary.getProtocolManager()
 
         Bukkit.getLogger().info("---------------------------")
         Bukkit.getLogger().info("Started loading IngeniaMC-Core!")
         Bukkit.getLogger().info(" ")
 
-        loadMainInstances()
         Bukkit.getLogger().info("Main instances loaded ✓")
 
         saveDefaultConfig()
@@ -48,6 +50,9 @@ class Main : JavaPlugin() {
 
         loadEventListeners()
         Bukkit.getLogger().info("Event Listeners loaded ✓")
+
+        loadPacketListeners()
+        Bukkit.getLogger().info("Packet Listeners loaded ✓")
 
         for(player in Bukkit.getOnlinePlayers()){
             val ingeniaPlayer = IngeniaPlayer(player)
@@ -64,8 +69,6 @@ class Main : JavaPlugin() {
         isDisabling = true
     }
 
-    private fun loadMainInstances() {}
-
     private fun loadCommandExecutors() {
         Objects.requireNonNull(getCommand("gmc"))?.setExecutor(GamemodeCommand())
         Objects.requireNonNull(getCommand("gms"))?.setExecutor(GamemodeCommand())
@@ -77,6 +80,11 @@ class Main : JavaPlugin() {
         Objects.requireNonNull(getCommand("cosmetics"))?.setExecutor(CosmeticCommand())
 
         Objects.requireNonNull(getCommand("wand"))?.setExecutor(WandCommand())
+
+        Objects.requireNonNull(getCommand("msg"))?.setExecutor(MessageCommand())
+        Objects.requireNonNull(getCommand("tell"))?.setExecutor(MessageCommand())
+        Objects.requireNonNull(getCommand("r"))?.setExecutor(MessageCommand())
+        Objects.requireNonNull(getCommand("react"))?.setExecutor(MessageCommand())
     }
 
     private fun loadTabCompleters() {
@@ -94,6 +102,12 @@ class Main : JavaPlugin() {
          */
         Bukkit.getServer().pluginManager.registerEvents(JoinListener(), this)
         Bukkit.getServer().pluginManager.registerEvents(LeaveListener(), this)
+        Bukkit.getServer().pluginManager.registerEvents(ServerListPingListener(), this)
+
+        /*
+            Chat events
+         */
+        Bukkit.getServer().pluginManager.registerEvents(ChatListener(), this)
 
         /*
             Inventory/GUI open events
@@ -115,5 +129,9 @@ class Main : JavaPlugin() {
             Attraction Events
          */
         Bukkit.getServer().pluginManager.registerEvents(PlayerInteractEntityListener(), this)
+    }
+
+    private fun loadPacketListeners(){
+
     }
 }
