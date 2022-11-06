@@ -47,7 +47,8 @@ class AttractionUtils {
         }
 
         fun existsAttraction(category: String, attraction: String): Boolean{
-            return existsAttraction(File(Main.plugin.dataFolder, "rides/$category"), File(Main.plugin.dataFolder, "rides/$category/$attraction"))
+            return existsAttraction(File(Main.plugin.dataFolder, "rides/$category"), File(Main.plugin.dataFolder,
+                if(attraction.contains(".yml")) "rides/$category/$attraction" else "rides/$category/$attraction.yml"))
         }
 
         fun getAllAttractions(): List<Attraction>{

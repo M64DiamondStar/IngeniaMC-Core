@@ -7,10 +7,9 @@ import me.m64diamondstar.ingeniamccore.attractions.utils.AttractionUtils
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
 import org.bukkit.Particle
-import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
-class FreefallSubcommand(private val sender: CommandSender, private val args: Array<String>, private val player: Player) {
+class FreefallSubcommand(private val args: Array<String>, private val player: Player) {
 
     fun execute(){
         if(args.size >= 5){
