@@ -3,12 +3,12 @@ package me.m64diamondstar.ingeniamccore
 import com.comphenix.protocol.ProtocolLibrary
 import com.comphenix.protocol.ProtocolManager
 import me.m64diamondstar.ingeniamccore.attractions.listeners.PlayerInteractEntityListener
-import me.m64diamondstar.ingeniamccore.general.commands.CosmeticCommand
-import me.m64diamondstar.ingeniamccore.general.commands.GamemodeCommand
-import me.m64diamondstar.ingeniamccore.general.commands.MessageCommand
+import me.m64diamondstar.ingeniamccore.attractions.traincarts.SignRegistry
+import me.m64diamondstar.ingeniamccore.general.commands.*
 import me.m64diamondstar.ingeniamccore.general.commands.ingenia.IngeniaCommand
-import me.m64diamondstar.ingeniamccore.general.commands.WandCommand
+import me.m64diamondstar.ingeniamccore.general.commands.tabcompleters.AdminTabCompleter
 import me.m64diamondstar.ingeniamccore.general.commands.tabcompleters.IngeniaTabCompleter
+import me.m64diamondstar.ingeniamccore.general.commands.tabcompleters.MessageTabCompleter
 import me.m64diamondstar.ingeniamccore.general.listeners.*
 import me.m64diamondstar.ingeniamccore.wands.wandlistener.WandListener
 import me.m64diamondstar.ingeniamccore.general.listeners.helpers.BonemealListener
@@ -54,6 +54,9 @@ class Main : JavaPlugin() {
         loadPacketListeners()
         Bukkit.getLogger().info("Packet Listeners loaded ✓")
 
+        SignRegistry.registerSigns()
+        Bukkit.getLogger().info("TrainCarts Signs loaded ✓")
+
         for(player in Bukkit.getOnlinePlayers()){
             val ingeniaPlayer = IngeniaPlayer(player)
             ingeniaPlayer.setScoreboard(true)
@@ -67,6 +70,7 @@ class Main : JavaPlugin() {
 
     override fun onDisable() {
         isDisabling = true
+        SignRegistry.unregisterSigns()
     }
 
     private fun loadCommandExecutors() {
@@ -76,19 +80,21 @@ class Main : JavaPlugin() {
         Objects.requireNonNull(getCommand("gmsp"))?.setExecutor(GamemodeCommand())
 
         Objects.requireNonNull(getCommand("ingenia"))?.setExecutor(IngeniaCommand())
+        Objects.requireNonNull(getCommand("admin"))?.setExecutor(AdminCommand())
 
         Objects.requireNonNull(getCommand("cosmetics"))?.setExecutor(CosmeticCommand())
 
         Objects.requireNonNull(getCommand("wand"))?.setExecutor(WandCommand())
 
         Objects.requireNonNull(getCommand("msg"))?.setExecutor(MessageCommand())
-        Objects.requireNonNull(getCommand("tell"))?.setExecutor(MessageCommand())
-        Objects.requireNonNull(getCommand("r"))?.setExecutor(MessageCommand())
         Objects.requireNonNull(getCommand("react"))?.setExecutor(MessageCommand())
     }
 
     private fun loadTabCompleters() {
-        Objects.requireNonNull(getCommand("ig")?.setTabCompleter(IngeniaTabCompleter()))
+        Objects.requireNonNull(getCommand("ingenia")?.setTabCompleter(IngeniaTabCompleter()))
+        Objects.requireNonNull(getCommand("admin")?.setTabCompleter(AdminTabCompleter ()))
+        Objects.requireNonNull(getCommand("msg")?.setTabCompleter(MessageTabCompleter()))
+        Objects.requireNonNull(getCommand("react")?.setTabCompleter(MessageTabCompleter()))
     }
 
     private fun loadEventListeners() {
