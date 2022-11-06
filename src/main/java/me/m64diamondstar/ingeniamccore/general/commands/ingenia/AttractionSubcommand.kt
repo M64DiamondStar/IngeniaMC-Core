@@ -1,8 +1,10 @@
 package me.m64diamondstar.ingeniamccore.general.commands.ingenia
 
+import me.m64diamondstar.ingeniamccore.attractions.custom.Coaster
 import me.m64diamondstar.ingeniamccore.attractions.utils.AttractionType
 import me.m64diamondstar.ingeniamccore.attractions.utils.Attraction
 import me.m64diamondstar.ingeniamccore.attractions.utils.AttractionUtils
+import me.m64diamondstar.ingeniamccore.general.commands.ingenia.attraction.CoasterSubcommand
 import me.m64diamondstar.ingeniamccore.general.commands.ingenia.attraction.FreefallSubcommand
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
@@ -234,8 +236,13 @@ class AttractionSubcommand(private val sender: CommandSender, private val args: 
         Set the settings for custom attractions like freefall towers or top spins
          */
         if(args[1].equals("freefall", ignoreCase = true)){
-            val freefallSubcommand = FreefallSubcommand(sender, args, player)
+            val freefallSubcommand = FreefallSubcommand(args, player)
             freefallSubcommand.execute()
+        }
+
+        if(args[1].equals("coaster", ignoreCase = true)){
+            val coasterSubcommand = CoasterSubcommand(args, player)
+            coasterSubcommand.execute()
         }
     }
 
@@ -249,6 +256,7 @@ class AttractionSubcommand(private val sender: CommandSender, private val args: 
             tabs.add("ridecount")
             tabs.add("warp")
             tabs.add("freefall")
+            tabs.add("coaster")
         }
 
         //Global tab completer for attraction categories and names except for create and delete subcommand
@@ -300,11 +308,22 @@ class AttractionSubcommand(private val sender: CommandSender, private val args: 
                 tabs.add("spawn")
                 tabs.add("despawn")
             }
+
+            if(args[1].equals("coaster", ignoreCase = true)){
+                tabs.add("row")
+            }
         }
 
         if(args.size == 6){
             if(args[1].equals("ridecount", ignoreCase = true)){
                 Bukkit.getOnlinePlayers().forEach { tabs.add(it.name) }
+            }
+
+            if(args[1].equals("coaster", ignoreCase = true) && args[4].equals("row", ignoreCase = true)){
+                if(AttractionUtils.existsCategory(args[2]) && AttractionUtils.existsAttraction(args[2], args[3])){
+                    val coaster = Coaster(args[2], args[3])
+                    coaster.getRows().forEach { tabs.add("$it") }
+                }
             }
         }
 
@@ -319,6 +338,10 @@ class AttractionSubcommand(private val sender: CommandSender, private val args: 
                 tabs.add("7")
                 tabs.add("8")
                 tabs.add("9")
+            }
+
+            if(args[1].equals("coaster", ignoreCase = true) && args[4].equals("row", ignoreCase = true)){
+                tabs.add("setstation")
             }
         }
 
