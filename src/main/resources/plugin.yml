@@ -4,8 +4,9 @@ main: me.m64diamondstar.ingeniamccore.Main
 api-version: 1.19
 authors: [ M64DiamondStar ]
 description: The Core plugin of IngeniaMC.
-softdepend:
+depend:
   - ProtocolLib
+  - Train_Carts
 commands:
   wand:
     description: Open the wand selection menu.
@@ -40,5 +41,9 @@ commands:
     description: React to the last player that messaged you.
     aliases:
       - r
+  admin:
+    description: Command for all admin sub-commands.
+    aliases:
+      - adm
 
 
