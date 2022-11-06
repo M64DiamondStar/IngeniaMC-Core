@@ -1,5 +1,8 @@
 package me.m64diamondstar.ingeniamccore.general.commands.ingenia;
 
+import me.m64diamondstar.ingeniamccore.Main;
+import me.m64diamondstar.ingeniamccore.utils.messages.Colors;
+import me.m64diamondstar.ingeniamccore.utils.messages.MessageType;
 import me.m64diamondstar.ingeniamccore.utils.messages.Messages;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -47,6 +50,11 @@ public class IngeniaCommand implements CommandExecutor {
             case "attraction" -> {
                 AttractionSubcommand attractionSubcommand = new AttractionSubcommand(sender, args);
                 attractionSubcommand.execute();
+            }
+
+            case "reload" -> {
+                Main.plugin.reloadConfig();
+                sender.sendMessage(Colors.format(MessageType.SUCCESS + "Successfully reloaded config.yml!"));
             }
 
 
