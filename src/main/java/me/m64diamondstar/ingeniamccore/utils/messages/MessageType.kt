@@ -8,5 +8,6 @@ interface MessageType {
         const val INFO = "#6ac4c1"
         const val LORE = "#878787"
         const val PLAYER_UPDATE = "#f7d145"
+        const val WARNING = "#cc9349"
     }
 }
