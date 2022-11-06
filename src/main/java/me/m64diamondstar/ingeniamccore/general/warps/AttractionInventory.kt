@@ -9,6 +9,7 @@ import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
 import org.bukkit.Material
 import org.bukkit.event.inventory.InventoryClickEvent
+import org.bukkit.event.player.PlayerTeleportEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.ItemMeta
 
@@ -27,7 +28,7 @@ class AttractionInventory(player: IngeniaPlayer): Gui(player) {
     override fun handleInventory(event: InventoryClickEvent) {
         if(event.slot in 0..44){
             if(slots.containsKey(event.slot)){
-                getPlayer().player.teleport(slots[event.slot]?.getWarpLocation()!!)
+                getPlayer().player.teleport(slots[event.slot]?.getWarpLocation()!!, PlayerTeleportEvent.TeleportCause.PLUGIN)
             }
         }
 
