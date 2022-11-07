@@ -1,8 +1,6 @@
 package me.m64diamondstar.ingeniamccore.attractions.utils
 
-import me.m64diamondstar.ingeniamccore.Main
 import me.m64diamondstar.ingeniamccore.data.Configuration
-import me.m64diamondstar.ingeniamccore.utils.entities.EntityRegistry
 import me.m64diamondstar.ingeniamccore.utils.entities.LeaderboardPacketEntity
 import me.m64diamondstar.ingeniamccore.utils.items.ItemDecoder
 import me.m64diamondstar.ingeniamccore.utils.items.ItemEncoder
@@ -16,6 +14,8 @@ import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.OfflinePlayer
 import org.bukkit.World
+import org.bukkit.block.BlockFace
+import org.bukkit.block.data.type.Gate
 import org.bukkit.configuration.ConfigurationSection
 import org.bukkit.craftbukkit.v1_19_R1.CraftWorld
 import org.bukkit.craftbukkit.v1_19_R1.entity.CraftPlayer
@@ -23,8 +23,6 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import java.awt.Color
 import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 open class Attraction(category: String, name: String): Configuration("rides/$category", name.replace(".yml", ""), false, true) {
 
@@ -138,22 +136,6 @@ open class Attraction(category: String, name: String): Configuration("rides/$cat
     }
 
     /**
-     * Sets the location of the leaderboard sign
-     */
-    fun setLeaderboardLocation(x: Int, y: Int, z: Int){
-        this.getConfig().set("Leaderboard.Location", "$x, $y, $z")
-        this.reloadConfig()
-    }
-
-    /**
-     * Set the leaderboard on enabled or disabled
-     */
-    fun setLeaderboardEnabled(enabled: Boolean){
-        this.getConfig().set("Leaderboard.Enabled", enabled)
-        this.reloadConfig()
-    }
-
-    /**
      * Set the warp location
      * @return is last setting to enable warp?
      */
@@ -211,6 +193,103 @@ open class Attraction(category: String, name: String): Configuration("rides/$cat
             return null
 
         return ItemDecoder(this.getConfig().getString("Warp.Item")!!).decodedItem()
+    }
+
+    /**
+     * Add a gate to the ride
+     */
+    fun addGate(gate: Gate, location: Location){
+        val firstFree = getConfig().getConfigurationSection("Gates")?.getKeys(false)!!.size
+        val direction = gate.facing.toString()
+        val x = location.blockX
+        val y = location.blockY
+        val z = location.blockZ
+
+        this.getConfig().set("Gates.$firstFree", "$direction, $x, $y, $z")
+        this.getConfig().set("Gates.Enabled", true)
+        this.reloadConfig()
+    }
+
+    /**
+     * Removes a gate to the ride
+     * @return true if succeeds, false if fails
+     */
+    fun removeGate(location: Location): Boolean{
+        if(getConfig().getConfigurationSection("Gates")?.getKeys(false)!!.size <= 1) return false
+        var found = false
+        for(i in 1 until getConfig().getConfigurationSection("Gates")?.getKeys(false)!!.size){
+            val configLocation = Location(getWorld(),
+                getConfig().getString("Gates.$i")!!.split(",")[1].toDouble(),
+                getConfig().getString("Gates.$i")!!.split(",")[2].toDouble(),
+                getConfig().getString("Gates.$i")!!.split(",")[3].toDouble())
+
+            if(found && i - 1 != 0){
+                getConfig().set("Gates.${i - 1}", getConfig().get("Gates.$i"))
+                getConfig().set("Gates.$i", null)
+                reloadConfig()
+            }
+
+            if(!found && location.blockX == configLocation.blockX && location.blockY == configLocation.blockY && location.blockZ == configLocation.blockZ) {
+                getConfig().set("Gates.$i", null)
+                reloadConfig()
+                found = true
+            }
+        }
+        if(found)
+            return true
+        return false
+    }
+
+    /**
+     * Opens the gates of this ride
+     */
+    fun openGates(){
+        if(getConfig().getConfigurationSection("Gates")?.getKeys(false)!!.size <= 1) return
+        for(i in 1 until getConfig().getConfigurationSection("Gates")?.getKeys(false)!!.size){
+            val location = Location(getWorld(),
+                getConfig().getString("Gates.$i")!!.split(",")[1].toDouble(),
+                getConfig().getString("Gates.$i")!!.split(",")[2].toDouble(),
+                getConfig().getString("Gates.$i")!!.split(",")[3].toDouble())
+
+            val gate = location.block.blockData as Gate
+            gate.facing = BlockFace.valueOf(getConfig().getString("Gates.$i")!!.split(",")[0])
+            gate.isOpen = true
+            location.block.blockData = gate
+        }
+    }
+
+    /**
+     * Closes the gates of this ride
+     */
+    fun closeGates(){
+        if(getConfig().getConfigurationSection("Gates")?.getKeys(false)!!.size <= 1) return
+        for(i in 1 until getConfig().getConfigurationSection("Gates")?.getKeys(false)!!.size){
+            val location = Location(getWorld(),
+                getConfig().getString("Gates.$i")!!.split(",")[1].toDouble(),
+                getConfig().getString("Gates.$i")!!.split(",")[2].toDouble(),
+                getConfig().getString("Gates.$i")!!.split(",")[3].toDouble())
+
+            val gate = location.block.blockData as Gate
+            gate.facing = BlockFace.valueOf(getConfig().getString("Gates.$i")!!.split(",")[0])
+            gate.isOpen = false
+            location.block.blockData = gate
+        }
+    }
+
+    /**
+     * Sets the location of the leaderboard sign
+     */
+    fun setLeaderboardLocation(x: Int, y: Int, z: Int){
+        this.getConfig().set("Leaderboard.Location", "$x, $y, $z")
+        this.reloadConfig()
+    }
+
+    /**
+     * Set the leaderboard on enabled or disabled
+     */
+    fun setLeaderboardEnabled(enabled: Boolean){
+        this.getConfig().set("Leaderboard.Enabled", enabled)
+        this.reloadConfig()
     }
 
     /**

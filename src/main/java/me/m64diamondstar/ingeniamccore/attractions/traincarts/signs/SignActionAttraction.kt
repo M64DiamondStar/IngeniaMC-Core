@@ -30,6 +30,9 @@ class SignActionAttraction: SignAction() {
             // Main station row (row 1)
             if (row == 1){
                 coaster.setRowOccupied(row, true)
+                info.member.group.properties.playersEnter = true
+                info.member.group.properties.playersExit = true
+                coaster.openGates()
             }else{
 
                 // Check if next row is occupied

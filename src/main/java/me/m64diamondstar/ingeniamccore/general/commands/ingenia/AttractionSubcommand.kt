@@ -12,6 +12,7 @@ import me.m64diamondstar.ingeniamccore.utils.messages.Messages
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.Particle
+import org.bukkit.block.data.type.Gate
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.ItemFrame
@@ -231,6 +232,56 @@ class AttractionSubcommand(private val sender: CommandSender, private val args: 
             }
         }
 
+        if(args[1].equals("gates", ignoreCase = true)){
+
+            if(args.size != 5 || (!args[4].equals("add", ignoreCase = true) && !args[4].equals("remove", ignoreCase = true))){
+                player.sendMessage(Messages.commandUsage("ig attraction gates <category> <name> add/remove"))
+                return
+            }
+
+            if(!AttractionUtils.existsCategory(args[2])){
+                player.sendMessage(Colors.format(MessageType.ERROR + "The category &o${args[2]}&r ${MessageType.ERROR}doesn't exist!"))
+                return
+            }
+            if(!AttractionUtils.existsAttraction(args[2], args[3])){
+                player.sendMessage(Colors.format(MessageType.ERROR + "The attraction &o${args[3]}&r ${MessageType.ERROR}doesn't exist!"))
+                return
+            }
+
+            val attraction = Attraction(args[2], args[3])
+
+            val block = player.getTargetBlockExact(5)
+            if(block == null || block.type == Material.AIR){
+                player.sendMessage(Colors.format(MessageType.ERROR + "Please look at a gate to set the location."))
+                return
+            }
+
+            if(!block.type.toString().contains("GATE")){
+                player.sendMessage(Colors.format(MessageType.ERROR + "Please look at a gate to set the location."))
+                return
+            }
+
+            val gate = block.blockData as Gate
+
+            val location = block.location
+            if(args[4].equals("add", ignoreCase = true)) {
+                attraction.addGate(gate, location)
+                gate.isOpen = false
+                location.block.blockData = gate
+                player.sendMessage(Colors.format(MessageType.SUCCESS + "Gate has been added."))
+            }else{
+                val success = attraction.removeGate(location)
+                if(success)
+                    player.sendMessage(Colors.format(MessageType.SUCCESS + "Gate has been removed."))
+                else
+                    player.sendMessage(Colors.format(MessageType.ERROR + "Sorry man, i couldn't find a gate on this location..."))
+            }
+            player.spawnParticle(Particle.SMOKE_NORMAL, location.add(0.5, 0.5, 0.5),
+                100, 0.0, 0.2, 0.0, 0.0)
+
+
+        }
+
         /*
         Attraction Settings
         Set the settings for custom attractions like freefall towers or top spins
@@ -257,6 +308,7 @@ class AttractionSubcommand(private val sender: CommandSender, private val args: 
             tabs.add("warp")
             tabs.add("freefall")
             tabs.add("coaster")
+            tabs.add("gates")
         }
 
         //Global tab completer for attraction categories and names except for create and delete subcommand
@@ -311,6 +363,11 @@ class AttractionSubcommand(private val sender: CommandSender, private val args: 
 
             if(args[1].equals("coaster", ignoreCase = true)){
                 tabs.add("row")
+            }
+
+            if(args[1].equals("gates", ignoreCase = true)){
+                tabs.add("add")
+                tabs.add("remove")
             }
         }
 
