@@ -51,19 +51,6 @@ class Coaster(category: String, name: String): Attraction(category, name) {
         return Location(getWorld(), x, y, z)
     }
 
-    fun dispatchRow(row: Int){
-        if(getRowStation(row) == null) {
-            Bukkit.getLogger()
-                .warning("Station sign for row $row for ${getName()} in ${getCategory()} still has to be made! Please do this as quickly as possible!")
-            return
-        }
-        getRowStation(row)!!.block.type = Material.REDSTONE_TORCH
-
-        Bukkit.getScheduler().scheduleSyncDelayedTask(Main.plugin, {
-            getRowStation(row)!!.block.type = Material.AIR
-        }, 5L)
-    }
-
     fun activateRow(row: Int, activated: Boolean){
         if(getRowStation(row) == null) {
             Bukkit.getLogger()
@@ -78,7 +65,16 @@ class Coaster(category: String, name: String): Attraction(category, name) {
     }
 
     fun dispatch(){
+        if(getRowStation(1) == null) {
+            Bukkit.getLogger()
+                .warning("Station sign(s) for ${getName()} in ${getCategory()} still has to be made! Please do this as quickly as possible!")
+            return
+        }
+        getRowStation(1)!!.block.type = Material.REDSTONE_TORCH
 
+        Bukkit.getScheduler().scheduleSyncDelayedTask(Main.plugin, {
+            getRowStation(1)!!.block.type = Material.AIR
+        }, 5L)
     }
 
 }
