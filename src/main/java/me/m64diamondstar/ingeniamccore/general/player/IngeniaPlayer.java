@@ -101,32 +101,26 @@ public class IngeniaPlayer {
     }
 
     public long getExp(){
-        this.config = new PlayerConfig(player.getUniqueId());
         return config.getExp();
     }
 
     public void setExp(long l){
-        this.config = new PlayerConfig(player.getUniqueId());
         config.setExp(l);
     }
 
     public void addExp(long l){
-        this.config = new PlayerConfig(player.getUniqueId());
         config.setExp(l + getExp());
     }
 
     public long getBal(){
-        this.config = new PlayerConfig(player.getUniqueId());
         return config.getBal();
     }
 
     public void setBal(long l){
-        this.config = new PlayerConfig(player.getUniqueId());
         config.setBal(l);
     }
 
     public void addBal(long l){
-        this.config = new PlayerConfig(player.getUniqueId());
         config.setBal(l + getBal());
     }
 
