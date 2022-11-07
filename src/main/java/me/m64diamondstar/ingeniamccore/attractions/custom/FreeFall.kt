@@ -230,6 +230,7 @@ class FreeFall(category: String, name: String): Attraction(category, name), Cust
                         )
                         loc.yaw = -(22.5f * i.toFloat())
                         stand.teleport(loc)
+                        openGates()
                     }
                 }
 
