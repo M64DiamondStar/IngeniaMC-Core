@@ -18,12 +18,12 @@ import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
 import java.util.*
 
-class Main : JavaPlugin() {
+class IngeniaMC : JavaPlugin() {
 
     private lateinit var protocolManager: ProtocolManager
 
     companion object {
-        lateinit var plugin: Main
+        lateinit var plugin: IngeniaMC
         var isDisabling: Boolean = false
     }
 
