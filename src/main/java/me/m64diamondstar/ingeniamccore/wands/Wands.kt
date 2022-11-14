@@ -46,7 +46,7 @@ object Wands {
         if(Sled(player).hasPermission()) accessibleWands.add(getAsItemStack(Sled(player)))
         if(SnowCannon(player).hasPermission()) accessibleWands.add(getAsItemStack(SnowCannon(player)))
         if(SnowExplosion(player).hasPermission()) accessibleWands.add(getAsItemStack(SnowExplosion(player)))
-        if(Sled(player).hasPermission()) accessibleWands.add(getAsItemStack(Sled(player)))
+        if(Speed(player).hasPermission()) accessibleWands.add(getAsItemStack(Speed(player)))
         if(TNT(player).hasPermission()) accessibleWands.add(getAsItemStack(TNT(player)))
         if(Water(player).hasPermission()) accessibleWands.add(getAsItemStack(Water(player)))
 
