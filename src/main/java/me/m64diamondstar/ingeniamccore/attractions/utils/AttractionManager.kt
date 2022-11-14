@@ -1,6 +1,6 @@
 package me.m64diamondstar.ingeniamccore.attractions.utils
 
-import me.m64diamondstar.ingeniamccore.Main
+import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageLocation
 import me.m64diamondstar.ingeniamccore.utils.messages.Messages
@@ -21,7 +21,7 @@ object AttractionManager {
             override fun run() {
 
                 if(c == 0){
-                    attraction.run()
+                    attraction.execute()
                     this.cancel()
                     return
                 }
@@ -42,7 +42,7 @@ object AttractionManager {
 
                 c -= 1
             }
-        }.runTaskTimer(Main.plugin, 5L, 20L)
+        }.runTaskTimer(IngeniaMC.plugin, 5L, 20L)
 
     }
 
