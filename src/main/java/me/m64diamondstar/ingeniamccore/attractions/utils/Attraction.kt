@@ -24,7 +24,7 @@ import org.bukkit.inventory.ItemStack
 import java.awt.Color
 import java.util.*
 
-open class Attraction(category: String, name: String): Configuration("rides/$category", name.replace(".yml", ""), false, true) {
+open class Attraction(category: String, name: String): Configuration("rides/$category", name, false, true) {
 
     private val name: String
     private val category: String
@@ -78,9 +78,8 @@ open class Attraction(category: String, name: String): Configuration("rides/$cat
         header.add("-----------------------------------------")
         header.add("This is the file for the attraction: ${getName()}.")
         header.add("Please try to use in-game commands as much as possible, ")
-        header.add("but if it's really necessary you can edit this file and use")
-        header.add("/ig attraction reload ${getName()}")
-        header.add("")
+        header.add("but if it's really necessary you can edit this file.")
+        header.add(" ")
         header.add("Reminder, all the times are in ticks! 20 ticks = 1 second.")
         header.add("-----------------------------------------")
 
