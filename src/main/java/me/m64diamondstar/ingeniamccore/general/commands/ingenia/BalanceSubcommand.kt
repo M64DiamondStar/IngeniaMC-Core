@@ -1,6 +1,7 @@
 package me.m64diamondstar.ingeniamccore.general.commands.ingenia
 
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
+import me.m64diamondstar.ingeniamccore.utils.IngeniaSubcommand
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
 import me.m64diamondstar.ingeniamccore.utils.messages.Messages
@@ -8,12 +9,12 @@ import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 import java.lang.NumberFormatException
 
-class BalanceSubcommand(private val sender: CommandSender, private val args: Array<String>) {
+class BalanceSubcommand(private val sender: CommandSender, private val args: Array<String>): IngeniaSubcommand {
 
     /**
      * Execute the command
      */
-    fun execute() {
+    override fun execute() {
         if (args.size <= 2) {
             sender.sendMessage(Colors.format(Messages.commandUsage("ig balance <add/set/subtract/get> <player> [amount]")))
         } else if (args.size == 3) {
@@ -74,7 +75,7 @@ class BalanceSubcommand(private val sender: CommandSender, private val args: Arr
     }
 
 
-    fun getTabCompleters(): ArrayList<String>{
+    override fun getTabCompleters(): ArrayList<String>{
         var tabs = ArrayList<String>()
 
         val firstTab = ArrayList<String>()
