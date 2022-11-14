@@ -1,6 +1,6 @@
 package me.m64diamondstar.ingeniamccore.general.listeners
 
-import me.m64diamondstar.ingeniamccore.Main
+import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import org.bukkit.event.EventHandler
@@ -24,7 +24,7 @@ class ChatListener: Listener {
         if(player.hasPermission("ingenia.team")) return
 
         event.commands.clear()
-        event.commands.addAll( Main.plugin.config.getStringList("Player-Commands"))
+        event.commands.addAll( IngeniaMC.plugin.config.getStringList("Player-Commands"))
     }
 
 }

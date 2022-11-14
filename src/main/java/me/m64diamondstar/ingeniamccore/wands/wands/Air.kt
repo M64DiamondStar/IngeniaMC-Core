@@ -1,6 +1,6 @@
 package me.m64diamondstar.ingeniamccore.wands.wands
 
-import me.m64diamondstar.ingeniamccore.Main
+import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.wands.wandlistener.WandListener
 import org.bukkit.craftbukkit.v1_19_R1.entity.CraftPlayer
@@ -35,7 +35,7 @@ class Air(player: Player): Wand {
         player.velocity = Vector(0, 1, 0)
         player.world.spawnParticle(Particle.SPELL, player.location, 100, 0.5, 0.5, 0.5, 0.01)
         Bukkit.getScheduler().scheduleSyncDelayedTask(
-            Main.plugin, {
+            IngeniaMC.plugin, {
                 player.velocity = player.location.direction.multiply(1.4)
                 WandListener.gliding.add(player)
                 player.isGliding = true
@@ -54,7 +54,7 @@ class Air(player: Player): Wand {
                 }
                 c++
             }
-        }.runTaskTimer(Main.plugin, 16L, 1L)
+        }.runTaskTimer(IngeniaMC.plugin, 16L, 1L)
         Cooldowns.addPlayer(player, 15000L, 15000L, 18000L, 21000L)
     }
 }

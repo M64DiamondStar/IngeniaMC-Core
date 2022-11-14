@@ -4,14 +4,15 @@ import me.m64diamondstar.ingeniamccore.attractions.custom.FreeFall
 import me.m64diamondstar.ingeniamccore.attractions.utils.Attraction
 import me.m64diamondstar.ingeniamccore.attractions.utils.AttractionType
 import me.m64diamondstar.ingeniamccore.attractions.utils.AttractionUtils
+import me.m64diamondstar.ingeniamccore.utils.Subcommand
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
 import org.bukkit.Particle
 import org.bukkit.entity.Player
 
-class FreefallSubcommand(private val args: Array<String>, private val player: Player) {
+class FreefallSubcommand(private val args: Array<String>, private val player: Player): Subcommand {
 
-    fun execute(){
+    override fun execute(){
         if(args.size >= 5){
             if(!AttractionUtils.existsCategory(args[2])){
                 player.sendMessage(Colors.format(MessageType.ERROR + "The category &o${args[2]}&r ${MessageType.ERROR}doesn't exist!"))

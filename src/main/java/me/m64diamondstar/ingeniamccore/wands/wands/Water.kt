@@ -1,6 +1,6 @@
 package me.m64diamondstar.ingeniamccore.wands.wands
 
-import me.m64diamondstar.ingeniamccore.Main
+import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.wands.wandlistener.WandListener
 import org.bukkit.craftbukkit.v1_19_R1.entity.CraftPlayer
@@ -66,7 +66,7 @@ class Water(player: Player): Wand {
                 loc4.add(0.0, 0.05, 0.0)
                 c++
             }
-        }.runTaskTimer(Main.plugin, 0L, 1L)
+        }.runTaskTimer(IngeniaMC.plugin, 0L, 1L)
         object : BukkitRunnable() {
             var c: Long = 0
             override fun run() {
@@ -84,7 +84,7 @@ class Water(player: Player): Wand {
                 loc4.add(0.0, -0.1, 0.3)
                 c++
             }
-        }.runTaskTimer(Main.plugin, 40L, 1L)
+        }.runTaskTimer(IngeniaMC.plugin, 40L, 1L)
         object : BukkitRunnable() {
             override fun run() {
                 player.setGliding(true)
@@ -92,7 +92,7 @@ class Water(player: Player): Wand {
                 player.setWalkSpeed(walkspeed)
                 player.setFlySpeed(flyspeed)
             }
-        }.runTaskLater(Main.plugin, 50L)
+        }.runTaskLater(IngeniaMC.plugin, 50L)
         object : BukkitRunnable() {
             var c: Long = 0
             override fun run() {
@@ -107,7 +107,7 @@ class Water(player: Player): Wand {
                 player.setVelocity(player.getEyeLocation().direction.multiply(0.75))
                 c++
             }
-        }.runTaskTimer(Main.plugin, 50L, 1L)
+        }.runTaskTimer(IngeniaMC.plugin, 50L, 1L)
         Cooldowns.addPlayer(player, 7500L, 8500L, 9500L, 12000L)
     }
 

@@ -1,6 +1,6 @@
 package me.m64diamondstar.ingeniamccore.wands.wands
 
-import me.m64diamondstar.ingeniamccore.Main
+import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.wands.Cooldowns
 import org.bukkit.Bukkit
@@ -32,13 +32,13 @@ class Fire(player: Player): Wand {
         val nLoc = player.location
 
         val s = Bukkit.getScheduler().scheduleSyncRepeatingTask(
-            Main.plugin, {
+            IngeniaMC.plugin, {
                 player.teleport(nLoc)
             }, 0L, 1L
         )
 
         Bukkit.getScheduler().scheduleSyncDelayedTask(
-            Main.plugin, {
+            IngeniaMC.plugin, {
                 val location1 = player.eyeLocation
                 val particles = 50
                 val radius = 0.7f
@@ -55,7 +55,7 @@ class Fire(player: Player): Wand {
             }, 3L
         )
         Bukkit.getScheduler().scheduleSyncDelayedTask(
-            Main.plugin, {
+            IngeniaMC.plugin, {
                 val location2 = player.eyeLocation
                 val particles = 50
                 val radius = 0.7f
@@ -72,7 +72,7 @@ class Fire(player: Player): Wand {
             }, 5L
         )
         Bukkit.getScheduler().scheduleSyncDelayedTask(
-            Main.plugin, {
+            IngeniaMC.plugin, {
                 val location3 = player.eyeLocation
                 val particles = 50
                 val radius = 0.7f
@@ -89,7 +89,7 @@ class Fire(player: Player): Wand {
             }, 8L
         )
         Bukkit.getScheduler().scheduleSyncDelayedTask(
-            Main.plugin, {
+            IngeniaMC.plugin, {
                 Bukkit.getScheduler().cancelTask(s)
                 val block = player.getTargetBlock(null, 21)
                 player.world.spawnParticle(Particle.CLOUD, player.location, 150, 0.35, 0.7, 0.35, 0.0)

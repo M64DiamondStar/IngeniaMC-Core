@@ -1,9 +1,7 @@
 package me.m64diamondstar.ingeniamccore.utils.leaderboard
 
-import me.m64diamondstar.ingeniamccore.Main
-import org.bukkit.Bukkit
+import me.m64diamondstar.ingeniamccore.IngeniaMC
 import org.bukkit.entity.Player
-import org.bukkit.inventory.ItemStack
 import java.awt.*
 import java.awt.image.BufferedImage
 import java.io.File
@@ -95,12 +93,12 @@ class Leaderboard (scores: Map<String, Int>, backgroundColor: Color, outlineColo
 
         try {
             val ge = GraphicsEnvironment.getLocalGraphicsEnvironment()
-            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, File(Main.plugin.dataFolder, "fonts/Minecraft.otf")).deriveFont(20F))
+            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, File(IngeniaMC.plugin.dataFolder, "fonts/Minecraft.otf")).deriveFont(20F))
         }catch (e: IOException){
             e.printStackTrace()
         }
 
-        graphics2D.font = Font.createFont(Font.TRUETYPE_FONT, File(Main.plugin.dataFolder, "fonts/Minecraft.otf")).deriveFont(20F)
+        graphics2D.font = Font.createFont(Font.TRUETYPE_FONT, File(IngeniaMC.plugin.dataFolder, "fonts/Minecraft.otf")).deriveFont(20F)
         writeCenteredText("Top Ridecount", 25)
 
         for (top in 0..2){

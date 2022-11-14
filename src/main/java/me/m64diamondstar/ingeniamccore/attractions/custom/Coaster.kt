@@ -1,6 +1,6 @@
 package me.m64diamondstar.ingeniamccore.attractions.custom
 
-import me.m64diamondstar.ingeniamccore.Main
+import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.attractions.utils.Attraction
 import org.bukkit.Bukkit
 import org.bukkit.Location
@@ -72,7 +72,7 @@ class Coaster(category: String, name: String): Attraction(category, name) {
         }
         getRowStation(1)!!.block.type = Material.REDSTONE_TORCH
 
-        Bukkit.getScheduler().scheduleSyncDelayedTask(Main.plugin, {
+        Bukkit.getScheduler().scheduleSyncDelayedTask(IngeniaMC.plugin, {
             getRowStation(1)!!.block.type = Material.AIR
         }, 5L)
     }

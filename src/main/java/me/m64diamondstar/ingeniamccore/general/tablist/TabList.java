@@ -1,13 +1,12 @@
 package me.m64diamondstar.ingeniamccore.general.tablist;
 
-import me.m64diamondstar.ingeniamccore.Main;
+import me.m64diamondstar.ingeniamccore.IngeniaMC;
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 public class TabList {
 
@@ -15,9 +14,9 @@ public class TabList {
     private final List<String> footer = new ArrayList<>();
 
 
-    private final Main plugin;
+    private final IngeniaMC plugin;
 
-    public TabList(Main plugin) {
+    public TabList(IngeniaMC plugin) {
         this.plugin = plugin;
     }
 

@@ -1,6 +1,6 @@
 package me.m64diamondstar.ingeniamccore.wands.wands
 
-import me.m64diamondstar.ingeniamccore.Main
+import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.wands.Cooldowns
 import java.util.HashMap
@@ -47,7 +47,7 @@ class Cloak(player: Player): Wand {
         player.teleport(nLoc)
         armorInv[player] = player.inventory.armorContents
         val s = Bukkit.getScheduler().scheduleSyncRepeatingTask(
-            Main.plugin, {
+            IngeniaMC.plugin, {
                 val x: Double
                 val z: Double
                 val angle: Double = 2 * Math.PI * c / particles
@@ -61,7 +61,7 @@ class Cloak(player: Player): Wand {
             }, 0L, 1L
         )
         Bukkit.getScheduler().scheduleSyncDelayedTask(
-            Main.plugin, {
+            IngeniaMC.plugin, {
                 Bukkit.getScheduler().cancelTask(s)
                 player.world.spawnParticle(
                     Particle.SMOKE_LARGE,
@@ -81,10 +81,10 @@ class Cloak(player: Player): Wand {
             }, 20L
         )
         val s2 = Bukkit.getScheduler().scheduleSyncRepeatingTask(
-            Main.plugin, { player.inventory.heldItemSlot = 8 }, 0L, 1L
+            IngeniaMC.plugin, { player.inventory.heldItemSlot = 8 }, 0L, 1L
         )
         Bukkit.getScheduler().scheduleSyncDelayedTask(
-            Main.plugin, {
+            IngeniaMC.plugin, {
                 player.world.spawnParticle(
                     Particle.SMOKE_LARGE,
                     player.location.add(0.0, 1.0, 0.0),

@@ -1,6 +1,6 @@
 package me.m64diamondstar.ingeniamccore.wands.wands
 
-import me.m64diamondstar.ingeniamccore.Main
+import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.wands.Cooldowns
 import org.bukkit.Bukkit
@@ -48,7 +48,7 @@ class Happiness(player: Player): Wand {
                         }
                         c++
                     }
-                }.runTaskTimer(Main.plugin, 0, 3)
+                }.runTaskTimer(IngeniaMC.plugin, 0, 3)
             }
         }
         Cooldowns.addPlayer(player, 0L, 5000L, 6000L, 8000L)

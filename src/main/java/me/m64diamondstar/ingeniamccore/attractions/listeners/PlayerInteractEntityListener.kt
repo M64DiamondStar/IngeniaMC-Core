@@ -2,7 +2,7 @@ package me.m64diamondstar.ingeniamccore.attractions.listeners
 
 import com.bergerkiller.bukkit.tc.controller.MinecartGroup
 import com.bergerkiller.bukkit.tc.controller.MinecartMemberStore
-import me.m64diamondstar.ingeniamccore.Main
+import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.attractions.custom.Coaster
 import me.m64diamondstar.ingeniamccore.attractions.custom.FreeFall
 import me.m64diamondstar.ingeniamccore.attractions.utils.Attraction
@@ -11,7 +11,6 @@ import me.m64diamondstar.ingeniamccore.attractions.utils.AttractionType
 import me.m64diamondstar.ingeniamccore.attractions.utils.SeatRegistry
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageLocation
-import org.bukkit.Bukkit
 import org.bukkit.entity.EntityType
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -110,7 +109,7 @@ class PlayerInteractEntityListener: Listener {
                             sendMessage("&6This coaster will dispatch in 1 second.", MessageLocation.HOTBAR) }
                     c--
                 }
-            }.runTaskTimer(Main.plugin, 0L, 20L)
+            }.runTaskTimer(IngeniaMC.plugin, 0L, 20L)
         }
 
     }

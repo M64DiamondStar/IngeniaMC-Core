@@ -1,6 +1,6 @@
 package me.m64diamondstar.ingeniamccore.wands.wandlistener;
 
-import me.m64diamondstar.ingeniamccore.Main;
+import me.m64diamondstar.ingeniamccore.IngeniaMC;
 import me.m64diamondstar.ingeniamccore.wands.Cooldowns;
 import me.m64diamondstar.ingeniamccore.wands.wands.*;
 import org.bukkit.Color;
@@ -14,12 +14,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityToggleGlideEvent;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerSwapHandItemsEvent;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
@@ -119,7 +115,7 @@ public class WandListener implements Listener {
                                     if (sb.isDead()) this.cancel();
                                 }
 
-                            }.runTaskTimer(Main.getPlugin(Main.class), 0L, 1);
+                            }.runTaskTimer(IngeniaMC.getPlugin(IngeniaMC.class), 0L, 1);
                         }
                     }
                     case "TnTWandBlock" -> e.setCancelled(true);

@@ -1,6 +1,6 @@
 package me.m64diamondstar.ingeniamccore.wands.wands
 
-import me.m64diamondstar.ingeniamccore.Main
+import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.wands.Cooldowns
 import org.bukkit.Bukkit
@@ -38,14 +38,14 @@ class Earth(player: Player): Wand {
         player.velocity = Vector(0, 1, 0)
         val walkspeed = player.walkSpeed
         Bukkit.getScheduler().scheduleSyncDelayedTask(
-            Main.plugin, {
+            IngeniaMC.plugin, {
                 player.velocity = Vector(0, -2, 0)
                 player.walkSpeed = 0.8f
                 player.fallDistance = 0f
             }, 15L
         )
         val schedule = Bukkit.getScheduler().scheduleSyncRepeatingTask(
-            Main.plugin, {
+            IngeniaMC.plugin, {
                 val `as` =
                     player.world.spawnEntity(player.location.add(0.0, -1.6, 0.0), EntityType.ARMOR_STAND) as ArmorStand
                 `as`.headPose = EulerAngle(
@@ -62,12 +62,12 @@ class Earth(player: Player): Wand {
                 player.addPotionEffect(PotionEffect(PotionEffectType.JUMP, 10, 200))
                 player.fallDistance = 0f
                 Bukkit.getScheduler().scheduleSyncDelayedTask(
-                    Main.plugin, { `as`.remove() }, 15L
+                    IngeniaMC.plugin, { `as`.remove() }, 15L
                 )
             }, 25L, 1L
         )
         Bukkit.getScheduler().scheduleSyncDelayedTask(
-            Main.plugin, {
+            IngeniaMC.plugin, {
                 Bukkit.getScheduler().cancelTask(schedule)
                 player.walkSpeed = walkspeed
             }, 125

@@ -1,6 +1,6 @@
 package me.m64diamondstar.ingeniamccore.wands.wands
 
-import me.m64diamondstar.ingeniamccore.Main
+import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.wands.Cooldowns
 import org.bukkit.Bukkit
@@ -30,13 +30,13 @@ class Fly(player: Player): Wand {
     override fun run() {
         player.setGravity(false)
         val schedule = Bukkit.getScheduler().scheduleSyncRepeatingTask(
-            Main.plugin, {
+            IngeniaMC.plugin, {
                 player.velocity = player.location.direction.multiply(0.5)
                 player.world.spawnParticle(Particle.CLOUD, player.location, 3, 0.0, 0.0, 0.0, 0.0)
             }, 0L, 1L
         )
         Bukkit.getScheduler().scheduleSyncDelayedTask(
-            Main.plugin, {
+            IngeniaMC.plugin, {
                 Bukkit.getScheduler().cancelTask(schedule)
                 player.setGravity(true)
             }, 160L

@@ -1,6 +1,6 @@
 package me.m64diamondstar.ingeniamccore.wands.wands
 
-import me.m64diamondstar.ingeniamccore.Main
+import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import org.bukkit.craftbukkit.v1_19_R1.entity.CraftPlayer
 import me.m64diamondstar.ingeniamccore.wands.Cooldowns
@@ -105,10 +105,10 @@ class Sled(player: Player): Wand {
                             c2++
                         }
                     }.runTaskTimer(
-                        Main.plugin, 0L, 1L
+                        IngeniaMC.plugin, 0L, 1L
                     )
                     Bukkit.getScheduler().scheduleSyncDelayedTask(
-                        Main.plugin, {
+                        IngeniaMC.plugin, {
                             if (!sled.isDead()) {
                                 sled.getWorld().spawnParticle(
                                     Particle.CLOUD,
@@ -153,11 +153,11 @@ class Sled(player: Player): Wand {
                 `as`.isInvisible = true
                 Objects.requireNonNull(`as`.equipment)?.helmet = ItemStack(Material.SNOW_BLOCK)
                 Bukkit.getScheduler().scheduleSyncDelayedTask(
-                    Main.plugin, { `as`.remove() }, 25L
+                    IngeniaMC.plugin, { `as`.remove() }, 25L
                 )
                 c++
             }
-        }.runTaskTimer(Main.plugin, 0L, 1L)
+        }.runTaskTimer(IngeniaMC.plugin, 0L, 1L)
     }
 
     private fun west(sled: ArmorStand, seat: ArmorStand, player: Player) {
@@ -219,10 +219,10 @@ class Sled(player: Player): Wand {
                             c2++
                         }
                     }.runTaskTimer(
-                        Main.plugin, 0L, 1L
+                        IngeniaMC.plugin, 0L, 1L
                     )
                     Bukkit.getScheduler().scheduleSyncDelayedTask(
-                        Main.plugin, {
+                        IngeniaMC.plugin, {
                             if (!sled.isDead()) {
                                 sled.getWorld().spawnParticle(
                                     Particle.CLOUD,
@@ -267,11 +267,11 @@ class Sled(player: Player): Wand {
                 `as`.isInvisible = true
                 Objects.requireNonNull(`as`.equipment)?.helmet = ItemStack(Material.SNOW_BLOCK)
                 Bukkit.getScheduler().scheduleSyncDelayedTask(
-                    Main.plugin, { `as`.remove() }, 25L
+                    IngeniaMC.plugin, { `as`.remove() }, 25L
                 )
                 c++
             }
-        }.runTaskTimer(Main.plugin, 0L, 1L)
+        }.runTaskTimer(IngeniaMC.plugin, 0L, 1L)
     }
 
     private fun north(sled: ArmorStand, seat: ArmorStand, player: Player) {
@@ -333,10 +333,10 @@ class Sled(player: Player): Wand {
                             c2++
                         }
                     }.runTaskTimer(
-                        Main.plugin, 0L, 1L
+                        IngeniaMC.plugin, 0L, 1L
                     )
                     Bukkit.getScheduler().scheduleSyncDelayedTask(
-                        Main.plugin, {
+                        IngeniaMC.plugin, {
                             if (!sled.isDead()) {
                                 sled.getWorld().spawnParticle(
                                     Particle.CLOUD,
@@ -381,11 +381,11 @@ class Sled(player: Player): Wand {
                 `as`.isInvisible = true
                 Objects.requireNonNull(`as`.equipment)?.helmet = ItemStack(Material.SNOW_BLOCK)
                 Bukkit.getScheduler().scheduleSyncDelayedTask(
-                    Main.plugin, { `as`.remove() }, 25L
+                    IngeniaMC.plugin, { `as`.remove() }, 25L
                 )
                 c++
             }
-        }.runTaskTimer(Main.plugin, 0L, 1L)
+        }.runTaskTimer(IngeniaMC.plugin, 0L, 1L)
     }
 
     private fun east(sled: ArmorStand, seat: ArmorStand, player: Player) {
@@ -447,10 +447,10 @@ class Sled(player: Player): Wand {
                             c2++
                         }
                     }.runTaskTimer(
-                        Main.plugin, 0L, 1L
+                        IngeniaMC.plugin, 0L, 1L
                     )
                     Bukkit.getScheduler().scheduleSyncDelayedTask(
-                        Main.plugin, {
+                        IngeniaMC.plugin, {
                             if (!sled.isDead()) {
                                 sled.getWorld().spawnParticle(
                                     Particle.CLOUD,
@@ -495,11 +495,11 @@ class Sled(player: Player): Wand {
                 `as`.isInvisible = true
                 Objects.requireNonNull(`as`.equipment)?.helmet = ItemStack(Material.SNOW_BLOCK)
                 Bukkit.getScheduler().scheduleSyncDelayedTask(
-                    Main.plugin, { `as`.remove() }, 25L
+                    IngeniaMC.plugin, { `as`.remove() }, 25L
                 )
                 c++
             }
-        }.runTaskTimer(Main.plugin, 0L, 1L)
+        }.runTaskTimer(IngeniaMC.plugin, 0L, 1L)
     }
 
     private fun pillar(player: Player) {
@@ -587,7 +587,7 @@ class Sled(player: Player): Wand {
                     }
                     c++
                 }
-            }.runTaskTimer(Main.plugin, 0L, 1L)
+            }.runTaskTimer(IngeniaMC.plugin, 0L, 1L)
         }
     }
 

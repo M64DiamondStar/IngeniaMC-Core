@@ -1,6 +1,6 @@
 package me.m64diamondstar.ingeniamccore.attractions.custom
 
-import me.m64diamondstar.ingeniamccore.Main
+import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.attractions.utils.Attraction
 import me.m64diamondstar.ingeniamccore.attractions.utils.CustomAttraction
 import me.m64diamondstar.ingeniamccore.attractions.utils.SeatRegistry
@@ -46,7 +46,7 @@ class FreeFall(category: String, name: String): Attraction(category, name), Cust
 
             getConfig().set("Data.Stands.${stand.uniqueId}.Index", i)
 
-            stand.location.chunk.addPluginChunkTicket(Main.plugin)
+            stand.location.chunk.addPluginChunkTicket(IngeniaMC.plugin)
         }
         reloadConfig()
         registerSeats()
@@ -116,10 +116,10 @@ class FreeFall(category: String, name: String): Attraction(category, name), Cust
                 }
                 c -= 1
             }
-        }.runTaskTimer(Main.plugin, 0L, 20L)
+        }.runTaskTimer(IngeniaMC.plugin, 0L, 20L)
     }
 
-    override fun run() {
+    override fun execute() {
         object : BukkitRunnable() {
             var c = 0.0
             val radius = 3.75f
@@ -244,7 +244,7 @@ class FreeFall(category: String, name: String): Attraction(category, name), Cust
                 c += 1.0
                 angle += 2.5.toFloat()
             }
-        }.runTaskTimer(Main.plugin, 0L, 1L)
+        }.runTaskTimer(IngeniaMC.plugin, 0L, 1L)
     }
 
 }

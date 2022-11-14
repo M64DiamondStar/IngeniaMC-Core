@@ -1,6 +1,6 @@
 package me.m64diamondstar.ingeniamccore.wands.wands
 
-import me.m64diamondstar.ingeniamccore.Main
+import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import java.lang.Runnable
 import me.m64diamondstar.ingeniamccore.wands.Cooldowns
@@ -62,7 +62,7 @@ class Bouncer(player: Player): Wand {
             stands2.add(armorStand)
         }
         val s = Bukkit.getScheduler().scheduleSyncRepeatingTask(
-            Main.plugin, {
+            IngeniaMC.plugin, {
                 for (stand in stands1) {
                     val loc = player.location.add(
                         0.0, -0.5 +
@@ -93,7 +93,7 @@ class Bouncer(player: Player): Wand {
             }, 0L, 1L
         )
         Bukkit.getScheduler().runTaskLater(
-            Main.plugin, Runnable {
+            IngeniaMC.plugin, Runnable {
                 Bukkit.getScheduler().cancelTask(s)
                 for (stand in stands1) stand.remove()
                 for (stand in stands2) stand.remove()

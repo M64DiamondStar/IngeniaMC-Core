@@ -1,6 +1,6 @@
 package me.m64diamondstar.ingeniamccore.wands.wands
 
-import me.m64diamondstar.ingeniamccore.Main
+import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.wands.Cooldowns
 import org.bukkit.Bukkit
@@ -40,131 +40,131 @@ class Music(player: Player): Wand {
         db.isSilent = true
         db.setGravity(false)
         val schedule = Bukkit.getScheduler().scheduleSyncRepeatingTask(
-            Main.plugin, { db.teleport(player.location.add(0.0, 2.5, 0.0)) }, 0L, 1L
+            IngeniaMC.plugin, { db.teleport(player.location.add(0.0, 2.5, 0.0)) }, 0L, 1L
         )
         Bukkit.getScheduler().scheduleSyncDelayedTask(
-            Main.plugin, {
+            IngeniaMC.plugin, {
                 db.equipment!!.helmet = ItemStack(Material.RED_STAINED_GLASS)
                 db.world.spawnParticle(Particle.NOTE, db.location.add(0.0, -3.0, 0.0), 50, 2.0, 1.0, 2.0)
                 val dropitem = player.world.dropItem(player.location.add(0.0, 2.0, 0.0), disc)
                 dropitem.pickupDelay = Int.MAX_VALUE
                 Bukkit.getScheduler().scheduleSyncDelayedTask(
-                    Main.plugin, { dropitem.remove() }, 20L
+                    IngeniaMC.plugin, { dropitem.remove() }, 20L
                 )
             }, 10L
         )
         Bukkit.getScheduler().scheduleSyncDelayedTask(
-            Main.plugin, {
+            IngeniaMC.plugin, {
                 db.equipment!!.helmet = ItemStack(Material.ORANGE_STAINED_GLASS)
                 db.world.spawnParticle(Particle.NOTE, db.location.add(0.0, -3.0, 0.0), 50, 2.0, 1.0, 2.0)
                 val dropitem = player.world.dropItem(player.location.add(0.0, 2.0, 0.0), disc)
                 dropitem.pickupDelay = Int.MAX_VALUE
                 Bukkit.getScheduler().scheduleSyncDelayedTask(
-                    Main.plugin, { dropitem.remove() }, 20L
+                    IngeniaMC.plugin, { dropitem.remove() }, 20L
                 )
             }, 20L
         )
         Bukkit.getScheduler().scheduleSyncDelayedTask(
-            Main.plugin, {
+            IngeniaMC.plugin, {
                 db.equipment!!.helmet = ItemStack(Material.YELLOW_STAINED_GLASS)
                 db.world.spawnParticle(Particle.NOTE, db.location.add(0.0, -3.0, 0.0), 50, 2.0, 1.0, 2.0)
                 val dropitem = player.world.dropItem(player.location.add(0.0, 2.0, 0.0), disc)
                 dropitem.pickupDelay = Int.MAX_VALUE
                 Bukkit.getScheduler().scheduleSyncDelayedTask(
-                    Main.plugin, { dropitem.remove() }, 20L
+                    IngeniaMC.plugin, { dropitem.remove() }, 20L
                 )
             }, 30L
         )
         Bukkit.getScheduler().scheduleSyncDelayedTask(
-            Main.plugin, {
+            IngeniaMC.plugin, {
                 db.equipment!!.helmet = ItemStack(Material.LIME_STAINED_GLASS)
                 db.world.spawnParticle(Particle.NOTE, db.location.add(0.0, -3.0, 0.0), 50, 2.0, 1.0, 2.0)
                 val dropitem = player.world.dropItem(player.location.add(0.0, 2.0, 0.0), disc)
                 dropitem.pickupDelay = Int.MAX_VALUE
                 Bukkit.getScheduler().scheduleSyncDelayedTask(
-                    Main.plugin, { dropitem.remove() }, 20L
+                    IngeniaMC.plugin, { dropitem.remove() }, 20L
                 )
             }, 40L
         )
         Bukkit.getScheduler().scheduleSyncDelayedTask(
-            Main.plugin, {
+            IngeniaMC.plugin, {
                 db.equipment!!.helmet = ItemStack(Material.GREEN_STAINED_GLASS)
                 db.world.spawnParticle(Particle.NOTE, db.location.add(0.0, -3.0, 0.0), 50, 2.0, 1.0, 2.0)
                 val dropitem = player.world.dropItem(player.location.add(0.0, 2.0, 0.0), disc)
                 dropitem.pickupDelay = Int.MAX_VALUE
                 Bukkit.getScheduler().scheduleSyncDelayedTask(
-                    Main.plugin, { dropitem.remove() }, 20L
+                    IngeniaMC.plugin, { dropitem.remove() }, 20L
                 )
             }, 50L
         )
         Bukkit.getScheduler().scheduleSyncDelayedTask(
-            Main.plugin, {
+            IngeniaMC.plugin, {
                 db.equipment!!.helmet = ItemStack(Material.BLUE_STAINED_GLASS)
                 db.world.spawnParticle(Particle.NOTE, db.location.add(0.0, -3.0, 0.0), 50, 2.0, 1.0, 2.0)
                 val dropitem = player.world.dropItem(player.location.add(0.0, 2.0, 0.0), disc)
                 dropitem.pickupDelay = Int.MAX_VALUE
                 Bukkit.getScheduler().scheduleSyncDelayedTask(
-                    Main.plugin, { dropitem.remove() }, 20L
+                    IngeniaMC.plugin, { dropitem.remove() }, 20L
                 )
             }, 60L
         )
         Bukkit.getScheduler().scheduleSyncDelayedTask(
-            Main.plugin, {
+            IngeniaMC.plugin, {
                 db.equipment!!.helmet = ItemStack(Material.LIGHT_BLUE_STAINED_GLASS)
                 db.world.spawnParticle(Particle.NOTE, db.location.add(0.0, -3.0, 0.0), 50, 2.0, 1.0, 2.0)
                 val dropitem = player.world.dropItem(player.location.add(0.0, 2.0, 0.0), disc)
                 dropitem.pickupDelay = Int.MAX_VALUE
                 Bukkit.getScheduler().scheduleSyncDelayedTask(
-                    Main.plugin, { dropitem.remove() }, 20L
+                    IngeniaMC.plugin, { dropitem.remove() }, 20L
                 )
             }, 70L
         )
         Bukkit.getScheduler().scheduleSyncDelayedTask(
-            Main.plugin, {
+            IngeniaMC.plugin, {
                 db.equipment!!.helmet = ItemStack(Material.PINK_STAINED_GLASS)
                 db.world.spawnParticle(Particle.NOTE, db.location.add(0.0, -3.0, 0.0), 50, 2.0, 1.0, 2.0)
                 val dropitem = player.world.dropItem(player.location.add(0.0, 2.0, 0.0), disc)
                 dropitem.pickupDelay = Int.MAX_VALUE
                 Bukkit.getScheduler().scheduleSyncDelayedTask(
-                    Main.plugin, { dropitem.remove() }, 20L
+                    IngeniaMC.plugin, { dropitem.remove() }, 20L
                 )
             }, 80L
         )
         Bukkit.getScheduler().scheduleSyncDelayedTask(
-            Main.plugin, {
+            IngeniaMC.plugin, {
                 db.equipment!!.helmet = ItemStack(Material.MAGENTA_STAINED_GLASS)
                 db.world.spawnParticle(Particle.NOTE, db.location.add(0.0, -3.0, 0.0), 50, 2.0, 1.0, 2.0)
                 val dropitem = player.world.dropItem(player.location.add(0.0, 2.0, 0.0), disc)
                 dropitem.pickupDelay = Int.MAX_VALUE
                 Bukkit.getScheduler().scheduleSyncDelayedTask(
-                    Main.plugin, { dropitem.remove() }, 20L
+                    IngeniaMC.plugin, { dropitem.remove() }, 20L
                 )
             }, 90L
         )
         Bukkit.getScheduler().scheduleSyncDelayedTask(
-            Main.plugin, {
+            IngeniaMC.plugin, {
                 db.equipment!!.helmet = ItemStack(Material.PURPLE_STAINED_GLASS)
                 db.world.spawnParticle(Particle.NOTE, db.location.add(0.0, -3.0, 0.0), 50, 2.0, 1.0, 2.0)
                 val dropitem = player.world.dropItem(player.location.add(0.0, 2.0, 0.0), disc)
                 dropitem.pickupDelay = Int.MAX_VALUE
                 Bukkit.getScheduler().scheduleSyncDelayedTask(
-                    Main.plugin, { dropitem.remove() }, 20L
+                    IngeniaMC.plugin, { dropitem.remove() }, 20L
                 )
             }, 100L
         )
         Bukkit.getScheduler().scheduleSyncDelayedTask(
-            Main.plugin, {
+            IngeniaMC.plugin, {
                 db.equipment!!.helmet = ItemStack(Material.LIGHT_BLUE_STAINED_GLASS)
                 db.world.spawnParticle(Particle.NOTE, db.location.add(0.0, -3.0, 0.0), 50, 2.0, 1.0, 2.0)
                 val dropitem = player.world.dropItem(player.location.add(0.0, 2.0, 0.0), disc)
                 dropitem.pickupDelay = Int.MAX_VALUE
                 Bukkit.getScheduler().scheduleSyncDelayedTask(
-                    Main.plugin, { dropitem.remove() }, 20L
+                    IngeniaMC.plugin, { dropitem.remove() }, 20L
                 )
             }, 110L
         )
         Bukkit.getScheduler().scheduleSyncDelayedTask(
-            Main.plugin, {
+            IngeniaMC.plugin, {
                 db.remove()
                 db.world.spawnParticle(Particle.CLOUD, db.location.add(0.0, 1.5, 0.0), 10, 0.0, 0.0, 0.0, 0.0)
                 Bukkit.getScheduler().cancelTask(schedule)

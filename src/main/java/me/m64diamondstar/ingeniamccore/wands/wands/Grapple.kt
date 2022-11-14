@@ -1,29 +1,16 @@
 package me.m64diamondstar.ingeniamccore.wands.wands
 
-import me.m64diamondstar.ingeniamccore.Main
+import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.utils.entities.LeashablePacketEntity
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageLocation
 import me.m64diamondstar.ingeniamccore.wands.Cooldowns
-import net.minecraft.BlockUtil
-import net.minecraft.network.protocol.game.PacketPlayOutAttachEntity
-import net.minecraft.network.protocol.game.PacketPlayOutEntityDestroy
-import net.minecraft.network.protocol.game.PacketPlayOutEntityVelocity
-import net.minecraft.world.entity.Entity
-import net.minecraft.world.phys.Vec3D
 import org.bukkit.*
-import org.bukkit.Particle.DustOptions
 import org.bukkit.craftbukkit.v1_19_R1.CraftWorld
-import org.bukkit.craftbukkit.v1_19_R1.entity.CraftEntity
-import org.bukkit.craftbukkit.v1_19_R1.entity.CraftPlayer
-import org.bukkit.entity.EntityType
-import org.bukkit.entity.Pig
 import org.bukkit.entity.Player
-import org.bukkit.entity.Slime
 import org.bukkit.scheduler.BukkitRunnable
 import org.bukkit.util.Vector
-import java.awt.TrayIcon
 import kotlin.math.abs
 
 
@@ -63,8 +50,8 @@ class Grapple(player: Player): Wand {
 
             override fun run(){
 
-                if(c == 400 || Main.isDisabling){
-                    Bukkit.getScheduler().callSyncMethod(Main.plugin) {
+                if(c == 400 || IngeniaMC.isDisabling){
+                    Bukkit.getScheduler().callSyncMethod(IngeniaMC.plugin) {
                         leashableEntity.despawn()
                     }
                     cancel()
@@ -80,7 +67,7 @@ class Grapple(player: Player): Wand {
 
                         isHooked = true
 
-                        Bukkit.getScheduler().callSyncMethod(Main.plugin) {
+                        Bukkit.getScheduler().callSyncMethod(IngeniaMC.plugin) {
                             leashableEntity = LeashablePacketEntity((player.world as CraftWorld).handle, hookLocation, player)
                             leashableEntity.spawn()
                         }
@@ -101,7 +88,7 @@ class Grapple(player: Player): Wand {
 
                 }else{
                     isHooked = false
-                    Bukkit.getScheduler().callSyncMethod(Main.plugin) {
+                    Bukkit.getScheduler().callSyncMethod(IngeniaMC.plugin) {
                         leashableEntity.despawn()
                     }
                 }
@@ -109,7 +96,7 @@ class Grapple(player: Player): Wand {
                 c += 1
             }
 
-        }.runTaskTimerAsynchronously(Main.plugin, 0L, 1L)
+        }.runTaskTimerAsynchronously(IngeniaMC.plugin, 0L, 1L)
 
         Cooldowns.addPlayer(player, 20500L, 22000L, 25000L, 30000L)
 

@@ -1,6 +1,6 @@
 package me.m64diamondstar.ingeniamccore.wands.wands
 
-import me.m64diamondstar.ingeniamccore.Main
+import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import java.lang.Runnable
 import me.m64diamondstar.ingeniamccore.wands.Cooldowns
@@ -53,7 +53,7 @@ class AntiGravity(player: Player): Wand {
             stands.add(armorStand)
         }
         val s = Bukkit.getScheduler().scheduleSyncRepeatingTask(
-            Main.plugin, {
+            IngeniaMC.plugin, {
                 for (stand in stands) {
                     val loc = player.location.add(0.0, -0.5, 0.0)
                     loc.yaw = stand.location.yaw + 10
@@ -63,7 +63,7 @@ class AntiGravity(player: Player): Wand {
             }, 0L, 1L
         )
         Bukkit.getScheduler().runTaskLater(
-            Main.plugin, Runnable {
+            IngeniaMC.plugin, Runnable {
                 player.setGravity(true)
                 player.addPotionEffect(PotionEffectType.SLOW_FALLING.createEffect(50, 1))
                 Bukkit.getScheduler().cancelTask(s)

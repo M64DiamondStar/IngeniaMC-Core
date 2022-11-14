@@ -1,6 +1,6 @@
 package me.m64diamondstar.ingeniamccore.data
 
-import me.m64diamondstar.ingeniamccore.Main
+import me.m64diamondstar.ingeniamccore.IngeniaMC
 import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.configuration.file.YamlConfiguration
 import java.io.File
@@ -20,8 +20,8 @@ abstract class Configuration (path: String, name: String, resource: Boolean, ins
      */
     init {
 
-        this.path = File(Main.plugin.dataFolder, path)
-        this.name = name
+        this.path = File(IngeniaMC.plugin.dataFolder, path)
+        this.name = name.replace(".yml", "")
         this.resource = resource
 
         this.path.mkdirs()

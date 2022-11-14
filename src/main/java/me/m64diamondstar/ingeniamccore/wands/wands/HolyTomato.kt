@@ -1,6 +1,6 @@
 package me.m64diamondstar.ingeniamccore.wands.wands
 
-import me.m64diamondstar.ingeniamccore.Main
+import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.wands.Cooldowns
 import org.bukkit.Bukkit
@@ -39,7 +39,7 @@ class HolyTomato(player: Player): Wand {
         meta!!.setCustomModelData(1)
         item.itemMeta = meta
         val schedule = Bukkit.getScheduler().scheduleSyncRepeatingTask(
-            Main.plugin, {
+            IngeniaMC.plugin, {
                 player.world.spawnParticle(
                     Particle.REDSTONE, loc, 50, 1.0, 1.0, 1.0, 0.0, Particle.DustOptions(
                         Color.RED, 1F
@@ -51,7 +51,7 @@ class HolyTomato(player: Player): Wand {
             val ti = player.world.dropItem(loc, item)
             ti.pickupDelay = Int.MAX_VALUE
             Bukkit.getScheduler().scheduleSyncDelayedTask(
-                Main.plugin, {
+                IngeniaMC.plugin, {
                     player.world.spawnParticle(Particle.CLOUD, ti.location, 1, 0.0, 0.0, 0.0, 0.0)
                     ti.remove()
                     Bukkit.getScheduler().cancelTask(schedule)

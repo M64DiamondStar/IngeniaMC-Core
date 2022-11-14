@@ -1,6 +1,6 @@
 package me.m64diamondstar.ingeniamccore.wands.wands
 
-import me.m64diamondstar.ingeniamccore.Main
+import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.wands.Cooldowns
 import org.bukkit.Bukkit
@@ -47,7 +47,7 @@ class Bush(player: Player):Wand {
             as1.customName = "IngeniaWandsBush" + player.uniqueId
             player.equipment!!.helmet = ItemStack(Material.OAK_LEAVES)
             Bukkit.getScheduler().scheduleSyncDelayedTask(
-                Main.plugin, {
+                IngeniaMC.plugin, {
                     as1.remove()
                     as1.world.spawnParticle(Particle.CLOUD, as1.location.add(0.0, 1.5, 0.0), 3, 0.0, 0.0, 0.0, 0.0)
                     if (player.equipment!!.helmet != null) {

@@ -1,6 +1,6 @@
 package me.m64diamondstar.ingeniamccore.wands.wands
 
-import me.m64diamondstar.ingeniamccore.Main
+import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import org.bukkit.Color
 import org.bukkit.Particle
@@ -39,6 +39,6 @@ class SnowCannon(player: Player): Wand {
                 )
                 if (snowball.isDead) cancel()
             }
-        }.runTaskTimer(Main.plugin, 0L, 1L)
+        }.runTaskTimer(IngeniaMC.plugin, 0L, 1L)
     }
 }

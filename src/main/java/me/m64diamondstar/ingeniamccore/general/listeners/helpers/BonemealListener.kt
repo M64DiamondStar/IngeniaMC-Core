@@ -1,6 +1,6 @@
 package me.m64diamondstar.ingeniamccore.general.listeners.helpers
 
-import me.m64diamondstar.ingeniamccore.Main
+import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.utils.items.MaterialChecker
 import org.bukkit.Color
 import org.bukkit.Material
@@ -34,7 +34,7 @@ class BonemealListener: Listener {
                 }
             }
 
-        }.runTaskLater(Main.plugin, 5L)
+        }.runTaskLater(IngeniaMC.plugin, 5L)
 
     }
 
