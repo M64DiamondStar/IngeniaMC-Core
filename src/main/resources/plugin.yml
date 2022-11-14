@@ -1,12 +1,12 @@
 name: IngeniaMC-Core
 version: '${project.version}'
-main: me.m64diamondstar.ingeniamccore.Main
+main: me.m64diamondstar.ingeniamccore.IngeniaMC
 api-version: 1.19
 authors: [ M64DiamondStar ]
 description: The Core plugin of IngeniaMC.
 depend:
-  - ProtocolLib
   - Train_Carts
+  - ProtocolLib
 commands:
   wand:
     description: Open the wand selection menu.
