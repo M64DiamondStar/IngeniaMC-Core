@@ -1,6 +1,6 @@
 package me.m64diamondstar.ingeniamccore.general.player;
 
-import me.m64diamondstar.ingeniamccore.Main;
+import me.m64diamondstar.ingeniamccore.IngeniaMC;
 import me.m64diamondstar.ingeniamccore.data.files.PlayerConfig;
 import me.m64diamondstar.ingeniamccore.general.scoreboard.Scoreboard;
 import me.m64diamondstar.ingeniamccore.general.tablist.TabList;
@@ -20,8 +20,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -37,7 +35,15 @@ public class IngeniaPlayer {
         this.config = new PlayerConfig(player.getUniqueId());
     }
 
+    private PlayerConfig getConfig(){
+        this.config = new PlayerConfig(player.getUniqueId());
+        return config;
+    }
+
     public void startUp(){
+        this.setScoreboard(true);
+        this.setTablist(true);
+        this.giveMenuItem();
         player.setCollidable(false);
 
         if(player.isOp())
@@ -101,27 +107,27 @@ public class IngeniaPlayer {
     }
 
     public long getExp(){
-        return config.getExp();
+        return getConfig().getExp();
     }
 
     public void setExp(long l){
-        config.setExp(l);
+        getConfig().setExp(l);
     }
 
     public void addExp(long l){
-        config.setExp(l + getExp());
+        getConfig().setExp(l + getExp());
     }
 
     public long getBal(){
-        return config.getBal();
+        return getConfig().getBal();
     }
 
     public void setBal(long l){
-        config.setBal(l);
+        getConfig().setBal(l);
     }
 
     public void addBal(long l){
-        config.setBal(l + getBal());
+        getConfig().setBal(l + getBal());
     }
 
     public void setScoreboard(boolean on){
@@ -138,26 +144,24 @@ public class IngeniaPlayer {
     }
 
     public void setTablist(boolean on){
+        TabList tabList = new TabList(IngeniaMC.plugin);
         if(on) {
-            TabList tabList = new TabList(Main.plugin);
-            for (String header : Objects.requireNonNull(Main.plugin.getConfig().getConfigurationSection("Tablist")).getStringList("Header")) {
+            for (String header : Objects.requireNonNull(IngeniaMC.plugin.getConfig().getConfigurationSection("Tablist")).getStringList("Header")) {
                 tabList.addHeader(header, player);
             }
 
-            for (String footer : Objects.requireNonNull(Main.plugin.getConfig().getConfigurationSection("Tablist")).getStringList("Footer")) {
+            for (String footer : Objects.requireNonNull(IngeniaMC.plugin.getConfig().getConfigurationSection("Tablist")).getStringList("Footer")) {
                 tabList.addFooter(
                         footer.replace(
                                 "%online%", Bukkit.getOnlinePlayers().size() + ""
                         )
                 );
             }
-            tabList.showTab(player);
         }else{
-            TabList tabList = new TabList(Main.plugin);
             tabList.clearHeader();
             tabList.clearFooter();
-            tabList.showTab(player);
         }
+        tabList.showTab(player);
     }
 
     public List<ItemStack> getWands(){
@@ -170,19 +174,19 @@ public class IngeniaPlayer {
     }
 
     public void setJoinMessage(String msg){
-        config.setJoinMessage(msg);
+        getConfig().setJoinMessage(msg);
     }
 
     public String getJoinMessage(){
-        return Objects.requireNonNull(config.getJoinMessage()).replace("%player%", Colors.format(config.getJoinColor() + player.getName() + "#ababab"));
+        return Objects.requireNonNull(getConfig().getJoinMessage()).replace("%player%", Colors.format(getConfig().getJoinColor() + player.getName() + "#ababab"));
     }
 
     public void setLeaveMessage(String msg){
-        config.setLeaveMessage(msg);
+        getConfig().setLeaveMessage(msg);
     }
 
     public String getLeaveMessage(){
-        return Objects.requireNonNull(config.getLeaveMessage()).replace("%player%", Colors.format(config.getJoinColor() + player.getName() + "#ababab"));
+        return Objects.requireNonNull(getConfig().getLeaveMessage()).replace("%player%", Colors.format(getConfig().getJoinColor() + player.getName() + "#ababab"));
     }
 
     public Inventory getPreviousInventory(){
