@@ -19,6 +19,6 @@ interface CustomAttraction {
 
     fun setSpawnLocation(location: Location)
 
-    fun run()
+    fun execute()
 
 }
