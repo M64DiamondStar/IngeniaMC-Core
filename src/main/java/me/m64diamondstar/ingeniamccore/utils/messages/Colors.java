@@ -30,8 +30,8 @@ public class Colors {
 
         try{
             r = Integer.parseInt(args[0]);
-            g = Integer.parseInt(args[0]);
-            b = Integer.parseInt(args[0]);
+            g = Integer.parseInt(args[1]);
+            b = Integer.parseInt(args[2]);
         }catch (NumberFormatException e){
             Bukkit.getLogger().warning(e.getCause() + ": Error with converting String to Int in " + e.getClass());
         }
