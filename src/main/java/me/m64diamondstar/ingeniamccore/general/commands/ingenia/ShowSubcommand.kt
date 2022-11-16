@@ -1,17 +1,11 @@
 package me.m64diamondstar.ingeniamccore.general.commands.ingenia
 
-import com.comphenix.protocol.wrappers.EnumWrappers
-import me.m64diamondstar.ingeniamccore.attractions.utils.AttractionUtils
-import me.m64diamondstar.ingeniamccore.general.commands.ingenia.show.ParticleSubcommand
-import me.m64diamondstar.ingeniamccore.shows.type.Particle
 import me.m64diamondstar.ingeniamccore.shows.utils.Show
 import me.m64diamondstar.ingeniamccore.shows.utils.ShowUtils
 import me.m64diamondstar.ingeniamccore.utils.IngeniaSubcommand
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
 import me.m64diamondstar.ingeniamccore.utils.messages.Messages
-import org.bukkit.Color
-import org.bukkit.Material
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import java.lang.NumberFormatException
@@ -59,12 +53,8 @@ class ShowSubcommand(private val sender: CommandSender, private val args: Array<
             if(!exists(player))
                 return
 
-            val show = Show(args[2], args[3])
+            //val show = Show(args[2], args[3])
 
-            if(args[4].equals("particle", ignoreCase = true)){
-                val particleSubcommand = ParticleSubcommand(args, player, show)
-                particleSubcommand.execute()
-            }
         }
 
         // Play a show from start, one specific effect or start from an effect ID
