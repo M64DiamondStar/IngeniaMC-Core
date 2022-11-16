@@ -8,6 +8,7 @@ import me.m64diamondstar.ingeniamccore.shows.type.Particle
 import me.m64diamondstar.ingeniamccore.shows.type.ParticleEmitter
 import org.bukkit.Bukkit
 import org.bukkit.scheduler.BukkitRunnable
+import java.lang.IllegalArgumentException
 import java.util.ArrayList
 
 /**
@@ -58,15 +59,7 @@ class Show(private val category: String, private val name: String): Configuratio
                 var i = 1
                 while (getConfig().getConfigurationSection("$i") != null) {
                     if (getConfig().getConfigurationSection("$i")!!.getLong("Delay") == count) {
-                        if(getType(i)?.isSync() == true) {
-                            object : BukkitRunnable() {
-                                override fun run() {
-                                    getType(i)?.execute()
-                                }
-                            }.runTask(IngeniaMC.plugin)
-                        }else {
-                            getType(i)?.execute()
-                        }
+                        getType(i)!!.execute()
                         tasksDone++
                     }
                     i++
@@ -74,7 +67,7 @@ class Show(private val category: String, private val name: String): Configuratio
 
                 count++
             }
-        }.runTaskTimerAsynchronously(IngeniaMC.plugin, 0L, 1L)
+        }.runTaskTimer(IngeniaMC.plugin, 0L, 1L)
     }
 
     /**
@@ -95,15 +88,7 @@ class Show(private val category: String, private val name: String): Configuratio
                 var i = id
                 while (getConfig().getConfigurationSection("$i") != null) {
                     if (getConfig().getConfigurationSection("$i")!!.getLong("Delay") == count) {
-                        if(getType(i)?.isSync() == true) {
-                            object : BukkitRunnable() {
-                                override fun run() {
-                                    getType(i)?.execute()
-                                }
-                            }.runTask(IngeniaMC.plugin)
-                        }else {
-                            getType(i)?.execute()
-                        }
+                        getType(i)!!.execute()
                         tasksDone++
                     }
                     i++
@@ -111,7 +96,7 @@ class Show(private val category: String, private val name: String): Configuratio
 
                 count++
             }
-        }.runTaskTimerAsynchronously(IngeniaMC.plugin, 0L, 1L)
+        }.runTaskTimer(IngeniaMC.plugin, 0L, 1L)
     }
 
     /**
@@ -133,15 +118,17 @@ class Show(private val category: String, private val name: String): Configuratio
     }
 
     fun getType(id: Int): EffectType? {
-        if(getConfig().getString("$id.Type").equals("Animatronic", ignoreCase = true))
-            return Animatronic(this, id)
-        if(getConfig().getString("$id.Type").equals("Animatronic-Group", ignoreCase = true))
-            return AnimatronicGroup(this, id)
-        if(getConfig().getString("$id.Type").equals("Particle", ignoreCase = true))
-            return Particle(this, id)
-        if(getConfig().getString("$id.Type").equals("Particle-Emitter", ignoreCase = true))
-            return ParticleEmitter(this, id)
-        return null
+        val type: EffectType.Types
+
+        val string = if(getConfig().get("$id.Type") != null) getConfig().getString("$id.Type")!! else return null
+
+        try{
+            type = EffectType.Types.valueOf(string.uppercase())
+        }catch (e: IllegalArgumentException){
+            return null
+        }
+
+        return type.getTypeClass(this, id)
     }
 
 }

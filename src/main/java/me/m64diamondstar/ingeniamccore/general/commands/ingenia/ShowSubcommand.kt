@@ -82,17 +82,19 @@ class ShowSubcommand(private val sender: CommandSender, private val args: Array<
             else if(args.size == 6){
                 if(args[4].equals("only", ignoreCase = true)){
                     try {
-                        show.playOnly(args[5].toInt())
-                        player.sendMessage(Colors.format(MessageType.SUCCESS + "Successfully played effect ${args[5]} of this show."))
+                        if(show.playOnly(args[5].toInt()))
+                            player.sendMessage(Colors.format(MessageType.SUCCESS + "Successfully played effect ${args[5]} of this show."))
+                        else
+                            player.sendMessage(Colors.format("${MessageType.ERROR}&n${args[5]}&r ${MessageType.ERROR}is not a valid ID."))
                     }catch (e: NumberFormatException){
-                        player.sendMessage(Colors.format("${MessageType.ERROR}&n${args[6]}&r ${MessageType.ERROR}is not a valid number."))
+                        player.sendMessage(Colors.format("${MessageType.ERROR}&n${args[5]}&r ${MessageType.ERROR}is not a valid number."))
                     }
                 }else if(args[4].equals("from", ignoreCase = true)){
                     try {
                         show.playFrom(args[5].toInt())
                         player.sendMessage(Colors.format(MessageType.SUCCESS + "Successfully started from effect ${args[5]} of this show."))
                     }catch (e: NumberFormatException){
-                        player.sendMessage(Colors.format("${MessageType.ERROR}&n${args[6]}&r ${MessageType.ERROR}is not a valid number."))
+                        player.sendMessage(Colors.format("${MessageType.ERROR}&n${args[5]}&r ${MessageType.ERROR}is not a valid number."))
                     }
                 }else player.sendMessage(Messages.invalidSubcommand("ig show play <category> <name> [<only/from> <id>]"))
             }else player.sendMessage(Messages.invalidSubcommand("ig show play <category> <name> [<only/from> <id>]"))

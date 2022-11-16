@@ -1,21 +1,43 @@
 package me.m64diamondstar.ingeniamccore.shows.utils
 
+import me.m64diamondstar.ingeniamccore.shows.type.*
 import org.bukkit.configuration.ConfigurationSection
 
 abstract class EffectType(private val show: Show, private val id: Int) {
 
     enum class Types {
-        ANIMATRONIC,
-        ANIMATRONIC_GROUP,
-        DIALOGUE,
-        FALLING_BLOCK,
-        FILL_BLOCK,
-        FIREWORK,
-        FOUNTAIN,
-        PARTICLE,
-        PARTICLE_EMITTER,
-        PARTICLE_LINE,
-        SET_BLOCK
+        ANIMATRONIC {
+            override fun getTypeClass(show: Show, id: Int): EffectType = Animatronic(show, id)
+        },
+        ANIMATRONIC_GROUP {
+            override fun getTypeClass(show: Show, id: Int): EffectType = AnimatronicGroup(show, id)
+        },
+        FALLING_BLOCK {
+            override fun getTypeClass(show: Show, id: Int): EffectType = FallingBlock(show, id)
+        },
+        FILL_BLOCK {
+            override fun getTypeClass(show: Show, id: Int): EffectType = FillBlock(show, id)
+        },
+        FIREWORK {
+            override fun getTypeClass(show: Show, id: Int): EffectType = Firework(show, id)
+        },
+        FOUNTAIN {
+            override fun getTypeClass(show: Show, id: Int): EffectType = Fountain(show, id)
+        },
+        PARTICLE {
+            override fun getTypeClass(show: Show, id: Int): EffectType = Particle(show, id)
+        },
+        PARTICLE_EMITTER {
+            override fun getTypeClass(show: Show, id: Int): EffectType = ParticleEmitter(show, id)
+        },
+        PARTICLE_LINE {
+            override fun getTypeClass(show: Show, id: Int): EffectType = ParticleLine(show, id)
+        },
+        SET_BLOCK {
+            override fun getTypeClass(show: Show, id: Int): EffectType = SetBlock(show, id)
+        };
+
+        abstract fun getTypeClass(show: Show, id: Int): EffectType
     }
 
     abstract fun execute()

@@ -2,6 +2,7 @@ package me.m64diamondstar.ingeniamccore.utils
 
 import org.bukkit.Bukkit
 import org.bukkit.Location
+import org.bukkit.util.Vector
 import java.lang.NumberFormatException
 
 object LocationUtils {
@@ -37,6 +38,28 @@ object LocationUtils {
         }
 
         return Location(world, x, y, z, yaw, pitch)
+    }
+
+    fun getVectorFromString(string: String): Vector?{
+        var args = string.split(", ")
+        if(args.size == 1)
+            args = string.split(",")
+        if(args.size == 1)
+            return null
+
+        val x: Double
+        val y: Double
+        val z: Double
+
+        try{
+            x = args[0].toDouble()
+            y = args[1].toDouble()
+            z = args[2].toDouble()
+        }catch (e: NumberFormatException){
+            return null
+        }
+
+        return Vector(x, y, z)
     }
 
 }
