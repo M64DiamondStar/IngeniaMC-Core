@@ -13,6 +13,7 @@ import me.m64diamondstar.ingeniamccore.general.listeners.*
 import me.m64diamondstar.ingeniamccore.wands.wandlistener.WandListener
 import me.m64diamondstar.ingeniamccore.general.listeners.helpers.BonemealListener
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
+import me.m64diamondstar.ingeniamccore.shows.listeners.EntityChangeBlockListener
 import me.m64diamondstar.ingeniamccore.utils.gui.GuiListener
 import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
@@ -135,6 +136,11 @@ class IngeniaMC : JavaPlugin() {
             Attraction Events
          */
         Bukkit.getServer().pluginManager.registerEvents(PlayerInteractEntityListener(), this)
+
+        /*
+            Show Events
+         */
+        Bukkit.getServer().pluginManager.registerEvents(EntityChangeBlockListener(), this)
     }
 
     private fun loadPacketListeners(){
