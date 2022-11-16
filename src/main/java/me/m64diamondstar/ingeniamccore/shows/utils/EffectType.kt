@@ -18,9 +18,6 @@ abstract class EffectType(private val show: Show, private val id: Int) {
         FILL_BLOCK {
             override fun getTypeClass(show: Show, id: Int): EffectType = FillBlock(show, id)
         },
-        FIREWORK {
-            override fun getTypeClass(show: Show, id: Int): EffectType = Firework(show, id)
-        },
         FOUNTAIN {
             override fun getTypeClass(show: Show, id: Int): EffectType = Fountain(show, id)
         },
