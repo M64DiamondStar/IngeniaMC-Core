@@ -33,7 +33,7 @@ open class Attraction(category: String, name: String): Configuration("rides/$cat
      * Constructor for managing an attraction.
      */
     init {
-        this.name = name
+        this.name = name.replace(".yml", "")
         this.category = category
     }
 
@@ -350,7 +350,7 @@ open class Attraction(category: String, name: String): Configuration("rides/$cat
         val leaderboardPacketEntity = LeaderboardPacketEntity(leaderboard, getNMSWorld(),
             getLeaderboardLocation(), getLeaderboardDirection())
         leaderboardPacketEntity.spawn(player)
-        LeaderboardRegistry.setBoard(player, leaderboardPacketEntity.ae())
+        LeaderboardRegistry.setBoard(getName(), player, leaderboardPacketEntity.ae())
     }
 
     /**
@@ -380,11 +380,8 @@ open class Attraction(category: String, name: String): Configuration("rides/$cat
      * Despawn the leaderboard for everyone on the server.
      */
     private fun despawnRidecountSign(player: Player){
-        if(LeaderboardRegistry.getBoards().containsKey(player.uniqueId))
-            (player as CraftPlayer).handle.b.a(LeaderboardRegistry.getBoards()[player.uniqueId]?.let {
-                PacketPlayOutEntityDestroy(
-                    it /*ID*/)
-            })
+        if(LeaderboardRegistry.getId(getName(), player) != null)
+            (player as CraftPlayer).handle.b.a(PacketPlayOutEntityDestroy(LeaderboardRegistry.getId(getName(), player)))
     }
 
     /**
