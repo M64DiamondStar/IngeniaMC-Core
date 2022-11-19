@@ -32,12 +32,14 @@ class MenuSubcommand(private val sender: CommandSender, private val args: Array<
                     val mainInventory = MainInventory(player)
                     mainInventory.open()
                 }else{
-                    val target = IngeniaPlayer(Bukkit.getPlayer(args[2]))
-                    if (target.player == null) {
+                    val target = Bukkit.getPlayer(args[2])
+                    if (target == null) {
                         sender.sendMessage(Messages.invalidPlayer())
                         return
                     }
-                    val mainInventory = MainInventory(target)
+                    val targetPlayer = IngeniaPlayer(target)
+
+                    val mainInventory = MainInventory(targetPlayer)
                     mainInventory.open()
                 }
             } else if(args[1].equals("give", ignoreCase = true)){
@@ -50,12 +52,13 @@ class MenuSubcommand(private val sender: CommandSender, private val args: Array<
                     val player = IngeniaPlayer(sender)
                     player.giveMenuItem()
                 }else{
-                    val target = IngeniaPlayer(Bukkit.getPlayer(args[2]))
-                    if (target.player == null) {
+                    val target = Bukkit.getPlayer(args[2])
+                    if (target == null) {
                         sender.sendMessage(Messages.invalidPlayer())
                         return
                     }
-                    target.giveMenuItem()
+                    val targetPlayer = IngeniaPlayer(target)
+                    targetPlayer.giveMenuItem()
                 }
             } else{
                 sender.sendMessage(Colors.format(Messages.commandUsage("ig menu [give/open] [player]")))

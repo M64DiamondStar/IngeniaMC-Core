@@ -18,14 +18,15 @@ class ExpSubcommand(private val sender: CommandSender, private val args: Array<S
             sender.sendMessage(Colors.format(Messages.commandUsage("ig exp <add/set/subtract/get> <player> [amount]")))
         } else if (args.size == 3) {
             if (args[1].equals("get", ignoreCase = true)) {
-                val target = IngeniaPlayer(Bukkit.getPlayer(args[2]))
-                if (target.player == null) {
+                val target = Bukkit.getPlayer(args[2])
+                if (target == null) {
                     sender.sendMessage(Messages.invalidPlayer())
                     return
                 }
+                val targetPlayer = IngeniaPlayer(target)
                 sender.sendMessage(
                     Colors.format(
-                        MessageType.INFO + target.name + " has " + target.exp + " exp."))
+                        MessageType.INFO + targetPlayer.name + " has " + targetPlayer.exp + " exp."))
             } else {
                 sender.sendMessage(
                     Colors.format(
@@ -39,30 +40,31 @@ class ExpSubcommand(private val sender: CommandSender, private val args: Array<S
                 sender.sendMessage(Messages.invalidNumber())
                 return
             }
-            val target = IngeniaPlayer(Bukkit.getPlayer(args[2]))
-            if (target.player == null) {
+            val target = Bukkit.getPlayer(args[2])
+            if (target == null) {
                 sender.sendMessage(Messages.invalidPlayer())
                 return
             }
+            val targetPlayer = IngeniaPlayer(target)
             if (args[1].equals("add", ignoreCase = true)) {
-                target.addExp(exp)
+                targetPlayer.addExp(exp)
                 sender.sendMessage(
                     Colors.format(
-                        MessageType.SUCCESS + "Successfully added " + exp + " to " + target.name + "."
+                        MessageType.SUCCESS + "Successfully added " + exp + " to " + targetPlayer.name + "."
                     )
                 )
             } else if (args[1].equals("set", ignoreCase = true)) {
-                target.exp = exp
+                targetPlayer.exp = exp
                 sender.sendMessage(
                     Colors.format(
-                        MessageType.SUCCESS + "Successfully set " + target.name + "'s exp to " + exp + "."
+                        MessageType.SUCCESS + "Successfully set " + targetPlayer.name + "'s exp to " + exp + "."
                     )
                 )
             } else if (args[1].equals("subtract", ignoreCase = true)) {
-                target.addExp(-exp)
+                targetPlayer.addExp(-exp)
                 sender.sendMessage(
                     Colors.format(
-                        MessageType.SUCCESS + "Successfully subtracted " + exp + " exp from " + target.name + "."
+                        MessageType.SUCCESS + "Successfully subtracted " + exp + " exp from " + targetPlayer.name + "."
                     )
                 )
             } else {

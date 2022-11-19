@@ -19,14 +19,15 @@ class BalanceSubcommand(private val sender: CommandSender, private val args: Arr
             sender.sendMessage(Colors.format(Messages.commandUsage("ig balance <add/set/subtract/get> <player> [amount]")))
         } else if (args.size == 3) {
             if (args[1].equals("get", ignoreCase = true)) {
-                val target = IngeniaPlayer(Bukkit.getPlayer(args[2]))
-                if (target.player == null) {
+                val target = Bukkit.getPlayer(args[2])
+                if (target == null) {
                     sender.sendMessage(Messages.invalidPlayer())
                     return
                 }
+                val targetPlayer = IngeniaPlayer(target)
                 sender.sendMessage(
                     Colors.format(
-                        MessageType.INFO + target.name + " has " + target.bal + ":gs:."))
+                        MessageType.INFO + targetPlayer.name + " has " + targetPlayer.bal + ":gs:."))
             } else {
                 sender.sendMessage(
                     Colors.format(
@@ -40,30 +41,31 @@ class BalanceSubcommand(private val sender: CommandSender, private val args: Arr
                 sender.sendMessage(Messages.invalidNumber())
                 return
             }
-            val target = IngeniaPlayer(Bukkit.getPlayer(args[2]))
-            if (target.player == null) {
+            val target = Bukkit.getPlayer(args[2])
+            if (target == null) {
                 sender.sendMessage(Messages.invalidPlayer())
                 return
             }
+            val targetPlayer = IngeniaPlayer(target)
             if (args[1].equals("add", ignoreCase = true)) {
-                target.addBal(gs)
+                targetPlayer.addBal(gs)
                 sender.sendMessage(
                     Colors.format(
-                        MessageType.SUCCESS + "Successfully added " + gs + ":gs: to " + target.name + "."
+                        MessageType.SUCCESS + "Successfully added " + gs + ":gs: to " + targetPlayer.name + "."
                     )
                 )
             } else if (args[1].equals("set", ignoreCase = true)) {
-                target.bal = gs
+                targetPlayer.bal = gs
                 sender.sendMessage(
                     Colors.format(
-                        MessageType.SUCCESS + "Successfully set " + target.name + "'s balance to " + gs + ":gs:."
+                        MessageType.SUCCESS + "Successfully set " + targetPlayer.name + "'s balance to " + gs + ":gs:."
                     )
                 )
             } else if (args[1].equals("subtract", ignoreCase = true)) {
-                target.addBal(-gs)
+                targetPlayer.addBal(-gs)
                 sender.sendMessage(
                     Colors.format(
-                        MessageType.SUCCESS + "Successfully subtracted " + gs + ":gs: from " + target.name + "."
+                        MessageType.SUCCESS + "Successfully subtracted " + gs + ":gs: from " + targetPlayer.name + "."
                     )
                 )
             } else {

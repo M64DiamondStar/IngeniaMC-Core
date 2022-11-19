@@ -41,18 +41,14 @@ class GamemodeCommand : CommandExecutor {
         if (args.isEmpty()) {
             player.setGameMode(gameMode)
         } else if (args.size == 1) {
-            val target = IngeniaPlayer(
-                Objects.requireNonNull(
-                    Bukkit.getPlayer(
-                        args[0]
-                    )
-                )
-            )
-            if (target.player == null) {
+
+            val target = Bukkit.getPlayer(args[0])
+            if (target == null) {
                 player.sendMessage("This player is not online!", MessageType.ERROR)
                 return
             }
-            target.setGameMode(gameMode)
+            val targetPlayer = IngeniaPlayer(target)
+            targetPlayer.setGameMode(gameMode)
             player.sendMessage(
                 "Successfully changed " + args[0] + "'s gamemode to " + gameMode.toString()
                     .lowercase(Locale.getDefault()), MessageType.SUCCESS

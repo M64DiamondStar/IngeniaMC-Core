@@ -19,7 +19,7 @@ class ScoreboardSubcommand(private val sender: CommandSender, private val args: 
         }
         if (args[1].equals("show", ignoreCase = true) || args[1].equals("true", ignoreCase = true)) {
             val player: IngeniaPlayer = if (args.size == 3) {
-                IngeniaPlayer(Bukkit.getPlayer(args[2]))
+                IngeniaPlayer(Bukkit.getPlayer(args[2])!!)
             } else {
                 IngeniaPlayer(sender as Player)
             }
@@ -27,11 +27,11 @@ class ScoreboardSubcommand(private val sender: CommandSender, private val args: 
         } else if (args[1].equals("hide", ignoreCase = true) || args[1].equals("false", ignoreCase = true)) {
             val player: IngeniaPlayer
             if (args.size == 3) {
-                player = IngeniaPlayer(Bukkit.getPlayer(args[2]))
-                if (player.player == null) {
+                if (Bukkit.getPlayer(args[2]) == null) {
                     sender.sendMessage(Messages.invalidPlayer())
                     return
                 }
+                player = IngeniaPlayer(Bukkit.getPlayer(args[2])!!)
             } else {
                 player = IngeniaPlayer(sender as Player)
             }
