@@ -5,12 +5,7 @@ import me.m64diamondstar.ingeniamccore.wands.Cooldowns
 import org.bukkit.Particle
 import org.bukkit.entity.Player
 
-class Launch(player: Player): Wand {
-    private var player: Player
-
-    init {
-        this.player = player
-    }
+class Launch: Wand {
 
     override fun getDisplayName(): String{
         return Colors.format("#247287&lL#338094&la#428fa1&lu#529dae&ln#61abbb&lc#70bac9&lh" +
@@ -21,11 +16,11 @@ class Launch(player: Player): Wand {
         return 1
     }
 
-    override fun hasPermission(): Boolean {
+    override fun hasPermission(player: Player): Boolean {
         return player.hasPermission("ingeniawands.launch")
     }
 
-    override fun run() {
+    override fun run(player: Player) {
         player.velocity = player.location.direction.multiply(2.5)
         player.world.spawnParticle(Particle.REVERSE_PORTAL, player.location, 300, 0.0, 0.0, 0.0)
         Cooldowns.addPlayer(player, 0L, 3000L, 4000L, 6000L)

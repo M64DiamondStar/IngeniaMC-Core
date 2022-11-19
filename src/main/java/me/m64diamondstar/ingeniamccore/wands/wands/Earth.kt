@@ -15,12 +15,7 @@ import org.bukkit.util.EulerAngle
 import org.bukkit.util.Vector
 import java.util.*
 
-class Earth(player: Player): Wand {
-    private var player: Player
-
-    init {
-        this.player = player
-    }
+class Earth: Wand {
 
     override fun getDisplayName(): String{
         return Colors.format("#784108&lE#854d0d&la#925912&lr#9f6417&lt#ac701c&lh #b97c20&lW#c68825&la#d3932a&ln#e09f2f&ld")
@@ -30,11 +25,11 @@ class Earth(player: Player): Wand {
         return 14
     }
 
-    override fun hasPermission(): Boolean {
+    override fun hasPermission(player: Player): Boolean {
         return player.hasPermission("ingeniawands.earth")
     }
 
-    override fun run() {
+    override fun run(player: Player) {
         player.velocity = Vector(0, 1, 0)
         val walkspeed = player.walkSpeed
         Bukkit.getScheduler().scheduleSyncDelayedTask(

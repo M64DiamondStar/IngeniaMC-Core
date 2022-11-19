@@ -5,12 +5,7 @@ import me.m64diamondstar.ingeniamccore.wands.Cooldowns
 import org.bukkit.Material
 import org.bukkit.entity.Player
 
-class SnowExplosion(player: Player): Wand {
-    private var player: Player
-
-    init {
-        this.player = player
-    }
+class SnowExplosion: Wand {
 
     override fun getDisplayName(): String{
         return Colors.format("#ffffff&lS#fcf5f5&ln#f8ecec&lo#f5e2e2&lw" +
@@ -22,11 +17,11 @@ class SnowExplosion(player: Player): Wand {
         return 18
     }
 
-    override fun hasPermission(): Boolean {
+    override fun hasPermission(player: Player): Boolean {
         return player.hasPermission("ingeniawands.snowexplosion")
     }
 
-    override fun run() {
+    override fun run(player: Player) {
         val fb =
             player.world.spawnFallingBlock(player.location.add(0.0, 1.0, 0.0), Material.SNOW_BLOCK.createBlockData())
         fb.velocity = player.location.direction.multiply(1.5)

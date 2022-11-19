@@ -8,12 +8,7 @@ import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.entity.Player
 
-class Fire(player: Player): Wand {
-    private var player: Player
-
-    init {
-        this.player = player
-    }
+class Fire: Wand {
 
     override fun getDisplayName(): String{
         return Colors.format("#a80000&lF#a90d02&li#a91b03&lr#aa2805&le #ab3607&lW#ac4309&la#ac510a&ln#ad5e0c&ld")
@@ -23,11 +18,11 @@ class Fire(player: Player): Wand {
         return 13
     }
 
-    override fun hasPermission(): Boolean {
+    override fun hasPermission(player: Player): Boolean {
         return player.hasPermission("ingeniawands.fire")
     }
 
-    override fun run() {
+    override fun run(player: Player) {
 
         val nLoc = player.location
 

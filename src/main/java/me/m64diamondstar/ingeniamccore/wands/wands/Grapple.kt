@@ -14,12 +14,7 @@ import org.bukkit.util.Vector
 import kotlin.math.abs
 
 
-class Grapple(player: Player): Wand {
-    private var player: Player
-
-    init {
-        this.player = player
-    }
+class Grapple: Wand {
 
     override fun getDisplayName(): String{
         return Colors.format("#bfc1fb&lG#adafe2&lr#9b9cca&la#898ab1&lp#777799&lp#656580&ll" +
@@ -30,11 +25,11 @@ class Grapple(player: Player): Wand {
         return 20
     }
 
-    override fun hasPermission(): Boolean {
+    override fun hasPermission(player: Player): Boolean {
         return player.hasPermission("ingeniawands.grapple")
     }
 
-    override fun run() {
+    override fun run(player: Player) {
 
         val ingeniaPlayer = IngeniaPlayer(player)
         ingeniaPlayer.sendMessage("&8Press &7shift &8while looking at a block to start!", MessageLocation.HOTBAR)

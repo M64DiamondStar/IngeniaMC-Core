@@ -22,15 +22,9 @@ import org.bukkit.util.EulerAngle
 import org.bukkit.util.Vector
 import java.util.*
 
-class Sled(player: Player): Wand {
+class Sled: Wand {
 
-    private var player: Player
-
-    init {
-        this.player = player
-    }
-
-    override fun run() {
+    override fun run(player: Player) {
         properInit(player)
     }
 
@@ -42,7 +36,7 @@ class Sled(player: Player): Wand {
         return 19
     }
 
-    override fun hasPermission(): Boolean {
+    override fun hasPermission(player: Player): Boolean {
         return player.hasPermission("ingeniawands.sled")
     }
 

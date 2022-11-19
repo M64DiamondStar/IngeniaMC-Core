@@ -8,12 +8,7 @@ import org.bukkit.entity.Player
 import org.bukkit.entity.Snowball
 import org.bukkit.scheduler.BukkitRunnable
 
-class SnowCannon(player: Player): Wand {
-    private var player: Player
-
-    init {
-        this.player = player
-    }
+class SnowCannon: Wand {
 
     override fun getDisplayName(): String{
         return Colors.format("#4f4f4f&lS#686868&ln#818181&lo#9a9a9a&lw" +
@@ -24,11 +19,11 @@ class SnowCannon(player: Player): Wand {
         return 3
     }
 
-    override fun hasPermission(): Boolean {
+    override fun hasPermission(player: Player): Boolean {
         return player.hasPermission("ingeniawands.snowcannon")
     }
 
-    override fun run() {
+    override fun run(player: Player) {
         val snowball = player.launchProjectile(Snowball::class.java, player.location.direction)
         object : BukkitRunnable() {
             override fun run() {

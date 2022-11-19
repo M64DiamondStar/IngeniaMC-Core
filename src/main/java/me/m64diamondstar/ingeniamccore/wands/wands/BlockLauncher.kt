@@ -4,12 +4,7 @@ import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.wands.Cooldowns
 import org.bukkit.entity.Player
 
-class BlockLauncher(player: Player): Wand {
-    private var player: Player
-
-    init {
-        this.player = player
-    }
+class BlockLauncher: Wand {
 
     override fun getDisplayName(): String{
         return Colors.format("#71c427&lB#6dbd25&ll#68b523&lo#64ae21&lc#60a71f&lk" +
@@ -21,11 +16,11 @@ class BlockLauncher(player: Player): Wand {
         return 5
     }
 
-    override fun hasPermission(): Boolean {
+    override fun hasPermission(player: Player): Boolean {
         return player.hasPermission("ingeniawands.blocklauncher")
     }
 
-    override fun run() {
+    override fun run(player: Player) {
         val loc = player.location.add(0.0, -1.0, 0.0)
         val block = loc.block
         val fallingblock = player.world.spawnFallingBlock(player.location.add(0.0, 1.0, 0.0), block.blockData)

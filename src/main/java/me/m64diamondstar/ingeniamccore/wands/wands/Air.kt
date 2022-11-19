@@ -11,13 +11,7 @@ import org.bukkit.entity.Player
 import org.bukkit.scheduler.BukkitRunnable
 import org.bukkit.util.Vector
 
-class Air(player: Player): Wand {
-
-    private var player: Player
-
-    init {
-        this.player = player
-    }
+class Air: Wand {
 
     override fun getDisplayName(): String{
         return Colors.format("#ffffff&lA#d8e9f5&li#b1d4eb&lr #8abee1&lW#63a8d6&la#3c93cc&ln#157dc2&ld")
@@ -27,11 +21,11 @@ class Air(player: Player): Wand {
         return 12
     }
 
-    override fun hasPermission(): Boolean {
+    override fun hasPermission(player: Player): Boolean {
         return player.hasPermission("ingeniawands.air")
     }
 
-    override fun run() {
+    override fun run(player: Player) {
         player.velocity = Vector(0, 1, 0)
         player.world.spawnParticle(Particle.SPELL, player.location, 100, 0.5, 0.5, 0.5, 0.01)
         Bukkit.getScheduler().scheduleSyncDelayedTask(
@@ -47,7 +41,7 @@ class Air(player: Player): Wand {
 
                 if (!(player as CraftPlayer).isOnGround) player.getWorld()
                     .spawnParticle(Particle.SPELL, player.getLocation(), 30, 0.1, 0.1, 0.1, 0.0)
-                if (c == 300 || (player as CraftPlayer).isOnGround) {
+                if (c == 300 || player.isOnGround) {
                     WandListener.gliding.remove(player)
                     cancel()
                     return

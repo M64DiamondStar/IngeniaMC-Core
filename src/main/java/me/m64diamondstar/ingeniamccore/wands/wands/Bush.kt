@@ -12,12 +12,7 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import java.util.*
 
-class Bush(player: Player):Wand {
-    private var player: Player
-
-    init {
-        this.player = player
-    }
+class Bush:Wand {
 
     override fun getDisplayName(): String{
         return Colors.format("#188c00&lB#179b00&lu#15ab00&ls#14ba00&lh #14ba00&lW#15ab00&la#179b00&ln#188c00&ld")
@@ -27,11 +22,11 @@ class Bush(player: Player):Wand {
         return 9
     }
 
-    override fun hasPermission(): Boolean {
+    override fun hasPermission(player: Player): Boolean {
         return player.hasPermission("ingeniawands.bush")
     }
 
-    override fun run() {
+    override fun run(player: Player) {
         val helmet = Objects.requireNonNull(player.equipment)?.helmet
         for (i in 0..64) {
             val as1 = player.world.spawnEntity(

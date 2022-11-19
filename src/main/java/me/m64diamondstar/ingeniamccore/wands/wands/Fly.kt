@@ -7,12 +7,7 @@ import org.bukkit.Bukkit
 import org.bukkit.Particle
 import org.bukkit.entity.Player
 
-class Fly(player: Player): Wand {
-    private var player: Player
-
-    init {
-        this.player = player
-    }
+class Fly: Wand {
 
     override fun getDisplayName(): String{
         return Colors.format("#78518c&lF#835c95&ll#8d679e&ly" +
@@ -23,11 +18,11 @@ class Fly(player: Player): Wand {
         return 2
     }
 
-    override fun hasPermission(): Boolean {
+    override fun hasPermission(player: Player): Boolean {
         return player.hasPermission("ingeniawands.fly")
     }
 
-    override fun run() {
+    override fun run(player: Player) {
         player.setGravity(false)
         val schedule = Bukkit.getScheduler().scheduleSyncRepeatingTask(
             IngeniaMC.plugin, {

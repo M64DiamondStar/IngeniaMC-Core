@@ -10,12 +10,7 @@ import org.bukkit.Particle
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 
-class HolyTomato(player: Player): Wand {
-    private var player: Player
-
-    init {
-        this.player = player
-    }
+class HolyTomato: Wand {
 
     override fun getDisplayName(): String{
         return Colors.format("#630b0b&lH#710d0d&lo#7f0f0f&ll#8e1111&ly #9c1212&lT#aa1414&lo#b81616&lm#630b0b&la#710d0d&lt#7f0f0f&lo" +
@@ -26,11 +21,11 @@ class HolyTomato(player: Player): Wand {
         return 6
     }
 
-    override fun hasPermission(): Boolean {
+    override fun hasPermission(player: Player): Boolean {
         return player.hasPermission("ingeniawands.holytomato")
     }
 
-    override fun run() {
+    override fun run(player: Player) {
         val loc = player.location.add(0.0, 1.0, 0.0)
         val item = ItemStack(Material.BAKED_POTATO)
         val meta = item.itemMeta

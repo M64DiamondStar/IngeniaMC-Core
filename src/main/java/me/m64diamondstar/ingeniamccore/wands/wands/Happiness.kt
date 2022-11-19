@@ -8,12 +8,7 @@ import org.bukkit.Particle
 import org.bukkit.entity.Player
 import org.bukkit.scheduler.BukkitRunnable
 
-class Happiness(player: Player): Wand {
-    private var player: Player
-
-    init {
-        this.player = player
-    }
+class Happiness: Wand {
 
     override fun getDisplayName(): String{
         return Colors.format("#dde810&lH#d4e110&la#ccda11&lp#c3d311&lp#bbcc11&li#b2c511&ln#aabe12&le#a1b712&ls#98b012&ls" +
@@ -24,11 +19,11 @@ class Happiness(player: Player): Wand {
         return 7
     }
 
-    override fun hasPermission(): Boolean {
+    override fun hasPermission(player: Player): Boolean {
         return player.hasPermission("ingeniawands.happiness")
     }
 
-    override fun run() {
+    override fun run(player: Player) {
         val maxDist = 5.0
         for (other in Bukkit.getOnlinePlayers()) {
             if (other.location.distance(player.location) <= maxDist) {

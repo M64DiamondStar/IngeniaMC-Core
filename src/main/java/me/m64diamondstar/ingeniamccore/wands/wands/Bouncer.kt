@@ -15,16 +15,10 @@ import org.bukkit.potion.PotionEffectType
 import org.bukkit.util.EulerAngle
 import java.util.*
 
-class Bouncer(player: Player): Wand {
+class Bouncer: Wand {
     private val stands1: MutableList<ArmorStand> = ArrayList()
     private val stands2: MutableList<ArmorStand> = ArrayList()
     private var y = 0
-
-    private var player: Player
-
-    init {
-        this.player = player
-    }
 
     override fun getDisplayName(): String{
         return Colors.format("#428017&lB#458722&lo#478d2c&lu#4a9437&ln#4d9a42&lc#50a14d&le#52a857&lr" +
@@ -35,11 +29,11 @@ class Bouncer(player: Player): Wand {
         return 17
     }
 
-    override fun hasPermission(): Boolean {
+    override fun hasPermission(player: Player): Boolean {
         return player.hasPermission("ingeniawands.bouncer")
     }
 
-    override fun run() {
+    override fun run(player: Player) {
         player.addPotionEffect(PotionEffectType.JUMP.createEffect(200, 5))
         for (i in 0..1) {
             val loc = player.location.add(0.0, -0.5, 0.0)
