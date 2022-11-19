@@ -33,45 +33,45 @@ public class WandListener implements Listener {
                     Objects.requireNonNull(player.getInventory().getItemInMainHand().getItemMeta()).hasCustomModelData() &&
             !Cooldowns.isOnCooldown(player)) {
                 if(player.getInventory().getItemInMainHand().getItemMeta().getCustomModelData() == 1)
-                    new Launch(player).run();
+                    new Launch().run(player);
                 if(player.getInventory().getItemInMainHand().getItemMeta().getCustomModelData() == 2)
-                    new Fly(player).run();
+                    new Fly().run(player);
                 if(player.getInventory().getItemInMainHand().getItemMeta().getCustomModelData() == 3)
-                    new SnowCannon(player).run();
+                    new SnowCannon().run(player);
                 if(player.getInventory().getItemInMainHand().getItemMeta().getCustomModelData() == 4)
-                    new Music(player).run();
+                    new Music().run(player);
                 if(player.getInventory().getItemInMainHand().getItemMeta().getCustomModelData() == 5)
-                    new BlockLauncher(player).run();
+                    new BlockLauncher().run(player);
                 if(player.getInventory().getItemInMainHand().getItemMeta().getCustomModelData() == 6)
-                    new HolyTomato(player).run();
+                    new HolyTomato().run(player);
                 if(player.getInventory().getItemInMainHand().getItemMeta().getCustomModelData() == 7)
-                    new Happiness(player).run();
+                    new Happiness().run(player);
                 if(player.getInventory().getItemInMainHand().getItemMeta().getCustomModelData() == 8)
-                    new TNT(player).run();
+                    new TNT().run(player);
                 if(player.getInventory().getItemInMainHand().getItemMeta().getCustomModelData() == 9)
-                    new Bush(player).run();
+                    new Bush().run(player);
                 if(player.getInventory().getItemInMainHand().getItemMeta().getCustomModelData() == 10)
-                    new Cloak(player).run();
+                    new Cloak().run(player);
                 if(player.getInventory().getItemInMainHand().getItemMeta().getCustomModelData() == 11)
-                    new Water(player).run();
+                    new Water().run(player);
                 if(player.getInventory().getItemInMainHand().getItemMeta().getCustomModelData() == 12)
-                    new Air(player).run();
+                    new Air().run(player);
                 if(player.getInventory().getItemInMainHand().getItemMeta().getCustomModelData() == 13)
-                    new Fire(player).run();
+                    new Fire().run(player);
                 if(player.getInventory().getItemInMainHand().getItemMeta().getCustomModelData() == 14)
-                    new Earth(player).run();
+                    new Earth().run(player);
                 if(player.getInventory().getItemInMainHand().getItemMeta().getCustomModelData() == 15)
-                    new Speed(player).run();
+                    new Speed().run(player);
                 if(player.getInventory().getItemInMainHand().getItemMeta().getCustomModelData() == 16)
-                    new AntiGravity(player).run();
+                    new AntiGravity().run(player);
                 if(player.getInventory().getItemInMainHand().getItemMeta().getCustomModelData() == 17)
-                    new Bouncer(player).run();
+                    new Bouncer().run(player);
                 if(player.getInventory().getItemInMainHand().getItemMeta().getCustomModelData() == 18)
-                    new SnowExplosion(player).run();
+                    new SnowExplosion().run(player);
                 if(player.getInventory().getItemInMainHand().getItemMeta().getCustomModelData() == 19)
-                    new Sled(player).run();
+                    new Sled().run(player);
                 if(player.getInventory().getItemInMainHand().getItemMeta().getCustomModelData() == 20)
-                    new Grapple(player).run();
+                    new Grapple().run(player);
             }
         }
     }
