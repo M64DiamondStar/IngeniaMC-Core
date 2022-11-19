@@ -1,10 +1,14 @@
-package me.m64diamondstar.ingeniamccore.general.player.levels
+package me.m64diamondstar.ingeniamccore.general.levels
 
 import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.utils.rewards.Reward
 import me.m64diamondstar.ingeniamccore.utils.rewards.RewardType
 
 object LevelUtils {
+
+    fun getExpFromLevel(level: Int): Long{
+        return IngeniaMC.plugin.config.getLong("Levels.$level.Requirement")
+    }
 
     fun isLevelUp(previousExp: Long, newExp: Long): Boolean{
         if(getLevel(previousExp) < getLevel(newExp)) {
