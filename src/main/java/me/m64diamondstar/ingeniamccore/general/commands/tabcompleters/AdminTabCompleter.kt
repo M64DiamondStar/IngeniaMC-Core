@@ -21,6 +21,9 @@ class AdminTabCompleter: TabCompleter {
             tc.add("hat")
             tc.add("undress")
             tc.add("givehead")
+            tc.add("back")
+            tc.add("day")
+            tc.add("night")
         }else
             tc.clear()
 
