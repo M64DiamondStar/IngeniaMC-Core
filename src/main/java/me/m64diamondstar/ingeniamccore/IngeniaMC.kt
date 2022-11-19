@@ -141,6 +141,11 @@ class IngeniaMC : JavaPlugin() {
             Show Events
          */
         Bukkit.getServer().pluginManager.registerEvents(EntityChangeBlockListener(), this)
+
+        /*
+            Move Events
+         */
+        Bukkit.getServer().pluginManager.registerEvents(MoveListener(), this)
     }
 
     private fun loadPacketListeners(){
