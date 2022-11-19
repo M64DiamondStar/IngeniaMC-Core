@@ -1,6 +1,7 @@
 package me.m64diamondstar.ingeniamccore.attractions.utils
 
 import me.m64diamondstar.ingeniamccore.IngeniaMC
+import org.bukkit.entity.Player
 import java.io.File
 
 object AttractionUtils {
@@ -55,6 +56,12 @@ object AttractionUtils {
                 list.add(Attraction(category.name, it.name))}
         }
         return list
+    }
+
+    fun getTotalRidecount(player: Player): Int{
+        var i = 0
+        getAllAttractions().forEach { i += it.getRidecount(player) }
+        return i
     }
 
 
