@@ -1,6 +1,8 @@
 package me.m64diamondstar.ingeniamccore.general.inventory
 
+import me.m64diamondstar.ingeniamccore.attractions.utils.AttractionUtils
 import me.m64diamondstar.ingeniamccore.cosmetics.inventory.CosmeticsInventory
+import me.m64diamondstar.ingeniamccore.general.levels.LevelUtils
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.general.warps.AttractionInventory
 import me.m64diamondstar.ingeniamccore.general.warps.ShopInventory
@@ -13,7 +15,9 @@ import org.bukkit.event.inventory.InventoryType
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.ItemMeta
 import org.bukkit.inventory.meta.SkullMeta
+import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 class MainInventory(player: IngeniaPlayer): Gui(player) {
 
@@ -38,7 +42,7 @@ class MainInventory(player: IngeniaPlayer): Gui(player) {
         val transparentMeta = transparentItem.itemMeta as ItemMeta
 
         transparentMeta.setDisplayName(Colors.format("#4b85e3&lProfile"))
-        transparentMeta.lore = listOf(Colors.format("${MessageType.LORE}Click to view your profile."))
+        transparentMeta.lore = getProfileLore()
         transparentMeta.setCustomModelData(1)
 
         transparentItem.itemMeta = transparentMeta
@@ -49,7 +53,8 @@ class MainInventory(player: IngeniaPlayer): Gui(player) {
         val playerMeta = playerHead.itemMeta as SkullMeta
 
         playerMeta.setDisplayName(Colors.format("#4b85e3&lProfile"))
-        playerMeta.lore = listOf(Colors.format("${MessageType.LORE}Click to view your profile."))
+
+        playerMeta.lore = getProfileLore()
         playerMeta.setCustomModelData(1)
         playerMeta.owningPlayer = getPlayer().player
 
@@ -122,6 +127,22 @@ class MainInventory(player: IngeniaPlayer): Gui(player) {
             shopInventory.open()
         }
 
+    }
+
+    private fun getProfileLore(): List<String>{
+        val lore = ArrayList<String>()
+
+        val expToNext = "${getPlayer().exp - LevelUtils.getExpFromLevel(getPlayer().getLevel())}/" +
+                "${LevelUtils.getExpFromLevel(getPlayer().getLevel() + 1) - LevelUtils.getExpFromLevel(getPlayer().getLevel())}"
+
+        lore.add(Colors.format(MessageType.INGENIA + "» Name: &f" + getPlayer().name))
+        lore.add(Colors.format(MessageType.INGENIA + "» Golden Stars: &f${getPlayer().bal}:gs:"))
+        lore.add(Colors.format(MessageType.INGENIA + "» Level: &f${getPlayer().getLevel()}"))
+        lore.add(Colors.format(MessageType.INGENIA + "» Total Exp: &f${getPlayer().exp}"))
+        lore.add(Colors.format(MessageType.INGENIA + "» Exp Until Next Level: &f" + expToNext))
+        lore.add(Colors.format(MessageType.INGENIA + "» Rank: &f" + getPlayer().prefix))
+        lore.add(Colors.format(MessageType.INGENIA + "» Total Ridecount: &f" + AttractionUtils.getTotalRidecount(getPlayer().player)))
+        return lore
     }
 
 }
