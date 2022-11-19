@@ -1,15 +1,16 @@
 package me.m64diamondstar.ingeniamccore.general.player
 
-import me.m64diamondstar.ingeniamccore.general.player.levels.LevelUtils.isLevelUp
-import me.m64diamondstar.ingeniamccore.general.player.levels.LevelUtils.getLevelUpLevels
-import me.m64diamondstar.ingeniamccore.general.player.levels.LevelUtils.getRewards
+import me.m64diamondstar.ingeniamccore.general.levels.LevelUtils.isLevelUp
+import me.m64diamondstar.ingeniamccore.general.levels.LevelUtils.getLevelUpLevels
+import me.m64diamondstar.ingeniamccore.general.levels.LevelUtils.getRewards
 import me.m64diamondstar.ingeniamccore.wands.Wands.getAccessibleWands
 import me.m64diamondstar.ingeniamccore.utils.LocationUtils.getLocationFromString
 import me.m64diamondstar.ingeniamccore.data.files.PlayerConfig
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageLocation
 import me.m64diamondstar.ingeniamccore.general.tablist.TabList
 import me.m64diamondstar.ingeniamccore.IngeniaMC
-import me.m64diamondstar.ingeniamccore.general.player.levels.LevelUtils.getLevel
+import me.m64diamondstar.ingeniamccore.general.levels.LevelUtils
+import me.m64diamondstar.ingeniamccore.general.levels.LevelUtils.getLevel
 import me.m64diamondstar.ingeniamccore.general.scoreboard.Scoreboard
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
@@ -109,6 +110,10 @@ class IngeniaPlayer(val player: Player) {
     fun addExp(l: Long) {
         if (isLevelUp(exp, exp + l)) levelUp(exp, exp + l)
         getConfig().setExp(l + exp)
+    }
+
+    fun getLevel(): Int{
+        return getLevel(exp)
     }
 
     private fun levelUp(previousExp: Long, newExp: Long) {
