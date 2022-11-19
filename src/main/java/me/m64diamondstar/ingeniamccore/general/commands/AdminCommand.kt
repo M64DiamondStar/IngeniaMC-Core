@@ -1,7 +1,7 @@
 package me.m64diamondstar.ingeniamccore.general.commands
 
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
-import me.m64diamondstar.ingeniamccore.general.player.levels.LevelUtils
+import me.m64diamondstar.ingeniamccore.general.levels.LevelUtils
 import me.m64diamondstar.ingeniamccore.utils.items.Items
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
