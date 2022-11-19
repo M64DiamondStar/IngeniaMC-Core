@@ -1,5 +1,7 @@
 package me.m64diamondstar.ingeniamccore.general.commands
 
+import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
+import me.m64diamondstar.ingeniamccore.general.player.levels.LevelUtils
 import me.m64diamondstar.ingeniamccore.utils.items.Items
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
@@ -12,6 +14,7 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
+import java.lang.IllegalArgumentException
 
 class AdminCommand: CommandExecutor {
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
@@ -36,14 +39,15 @@ class AdminCommand: CommandExecutor {
                 sender.sendMessage(Colors.format(MessageType.SUCCESS + "Speed set to ${args[1]}."))
             }catch (e: NumberFormatException){
                 sender.sendMessage(Messages.invalidNumber())
+            }catch (e: IllegalArgumentException){
+                sender.sendMessage(Colors.format(MessageType.ERROR + "This amount of speed doesn't exist."))
             }
         }
 
         if(args[0].equals("givehead", ignoreCase = true) && args.size == 2){
             val head = Items.getPlayerHead(args[1])
             sender.inventory.addItem(head)
-            sender.sendMessage(Colors.format(MessageType.SUCCESS + "I've been waiting for that heheh, *unzips pants*..."))
-            sender.sendMessage(Colors.format(MessageType.SUCCESS + "Oh, you mean that kind of head... Well, here you go...（´＿｀)"))
+            sender.sendMessage(Colors.format(MessageType.SUCCESS + "You've been given the player-head!"))
         }
 
         if(args[0].equals("heal", ignoreCase = true) && args.size == 1){
@@ -70,7 +74,7 @@ class AdminCommand: CommandExecutor {
             sender.equipment?.chestplate = ItemStack(Material.AIR)
             sender.equipment?.leggings = ItemStack(Material.AIR)
             sender.equipment?.boots = ItemStack(Material.AIR)
-            sender.sendMessage(Colors.format(MessageType.SUCCESS + "Ayo, you're in public you know that right? Anyway, you've been undressed ( ͡° ͜ʖ ͡°)"))
+            sender.sendMessage(Colors.format(MessageType.SUCCESS + "Undressed!"))
         }
 
         if (args[0].equals("hat", ignoreCase = true) && args.size == 1) {
@@ -95,6 +99,34 @@ class AdminCommand: CommandExecutor {
                 sender.addPotionEffect(PotionEffect(PotionEffectType.NIGHT_VISION, 99999999, 1, true))
                 sender.sendMessage(Colors.format(MessageType.SUCCESS + "SUPER EYES ENABLED."))
             }
+        }
+
+        if(args[0].equals("back", ignoreCase = true)){
+            val player = IngeniaPlayer(sender)
+            if(player.previousLocation == null){
+                sender.sendMessage(Colors.format(MessageType.ERROR + "You haven't even teleported yet..."))
+                return false
+            }
+            sender.teleport(player.previousLocation!!)
+            sender.sendMessage(Colors.format(MessageType.SUCCESS + "* poof *"))
+        }
+
+        if(args[0].equals("day", ignoreCase = true)){
+            sender.world.time = 6000
+            sender.sendMessage(Colors.format(MessageType.SUCCESS + "AAHHH MY EYESSSS, oh wait i don't have any..."))
+        }
+
+        if(args[0].equals("night", ignoreCase = true)){
+            sender.world.time = 18000
+            sender.sendMessage(Colors.format(MessageType.SUCCESS + "Dark mode enabled!"))
+        }
+
+        if(args[0].equals("jort", ignoreCase = true)){
+            sender.sendMessage(Colors.format(MessageType.ERROR + "CMON YOU CAN DO IT, DO NOT GIVE UP!"))
+        }
+
+        if(args[0].equals("getLevel", ignoreCase = true)){
+            sender.sendMessage("Level: ${LevelUtils.getLevel(args[1].toLong())}")
         }
 
 
