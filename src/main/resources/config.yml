@@ -28,3 +28,214 @@ Player-Commands:
   - r
   - tell
   - react
+
+
+# Levels
+# And the amount of EXP needed to achieve them.
+Levels:
+  '1':
+    Requirement: 25
+    Rewards:
+      - 'GS: 50'
+  '2':
+    Requirement: 50
+    Rewards:
+      - 'GS: 50'
+  '3':
+    Requirement: 100
+    Rewards:
+      - 'GS: 50'
+  '4':
+    Requirement: 150
+    Rewards:
+      - 'GS: 100'
+  '5':
+    Requirement: 200
+    Rewards:
+      - 'GS: 100'
+      - 'WAND: happiness'
+  '6':
+    Requirement: 300
+    Rewards:
+      - 'GS: 100'
+  '7':
+    Requirement: 400
+    Rewards:
+      - 'GS: 100'
+  '8':
+    Requirement: 500
+    Rewards:
+      - 'GS: 200'
+  '9':
+    Requirement: 700
+    Rewards:
+      - 'GS: 200'
+  '10':
+    Requirement: 900
+    Rewards:
+      - 'GS: 300'
+      - 'WAND: blocklauncher'
+  '11':
+    Requirement: 1200
+    Rewards:
+      - 'GS: 300'
+  '12':
+    Requirement: 1500
+    Rewards:
+      - 'GS: 400'
+  '13':
+    Requirement: 1900
+    Rewards:
+      - 'GS: 400'
+  '14':
+    Requirement: 2400
+    Rewards:
+      - 'GS: 500'
+  '15':
+    Requirement: 2900
+    Rewards:
+      - 'GS: 500'
+  '16':
+    Requirement: 3500
+    Rewards:
+      - 'GS: 600'
+  '17':
+    Requirement: 4200
+    Rewards:
+      - 'GS: 600'
+  '18':
+    Requirement: 4900
+    Rewards:
+      - 'GS: 600'
+  '19':
+    Requirement: 5700
+    Rewards:
+      - 'GS: 700'
+  '20':
+    Requirement: 6500
+    Rewards:
+      - 'GS: 700'
+      - 'WAND: music'
+  '21':
+    Requirement: 7500
+    Rewards:
+      - 'GS: 700'
+  '22':
+    Requirement: 8700
+    Rewards:
+      - 'GS: 800'
+  '23':
+    Requirement: 9900
+    Rewards:
+      - 'GS: 800'
+  '24':
+    Requirement: 11000
+    Rewards:
+      - 'GS: 900'
+  '25':
+    Requirement: 12500
+    Rewards:
+      - 'GS: 1000'
+  '26':
+    Requirement: 14000
+    Rewards:
+      - 'GS: 1100'
+  '27':
+    Requirement: 15500
+    Rewards:
+      - 'GS: 1300'
+  '28':
+    Requirement: 17500
+    Rewards:
+      - 'GS: 1500'
+  '29':
+    Requirement: 19500
+    Rewards:
+      - 'GS: 1750'
+  '30':
+    Requirement: 21500
+    Rewards:
+      - 'GS: 2000'
+      - 'WAND: speed'
+  '31':
+    Requirement: 24000
+    Rewards:
+      - 'GS: 2250'
+  '32':
+    Requirement: 26500
+    Rewards:
+      - 'GS: 2500'
+  '33':
+    Requirement: 29000
+    Rewards:
+      - 'GS: 3000'
+  '34':
+    Requirement: 32000
+    Rewards:
+      - 'GS: 3500'
+  '35':
+    Requirement: 35000
+    Rewards:
+      - 'GS: 4000'
+  '36':
+    Requirement: 38000
+    Rewards:
+      - 'GS: 5000'
+  '37':
+    Requirement: 42000
+    Rewards:
+      - 'GS: 6000'
+  '38':
+    Requirement: 46000
+    Rewards:
+      - 'GS: 7000'
+  '39':
+    Requirement: 50000
+    Rewards:
+      - 'GS: 8000'
+  '40':
+    Requirement: 54000
+    Rewards:
+      - 'GS: 9000'
+      - 'WAND: antigravity'
+  '41':
+    Requirement: 58000
+    Rewards:
+      - 'GS: 10000'
+  '42':
+    Requirement: 62000
+    Rewards:
+      - 'GS: 12000'
+  '43':
+    Requirement: 66000
+    Rewards:
+      - 'GS: 14000'
+  '44':
+    Requirement: 70000
+    Rewards:
+      - 'GS: 16000'
+  '45':
+    Requirement: 75000
+    Rewards:
+      - 'GS: 18000'
+  '46':
+    Requirement: 80000
+    Rewards:
+      - 'GS: 20000'
+  '47':
+    Requirement: 85000
+    Rewards:
+      - 'GS: 22500'
+  '48':
+    Requirement: 90000
+    Rewards:
+      - 'GS: 25000'
+  '49':
+    Requirement: 95000
+    Rewards:
+      - 'GS: 27500'
+  '50':
+    Requirement: 100000
+    Rewards:
+      - 'GS: 35000'
+      - 'WAND: cloak'
