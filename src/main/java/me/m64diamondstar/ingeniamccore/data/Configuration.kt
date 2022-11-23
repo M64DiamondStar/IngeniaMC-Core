@@ -42,6 +42,8 @@ abstract class Configuration (path: String, name: String, resource: Boolean, ins
      * Saves the file
      */
     private fun saveConfig() {
+        if(!file.exists())
+            createConfig()
         try{
             config.save(file)
         } catch (e: Exception){
