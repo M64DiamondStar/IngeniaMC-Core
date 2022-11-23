@@ -1,11 +1,13 @@
 package me.m64diamondstar.ingeniamccore.general.commands.ingenia
 
 import me.m64diamondstar.ingeniamccore.attractions.custom.Coaster
+import me.m64diamondstar.ingeniamccore.attractions.operate.OperateInventory
 import me.m64diamondstar.ingeniamccore.attractions.utils.AttractionType
 import me.m64diamondstar.ingeniamccore.attractions.utils.Attraction
 import me.m64diamondstar.ingeniamccore.attractions.utils.AttractionUtils
 import me.m64diamondstar.ingeniamccore.general.commands.ingenia.attraction.CoasterSubcommand
 import me.m64diamondstar.ingeniamccore.general.commands.ingenia.attraction.FreefallSubcommand
+import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.utils.IngeniaSubcommand
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
@@ -279,7 +281,20 @@ class AttractionSubcommand(private val sender: CommandSender, private val args: 
             }
             player.spawnParticle(Particle.SMOKE_NORMAL, location.add(0.5, 0.5, 0.5),
                 100, 0.0, 0.2, 0.0, 0.0)
+        }
 
+        if(args[1].equals("operate", ignoreCase = true) && args.size == 4){
+            if (!AttractionUtils.existsCategory(args[2])) {
+                player.sendMessage(Colors.format(MessageType.ERROR + "The category &o${args[2]}&r ${MessageType.ERROR}doesn't exist!"))
+                return
+            }
+            if (!AttractionUtils.existsAttraction(args[2], args[3])) {
+                player.sendMessage(Colors.format(MessageType.ERROR + "The attraction &o${args[3]}&r ${MessageType.ERROR}doesn't exist!"))
+                return
+            }
+
+            val operateInventory = OperateInventory(IngeniaPlayer(player), Attraction(args[2], args[3]))
+            operateInventory.open()
 
         }
 
@@ -310,6 +325,7 @@ class AttractionSubcommand(private val sender: CommandSender, private val args: 
             tabs.add("freefall")
             tabs.add("coaster")
             tabs.add("gates")
+            tabs.add("operate")
         }
 
         //Global tab completer for attraction categories and names except for create and delete subcommand
@@ -400,6 +416,8 @@ class AttractionSubcommand(private val sender: CommandSender, private val args: 
 
             if(args[1].equals("coaster", ignoreCase = true) && args[4].equals("row", ignoreCase = true)){
                 tabs.add("setstation")
+                tabs.add("setspawn")
+                tabs.add("setdespawn")
             }
         }
 
