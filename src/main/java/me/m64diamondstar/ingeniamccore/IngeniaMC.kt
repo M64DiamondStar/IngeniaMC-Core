@@ -4,6 +4,8 @@ import com.comphenix.protocol.ProtocolLibrary
 import com.comphenix.protocol.ProtocolManager
 import me.m64diamondstar.ingeniamccore.attractions.listeners.PlayerInteractEntityListener
 import me.m64diamondstar.ingeniamccore.attractions.traincarts.SignRegistry
+import me.m64diamondstar.ingeniamccore.attractions.utils.AttractionUtils
+import me.m64diamondstar.ingeniamccore.games.guesstheword.GuessTheWordListener
 import me.m64diamondstar.ingeniamccore.general.commands.*
 import me.m64diamondstar.ingeniamccore.general.commands.ingenia.IngeniaCommand
 import me.m64diamondstar.ingeniamccore.general.commands.tabcompleters.AdminTabCompleter
@@ -17,6 +19,7 @@ import me.m64diamondstar.ingeniamccore.shows.listeners.EntityChangeBlockListener
 import me.m64diamondstar.ingeniamccore.utils.gui.GuiListener
 import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
+import org.bukkit.scheduler.BukkitRunnable
 import java.util.*
 
 class IngeniaMC : JavaPlugin() {
@@ -40,7 +43,6 @@ class IngeniaMC : JavaPlugin() {
         Bukkit.getLogger().info("Main instances loaded ✓")
 
         saveDefaultConfig()
-        reloadConfig()
         Bukkit.getLogger().info("Config (re)loaded ✓")
 
         loadCommandExecutors()
@@ -64,6 +66,12 @@ class IngeniaMC : JavaPlugin() {
         }
         Bukkit.getLogger().info("Player Scoreboards loaded ✓")
 
+        Bukkit.getScheduler().scheduleSyncDelayedTask(this) { AttractionUtils.spawnAllAttractions() }
+        Bukkit.getLogger().info("Attractions loaded ✓")
+
+        loadTasks()
+        Bukkit.getLogger().info("Tasks loaded ✓")
+
         Bukkit.getLogger().info(" ")
         Bukkit.getLogger().info("Finished loading, IngeniaMC-Core is enabled!")
         Bukkit.getLogger().info("---------------------------")
@@ -71,7 +79,9 @@ class IngeniaMC : JavaPlugin() {
 
     override fun onDisable() {
         isDisabling = true
+        AttractionUtils.despawnAllAttractions()
         SignRegistry.unregisterSigns()
+        saveConfig()
     }
 
     private fun loadCommandExecutors() {
@@ -115,6 +125,7 @@ class IngeniaMC : JavaPlugin() {
             Chat events
          */
         Bukkit.getServer().pluginManager.registerEvents(ChatListener(), this)
+        Bukkit.getServer().pluginManager.registerEvents(GuessTheWordListener(), this)
 
         /*
             Inventory/GUI open events
@@ -150,5 +161,13 @@ class IngeniaMC : JavaPlugin() {
 
     private fun loadPacketListeners(){
 
+    }
+
+    private fun loadTasks(){
+        object: BukkitRunnable(){
+            override fun run() {
+
+            }
+        }.runTaskTimer(this, 18000L, 18000L)
     }
 }
