@@ -31,7 +31,8 @@ public class WandListener implements Listener {
         if (e.getAction().equals(Action.RIGHT_CLICK_AIR) || e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
             if(player.getInventory().getItemInMainHand().getType().equals(Material.BLAZE_ROD) &&
                     Objects.requireNonNull(player.getInventory().getItemInMainHand().getItemMeta()).hasCustomModelData() &&
-            !Cooldowns.isOnCooldown(player)) {
+            !Cooldowns.isOnCooldown(player) &&
+            !player.isInsideVehicle()) {
                 if(player.getInventory().getItemInMainHand().getItemMeta().getCustomModelData() == 1)
                     new Launch().run(player);
                 if(player.getInventory().getItemInMainHand().getItemMeta().getCustomModelData() == 2)
