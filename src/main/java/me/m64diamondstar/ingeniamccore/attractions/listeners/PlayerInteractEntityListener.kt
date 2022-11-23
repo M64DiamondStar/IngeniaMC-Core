@@ -8,7 +8,6 @@ import me.m64diamondstar.ingeniamccore.attractions.custom.FreeFall
 import me.m64diamondstar.ingeniamccore.attractions.utils.Attraction
 import me.m64diamondstar.ingeniamccore.attractions.utils.AttractionManager
 import me.m64diamondstar.ingeniamccore.attractions.utils.AttractionType
-import me.m64diamondstar.ingeniamccore.attractions.utils.SeatRegistry
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageLocation
 import org.bukkit.entity.EntityType
@@ -17,6 +16,8 @@ import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerInteractAtEntityEvent
 import org.bukkit.event.player.PlayerInteractEntityEvent
 import org.bukkit.scheduler.BukkitRunnable
+import java.lang.IllegalArgumentException
+import java.lang.NullPointerException
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -34,7 +35,13 @@ class PlayerInteractEntityListener: Listener {
 
         if(entity.type != EntityType.ARMOR_STAND) return
         if(entity.customName == null) return
-        if(!SeatRegistry.getList().contains(entity.uniqueId)) return
+        try{
+            AttractionType.valueOf(entity.customName!!.split("-")[0])
+        }catch (e: NullPointerException){
+            return
+        }catch (e: IllegalArgumentException){
+            return
+        }
 
         event.isCancelled = true
 
