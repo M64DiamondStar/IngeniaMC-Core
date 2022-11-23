@@ -62,6 +62,13 @@ public class IngeniaCommand implements CommandExecutor {
                 showSubcommand.execute();
             }
 
+            // Game sub-command
+            // Edit or start custom games
+            case "game" -> {
+                GameSubcommand gameSubcommand = new GameSubcommand(sender, args);
+                gameSubcommand.execute();
+            }
+
             // Reload sub-command
             // Reload the main config.yml file
             case "reload" -> {
