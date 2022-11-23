@@ -1,6 +1,8 @@
 package me.m64diamondstar.ingeniamccore.attractions.utils
 
 import me.m64diamondstar.ingeniamccore.IngeniaMC
+import me.m64diamondstar.ingeniamccore.attractions.custom.Coaster
+import me.m64diamondstar.ingeniamccore.attractions.custom.FreeFall
 import org.bukkit.entity.Player
 import java.io.File
 
@@ -62,6 +64,24 @@ object AttractionUtils {
         var i = 0
         getAllAttractions().forEach { i += it.getRidecount(player) }
         return i
+    }
+
+    fun spawnAllAttractions(){
+        for(attraction in getAllAttractions()){
+            if(attraction.getType() == AttractionType.FREEFALL){
+                val freeFall = FreeFall(attraction.getCategory(), attraction.getName())
+                freeFall.spawn()
+            }
+        }
+    }
+
+    fun despawnAllAttractions(){
+        for(attraction in getAllAttractions()){
+            if(attraction.getType() == AttractionType.FREEFALL){
+                val freeFall = FreeFall(attraction.getCategory(), attraction.getName())
+                freeFall.despawn()
+            }
+        }
     }
 
 
