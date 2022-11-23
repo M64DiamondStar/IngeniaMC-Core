@@ -1,7 +1,6 @@
 package me.m64diamondstar.ingeniamccore.general.commands
 
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
-import me.m64diamondstar.ingeniamccore.general.levels.LevelUtils
 import me.m64diamondstar.ingeniamccore.utils.items.Items
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
@@ -124,11 +123,6 @@ class AdminCommand: CommandExecutor {
         if(args[0].equals("jort", ignoreCase = true)){
             sender.sendMessage(Colors.format(MessageType.ERROR + "CMON YOU CAN DO IT, DO NOT GIVE UP!"))
         }
-
-        if(args[0].equals("getLevel", ignoreCase = true)){
-            sender.sendMessage("Level: ${LevelUtils.getLevel(args[1].toLong())}")
-        }
-
 
         return false
     }
