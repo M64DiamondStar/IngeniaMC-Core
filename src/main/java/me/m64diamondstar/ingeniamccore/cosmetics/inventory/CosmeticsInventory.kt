@@ -1,12 +1,16 @@
 package me.m64diamondstar.ingeniamccore.cosmetics.inventory
 
+import me.m64diamondstar.ingeniamccore.general.inventory.MainInventory
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.utils.gui.Gui
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
+import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryType
+import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.meta.ItemMeta
 
 class CosmeticsInventory(private var player: Player, private var selected: String): Gui(IngeniaPlayer(player)) {
 
@@ -27,6 +31,11 @@ class CosmeticsInventory(private var player: Player, private var selected: Strin
         if(event.slot == -999 || !event.view.title.contains("田")) return
         if(event.clickedInventory?.type == InventoryType.PLAYER) return
 
+        if(event.slot == 49){
+            val mainInventory = MainInventory(getPlayer())
+            mainInventory.open()
+            return
+        }
 
         if(event.slot in 1..7 && event.slot != 4) {
             var inventory = CosmeticsInventory(player, "國")
@@ -60,6 +69,17 @@ class CosmeticsInventory(private var player: Player, private var selected: Strin
     }
 
     override fun setInventoryItems() {
+
+        val transparentItem = ItemStack(Material.FEATHER)
+        val transparentMeta = transparentItem.itemMeta as ItemMeta
+        transparentMeta.setDisplayName(Colors.format(MessageType.ERROR + "&lGo Back"))
+        transparentMeta.lore = listOf(Colors.format("${MessageType.LORE}Click here to go back to the main menu."))
+        transparentMeta.setCustomModelData(1)
+
+        transparentItem.itemMeta = transparentMeta
+
+        inventory.setItem(49, transparentItem)
+
         if(player.inventory.getItem(5) != null
             && player.inventory.getItem(5)!!.type == Material.BLAZE_ROD
             && player.inventory.getItem(5)!!.hasItemMeta()){
