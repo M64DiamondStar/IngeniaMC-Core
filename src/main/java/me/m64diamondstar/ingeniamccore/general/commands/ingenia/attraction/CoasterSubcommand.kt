@@ -36,7 +36,9 @@ class CoasterSubcommand(private val args: Array<String>, private val player: Pla
             val coaster = Coaster(args[2], args[3])
 
             if(args[4].equals("row", ignoreCase = true)){
-                if(args.size == 7 && args[6].equals("setstation", ignoreCase = true)){
+                if(args.size == 7 && (args[6].equals("setstation", ignoreCase = true) ||
+                            args[6].equals("setspawn", ignoreCase = true) ||
+                            args[6].equals("setdespawn", ignoreCase = true))){
                     val block = player.getTargetBlockExact(5)
                     if(block == null || block.type == Material.AIR){
                         player.sendMessage(Colors.format(MessageType.ERROR + "Please look at a block to set the location."))
@@ -50,11 +52,19 @@ class CoasterSubcommand(private val args: Array<String>, private val player: Pla
                     }
 
                     val location = block.location
-                    coaster.setRowStation(args[5].toInt(), location)
+                    if(args[6].equals("setstation", ignoreCase = true)) {
+                        coaster.setRowStation(args[5].toInt(), location)
+                        player.sendMessage(Colors.format(MessageType.SUCCESS + "Row Station has been set."))
+                    }else if(args[6].equals("setspawn", ignoreCase = true)){
+                        coaster.setRowSpawn(args[5].toInt(), location)
+                        player.sendMessage(Colors.format(MessageType.SUCCESS + "Row Spawn has been set."))
+                    }else{
+                        coaster.setRowDespawn(args[5].toInt(), location)
+                        player.sendMessage(Colors.format(MessageType.SUCCESS + "Row Despawn has been set."))
+                    }
                     player.spawnParticle(Particle.SMOKE_NORMAL, location.add(0.5, 0.5, 0.5),
                         100, 0.2, 0.2, 0.2, 0.0)
                     location.block.type = Material.AIR
-                    player.sendMessage(Colors.format(MessageType.SUCCESS + "Row Station has been set."))
                 }
             }
         }
