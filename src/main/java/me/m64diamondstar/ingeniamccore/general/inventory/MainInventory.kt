@@ -132,8 +132,11 @@ class MainInventory(player: IngeniaPlayer): Gui(player) {
     private fun getProfileLore(): List<String>{
         val lore = ArrayList<String>()
 
-        val expToNext = "${getPlayer().exp - LevelUtils.getExpFromLevel(getPlayer().getLevel())}/" +
+        var expToNext = "${getPlayer().exp - LevelUtils.getExpFromLevel(getPlayer().getLevel())}/" +
                 "${LevelUtils.getExpFromLevel(getPlayer().getLevel() + 1) - LevelUtils.getExpFromLevel(getPlayer().getLevel())}"
+        if(getPlayer().getLevel() == LevelUtils.getHighestLevel())
+            expToNext = "At max level!"
+
 
         lore.add(Colors.format(MessageType.INGENIA + "» Name: &f" + getPlayer().name))
         lore.add(Colors.format(MessageType.INGENIA + "» Golden Stars: &f${getPlayer().bal}:gs:"))
