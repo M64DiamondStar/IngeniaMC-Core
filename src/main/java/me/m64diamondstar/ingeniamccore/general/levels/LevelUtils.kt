@@ -6,6 +6,14 @@ import me.m64diamondstar.ingeniamccore.utils.rewards.RewardType
 
 object LevelUtils {
 
+    fun getHighestLevel(): Int {
+        var maxLevel = 0
+        for(currentLevel in IngeniaMC.plugin.config.getConfigurationSection("Levels")!!.getKeys(false)){
+            maxLevel++
+        }
+        return maxLevel
+    }
+
     fun getExpFromLevel(level: Int): Long{
         return IngeniaMC.plugin.config.getLong("Levels.$level.Requirement")
     }
