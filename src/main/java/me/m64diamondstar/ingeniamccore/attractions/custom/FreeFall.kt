@@ -3,7 +3,6 @@ package me.m64diamondstar.ingeniamccore.attractions.custom
 import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.attractions.utils.Attraction
 import me.m64diamondstar.ingeniamccore.attractions.utils.CustomAttraction
-import me.m64diamondstar.ingeniamccore.attractions.utils.SeatRegistry
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageLocation
 import me.m64diamondstar.ingeniamccore.utils.messages.Messages
@@ -49,7 +48,6 @@ class FreeFall(category: String, name: String): Attraction(category, name), Cust
             stand.location.chunk.addPluginChunkTicket(IngeniaMC.plugin)
         }
         reloadConfig()
-        registerSeats()
     }
 
     override fun despawn() {
@@ -59,10 +57,6 @@ class FreeFall(category: String, name: String): Attraction(category, name), Cust
 
         getConfig().set("Data.Stands", null)
         reloadConfig()
-    }
-
-    override fun registerSeats(){
-        getSeats().forEach { SeatRegistry.addEntity(it) }
     }
 
     override fun hasPassengers(): Boolean {
@@ -119,7 +113,7 @@ class FreeFall(category: String, name: String): Attraction(category, name), Cust
         }.runTaskTimer(IngeniaMC.plugin, 0L, 20L)
     }
 
-    override fun execute() {
+    override fun dispatch() {
         object : BukkitRunnable() {
             var c = 0.0
             val radius = 3.75f
@@ -127,6 +121,12 @@ class FreeFall(category: String, name: String): Attraction(category, name), Cust
             var y = 0.0
             var stop = 0f
             override fun run() {
+
+                if(getConfig().getConfigurationSection("Data.Stands") == null){
+                    this.cancel()
+                    return
+                }
+
                 if (c > 40 && c <= 620) // Y = 0 -> 58
                     y = 0.1
 

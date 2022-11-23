@@ -13,12 +13,10 @@ interface CustomAttraction {
 
     fun hasPassengers(): Boolean
 
-    fun registerSeats()
-
     fun getSpawnLocation(): Location?
 
     fun setSpawnLocation(location: Location)
 
-    fun execute()
+    fun dispatch()
 
 }

@@ -21,7 +21,7 @@ object AttractionManager {
             override fun run() {
 
                 if(c == 0){
-                    attraction.execute()
+                    attraction.dispatch()
                     this.cancel()
                     return
                 }
