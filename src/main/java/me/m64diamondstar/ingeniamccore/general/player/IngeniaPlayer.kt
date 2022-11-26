@@ -35,6 +35,7 @@ class IngeniaPlayer(val player: Player) {
     }
 
     fun startUp() {
+        allowDamage = false
         setScoreboard(true)
         setTablist(true)
         giveMenuItem()
@@ -150,6 +151,17 @@ class IngeniaPlayer(val player: Player) {
     fun addBal(l: Long) {
         getConfig().setBal(l + bal)
     }
+
+    var allowDamage: Boolean
+        get() {
+            val container = player.persistentDataContainer
+            return container.get(NamespacedKey(IngeniaMC.plugin, "allow-damage"), PersistentDataType.STRING).toBoolean()
+        }
+        set(value) {
+            val container = player.persistentDataContainer
+            container.set(
+                NamespacedKey(IngeniaMC.plugin, "allow-damage"), PersistentDataType.STRING, "$value")
+        }
 
     fun setScoreboard(on: Boolean) {
         if (scoreboard == null) scoreboard = Scoreboard(this)
