@@ -14,6 +14,9 @@ import me.m64diamondstar.ingeniamccore.general.commands.tabcompleters.MessageTab
 import me.m64diamondstar.ingeniamccore.general.listeners.*
 import me.m64diamondstar.ingeniamccore.wands.wandlistener.WandListener
 import me.m64diamondstar.ingeniamccore.general.listeners.helpers.BonemealListener
+import me.m64diamondstar.ingeniamccore.general.listeners.protection.BlockListener
+import me.m64diamondstar.ingeniamccore.general.listeners.protection.DamageListener
+import me.m64diamondstar.ingeniamccore.general.listeners.protection.HungerListener
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.shows.listeners.EntityChangeBlockListener
 import me.m64diamondstar.ingeniamccore.utils.gui.GuiListener
@@ -157,6 +160,14 @@ class IngeniaMC : JavaPlugin() {
             Move Events
          */
         Bukkit.getServer().pluginManager.registerEvents(MoveListener(), this)
+
+        /*
+            Protection Events
+         */
+        Bukkit.getServer().pluginManager.registerEvents(BlockListener(), this)
+        Bukkit.getServer().pluginManager.registerEvents(me.m64diamondstar.ingeniamccore.general.listeners.protection.InteractListener(), this)
+        Bukkit.getServer().pluginManager.registerEvents(DamageListener(), this)
+        Bukkit.getServer().pluginManager.registerEvents(HungerListener(), this)
     }
 
     private fun loadPacketListeners(){
