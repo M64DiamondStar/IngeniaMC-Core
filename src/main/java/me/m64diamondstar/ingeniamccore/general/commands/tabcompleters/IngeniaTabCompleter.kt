@@ -22,6 +22,7 @@ class IngeniaTabCompleter: TabCompleter {
             tc.add("show")
             tc.add("reload")
             tc.add("game")
+            tc.add("protect")
         }else if(args.size > 1){
 
             tc.clear()
@@ -46,6 +47,9 @@ class IngeniaTabCompleter: TabCompleter {
                 tc.addAll(sub.getTabCompleters())
             }else if(args[0].equals("game", true)){
                 val sub = GameSubcommand(sender, args)
+                tc.addAll(sub.getTabCompleters())
+            }else if(args[0].equals("protect", true)){
+                val sub = ProtectionSubcommand(sender, args)
                 tc.addAll(sub.getTabCompleters())
             }
 
