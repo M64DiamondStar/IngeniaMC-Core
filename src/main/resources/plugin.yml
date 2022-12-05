@@ -7,6 +7,8 @@ description: The Core plugin of IngeniaMC.
 depend:
   - Train_Carts
   - ProtocolLib
+  - FastAsyncWorldEdit
+  - OpenAudioMc
 commands:
   wand:
     description: Open the wand selection menu.
