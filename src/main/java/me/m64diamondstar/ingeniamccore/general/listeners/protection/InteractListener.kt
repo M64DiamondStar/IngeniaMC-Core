@@ -1,7 +1,7 @@
 package me.m64diamondstar.ingeniamccore.general.listeners.protection
 
 import me.m64diamondstar.ingeniamccore.general.listeners.protection.utils.BlockDataConfig
-import org.bukkit.block.TileState
+import org.bukkit.Material
 import org.bukkit.entity.EntityType
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -19,6 +19,11 @@ class InteractListener: Listener {
         if(event.action != Action.RIGHT_CLICK_BLOCK && event.action != Action.PHYSICAL) return
         if(event.clickedBlock == null) return
         if(player.hasPermission("ingenia.admin") || player.isOp) return
+
+        if(event.clickedBlock!!.type == Material.TRIPWIRE){
+            event.isCancelled = true
+            return
+        }
 
         if(event.clickedBlock!!.type.toString().contains("PRESSURE_PLATE") || //is correct block?
             event.clickedBlock!!.type.toString().contains("BUTTON") ||
