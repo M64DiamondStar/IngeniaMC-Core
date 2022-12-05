@@ -10,9 +10,12 @@ import java.util.*
 
 object Items {
 
-    fun getPlayerHead(url: String?): ItemStack {
+    fun getPlayerHead(fUrl: String?): ItemStack {
+        var url = fUrl
         val skull = ItemStack(Material.PLAYER_HEAD)
-        if (url == null || url.isEmpty()) return skull
+        if (url.isNullOrEmpty()) return skull
+        if(!url.contains("textures.minecraft.net"))
+            url = "http://textures.minecraft.net/$url"
         val skullMeta = skull.itemMeta as SkullMeta?
         val profile = GameProfile(UUID.randomUUID(), null)
         val encodedData = Base64.getEncoder().encode(String.format("{textures:{SKIN:{url:\"%s\"}}}", url).toByteArray())
