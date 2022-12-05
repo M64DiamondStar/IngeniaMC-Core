@@ -1,19 +1,18 @@
 package me.m64diamondstar.ingeniamccore.general.player
 
-import me.m64diamondstar.ingeniamccore.general.levels.LevelUtils.isLevelUp
+import me.m64diamondstar.ingeniamccore.IngeniaMC
+import me.m64diamondstar.ingeniamccore.data.files.PlayerConfig
+import me.m64diamondstar.ingeniamccore.general.levels.LevelUtils.getLevel
 import me.m64diamondstar.ingeniamccore.general.levels.LevelUtils.getLevelUpLevels
 import me.m64diamondstar.ingeniamccore.general.levels.LevelUtils.getRewards
-import me.m64diamondstar.ingeniamccore.wands.Wands.getAccessibleWands
-import me.m64diamondstar.ingeniamccore.utils.LocationUtils.getLocationFromString
-import me.m64diamondstar.ingeniamccore.data.files.PlayerConfig
-import me.m64diamondstar.ingeniamccore.utils.messages.MessageLocation
-import me.m64diamondstar.ingeniamccore.general.tablist.TabList
-import me.m64diamondstar.ingeniamccore.IngeniaMC
-import me.m64diamondstar.ingeniamccore.general.levels.LevelUtils
-import me.m64diamondstar.ingeniamccore.general.levels.LevelUtils.getLevel
+import me.m64diamondstar.ingeniamccore.general.levels.LevelUtils.isLevelUp
 import me.m64diamondstar.ingeniamccore.general.scoreboard.Scoreboard
+import me.m64diamondstar.ingeniamccore.general.tablist.TabList
+import me.m64diamondstar.ingeniamccore.utils.LocationUtils.getLocationFromString
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
+import me.m64diamondstar.ingeniamccore.utils.messages.MessageLocation
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
+import me.m64diamondstar.ingeniamccore.wands.Wands.getAccessibleWands
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
 import org.bukkit.*
@@ -69,6 +68,24 @@ class IngeniaPlayer(val player: Player) {
         ) else if (player.hasPermission("ingenia.vip")) Colors.format("#54b0b0VIP") else Colors.format(
             "#a1a1a1Visitor"
         )
+
+    var currentAreaName: String?
+        get() {
+            val container = player.persistentDataContainer
+            val name = container.get(NamespacedKey(IngeniaMC.plugin, "current-area"), PersistentDataType.STRING)
+            if(name.equals("null", ignoreCase = true))
+                return null
+            return name
+        }
+        set(value) {
+            val container = player.persistentDataContainer
+            if(value == null)
+                container.set(
+                    NamespacedKey(IngeniaMC.plugin, "current-area"), PersistentDataType.STRING, "null")
+            else
+                container.set(
+                    NamespacedKey(IngeniaMC.plugin, "current-area"), PersistentDataType.STRING, "$value")
+        }
 
     fun sendMessage(string: String?) {
         player.sendMessage(Colors.format(string))
