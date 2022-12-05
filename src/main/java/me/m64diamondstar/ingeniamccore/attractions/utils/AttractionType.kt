@@ -6,5 +6,6 @@ enum class AttractionType {
     FRISBEE,
     TOPSPIN,
     SWINGSHIP,
-    PARKTRAIN
+    PARKTRAIN,
+    SLIDE
 }
