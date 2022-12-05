@@ -1,11 +1,12 @@
 package me.m64diamondstar.ingeniamccore
 
-import com.comphenix.protocol.ProtocolLibrary
-import com.comphenix.protocol.ProtocolManager
+import com.craftmend.openaudiomc.api.interfaces.AudioApi
 import me.m64diamondstar.ingeniamccore.attractions.listeners.PlayerInteractEntityListener
 import me.m64diamondstar.ingeniamccore.attractions.traincarts.SignRegistry
 import me.m64diamondstar.ingeniamccore.attractions.utils.AttractionUtils
 import me.m64diamondstar.ingeniamccore.games.guesstheword.GuessTheWordListener
+import me.m64diamondstar.ingeniamccore.general.areas.AreaUtils
+import me.m64diamondstar.ingeniamccore.general.areas.listeners.PlayerMoveListener
 import me.m64diamondstar.ingeniamccore.general.commands.*
 import me.m64diamondstar.ingeniamccore.general.commands.ingenia.IngeniaCommand
 import me.m64diamondstar.ingeniamccore.general.commands.tabcompleters.AdminTabCompleter
@@ -27,17 +28,16 @@ import java.util.*
 
 class IngeniaMC : JavaPlugin() {
 
-    private lateinit var protocolManager: ProtocolManager
-
     companion object {
         lateinit var plugin: IngeniaMC
+        lateinit var audioApi: AudioApi
         var isDisabling: Boolean = false
     }
 
     override fun onEnable() {
 
+        audioApi = AudioApi.getInstance()
         plugin = this
-        protocolManager = ProtocolLibrary.getProtocolManager()
 
         Bukkit.getLogger().info("---------------------------")
         Bukkit.getLogger().info("Started loading IngeniaMC-Core!")
@@ -71,6 +71,9 @@ class IngeniaMC : JavaPlugin() {
 
         Bukkit.getScheduler().scheduleSyncDelayedTask(this) { AttractionUtils.spawnAllAttractions() }
         Bukkit.getLogger().info("Attractions loaded ✓")
+
+        AreaUtils.getAllAreas().forEach { AreaUtils.setArea(it) }
+        Bukkit.getLogger().info("Areas loaded ✓")
 
         loadTasks()
         Bukkit.getLogger().info("Tasks loaded ✓")
@@ -160,6 +163,7 @@ class IngeniaMC : JavaPlugin() {
             Move Events
          */
         Bukkit.getServer().pluginManager.registerEvents(MoveListener(), this)
+        Bukkit.getServer().pluginManager.registerEvents(PlayerMoveListener(), this)
 
         /*
             Protection Events
@@ -179,6 +183,6 @@ class IngeniaMC : JavaPlugin() {
             override fun run() {
 
             }
-        }.runTaskTimer(this, 18000L, 18000L)
+        }.runTaskTimer(this, 200L, 18000L)
     }
 }
