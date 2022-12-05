@@ -76,9 +76,18 @@ public class IngeniaCommand implements CommandExecutor {
                 sender.sendMessage(Colors.format(MessageType.SUCCESS + "Successfully reloaded config.yml!"));
             }
 
+            // Protect sub-command
+            // Protection events and other things
             case "protect" -> {
                 ProtectionSubcommand protectionSubcommand = new ProtectionSubcommand(sender, args);
                 protectionSubcommand.execute();
+            }
+
+            // Area sub-command
+            // Used for playing music and locating players
+            case "area" -> {
+                AreaSubcommand areaSubcommand = new AreaSubcommand(sender, args);
+                areaSubcommand.execute();
             }
 
 
