@@ -7,6 +7,7 @@ import me.m64diamondstar.ingeniamccore.attractions.utils.Attraction
 import me.m64diamondstar.ingeniamccore.attractions.utils.AttractionUtils
 import me.m64diamondstar.ingeniamccore.general.commands.ingenia.attraction.CoasterSubcommand
 import me.m64diamondstar.ingeniamccore.general.commands.ingenia.attraction.FreefallSubcommand
+import me.m64diamondstar.ingeniamccore.general.commands.ingenia.attraction.SlideSubcommand
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.utils.IngeniaSubcommand
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
@@ -311,6 +312,11 @@ class AttractionSubcommand(private val sender: CommandSender, private val args: 
             val coasterSubcommand = CoasterSubcommand(args, player)
             coasterSubcommand.execute()
         }
+
+        if(args[1].equals("slide", ignoreCase = true)){
+            val slideSubcommand = SlideSubcommand(args, player)
+            slideSubcommand.execute()
+        }
     }
 
     override fun getTabCompleters(): ArrayList<String> {
@@ -326,6 +332,7 @@ class AttractionSubcommand(private val sender: CommandSender, private val args: 
             tabs.add("coaster")
             tabs.add("gates")
             tabs.add("operate")
+            tabs.add("slide")
         }
 
         //Global tab completer for attraction categories and names except for create and delete subcommand
@@ -380,6 +387,11 @@ class AttractionSubcommand(private val sender: CommandSender, private val args: 
 
             if(args[1].equals("coaster", ignoreCase = true)){
                 tabs.add("row")
+            }
+
+            if(args[1].equals("slide", ignoreCase = true)){
+                tabs.add("setspawn")
+                tabs.add("setdespawn")
             }
 
             if(args[1].equals("gates", ignoreCase = true)){
