@@ -45,7 +45,10 @@ commands:
       - r
   admin:
     description: Command for all admin sub-commands.
+    permission: ingenia.admin
     aliases:
       - adm
+  leave:
+    description: Leave the game you're currently playing.
 
 
