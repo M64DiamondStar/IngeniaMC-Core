@@ -2,7 +2,6 @@
 The Core plugin of IngeniaMC.
 
 
-> **Information**
 > IngeniaMC is a Minecraft Theme Park with a story… We have a great team and community and we hope we can keep that! We try our best to give you the best
 > experience in our server and make you happy day after day with our endless possibilities! Here are the links:
 > 
