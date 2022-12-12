@@ -1,12 +1,92 @@
 package me.m64diamondstar.ingeniamccore.attractions.custom
 
+import com.bergerkiller.bukkit.tc.controller.MinecartGroup
+import com.bergerkiller.bukkit.tc.controller.MinecartMemberStore
 import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.attractions.utils.Attraction
+import me.m64diamondstar.ingeniamccore.attractions.utils.AttractionType
+import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
+import net.kyori.adventure.audience.Audience
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.TextColor
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Material
+import org.bukkit.entity.Entity
+import org.bukkit.scheduler.BukkitRunnable
 
 class Coaster(category: String, name: String): Attraction(category, name) {
+
+    companion object {
+        private val usedCoaster = java.util.ArrayList<MinecartGroup>()
+
+        fun clickEvent(entity: Entity){
+
+            if(MinecartMemberStore.getFromEntity(entity) == null) return
+
+            val member = MinecartMemberStore.getFromEntity(entity)
+
+            if(usedCoaster.contains(member.group)) return
+
+            for(block in member.group.signTracker.activeTrackedSigns) {
+                if (block.sign.sign.getLine(1).contains("attraction")) {
+                    if (block.sign.sign.getLine(1).split(" ")[1].toInt() != 1) return
+
+                    usedCoaster.add(member.group)
+
+                    val attraction = Attraction(block.sign.sign.getLine(2), block.sign.sign.getLine(3))
+                    if (attraction.getType() != AttractionType.COASTER) return
+
+                    object : BukkitRunnable() {
+
+                        var c = 15
+
+                        override fun run() {
+                            if (!member.group.hasPassenger()) {
+                                usedCoaster.remove(member.group)
+                                this.cancel()
+                                return
+                            }
+
+                            if (c == 0) {
+                                member.group.properties.playersEnter = false
+                                member.group.properties.playersExit = false
+
+                                if (attraction.getType() == AttractionType.COASTER) {
+                                    val coaster = Coaster(attraction.getCategory(), attraction.getName())
+                                    coaster.dispatch()
+                                }
+
+                                usedCoaster.remove(member.group)
+                                attraction.closeGates()
+
+                                this.cancel()
+                                return
+                            }
+
+                            if (c != 1)
+                                for (members in member.group)
+                                    members.entity.playerPassengers.forEach {
+                                        (it as Audience).sendActionBar(
+                                            Component.text("This coaster will dispatch in $c seconds.").color(
+                                                TextColor
+                                                    .fromHexString(MessageType.PLAYER_UPDATE)))
+                                    }
+                            else
+                                for (members in member.group)
+                                    members.entity.playerPassengers.forEach {
+                                        (it as Audience).sendActionBar(
+                                            Component.text("This coaster will dispatch in 1 second.").color(
+                                                TextColor
+                                                    .fromHexString(MessageType.PLAYER_UPDATE)))
+                                    }
+                            c--
+                        }
+                    }.runTaskTimer(IngeniaMC.plugin, 0L, 20L)
+                }
+            }
+        }
+    }
 
     fun setRowOccupied(row: Int, occupied: Boolean){
         getConfig().set("Data.Station.Rows.$row.Occupied", occupied)
@@ -114,9 +194,9 @@ class Coaster(category: String, name: String): Attraction(category, name) {
         }
 
         if(activated)
-            getRowStation(row)!!.block.type = Material.REDSTONE_TORCH
+            getRowStation(row)!!.block.setType(Material.REDSTONE_TORCH, true)
         else
-            getRowStation(row)!!.block.type = Material.AIR
+            getRowStation(row)!!.block.setType(Material.AIR, true)
     }
 
     fun dispatch(){
@@ -125,10 +205,10 @@ class Coaster(category: String, name: String): Attraction(category, name) {
                 .warning("Station sign(s) for ${getName()} in ${getCategory()} still has to be made! Please do this as quickly as possible!")
             return
         }
-        getRowStation(1)!!.block.type = Material.REDSTONE_TORCH
+        getRowStation(1)!!.block.setType(Material.REDSTONE_TORCH, true)
 
         Bukkit.getScheduler().scheduleSyncDelayedTask(IngeniaMC.plugin, {
-            getRowStation(1)!!.block.type = Material.AIR
+            getRowStation(1)!!.block.setType(Material.AIR, true)
         }, 5L)
     }
 
@@ -140,10 +220,13 @@ class Coaster(category: String, name: String): Attraction(category, name) {
                     .warning("Spawn sign(s) for ${getName()} in ${getCategory()} still has to be made! Please do this as quickly as possible!")
                 return
             }
-            getRowSpawn(row)!!.block.type = Material.REDSTONE_TORCH
+            getRowSpawn(row)!!.block.setType(Material.REDSTONE_TORCH, true)
+
+            getRowStation(row)!!.block.setType(Material.AIR, true)
+            setRowOccupied(row, true)
 
             Bukkit.getScheduler().scheduleSyncDelayedTask(IngeniaMC.plugin, {
-                getRowSpawn(row)!!.block.type = Material.AIR
+                getRowSpawn(row)!!.block.setType(Material.AIR, true)
             }, 5L)
 
         }
@@ -157,10 +240,14 @@ class Coaster(category: String, name: String): Attraction(category, name) {
                     .warning("Depawn sign(s) for ${getName()} in ${getCategory()} still has to be made! Please do this as quickly as possible!")
                 return
             }
-            getRowDespawn(row)!!.block.type = Material.REDSTONE_TORCH
+
+            getRowDespawn(row)!!.block.setType(Material.REDSTONE_TORCH, true)
+
+            getRowStation(row)!!.block.setType(Material.AIR, true)
+            setRowOccupied(row, true) //Prevent bugs at next spawn
 
             Bukkit.getScheduler().scheduleSyncDelayedTask(IngeniaMC.plugin, {
-                getRowDespawn(row)!!.block.type = Material.AIR
+                getRowDespawn(row)!!.block.setType(Material.AIR, true)
             }, 5L)
 
         }

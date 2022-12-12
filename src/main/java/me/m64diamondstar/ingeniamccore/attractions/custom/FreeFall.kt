@@ -2,9 +2,9 @@ package me.m64diamondstar.ingeniamccore.attractions.custom
 
 import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.attractions.utils.Attraction
+import me.m64diamondstar.ingeniamccore.attractions.utils.AttractionManager
+import me.m64diamondstar.ingeniamccore.attractions.utils.AttractionType
 import me.m64diamondstar.ingeniamccore.attractions.utils.CustomAttraction
-import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
-import me.m64diamondstar.ingeniamccore.utils.messages.MessageLocation
 import me.m64diamondstar.ingeniamccore.utils.messages.Messages
 import net.minecraft.world.entity.EnumMoveType
 import net.minecraft.world.phys.Vec3D
@@ -15,6 +15,7 @@ import org.bukkit.craftbukkit.v1_19_R1.entity.CraftArmorStand
 import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
+import org.bukkit.event.player.PlayerInteractAtEntityEvent
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
 import org.bukkit.scheduler.BukkitRunnable
@@ -23,6 +24,37 @@ import kotlin.math.cos
 import kotlin.math.sin
 
 class FreeFall(category: String, name: String): Attraction(category, name), CustomAttraction {
+
+    companion object {
+        fun clickEvent(event: PlayerInteractAtEntityEvent){
+            val entity = event.rightClicked
+            val player = event.player
+
+            if(entity.type != EntityType.ARMOR_STAND) return
+            if(entity.customName == null) return
+
+            try{
+                AttractionType.valueOf(entity.customName!!.split("-")[0])
+            }catch (e: NullPointerException){
+                return
+            }catch (e: IllegalArgumentException){
+                return
+            }
+
+            event.isCancelled = true
+
+            if(AttractionType.valueOf(Objects.requireNonNull<String?>(entity.customName).split("-").toTypedArray()[0]) == AttractionType.FREEFALL){
+                val freefall = FreeFall(entity.customName!!.split("-")[3], entity.customName!!.split("-")[2])
+
+                if(entity.passengers.size != 0)
+                    return
+
+                AttractionManager.countdown(freefall)
+                entity.addPassenger(player)
+
+            }
+        }
+    }
 
     override fun spawn() {
         for (i in 0..15) {
@@ -90,27 +122,6 @@ class FreeFall(category: String, name: String): Attraction(category, name), Cust
     override fun setSpawnLocation(location: Location){
         this.getConfig().set("Settings.SpawnLocation", "${location.x}, ${location.y}, ${location.z}")
         this.reloadConfig()
-    }
-
-    fun countdown(){
-
-        object: BukkitRunnable(){
-            var c = 15
-            override fun run() {
-
-                if(c == 0){
-                    this.cancel()
-                    return
-                }
-
-                getSeats().forEach {
-                    if(it.passengers.size == 1){
-                        IngeniaPlayer(it.passengers[0] as Player).sendMessage(Messages.rideCountdown(c), MessageLocation.HOTBAR)
-                    }
-                }
-                c -= 1
-            }
-        }.runTaskTimer(IngeniaMC.plugin, 0L, 20L)
     }
 
     override fun dispatch() {
