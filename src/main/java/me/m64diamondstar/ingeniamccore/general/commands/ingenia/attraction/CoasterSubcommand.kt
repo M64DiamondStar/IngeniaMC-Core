@@ -29,7 +29,7 @@ class CoasterSubcommand(private val args: Array<String>, private val player: Pla
             val rawAttraction = Attraction(args[2], args[3])
 
             if(rawAttraction.getType() != AttractionType.COASTER){
-                player.sendMessage(Colors.format(MessageType.ERROR + "The attraction &o${args[3]}&r ${MessageType.ERROR}is not a FreeFall, so the settings cannot be modified!"))
+                player.sendMessage(Colors.format(MessageType.ERROR + "The attraction &o${args[3]}&r ${MessageType.ERROR}is not a Coaster, so the settings cannot be modified!"))
                 return
             }
 
