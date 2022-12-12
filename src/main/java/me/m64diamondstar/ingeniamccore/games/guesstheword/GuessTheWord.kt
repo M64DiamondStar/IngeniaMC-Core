@@ -15,7 +15,7 @@ class GuessTheWord {
     private var currentWord: String = GuessTheWordUtils.scramble(unscrambledWord)
     private val playerUuids = ArrayList<UUID>()
 
-    fun start(){
+    fun execute(){
 
         GuessTheWordRegistry.add(this)
 
@@ -64,13 +64,6 @@ class GuessTheWord {
                 }
             }
         }.runTaskTimer(IngeniaMC.plugin, 0L, 20L)
-    }
-
-    fun getExp(): Long{
-        var exp = 0
-        for(letterIndex in 0 until currentWord.chunked(1).size)
-            if(currentWord.chunked(1)[letterIndex] == "_") exp++
-        return 0
     }
 
     fun getPlayers(): List<UUID>{

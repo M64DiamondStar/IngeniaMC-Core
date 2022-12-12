@@ -1,7 +1,6 @@
 package me.m64diamondstar.ingeniamccore.attractions.utils
 
 import me.m64diamondstar.ingeniamccore.IngeniaMC
-import me.m64diamondstar.ingeniamccore.attractions.custom.Coaster
 import me.m64diamondstar.ingeniamccore.attractions.custom.FreeFall
 import org.bukkit.entity.Player
 import java.io.File
@@ -43,6 +42,7 @@ object AttractionUtils {
     }
 
     private fun existsAttraction(category: File, attraction: File): Boolean{
+        if(!category.exists()) return false
         return category.listFiles()!!.contains(attraction)
     }
 

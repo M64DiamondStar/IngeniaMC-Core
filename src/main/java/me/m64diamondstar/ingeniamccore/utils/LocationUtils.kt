@@ -11,7 +11,9 @@ object LocationUtils {
      * Get location from format (world, x, y, z, yaw, pitch)
      *
      */
-    fun getLocationFromString(string: String): Location?{
+    fun getLocationFromString(string: String?): Location?{
+        if(string == null)
+            return null
         var args = string.split(", ")
         if(args.size == 1)
             args = string.split(",")

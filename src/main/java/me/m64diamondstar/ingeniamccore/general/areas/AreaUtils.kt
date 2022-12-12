@@ -28,6 +28,7 @@ object AreaUtils {
     }
 
     private fun existsArea(category: File, area: File): Boolean{
+        if(!category.exists()) return false
         return category.listFiles()!!.contains(area)
     }
 

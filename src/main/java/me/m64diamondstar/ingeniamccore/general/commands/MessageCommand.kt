@@ -16,13 +16,17 @@ class MessageCommand: CommandExecutor {
     }
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>?): Boolean {
-        if (sender !is Player) return false
+
+        if (sender !is Player) {
+            sender.sendMessage(Messages.noPlayer())
+            return false
+        }
 
         if ((label.equals("msg", ignoreCase = true) || label.equals("tell", ignoreCase = true)) && args!!.size >= 2) {
             val sb = StringBuilder()
 
-            for (LoopArgs in 1 until args.size) {
-                sb.append(args[LoopArgs]).append(" ")
+            for (loopArgs in 1 until args.size) {
+                sb.append(args[loopArgs]).append(" ")
             }
 
             val target = Bukkit.getPlayer(args[0])

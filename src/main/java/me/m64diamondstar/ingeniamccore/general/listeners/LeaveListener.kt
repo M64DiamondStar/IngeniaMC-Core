@@ -10,8 +10,6 @@ class LeaveListener : Listener {
     fun onPlayerLeave(e: PlayerQuitEvent) {
         val bukkitPlayer = e.player
         val player = IngeniaPlayer(bukkitPlayer)
-        player.startUp()
-        player.setScoreboard(true)
         e.quitMessage = player.leaveMessage
     }
 }

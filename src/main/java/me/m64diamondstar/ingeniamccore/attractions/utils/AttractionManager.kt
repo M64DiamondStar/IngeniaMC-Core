@@ -1,15 +1,14 @@
 package me.m64diamondstar.ingeniamccore.attractions.utils
 
 import me.m64diamondstar.ingeniamccore.IngeniaMC
-import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
-import me.m64diamondstar.ingeniamccore.utils.messages.MessageLocation
+import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
 import me.m64diamondstar.ingeniamccore.utils.messages.Messages
-import org.bukkit.entity.Player
+import net.kyori.adventure.audience.Audience
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.TextColor
 import org.bukkit.scheduler.BukkitRunnable
 
 object AttractionManager {
-
-    fun spawnAttractions() {}
 
     fun countdown(attraction: CustomAttraction) {
 
@@ -29,7 +28,10 @@ object AttractionManager {
                 var hasPassenger = false
                 attraction.getSeats().forEach {
                     if(it.passengers.size == 1){
-                        IngeniaPlayer(it.passengers[0] as Player).sendMessage(Messages.rideCountdown(c), MessageLocation.HOTBAR)
+                        (it.passengers[0] as Audience).sendActionBar(
+                            Component.text(Messages.rideCountdown(c)).color(
+                                TextColor
+                                    .fromHexString(MessageType.PLAYER_UPDATE)))
                         hasPassenger = true
                     }
                 }

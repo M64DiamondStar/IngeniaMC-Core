@@ -24,14 +24,18 @@ object Messages {
         return Colors.format(MessageType.ERROR + "Please enter a valid player.")
     }
 
+    fun invalidAttractionFunction(): String {
+        return Colors.format(MessageType.ERROR + "This function is not available for this attraction type.")
+    }
+
     fun currentRidecount(ridecount: Int): String {
         return Colors.format(MessageType.PLAYER_UPDATE + "Your ridecount for this ride is now at $ridecount.")
     }
 
     fun rideCountdown(currentCount: Int): String {
-        if(currentCount != 1)
-            return Colors.format("&eThis ride will start in $currentCount seconds.")
+        return if(currentCount != 1)
+            "This ride will start in $currentCount seconds."
         else
-            return Colors.format("&eThis ride will start in $currentCount second.")
+            "This ride will start in $currentCount second."
     }
 }
