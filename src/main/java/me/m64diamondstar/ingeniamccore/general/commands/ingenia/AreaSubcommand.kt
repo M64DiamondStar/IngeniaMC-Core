@@ -28,7 +28,7 @@ class AreaSubcommand(private val sender: CommandSender, private val args: Array<
         if(args[1].equals("create", ignoreCase = true) && args.size == 4) {
 
             if(AreaUtils.existsArea(args[2], args[3])){
-                player.sendMessage(Colors.format(MessageType.ERROR + "The area ${args[2]} already exists. " +
+                player.sendMessage(Colors.format(MessageType.ERROR + "The area ${args[3]} already exists. " +
                         "If you want to reset it, please delete it and re-create it."))
                 return
             }
@@ -36,20 +36,22 @@ class AreaSubcommand(private val sender: CommandSender, private val args: Array<
             val area = Area(args[2], args[3])
             area.createArea(player.world)
 
+            player.sendMessage(Colors.format(MessageType.SUCCESS + "Area has successfully been created!"))
+
         }
 
         if(args[1].equals("modify", ignoreCase = true) && args.size >= 4){
 
             if(!AreaUtils.existsArea(args[2], args[3])){
-                player.sendMessage(Colors.format(MessageType.ERROR + "The area ${args[2]} doesn't exist!"))
+                player.sendMessage(Colors.format(MessageType.ERROR + "The area ${args[3]} doesn't exist!"))
                 return
             }
 
             val area = Area(args[2], args[3])
 
-            if(args.size == 5 && args[3].equals("setdisplayname", ignoreCase = true)){
-                area.displayName = args[4].replace("_", " ").replace("-", " ")
-                player.sendMessage(Colors.format(MessageType.SUCCESS + "The display name has successfully been changed to ${args[4]}."))
+            if(args.size == 6 && args[4].equals("setDisplayname", ignoreCase = true)){
+                area.displayName = args[5].replace("_", " ").replace("-", " ")
+                player.sendMessage(Colors.format(MessageType.SUCCESS + "The display name has successfully been changed to ${args[5]}."))
             }
 
             else if(args.size == 5 && args[4].equals("setarea", ignoreCase = true)){
@@ -101,6 +103,8 @@ class AreaSubcommand(private val sender: CommandSender, private val args: Array<
                     return
                 }
 
+                player.sendMessage(Colors.format(MessageType.SUCCESS + "Successfully set the music of this area to:"))
+                player.sendMessage(Colors.format(MessageType.SUCCESS + args[5]))
                 area.setMusic(args[5])
             }
 
