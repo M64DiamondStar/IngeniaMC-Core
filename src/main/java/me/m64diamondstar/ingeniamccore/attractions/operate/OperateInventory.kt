@@ -2,12 +2,14 @@ package me.m64diamondstar.ingeniamccore.attractions.operate
 
 import me.m64diamondstar.ingeniamccore.attractions.custom.Coaster
 import me.m64diamondstar.ingeniamccore.attractions.custom.FreeFall
+import me.m64diamondstar.ingeniamccore.attractions.custom.Slide
 import me.m64diamondstar.ingeniamccore.attractions.utils.Attraction
 import me.m64diamondstar.ingeniamccore.attractions.utils.AttractionType
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.utils.gui.Gui
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
+import me.m64diamondstar.ingeniamccore.utils.messages.Messages
 import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.event.inventory.InventoryClickEvent
@@ -23,6 +25,10 @@ class OperateInventory(player: IngeniaPlayer, private val attraction: Attraction
     }
 
     override fun handleInventory(event: InventoryClickEvent) {
+
+        /*
+         GATES
+        */
         if(event.slot == 10){
             attraction.closeGates()
             getPlayer().player.playSound(getPlayer().player.location, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 2f, 1.5f)
@@ -33,6 +39,9 @@ class OperateInventory(player: IngeniaPlayer, private val attraction: Attraction
             getPlayer().player.playSound(getPlayer().player.location, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 2f, 1.5f)
         }
 
+        /*
+         DESPAWN
+        */
         if(event.slot == 14){
             if(attraction.getType() == AttractionType.COASTER){
                 val coaster = Coaster(attraction.getCategory(), attraction.getName())
@@ -42,9 +51,16 @@ class OperateInventory(player: IngeniaPlayer, private val attraction: Attraction
                 val freeFall = FreeFall(attraction.getCategory(), attraction.getName())
                 freeFall.despawn()
                 getPlayer().player.playSound(getPlayer().player.location, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 2f, 1.5f)
+            }else if(attraction.getType() == AttractionType.SLIDE){
+                val slide = Slide(attraction.getCategory(), attraction.getName())
+                slide.despawn()
+                getPlayer().player.playSound(getPlayer().player.location, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 2f, 1.5f)
             }
         }
 
+        /*
+         SPAWN
+        */
         if(event.slot == 16){
             if(attraction.getType() == AttractionType.COASTER){
                 val coaster = Coaster(attraction.getCategory(), attraction.getName())
@@ -54,9 +70,16 @@ class OperateInventory(player: IngeniaPlayer, private val attraction: Attraction
                 val freeFall = FreeFall(attraction.getCategory(), attraction.getName())
                 freeFall.spawn()
                 getPlayer().player.playSound(getPlayer().player.location, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 2f, 1.5f)
+            }else if(attraction.getType() == AttractionType.SLIDE){
+                val slide = Slide(attraction.getCategory(), attraction.getName())
+                slide.spawn()
+                getPlayer().player.playSound(getPlayer().player.location, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 2f, 1.5f)
             }
         }
 
+        /*
+         DISPATCH
+        */
         if(event.slot == 31){
             if(attraction.getType() == AttractionType.COASTER){
                 val coaster = Coaster(attraction.getCategory(), attraction.getName())
@@ -66,6 +89,8 @@ class OperateInventory(player: IngeniaPlayer, private val attraction: Attraction
                 val freeFall = FreeFall(attraction.getCategory(), attraction.getName())
                 freeFall.dispatch()
                 getPlayer().player.playSound(getPlayer().player.location, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 2f, 1.5f)
+            }else if(attraction.getType() == AttractionType.SLIDE){
+                getPlayer().sendMessage(Messages.invalidAttractionFunction())
             }
         }
     }
