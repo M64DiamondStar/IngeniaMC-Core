@@ -4,6 +4,7 @@ import com.craftmend.openaudiomc.api.interfaces.AudioApi
 import me.m64diamondstar.ingeniamccore.attractions.listeners.PlayerInteractEntityListener
 import me.m64diamondstar.ingeniamccore.attractions.traincarts.SignRegistry
 import me.m64diamondstar.ingeniamccore.attractions.utils.AttractionUtils
+import me.m64diamondstar.ingeniamccore.games.guesstheword.GuessTheWord
 import me.m64diamondstar.ingeniamccore.games.guesstheword.GuessTheWordListener
 import me.m64diamondstar.ingeniamccore.general.areas.AreaUtils
 import me.m64diamondstar.ingeniamccore.general.areas.listeners.PlayerMoveListener
@@ -13,7 +14,6 @@ import me.m64diamondstar.ingeniamccore.general.commands.tabcompleters.AdminTabCo
 import me.m64diamondstar.ingeniamccore.general.commands.tabcompleters.IngeniaTabCompleter
 import me.m64diamondstar.ingeniamccore.general.commands.tabcompleters.MessageTabCompleter
 import me.m64diamondstar.ingeniamccore.general.listeners.*
-import me.m64diamondstar.ingeniamccore.wands.wandlistener.WandListener
 import me.m64diamondstar.ingeniamccore.general.listeners.helpers.BonemealListener
 import me.m64diamondstar.ingeniamccore.general.listeners.protection.BlockListener
 import me.m64diamondstar.ingeniamccore.general.listeners.protection.DamageListener
@@ -21,6 +21,7 @@ import me.m64diamondstar.ingeniamccore.general.listeners.protection.HungerListen
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.shows.listeners.EntityChangeBlockListener
 import me.m64diamondstar.ingeniamccore.utils.gui.GuiListener
+import me.m64diamondstar.ingeniamccore.wands.wandlistener.WandListener
 import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.scheduler.BukkitRunnable
@@ -105,6 +106,8 @@ class IngeniaMC : JavaPlugin() {
 
         Objects.requireNonNull(getCommand("msg"))?.setExecutor(MessageCommand())
         Objects.requireNonNull(getCommand("react"))?.setExecutor(MessageCommand())
+
+        Objects.requireNonNull(getCommand("leave"))?.setExecutor(LeaveCommand())
     }
 
     private fun loadTabCompleters() {
@@ -150,20 +153,21 @@ class IngeniaMC : JavaPlugin() {
         Bukkit.getServer().pluginManager.registerEvents(BonemealListener(), this)
 
         /*
-            Attraction Events
-         */
-        Bukkit.getServer().pluginManager.registerEvents(PlayerInteractEntityListener(), this)
-
-        /*
             Show Events
          */
         Bukkit.getServer().pluginManager.registerEvents(EntityChangeBlockListener(), this)
+
+        /*
+            Attraction Events
+         */
+        Bukkit.getServer().pluginManager.registerEvents(PlayerInteractEntityListener(), this)
 
         /*
             Move Events
          */
         Bukkit.getServer().pluginManager.registerEvents(MoveListener(), this)
         Bukkit.getServer().pluginManager.registerEvents(PlayerMoveListener(), this)
+        Bukkit.getServer().pluginManager.registerEvents(me.m64diamondstar.ingeniamccore.games.parkour.listeners.PlayerMoveListener(), this)
 
         /*
             Protection Events
@@ -181,7 +185,8 @@ class IngeniaMC : JavaPlugin() {
     private fun loadTasks(){
         object: BukkitRunnable(){
             override fun run() {
-
+                val guessTheWord = GuessTheWord()
+                guessTheWord.execute()
             }
         }.runTaskTimer(this, 200L, 18000L)
     }
