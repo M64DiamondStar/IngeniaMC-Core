@@ -2,6 +2,8 @@ package me.m64diamondstar.ingeniamccore.general.player
 
 import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.data.files.PlayerConfig
+import me.m64diamondstar.ingeniamccore.games.PhysicalGameType
+import me.m64diamondstar.ingeniamccore.games.parkour.Parkour
 import me.m64diamondstar.ingeniamccore.general.levels.LevelUtils.getLevel
 import me.m64diamondstar.ingeniamccore.general.levels.LevelUtils.getLevelUpLevels
 import me.m64diamondstar.ingeniamccore.general.levels.LevelUtils.getRewards
@@ -9,10 +11,14 @@ import me.m64diamondstar.ingeniamccore.general.levels.LevelUtils.isLevelUp
 import me.m64diamondstar.ingeniamccore.general.scoreboard.Scoreboard
 import me.m64diamondstar.ingeniamccore.general.tablist.TabList
 import me.m64diamondstar.ingeniamccore.utils.LocationUtils.getLocationFromString
+import me.m64diamondstar.ingeniamccore.utils.Times
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageLocation
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
 import me.m64diamondstar.ingeniamccore.wands.Wands.getAccessibleWands
+import net.kyori.adventure.audience.Audience
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.TextColor
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
 import org.bukkit.*
@@ -21,6 +27,7 @@ import org.bukkit.event.inventory.InventoryType
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
+import org.bukkit.scheduler.BukkitRunnable
 import java.util.*
 
 class IngeniaPlayer(val player: Player) {
@@ -34,6 +41,7 @@ class IngeniaPlayer(val player: Player) {
     }
 
     fun startUp() {
+        game = null
         allowDamage = false
         setScoreboard(true)
         setTablist(true)
@@ -117,6 +125,49 @@ class IngeniaPlayer(val player: Player) {
     fun sendMessage(s: String, color: String) {
         this.sendMessage(Colors.format(color + s))
     }
+
+    val isInGame: Boolean
+        get() {
+            val container = player.persistentDataContainer
+            val name = container.get(NamespacedKey(IngeniaMC.plugin, "current-game"), PersistentDataType.STRING) ?: return false
+            try{
+                PhysicalGameType.valueOf(name)
+            }catch (ex: Exception){
+                return false
+            }
+            return true
+        }
+
+    var game: PhysicalGameType?
+        get(){
+            val container = player.persistentDataContainer
+            val name =
+                container.get(NamespacedKey(IngeniaMC.plugin, "current-game"), PersistentDataType.STRING) ?: return null
+            return try {
+                PhysicalGameType.valueOf(name)
+            }catch (ex: IllegalArgumentException){
+                null
+            }
+        }
+        set(value) {
+            val container = player.persistentDataContainer
+            container.set(
+                NamespacedKey(IngeniaMC.plugin, "current-game"), PersistentDataType.STRING, value.toString()
+            )
+        }
+
+    var isInGameLeavingState: Boolean
+        get() {
+            val container = player.persistentDataContainer
+            val name = container.get(NamespacedKey(IngeniaMC.plugin, "is-in-game-leaving-state"), PersistentDataType.STRING)
+            return name.toBoolean()
+        }
+        set(value) {
+            val container = player.persistentDataContainer
+            container.set(
+                NamespacedKey(IngeniaMC.plugin, "is-in-game-leaving-state"), PersistentDataType.STRING, value.toString()
+            )
+        }
 
     var exp: Long
         get() = getConfig().getExp()
@@ -278,5 +329,65 @@ class IngeniaPlayer(val player: Player) {
 
     init {
         config = PlayerConfig(player.uniqueId)
+    }
+
+    fun startParkour(parkour: Parkour){
+
+        game = PhysicalGameType.PARKOUR
+        isInGameLeavingState = false
+        sendMessage(MessageType.PLAYER_UPDATE + "Use '/leave' to cancel the parkour.")
+
+        object: BukkitRunnable(){
+
+            val startTime = System.currentTimeMillis()
+            var currentTime = System.currentTimeMillis()
+
+            override fun run() {
+                val timeDisplay = Times.formatTime(currentTime - startTime)
+
+                //Display normal time in actionbar
+                (player as Audience).sendActionBar(Component.text("${parkour.displayName} current time: $timeDisplay").color(TextColor
+                    .fromHexString(MessageType.PLAYER_UPDATE)))
+
+                //If player is at end
+                if(player.location.distanceSquared(parkour.endLocation!!) <= parkour.endRadius){
+
+                    (player as Audience).sendActionBar(Component.text("${parkour.displayName} finished in: $timeDisplay").color(TextColor
+                        .fromHexString(MessageType.PLAYER_UPDATE)))
+
+                    sendMessage(MessageType.PLAYER_UPDATE + "${parkour.displayName} has been finished in $timeDisplay.")
+
+                    player.playSound(player.location, Sound.UI_TOAST_CHALLENGE_COMPLETE, 0.5f, 1f)
+
+                    player.sendTitle(Colors.format(MessageType.PLAYER_UPDATE + parkour.displayName),
+                        Colors.format(MessageType.PLAYER_UPDATE + timeDisplay),
+                        10,
+                        50,
+                        10)
+
+                    game = null
+
+                    this.cancel()
+                    return
+                }
+
+                if(isInGameLeavingState){
+                    player.sendTitle(Colors.format(MessageType.PLAYER_UPDATE + parkour.displayName),
+                        Colors.format(MessageType.ERROR + "Cancelled"),
+                        10,
+                        50,
+                        10)
+                    sendMessage(MessageType.PLAYER_UPDATE + "You left the parkour.")
+
+                    game = null
+                    isInGameLeavingState = false
+
+                    this.cancel()
+                    return
+                }
+
+                currentTime = System.currentTimeMillis()
+            }
+        }.runTaskTimer(IngeniaMC.plugin, 0L, 1L)
     }
 }
