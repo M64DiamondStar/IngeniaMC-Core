@@ -82,6 +82,7 @@ class SignActionAttraction: SignAction() {
             event.getLine(1).split(" ")[1].toInt()
         }catch (e: NumberFormatException){
             event.player.sendMessage(Colors.format(MessageType.ERROR + "Please use a valid number as row."))
+            return false
         }
 
         if(!AttractionUtils.existsCategory(event.getLine(2)) || !AttractionUtils.existsAttraction(event.getLine(2), event.getLine(3))){
