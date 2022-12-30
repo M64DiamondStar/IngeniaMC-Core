@@ -47,7 +47,7 @@ class Leaderboard (scores: Map<String, Int>, backgroundColor: Color, outlineColo
             y = 210
             //POSITION + COUNT
             graphics2D.color = positionColor
-            writeCenteredText("#$place $score", y)
+            writeCenteredText("#$place - $score", y)
 
             //NAME
             writeCenteredText(name, y + 16)
@@ -55,7 +55,7 @@ class Leaderboard (scores: Map<String, Int>, backgroundColor: Color, outlineColo
         else {
             //POSITION + COUNT
             graphics2D.color = positionColor
-            writeCenteredText("#$place $score", y)
+            writeCenteredText("#$place - $score", y)
 
             //NAME
             graphics2D.color = nameColor
