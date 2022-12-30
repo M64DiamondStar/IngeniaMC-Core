@@ -24,6 +24,7 @@ class IngeniaTabCompleter: TabCompleter {
             tc.add("game")
             tc.add("protect")
             tc.add("area")
+            tc.add("warps")
         }else if(args.size > 1){
 
             tc.clear()
