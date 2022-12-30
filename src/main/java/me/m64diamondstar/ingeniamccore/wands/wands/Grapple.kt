@@ -1,12 +1,16 @@
 package me.m64diamondstar.ingeniamccore.wands.wands
 
 import me.m64diamondstar.ingeniamccore.IngeniaMC
-import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.utils.entities.LeashablePacketEntity
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
-import me.m64diamondstar.ingeniamccore.utils.messages.MessageLocation
+import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
 import me.m64diamondstar.ingeniamccore.wands.Cooldowns
-import org.bukkit.*
+import net.kyori.adventure.audience.Audience
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.TextColor
+import org.bukkit.Bukkit
+import org.bukkit.Location
+import org.bukkit.Material
 import org.bukkit.craftbukkit.v1_19_R1.CraftWorld
 import org.bukkit.entity.Player
 import org.bukkit.scheduler.BukkitRunnable
@@ -31,8 +35,10 @@ class Grapple: Wand {
 
     override fun run(player: Player) {
 
-        val ingeniaPlayer = IngeniaPlayer(player)
-        ingeniaPlayer.sendMessage("&8Press &7shift &8while looking at a block to start!", MessageLocation.HOTBAR)
+        (player as Audience).sendActionBar(
+            Component.text("Press shift while looking at a block to start.").color(
+                TextColor
+                    .fromHexString(MessageType.PLAYER_UPDATE)))
 
         object: BukkitRunnable(){
 
