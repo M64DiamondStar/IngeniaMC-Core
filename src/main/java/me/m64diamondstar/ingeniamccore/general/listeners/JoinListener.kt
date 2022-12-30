@@ -15,8 +15,6 @@ class JoinListener : Listener {
         val player = IngeniaPlayer(bukkitPlayer)
         e.joinMessage = player.joinMessage
 
-        AttractionUtils.getAllAttractions().forEach { it.spawnRidecountSign(bukkitPlayer) }
-
         player.startUp()
     }
 

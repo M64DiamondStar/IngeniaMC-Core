@@ -1,6 +1,7 @@
 package me.m64diamondstar.ingeniamccore.general.player
 
 import me.m64diamondstar.ingeniamccore.IngeniaMC
+import me.m64diamondstar.ingeniamccore.attractions.utils.AttractionUtils
 import me.m64diamondstar.ingeniamccore.data.files.PlayerConfig
 import me.m64diamondstar.ingeniamccore.games.PhysicalGameType
 import me.m64diamondstar.ingeniamccore.games.parkour.Parkour
@@ -63,6 +64,8 @@ class IngeniaPlayer(val player: Player) {
                 "#54b0b0VIP #defdff$name"
             )
         ) else player.setPlayerListName(Colors.format("#a1a1a1Visitor #cccccc$name"))
+
+        AttractionUtils.getAllAttractions().forEach { it.spawnRidecountSign(player) }
     }
 
     val name: String
