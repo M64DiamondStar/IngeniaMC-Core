@@ -1,7 +1,6 @@
-package me.m64diamondstar.ingeniamccore.games.parkour.listeners
+package me.m64diamondstar.ingeniamccore.games.parkour
 
 import me.m64diamondstar.ingeniamccore.IngeniaMC
-import me.m64diamondstar.ingeniamccore.games.parkour.Parkour
 import java.io.File
 
 object ParkourUtils {
