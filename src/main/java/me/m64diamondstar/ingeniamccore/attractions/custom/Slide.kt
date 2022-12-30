@@ -10,6 +10,11 @@ import org.bukkit.Material
 import org.bukkit.entity.Entity
 import org.bukkit.scheduler.BukkitRunnable
 
+/**
+ * Special coaster kind of ride that disables gravity on spawn and
+ * enables it when a player enters. This makes the ride start instantly
+ * without a countdown. Used for example at the Sled ride at the Winter Event.
+ */
 class Slide(category: String, name: String): Attraction(category, name) {
 
     companion object {
