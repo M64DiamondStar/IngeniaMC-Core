@@ -1,11 +1,8 @@
 package me.m64diamondstar.ingeniamccore.attractions.utils
 
 import me.m64diamondstar.ingeniamccore.IngeniaMC
-import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
-import me.m64diamondstar.ingeniamccore.utils.messages.Messages
-import net.kyori.adventure.audience.Audience
-import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.format.TextColor
+import me.m64diamondstar.ingeniamccore.utils.entities.EntityUtils
+import org.bukkit.entity.Player
 import org.bukkit.scheduler.BukkitRunnable
 
 object AttractionManager {
@@ -16,7 +13,7 @@ object AttractionManager {
             return
 
         object: BukkitRunnable(){
-            var c = 15
+            var c = attraction.getAttraction().getCountdownTime()
             override fun run() {
 
                 if(c == 0){
@@ -28,10 +25,7 @@ object AttractionManager {
                 var hasPassenger = false
                 attraction.getSeats().forEach {
                     if(it.passengers.size == 1){
-                        (it.passengers[0] as Audience).sendActionBar(
-                            Component.text(Messages.rideCountdown(c)).color(
-                                TextColor
-                                    .fromHexString(MessageType.PLAYER_UPDATE)))
+                        attraction.getAttraction().getCountdownType().sendActionBarMessage(player = it.passengers[0] as Player, c)
                         hasPassenger = true
                     }
                 }
@@ -46,6 +40,10 @@ object AttractionManager {
             }
         }.runTaskTimer(IngeniaMC.plugin, 5L, 20L)
 
+    }
+
+    fun setLocked(attraction: CustomAttraction, locked: Boolean){
+        attraction.getSeats().forEach { EntityUtils.setLocked(it, locked) }
     }
 
 }
