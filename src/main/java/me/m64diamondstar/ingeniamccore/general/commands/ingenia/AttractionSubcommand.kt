@@ -5,6 +5,7 @@ import me.m64diamondstar.ingeniamccore.attractions.operate.OperateInventory
 import me.m64diamondstar.ingeniamccore.attractions.utils.AttractionType
 import me.m64diamondstar.ingeniamccore.attractions.utils.Attraction
 import me.m64diamondstar.ingeniamccore.attractions.utils.AttractionUtils
+import me.m64diamondstar.ingeniamccore.attractions.utils.CountdownType
 import me.m64diamondstar.ingeniamccore.general.commands.ingenia.attraction.CoasterSubcommand
 import me.m64diamondstar.ingeniamccore.general.commands.ingenia.attraction.FreefallSubcommand
 import me.m64diamondstar.ingeniamccore.general.commands.ingenia.attraction.SlideSubcommand
@@ -13,6 +14,8 @@ import me.m64diamondstar.ingeniamccore.utils.IngeniaSubcommand
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
 import me.m64diamondstar.ingeniamccore.utils.messages.Messages
+import me.m64diamondstar.ingeniamccore.utils.rewards.Reward
+import me.m64diamondstar.ingeniamccore.utils.rewards.RewardType
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.Particle
@@ -23,6 +26,7 @@ import org.bukkit.entity.ItemFrame
 import org.bukkit.entity.Player
 import java.lang.NumberFormatException
 import java.util.*
+import kotlin.IllegalArgumentException
 import kotlin.collections.ArrayList
 
 class AttractionSubcommand(private val sender: CommandSender, private val args: Array<String>): IngeniaSubcommand {
@@ -193,7 +197,22 @@ class AttractionSubcommand(private val sender: CommandSender, private val args: 
                                 "You can only change ridecount of players who have already ridden this ride."))
                     }
 
-                }else
+                }else if(args.size == 8 && args[4].equals("setReward", ignoreCase = true)){
+
+                    try{
+
+                        val reward = Reward(RewardType.valueOf(args[6]), args[7])
+                        attraction.setRidecountReward(args[5].toInt(), reward)
+
+                    }catch (ex: NumberFormatException){
+                        player.sendMessage(Colors.format("${MessageType.ERROR}&n${args[6]}&r ${MessageType.ERROR}is not a valid number."))
+                    }catch (ex2: IllegalArgumentException){
+                        player.sendMessage(Colors.format("${MessageType.ERROR}&n${args[6]}&r ${MessageType.ERROR}is not a valid reward type."))
+                    }
+                }
+
+
+                else
                     player.sendMessage(Messages.commandUsage("ig attraction ridecount <category> <attraction> <get/add/set/remove> <player> [amount]"))
 
             }
@@ -299,6 +318,43 @@ class AttractionSubcommand(private val sender: CommandSender, private val args: 
 
         }
 
+        if(args[1].equals("countdown", ignoreCase = true) && args.size == 6){
+            if (!AttractionUtils.existsCategory(args[2])) {
+                player.sendMessage(Colors.format(MessageType.ERROR + "The category &o${args[2]}&r ${MessageType.ERROR}doesn't exist!"))
+                return
+            }
+            if (!AttractionUtils.existsAttraction(args[2], args[3])) {
+                player.sendMessage(Colors.format(MessageType.ERROR + "The attraction &o${args[3]}&r ${MessageType.ERROR}doesn't exist!"))
+                return
+            }
+
+            val attraction = Attraction(args[2], args[3])
+
+            if(args[4].equals("setType", ignoreCase = true)){
+                try {
+                    attraction.setCountdownType(CountdownType.valueOf(args[5].uppercase()))
+                    player.sendMessage(Colors.format(MessageType.SUCCESS
+                            + "Successfully set the countdown type to ${args[5].uppercase()}."))
+                }catch (e: IllegalArgumentException){
+                    player.sendMessage(Colors.format(MessageType.ERROR + "Please give a valid countdown type."))
+                }
+            }
+
+            else if(args[4].equals("setTime", ignoreCase = true)){
+                try{
+                    if(args[5].toInt() < 1){
+                        player.sendMessage(Colors.format(MessageType.ERROR + "Time must be greater than 0 seconds my man."))
+                    }
+                    attraction.setCountdownTime(args[5].toInt())
+                    player.sendMessage(Colors.format(MessageType.SUCCESS
+                            + "Successfully set the countdown time to ${args[5]}s."))
+                }catch (e: NumberFormatException){
+                    player.sendMessage(Messages.invalidNumber())
+                }
+            }
+
+        }
+
         /*
         Attraction Settings
         Set the settings for custom attractions like freefall towers or top spins
@@ -333,6 +389,7 @@ class AttractionSubcommand(private val sender: CommandSender, private val args: 
             tabs.add("gates")
             tabs.add("operate")
             tabs.add("slide")
+            tabs.add("countdown")
         }
 
         //Global tab completer for attraction categories and names except for create and delete subcommand
@@ -372,6 +429,7 @@ class AttractionSubcommand(private val sender: CommandSender, private val args: 
                 tabs.add("set")
                 tabs.add("remove")
                 tabs.add("add")
+                tabs.add("setReward")
             }
 
             if(args[1].equals("warp", ignoreCase = true)){
@@ -398,23 +456,19 @@ class AttractionSubcommand(private val sender: CommandSender, private val args: 
                 tabs.add("add")
                 tabs.add("remove")
             }
+
+            if(args[1].equals("countdown", ignoreCase = true)){
+                tabs.add("setType")
+                tabs.add("setTime")
+            }
         }
 
         if(args.size == 6){
-            if(args[1].equals("ridecount", ignoreCase = true)){
+            if(args[1].equals("ridecount", ignoreCase = true) && !args[4].equals("setReward", ignoreCase = true)){
                 Bukkit.getOnlinePlayers().forEach { tabs.add(it.name) }
             }
 
-            if(args[1].equals("coaster", ignoreCase = true) && args[4].equals("row", ignoreCase = true)){
-                if(AttractionUtils.existsCategory(args[2]) && AttractionUtils.existsAttraction(args[2], args[3])){
-                    val coaster = Coaster(args[2], args[3])
-                    coaster.getRows().forEach { tabs.add("$it") }
-                }
-            }
-        }
-
-        if(args.size == 7){
-            if(args[1].equals("ridecount", ignoreCase = true) && !args[4].equals("get", ignoreCase = true)){
+            if(args[1].equals("ridecount", ignoreCase = true) && args[4].equals("setReward", ignoreCase = true)){
                 tabs.add("1")
                 tabs.add("2")
                 tabs.add("3")
@@ -427,9 +481,55 @@ class AttractionSubcommand(private val sender: CommandSender, private val args: 
             }
 
             if(args[1].equals("coaster", ignoreCase = true) && args[4].equals("row", ignoreCase = true)){
+                if(AttractionUtils.existsCategory(args[2]) && AttractionUtils.existsAttraction(args[2], args[3])){
+                    val coaster = Coaster(args[2], args[3])
+                    coaster.getRows().forEach { tabs.add("$it") }
+                }
+            }
+
+            if(args[1].equals("countdown", ignoreCase = true)){
+                if(args[4].equals("setType", ignoreCase = true)){
+                    CountdownType.values().forEach { tabs.add(it.toString()) }
+                }else if(args[4].equals("setTime", ignoreCase = true)){
+                    for(i in 1..20){
+                        tabs.add("$i")
+                    }
+                }
+            }
+        }
+
+        if(args.size == 7){
+            if(args[1].equals("ridecount", ignoreCase = true) && !args[4].equals("get", ignoreCase = true)
+                && !args[4].equals("setReward", ignoreCase = true)){
+                tabs.add("1")
+                tabs.add("2")
+                tabs.add("3")
+                tabs.add("4")
+                tabs.add("5")
+                tabs.add("6")
+                tabs.add("7")
+                tabs.add("8")
+                tabs.add("9")
+            }
+
+            if(args[1].equals("ridecount", ignoreCase = true) && args[4].equals("setReward", ignoreCase = true)){
+                RewardType.values().forEach { tabs.add(it.toString()) }
+            }
+
+            if(args[1].equals("coaster", ignoreCase = true) && args[4].equals("row", ignoreCase = true)){
                 tabs.add("setstation")
                 tabs.add("setspawn")
                 tabs.add("setdespawn")
+            }
+        }
+
+        if(args.size == 8){
+            if(args[1].equals("ridecount", ignoreCase = true) && args[4].equals("setReward", ignoreCase = true)){
+                tabs.add("1")
+                tabs.add("2")
+                tabs.add("3")
+                tabs.add("launch")
+                tabs.add("fly")
             }
         }
 

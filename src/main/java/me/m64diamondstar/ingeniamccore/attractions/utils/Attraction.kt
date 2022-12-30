@@ -1,12 +1,16 @@
 package me.m64diamondstar.ingeniamccore.attractions.utils
 
 import me.m64diamondstar.ingeniamccore.data.Configuration
+import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.utils.entities.LeaderboardPacketEntity
 import me.m64diamondstar.ingeniamccore.utils.items.ItemDecoder
 import me.m64diamondstar.ingeniamccore.utils.items.ItemEncoder
 import me.m64diamondstar.ingeniamccore.utils.leaderboard.Leaderboard
 import me.m64diamondstar.ingeniamccore.utils.leaderboard.LeaderboardRegistry
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
+import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
+import me.m64diamondstar.ingeniamccore.utils.rewards.Reward
+import me.m64diamondstar.ingeniamccore.utils.rewards.RewardUtils
 import net.minecraft.core.BlockPosition
 import net.minecraft.core.EnumDirection
 import net.minecraft.network.protocol.game.PacketPlayOutEntityDestroy
@@ -46,6 +50,8 @@ open class Attraction(category: String, name: String): Configuration("rides/$cat
         this.getConfig().set("Name", getName())
         this.getConfig().set("DisplayName", "&c${getName()}")
         this.getConfig().set("World", world.name)
+        this.getConfig().set("CountdownType", CountdownType.COUNTDOWN)
+        this.getConfig().set("CountdownTime", 15)
 
         this.getConfig().set("Warp.Enabled", false)
 
@@ -93,6 +99,46 @@ open class Attraction(category: String, name: String): Configuration("rides/$cat
      */
     fun getName(): String{
         return name
+    }
+
+    /**
+     * Set the countdown type to a specific one,
+     * if you need it for a special ride.
+     */
+    fun setCountdownType(countdownType: CountdownType){
+        this.getConfig().set("CountdownType", countdownType.toString())
+        this.reloadConfig()
+    }
+
+    /**
+     * @return The cooldown type. This decides which message will be displayed to the player.
+     */
+    fun getCountdownType(): CountdownType {
+        val countdownType = CountdownType.valueOf(getConfig().getString("CountdownType") ?: "COUNTDOWN")
+        if(getConfig().getString("CountdownType") == null)
+            setCountdownType(CountdownType.COUNTDOWN)
+        return countdownType
+    }
+
+    /**
+     * Set the amount of time between the player entering a ride
+     * at the station and the dispatch of that ride
+     */
+    fun setCountdownTime(time: Int){
+        this.getConfig().set("CountdownTime", time)
+        this.reloadConfig()
+    }
+
+    /**
+     * @return The amount of time between the player entering a ride at the station and the dispatch of that ride
+     */
+    fun getCountdownTime(): Int{
+        val countdownTime = this.getConfig().getInt("CountdownTime")
+        if(countdownTime < 1){
+            setCountdownTime(15)
+            return 15
+        }
+        return this.getConfig().getInt("CountdownTime")
     }
 
     /**
@@ -329,6 +375,29 @@ open class Attraction(category: String, name: String): Configuration("rides/$cat
     }
 
     /**
+     * Sets the ridecount reward
+     */
+    fun setRidecountReward(ridecount: Int, reward: Reward){
+        this.getConfig().set("Ridecount-Reward.Ridecount", ridecount)
+        this.getConfig().set("Ridecount-Reward.Reward", reward.toString())
+        this.reloadConfig()
+    }
+
+    /**
+     * @return the reward you get when you reach the given ridecount
+     */
+    fun getRidecountReward(): Reward? {
+        return this.getConfig().getString("Ridecount-Reward.Reward")?.let { RewardUtils.fromString(it) }
+    }
+
+    /**
+     * @return the reward you need to reach for getting the reward
+     */
+    fun getRidecountRewardAmount(): Int {
+        return this.getConfig().getInt("Ridecount-Reward.Ridecount")
+    }
+
+    /**
      * Spawn an EntityItemFrame with top 3 and personal ridecount of the current ride for given player.
      */
     fun spawnRidecountSign(player: Player){
@@ -365,6 +434,13 @@ open class Attraction(category: String, name: String): Configuration("rides/$cat
      */
     fun setRidecount(player: OfflinePlayer, count: Int){
         this.getConfig().set("Data.Ridecount.${player.uniqueId}.Count", count)
+        if(count >= getRidecountRewardAmount() && !this.getConfig().getBoolean("Data.Ridecount.${player.uniqueId}.Rewarded")
+            && player.isOnline){
+            getRidecountReward()?.execute(IngeniaPlayer(player = player.player!!))
+            player.player!!.sendMessage(Colors.format(MessageType.PLAYER_UPDATE + "You got " + getRidecountReward()?.getDisplay()
+            + "&r${MessageType.PLAYER_UPDATE} for reaching a Ridecount of ${getRidecountRewardAmount()}!"))
+            this.getConfig().set("Data.Ridecount.${player.uniqueId}.Rewarded", true)
+        }
         this.reloadConfig()
     }
 
