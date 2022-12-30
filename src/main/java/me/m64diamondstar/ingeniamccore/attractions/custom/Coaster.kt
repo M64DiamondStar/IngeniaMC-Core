@@ -5,16 +5,15 @@ import com.bergerkiller.bukkit.tc.controller.MinecartMemberStore
 import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.attractions.utils.Attraction
 import me.m64diamondstar.ingeniamccore.attractions.utils.AttractionType
-import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
-import net.kyori.adventure.audience.Audience
-import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.format.TextColor
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.entity.Entity
 import org.bukkit.scheduler.BukkitRunnable
 
+/**
+ * Used for a lot of normal coasters and also special in the park.
+ */
 class Coaster(category: String, name: String): Attraction(category, name) {
 
     companion object {
@@ -39,7 +38,7 @@ class Coaster(category: String, name: String): Attraction(category, name) {
 
                     object : BukkitRunnable() {
 
-                        var c = 15
+                        var c = attraction.getCountdownTime()
 
                         override fun run() {
                             if (!member.group.hasPassenger()) {
@@ -64,22 +63,10 @@ class Coaster(category: String, name: String): Attraction(category, name) {
                                 return
                             }
 
-                            if (c != 1)
-                                for (members in member.group)
-                                    members.entity.playerPassengers.forEach {
-                                        (it as Audience).sendActionBar(
-                                            Component.text("This coaster will dispatch in $c seconds.").color(
-                                                TextColor
-                                                    .fromHexString(MessageType.PLAYER_UPDATE)))
-                                    }
-                            else
-                                for (members in member.group)
-                                    members.entity.playerPassengers.forEach {
-                                        (it as Audience).sendActionBar(
-                                            Component.text("This coaster will dispatch in 1 second.").color(
-                                                TextColor
-                                                    .fromHexString(MessageType.PLAYER_UPDATE)))
-                                    }
+                            for (members in member.group)
+                                members.entity.playerPassengers.forEach {
+                                    attraction.getCountdownType().sendActionBarMessage(player = it, c)
+                                }
                             c--
                         }
                     }.runTaskTimer(IngeniaMC.plugin, 0L, 20L)
