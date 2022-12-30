@@ -229,7 +229,7 @@ class GameSubcommand(private val sender: CommandSender, private val args: Array<
         }
 
         if(args.size == 4){
-            if(args[1].equals("parkour", ignoreCase = true) || args[1].equals("presenthunt", ignoreCase = true)){
+            if(args[1].equals("parkour", ignoreCase = true)){
                 if(args[2].equals("modify", ignoreCase = true)){
                     ParkourUtils.getCategories().forEach { tabs.add(it.name) }
                 }
