@@ -23,7 +23,11 @@ import java.util.*
 import kotlin.math.cos
 import kotlin.math.sin
 
-class FreeFall(category: String, name: String): Attraction(category, name), CustomAttraction {
+/**
+ * Custom attraction with a big drop tower that goes up, waits, goes down with high
+ * speed, goes up again but with high speed and then goes down back to the station.
+ */
+class FreeFall(private val category: String, private val name: String): Attraction(category, name), CustomAttraction {
 
     companion object {
         fun clickEvent(event: PlayerInteractAtEntityEvent){
@@ -125,6 +129,7 @@ class FreeFall(category: String, name: String): Attraction(category, name), Cust
     }
 
     override fun dispatch() {
+        AttractionManager.setLocked(this@FreeFall, locked = true)
         object : BukkitRunnable() {
             var c = 0.0
             val radius = 3.75f
@@ -199,6 +204,9 @@ class FreeFall(category: String, name: String): Attraction(category, name), Cust
                     stop = 0f
                 }
 
+                if(c == 1160.0){
+                    AttractionManager.setLocked(this@FreeFall, locked = false)
+                }
 
                 // RUN FOR EVERY ARMORSTAND
                 for (stand in getSeats()) {
@@ -256,6 +264,10 @@ class FreeFall(category: String, name: String): Attraction(category, name), Cust
                 angle += 2.5.toFloat()
             }
         }.runTaskTimer(IngeniaMC.plugin, 0L, 1L)
+    }
+
+    override fun getAttraction(): Attraction {
+        return Attraction(category, name)
     }
 
 }
