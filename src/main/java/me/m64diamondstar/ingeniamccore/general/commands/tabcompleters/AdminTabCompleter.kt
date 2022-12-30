@@ -24,6 +24,7 @@ class AdminTabCompleter: TabCompleter {
             tc.add("back")
             tc.add("day")
             tc.add("night")
+            tc.add("spawnRandomPresent")
         }else
             tc.clear()
 

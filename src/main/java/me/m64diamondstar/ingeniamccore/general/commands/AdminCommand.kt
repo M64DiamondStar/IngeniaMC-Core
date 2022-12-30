@@ -5,15 +5,20 @@ import me.m64diamondstar.ingeniamccore.utils.items.Items
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
 import me.m64diamondstar.ingeniamccore.utils.messages.Messages
+import net.minecraft.core.BlockPosition
+import net.minecraft.world.level.block.entity.TileEntitySkull
 import org.bukkit.Material
+import org.bukkit.block.BlockFace
+import org.bukkit.block.data.Rotatable
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
+import org.bukkit.craftbukkit.v1_19_R1.CraftWorld
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
-import java.lang.IllegalArgumentException
+
 
 class AdminCommand: CommandExecutor {
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
@@ -122,6 +127,27 @@ class AdminCommand: CommandExecutor {
 
         if(args[0].equals("jort", ignoreCase = true)){
             sender.sendMessage(Colors.format(MessageType.ERROR + "CMON YOU CAN DO IT, DO NOT GIVE UP!"))
+        }
+
+        if(args[0].equals("spawnRandomPresent", ignoreCase = true)){
+            val block = sender.location.block
+            block.type = Material.PLAYER_HEAD
+
+            val tileEntitySkull = (block.world as CraftWorld).handle.getBlockEntity(BlockPosition(block.x, block.y, block.z), true) as TileEntitySkull
+            tileEntitySkull.a(Items.getRandomPresentProfile())
+
+            val faces = BlockFace.values().toMutableList()
+            faces.remove(BlockFace.DOWN)
+            faces.remove(BlockFace.UP)
+            faces.remove(BlockFace.SELF)
+
+            val randomRotation = faces.shuffled().first()
+            val blockData = (block.blockData as Rotatable)
+            blockData.rotation = randomRotation
+
+            block.blockData = blockData
+
+            block.state.update()
         }
 
         return false
