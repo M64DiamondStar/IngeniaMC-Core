@@ -6,6 +6,8 @@ import me.m64diamondstar.ingeniamccore.attractions.traincarts.SignRegistry
 import me.m64diamondstar.ingeniamccore.attractions.utils.AttractionUtils
 import me.m64diamondstar.ingeniamccore.games.guesstheword.GuessTheWord
 import me.m64diamondstar.ingeniamccore.games.guesstheword.GuessTheWordListener
+import me.m64diamondstar.ingeniamccore.games.presenthunt.PresentHuntUtils
+import me.m64diamondstar.ingeniamccore.games.presenthunt.listeners.PlayerInteractListener
 import me.m64diamondstar.ingeniamccore.general.areas.AreaUtils
 import me.m64diamondstar.ingeniamccore.general.areas.listeners.PlayerMoveListener
 import me.m64diamondstar.ingeniamccore.general.commands.*
@@ -17,8 +19,10 @@ import me.m64diamondstar.ingeniamccore.general.listeners.*
 import me.m64diamondstar.ingeniamccore.general.listeners.helpers.BonemealListener
 import me.m64diamondstar.ingeniamccore.general.listeners.protection.BlockListener
 import me.m64diamondstar.ingeniamccore.general.listeners.protection.DamageListener
+import me.m64diamondstar.ingeniamccore.general.listeners.protection.EntityDismountListener
 import me.m64diamondstar.ingeniamccore.general.listeners.protection.HungerListener
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
+import me.m64diamondstar.ingeniamccore.general.warps.WarpUtils
 import me.m64diamondstar.ingeniamccore.shows.listeners.EntityChangeBlockListener
 import me.m64diamondstar.ingeniamccore.utils.gui.GuiListener
 import me.m64diamondstar.ingeniamccore.wands.wandlistener.WandListener
@@ -38,6 +42,7 @@ class IngeniaMC : JavaPlugin() {
     override fun onEnable() {
 
         audioApi = AudioApi.getInstance()
+
         plugin = this
 
         Bukkit.getLogger().info("---------------------------")
@@ -79,6 +84,12 @@ class IngeniaMC : JavaPlugin() {
         loadTasks()
         Bukkit.getLogger().info("Tasks loaded ✓")
 
+        WarpUtils.reloadWarpList()
+        Bukkit.getLogger().info("Warps loaded ✓")
+
+        PresentHuntUtils.loadActivePresents()
+        Bukkit.getLogger().info("Present Hunt loaded ✓")
+
         Bukkit.getLogger().info(" ")
         Bukkit.getLogger().info("Finished loading, IngeniaMC-Core is enabled!")
         Bukkit.getLogger().info("---------------------------")
@@ -88,6 +99,7 @@ class IngeniaMC : JavaPlugin() {
         isDisabling = true
         AttractionUtils.despawnAllAttractions()
         SignRegistry.unregisterSigns()
+        PresentHuntUtils.saveActivePresents()
         saveConfig()
     }
 
@@ -170,12 +182,18 @@ class IngeniaMC : JavaPlugin() {
         Bukkit.getServer().pluginManager.registerEvents(me.m64diamondstar.ingeniamccore.games.parkour.listeners.PlayerMoveListener(), this)
 
         /*
+            Game Events
+         */
+        Bukkit.getServer().pluginManager.registerEvents(PlayerInteractListener(), this)
+
+        /*
             Protection Events
          */
         Bukkit.getServer().pluginManager.registerEvents(BlockListener(), this)
         Bukkit.getServer().pluginManager.registerEvents(me.m64diamondstar.ingeniamccore.general.listeners.protection.InteractListener(), this)
         Bukkit.getServer().pluginManager.registerEvents(DamageListener(), this)
         Bukkit.getServer().pluginManager.registerEvents(HungerListener(), this)
+        Bukkit.getServer().pluginManager.registerEvents(EntityDismountListener(), this)
     }
 
     private fun loadPacketListeners(){
