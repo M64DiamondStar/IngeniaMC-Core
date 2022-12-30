@@ -8,7 +8,7 @@ import java.lang.NumberFormatException
 object LocationUtils {
 
     /**
-     * Get location from format (world, x, y, z, yaw, pitch)
+     * Get location from format (world, x, y, z[, yaw, pitch])
      *
      */
     fun getLocationFromString(string: String?): Location?{
