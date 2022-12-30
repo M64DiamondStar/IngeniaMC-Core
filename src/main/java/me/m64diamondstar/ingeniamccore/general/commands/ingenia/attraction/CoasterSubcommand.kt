@@ -44,6 +44,7 @@ class CoasterSubcommand(private val args: Array<String>, private val player: Pla
                         player.sendMessage(Colors.format(MessageType.ERROR + "Please look at a block to set the location."))
                         return
                     }
+                    val location = block.location
 
                     try{args[5].toInt()}
                     catch (e: NumberFormatException) {
@@ -51,7 +52,6 @@ class CoasterSubcommand(private val args: Array<String>, private val player: Pla
                         return
                     }
 
-                    val location = block.location
                     if(args[6].equals("setstation", ignoreCase = true)) {
                         coaster.setRowStation(args[5].toInt(), location)
                         player.sendMessage(Colors.format(MessageType.SUCCESS + "Row Station has been set."))
