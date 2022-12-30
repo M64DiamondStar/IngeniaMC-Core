@@ -10,6 +10,7 @@ import me.m64diamondstar.ingeniamccore.general.levels.LevelUtils.getRewards
 import me.m64diamondstar.ingeniamccore.general.levels.LevelUtils.isLevelUp
 import me.m64diamondstar.ingeniamccore.general.scoreboard.Scoreboard
 import me.m64diamondstar.ingeniamccore.general.tablist.TabList
+import me.m64diamondstar.ingeniamccore.general.warps.WarpUtils
 import me.m64diamondstar.ingeniamccore.utils.LocationUtils.getLocationFromString
 import me.m64diamondstar.ingeniamccore.utils.Times
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
@@ -32,17 +33,16 @@ import java.util.*
 
 class IngeniaPlayer(val player: Player) {
     private var scoreboard: Scoreboard? = null
-    private var config: PlayerConfig
     private var previousInventory: Inventory? = null
 
     private fun getConfig(): PlayerConfig {
-        config = PlayerConfig(player.uniqueId)
-        return config
+        return PlayerConfig(player.uniqueId)
     }
 
     fun startUp() {
         game = null
         allowDamage = false
+        player.teleport(WarpUtils.getNearestLocation(player))
         setScoreboard(true)
         setTablist(true)
         giveMenuItem()
@@ -178,7 +178,8 @@ class IngeniaPlayer(val player: Player) {
 
     fun addExp(l: Long) {
         if (isLevelUp(exp, exp + l)) levelUp(exp, exp + l)
-        getConfig().setExp(l + exp)
+        val newExp = l + exp
+        getConfig().setExp(newExp)
     }
 
     fun getLevel(): Int{
@@ -325,10 +326,6 @@ class IngeniaPlayer(val player: Player) {
             Bukkit.getConsoleSender(),
             "lp user " + player.name + " permission set " + permission + " true"
         )
-    }
-
-    init {
-        config = PlayerConfig(player.uniqueId)
     }
 
     fun startParkour(parkour: Parkour){
