@@ -19,4 +19,6 @@ interface CustomAttraction {
 
     fun dispatch()
 
+    fun getAttraction(): Attraction
+
 }
