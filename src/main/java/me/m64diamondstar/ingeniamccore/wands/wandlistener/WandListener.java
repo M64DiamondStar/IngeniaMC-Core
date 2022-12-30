@@ -8,13 +8,15 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.block.Block;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.FallingBlock;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityToggleGlideEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
@@ -132,23 +134,12 @@ public class WandListener implements Listener {
 
 
     @EventHandler
-    public void onPlayerToggleGlide(EntityToggleGlideEvent e){
-        if(!(e.getEntity() instanceof Player player)) return;
+    public void onPlayerToggleGlide(EntityToggleGlideEvent e) {
+        if (!(e.getEntity() instanceof Player player)) return;
 
-        if(gliding.contains(player))
+        if (gliding.contains(player))
             e.setCancelled(true);
 
-    }
-
-
-
-    @EventHandler()
-    public void onItemDrop(PlayerDropItemEvent e) {
-        if (e.getItemDrop().getItemStack().getType().equals(Material.BLAZE_ROD)) {
-            if(Objects.requireNonNull(e.getItemDrop().getItemStack().getItemMeta()).hasCustomModelData()) {
-                e.setCancelled(true);
-            }
-        }
     }
 
 }
