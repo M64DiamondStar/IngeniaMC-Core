@@ -10,6 +10,8 @@ object SignRegistry {
     private val signActionShow = SignActionShow()
     private val signActionRidecount = SignActionRidecount()
     private val signActionSlide = SignActionSlide()
+    private val signActionRandomGravity = SignActionRandomGravity()
+    private val signActionBroadcast = SignActionBroadcast()
 
     fun registerSigns(){
         SignAction.register(signActionAttraction)
@@ -18,6 +20,8 @@ object SignRegistry {
         SignAction.register(signActionShow)
         SignAction.register(signActionRidecount)
         SignAction.register(signActionSlide)
+        SignAction.register(signActionRandomGravity)
+        SignAction.register(signActionBroadcast)
     }
 
     fun unregisterSigns(){
@@ -27,5 +31,7 @@ object SignRegistry {
         SignAction.unregister(signActionShow)
         SignAction.unregister(signActionRidecount)
         SignAction.unregister(signActionSlide)
+        SignAction.unregister(signActionRandomGravity)
+        SignAction.unregister(signActionBroadcast)
     }
 }
