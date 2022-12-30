@@ -3,11 +3,15 @@ package me.m64diamondstar.ingeniamccore.general.commands.ingenia
 import me.m64diamondstar.ingeniamccore.games.guesstheword.GuessTheWord
 import me.m64diamondstar.ingeniamccore.games.guesstheword.GuessTheWordUtils
 import me.m64diamondstar.ingeniamccore.games.parkour.Parkour
-import me.m64diamondstar.ingeniamccore.games.parkour.listeners.ParkourUtils
+import me.m64diamondstar.ingeniamccore.games.parkour.ParkourUtils
+import me.m64diamondstar.ingeniamccore.games.presenthunt.PresentHunt
+import me.m64diamondstar.ingeniamccore.games.presenthunt.PresentHuntUtils
 import me.m64diamondstar.ingeniamccore.utils.IngeniaSubcommand
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
 import me.m64diamondstar.ingeniamccore.utils.messages.Messages
+import org.bukkit.Material
+import org.bukkit.Particle
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
@@ -116,7 +120,88 @@ class GameSubcommand(private val sender: CommandSender, private val args: Array<
             else{
                 sender.sendMessage(Colors.format(MessageType.ERROR + "Please use a valid sub-command! Check the auto tab-completion!"))
             }
-        }else{
+        }else if(args[1].equals("presenthunt", ignoreCase = true)){
+            if(args[2].equals("create", ignoreCase = true)){
+                if(PresentHuntUtils.existsPresentHunt(args[3], args[4])){
+                    player.sendMessage(Colors.format(MessageType.ERROR + "The present hunt ${args[4]} already exists. " +
+                            "If you want to reset it, please delete it and re-create it."))
+                    return
+                }
+
+                val presentHunt = PresentHunt(args[3], args[4])
+                presentHunt.createPresentHunt(player.world)
+
+                player.sendMessage(Colors.format(MessageType.SUCCESS + "Present Hunt has successfully been created!"))
+                player.sendMessage(Colors.format(MessageType.SUCCESS + "Please add presents by using:"))
+                player.sendMessage(Colors.format(MessageType.SUCCESS + "/ig game presenthunt modify ${args[3]} ${args[4]} addPresent"))
+                player.sendMessage(Colors.format(MessageType.SUCCESS + "While looking at a block!"))
+            }
+
+            else if(args[2].equals("modify", ignoreCase = true)) {
+
+                if(!PresentHuntUtils.existsPresentHunt(args[3], args[4])){
+                    player.sendMessage(Colors.format(MessageType.ERROR + "The present hunt ${args[4]} doesn't exist!"))
+                    return
+                }
+
+                val presentHunt = PresentHunt(args[3], args[4])
+
+                if(args[5].equals("addPresent", ignoreCase = true) && args.size == 6){
+                    val block = player.getTargetBlockExact(5)
+                    if(block == null || block.type == Material.AIR){
+                        player.sendMessage(Colors.format(MessageType.ERROR + "Please look at a block to set the location."))
+                        return
+                    }
+                    val location = block.location
+
+                    player.spawnParticle(
+                        Particle.SMOKE_NORMAL, location.add(0.5, 0.5, 0.5),
+                        100, 0.2, 0.2, 0.2, 0.0)
+                    location.block.type = Material.AIR
+                    presentHunt.addLocation(location)
+                    player.sendMessage(Colors.format(MessageType.SUCCESS + "Added present location."))
+                }
+
+                else if(args[5].equals("removePresent", ignoreCase = true) && args.size == 6){
+                    val block = player.getTargetBlockExact(5)
+                    if(block == null || block.type == Material.AIR){
+                        player.sendMessage(Colors.format(MessageType.ERROR + "Please look at a block to remove the location."))
+                        return
+                    }
+                    val location = block.location
+
+                    player.spawnParticle(
+                        Particle.SMOKE_NORMAL, location.add(0.5, 0.5, 0.5),
+                        100, 0.2, 0.2, 0.2, 0.0)
+                    location.block.type = Material.AIR
+                    val success = presentHunt.removeLocation(location)
+
+                    if(!success)
+                        player.sendMessage(Colors.format(MessageType.ERROR + "There was no present location here."))
+                    else
+                        player.sendMessage(Colors.format(MessageType.SUCCESS + "Removed present location."))
+
+                    PresentHuntUtils.removeActivePresent(location)
+                }
+
+                else if(args[5].equals("spawnRandomPresent", ignoreCase = true) && args.size == 6){
+                    presentHunt.spawnRandomPresent()
+                    player.sendMessage(Colors.format(MessageType.SUCCESS + "Forced random present spawn."))
+                }
+
+                else if(args[5].equals("despawnAllPresents", ignoreCase = true) && args.size == 6){
+                    presentHunt.getLocations().forEach {
+                        if(PresentHuntUtils.containsActivePresent(it)){
+                            PresentHuntUtils.removeActivePresent(it)
+                            it.block.type = Material.AIR
+                        }
+                    }
+                }
+
+            }
+        }
+
+        else{
             sender.sendMessage(Colors.format(MessageType.ERROR + "Please use a valid sub-command! Check the auto tab-completion!"))
         }
 
@@ -127,6 +212,7 @@ class GameSubcommand(private val sender: CommandSender, private val args: Array<
         if(args.size == 2){
             tabs.add("guesstheword")
             tabs.add("parkour")
+            tabs.add("presenthunt")
         }
 
         if(args.size == 3){
@@ -136,16 +222,22 @@ class GameSubcommand(private val sender: CommandSender, private val args: Array<
                 tabs.add("remove")
             }
 
-            if(args[1].equals("parkour", ignoreCase = true)){
+            if(args[1].equals("parkour", ignoreCase = true) || args[1].equals("presenthunt", ignoreCase = true)){
                 tabs.add("create")
                 tabs.add("modify")
             }
         }
 
         if(args.size == 4){
-            if(args[1].equals("parkour", ignoreCase = true)){
+            if(args[1].equals("parkour", ignoreCase = true) || args[1].equals("presenthunt", ignoreCase = true)){
                 if(args[2].equals("modify", ignoreCase = true)){
                     ParkourUtils.getCategories().forEach { tabs.add(it.name) }
+                }
+            }
+
+            if(args[1].equals("presenthunt", ignoreCase = true)){
+                if(args[2].equals("modify", ignoreCase = true)){
+                    PresentHuntUtils.getCategories().forEach { tabs.add(it.name) }
                 }
             }
         }
@@ -157,6 +249,15 @@ class GameSubcommand(private val sender: CommandSender, private val args: Array<
                         tabs.add("CATEGORY_DOES_NOT_EXIST")
                     else
                         ParkourUtils.getAllParkours().forEach { tabs.add(it.name) }
+                }
+            }
+
+            if(args[1].equals("presenthunt", ignoreCase = true)){
+                if(args[2].equals("modify", ignoreCase = true)){
+                    if(!PresentHuntUtils.existsCategory(args[3]))
+                        tabs.add("CATEGORY_DOES_NOT_EXIST")
+                    else
+                        PresentHuntUtils.getAllPresentHunts().forEach { tabs.add(it.name) }
                 }
             }
         }
@@ -172,6 +273,19 @@ class GameSubcommand(private val sender: CommandSender, private val args: Array<
                         tabs.add("setStartRadius")
                         tabs.add("setEndRadius")
                         tabs.add("setDisplay")
+                    }
+                }
+            }
+
+            if(args[1].equals("presenthunt", ignoreCase = true)){
+                if(args[2].equals("modify", ignoreCase = true)){
+                    if(!PresentHuntUtils.existsPresentHunt(args[3], args[4]))
+                        tabs.add("PRESENT_HUNT_DOES_NOT_EXIST")
+                    else {
+                        tabs.add("addPresent")
+                        tabs.add("removePresent")
+                        tabs.add("spawnRandomPresent")
+                        tabs.add("despawnAllPresents")
                     }
                 }
             }
