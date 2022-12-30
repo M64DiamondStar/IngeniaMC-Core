@@ -2,7 +2,10 @@ package me.m64diamondstar.ingeniamccore.attractions.utils
 
 import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.attractions.custom.FreeFall
+import org.bukkit.NamespacedKey
+import org.bukkit.entity.Entity
 import org.bukkit.entity.Player
+import org.bukkit.persistence.PersistentDataType
 import java.io.File
 
 object AttractionUtils {
@@ -82,6 +85,16 @@ object AttractionUtils {
                 freeFall.despawn()
             }
         }
+    }
+
+    fun isSeatLocked(entity: Entity): Boolean{
+        val data = entity.persistentDataContainer
+        return data.get(NamespacedKey(IngeniaMC.plugin, "locked"), PersistentDataType.STRING).toBoolean()
+    }
+
+    fun setSeatLocked(entity: Entity, boolean: Boolean){
+        val data = entity.persistentDataContainer
+        data.set(NamespacedKey(IngeniaMC.plugin, "locked"), PersistentDataType.STRING, "$boolean")
     }
 
 
