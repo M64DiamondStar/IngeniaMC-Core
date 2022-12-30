@@ -7,25 +7,11 @@ import me.m64diamondstar.ingeniamccore.wands.Wands
 
 class Reward(private val rewardType: RewardType, private val arg: String) {
 
-    fun execute(player: IngeniaPlayer){
-        when (rewardType){
-            RewardType.EXP -> {
-                player.addExp(arg.toLong())
-            }
+    fun execute(player: IngeniaPlayer) = rewardType.execute(player, arg)
 
-            RewardType.GS -> {
-                player.addBal(arg.toLong())
-            }
+    override fun toString(): String = "$rewardType: $arg"
 
-            RewardType.WAND -> {
-                player.givePermission("ingeniawands.$arg")
-            }
-        }
-    }
-
-    fun getType(): RewardType{
-        return rewardType
-    }
+    fun getType(): RewardType = rewardType
 
     fun getDisplay(): String{
 
@@ -47,7 +33,5 @@ class Reward(private val rewardType: RewardType, private val arg: String) {
 
         return string
     }
-
-
 
 }
