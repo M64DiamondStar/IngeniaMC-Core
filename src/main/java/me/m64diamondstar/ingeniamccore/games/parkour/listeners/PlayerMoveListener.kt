@@ -1,5 +1,6 @@
 package me.m64diamondstar.ingeniamccore.games.parkour.listeners
 
+import me.m64diamondstar.ingeniamccore.games.parkour.ParkourUtils
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
