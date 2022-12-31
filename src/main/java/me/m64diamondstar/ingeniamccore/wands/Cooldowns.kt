@@ -7,7 +7,9 @@ import org.bukkit.entity.Player
 import kotlin.time.Duration.Companion.seconds
 
 object Cooldowns {
-    var cooldowns: MutableMap<String, Long> = HashMap()
+
+    private var cooldowns: MutableMap<String, Long> = HashMap()
+
     fun addPlayer(player: Player, op: Long, vipp: Long, vip: Long, visitor: Long) {
         if (player.isOp || player.hasPermission("ingenia.team")) {
             cooldowns[player.name] = System.currentTimeMillis() + op
