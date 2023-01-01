@@ -13,6 +13,7 @@ import me.m64diamondstar.ingeniamccore.general.scoreboard.Scoreboard
 import me.m64diamondstar.ingeniamccore.general.tablist.TabList
 import me.m64diamondstar.ingeniamccore.general.warps.WarpUtils
 import me.m64diamondstar.ingeniamccore.utils.LocationUtils.getLocationFromString
+import me.m64diamondstar.ingeniamccore.utils.TeamHandler
 import me.m64diamondstar.ingeniamccore.utils.Times
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageLocation
@@ -47,6 +48,7 @@ class IngeniaPlayer(val player: Player) {
         setScoreboard(true)
         setTablist(true)
         giveMenuItem()
+        TeamHandler.addPlayer(player)
         player.isCollidable = false
         if (player.isOp) player.setPlayerListName(Colors.format("#c43535&lLead #ffdede$name")) else if (player.hasPermission(
                 "ingenia.team"
@@ -66,6 +68,10 @@ class IngeniaPlayer(val player: Player) {
         ) else player.setPlayerListName(Colors.format("#a1a1a1Visitor #cccccc$name"))
 
         AttractionUtils.getAllAttractions().forEach { it.spawnRidecountSign(player) }
+    }
+
+    fun shutDown(){
+
     }
 
     val name: String
