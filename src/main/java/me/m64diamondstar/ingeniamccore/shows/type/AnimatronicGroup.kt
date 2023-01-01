@@ -7,7 +7,7 @@ import me.thundertnt33.animatronics.api.Group
 class AnimatronicGroup(show: Show, id: Int) : EffectType(show, id) {
 
     override fun execute() {
-        val name = getSection().getString("name")!!
+        val name = getSection().getString("Name")!!
         val group = Group(name)
         group.play()
     }
