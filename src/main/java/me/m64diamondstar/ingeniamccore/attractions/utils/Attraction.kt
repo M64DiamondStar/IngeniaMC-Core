@@ -435,7 +435,7 @@ open class Attraction(category: String, name: String): Configuration("rides/$cat
     fun setRidecount(player: OfflinePlayer, count: Int){
         this.getConfig().set("Data.Ridecount.${player.uniqueId}.Count", count)
         if(count >= getRidecountRewardAmount() && !this.getConfig().getBoolean("Data.Ridecount.${player.uniqueId}.Rewarded")
-            && player.isOnline){
+            && player.isOnline && getRidecountRewardAmount() != 0){
             getRidecountReward()?.execute(IngeniaPlayer(player = player.player!!))
             player.player!!.sendMessage(Colors.format(MessageType.PLAYER_UPDATE + "You got " + getRidecountReward()?.getDisplay()
             + "&r${MessageType.PLAYER_UPDATE} for reaching a Ridecount of ${getRidecountRewardAmount()}!"))
