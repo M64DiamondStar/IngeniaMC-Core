@@ -32,6 +32,9 @@ abstract class EffectType(private val show: Show, private val id: Int) {
         },
         SET_BLOCK {
             override fun getTypeClass(show: Show, id: Int): EffectType = SetBlock(show, id)
+        },
+        ACTIVATOR{
+            override fun getTypeClass(show: Show, id: Int): EffectType = Activator(show, id)
         };
 
         abstract fun getTypeClass(show: Show, id: Int): EffectType
