@@ -50,5 +50,7 @@ commands:
       - adm
   leave:
     description: Leave the game you're currently playing.
+  spawn:
+    description: Teleport to the spawn.
 
 
