@@ -17,6 +17,8 @@ object WarpUtils {
     }
 
     fun getNearestLocation(player: Player): Location{
+        if(!list.contains(Location(player.world, 0.5, 52.0, 0.5, 0F, 0F)))
+            list.add(Location(player.world, 0.5, 52.0, 0.5, 0F, 0F))
         var nearestLocation = list[0]
         val playerLocation = player.location
 
