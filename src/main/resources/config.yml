@@ -21,6 +21,7 @@ Tablist:
 # auto tab completion when a players presses tab in chat.
 Player-Commands:
   - cosmetics
+  - wand
   - wands
   - help
   - leave
@@ -28,6 +29,7 @@ Player-Commands:
   - r
   - tell
   - react
+  - spawn
 
 
 # Levels
