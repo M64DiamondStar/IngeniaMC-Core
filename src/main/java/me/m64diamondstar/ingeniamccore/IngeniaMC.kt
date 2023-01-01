@@ -24,6 +24,7 @@ import me.m64diamondstar.ingeniamccore.general.listeners.protection.HungerListen
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.general.warps.WarpUtils
 import me.m64diamondstar.ingeniamccore.shows.listeners.EntityChangeBlockListener
+import me.m64diamondstar.ingeniamccore.utils.TeamHandler
 import me.m64diamondstar.ingeniamccore.utils.gui.GuiListener
 import me.m64diamondstar.ingeniamccore.wands.wandlistener.WandListener
 import org.bukkit.Bukkit
@@ -85,10 +86,9 @@ class IngeniaMC : JavaPlugin() {
         Bukkit.getLogger().info("Tasks loaded ✓")
 
         WarpUtils.reloadWarpList()
-        Bukkit.getLogger().info("Warps loaded ✓")
-
         PresentHuntUtils.loadActivePresents()
-        Bukkit.getLogger().info("Present Hunt loaded ✓")
+        TeamHandler.load()
+        Bukkit.getLogger().info("Small tasks ✓")
 
         Bukkit.getLogger().info(" ")
         Bukkit.getLogger().info("Finished loading, IngeniaMC-Core is enabled!")
@@ -100,6 +100,7 @@ class IngeniaMC : JavaPlugin() {
         AttractionUtils.despawnAllAttractions()
         SignRegistry.unregisterSigns()
         PresentHuntUtils.saveActivePresents()
+        TeamHandler.unload()
         saveConfig()
     }
 
@@ -120,6 +121,8 @@ class IngeniaMC : JavaPlugin() {
         Objects.requireNonNull(getCommand("react"))?.setExecutor(MessageCommand())
 
         Objects.requireNonNull(getCommand("leave"))?.setExecutor(LeaveCommand())
+
+        Objects.requireNonNull(getCommand("spawn"))?.setExecutor(SpawnCommand())
     }
 
     private fun loadTabCompleters() {
