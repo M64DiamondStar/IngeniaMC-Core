@@ -12,11 +12,6 @@ class DamageListener: Listener {
 
     @EventHandler
     fun onEntityDamage(event: EntityDamageByEntityEvent){
-        if(event.cause == EntityDamageEvent.DamageCause.SUFFOCATION){
-            event.isCancelled = true
-            return
-        }
-
         if(event.damager.type != EntityType.PLAYER) return
         val player = event.damager as Player
 
@@ -28,6 +23,16 @@ class DamageListener: Listener {
 
         if(IngeniaPlayer(player).allowDamage && IngeniaPlayer(damagedPlayer).allowDamage)
             event.isCancelled = false
+    }
+
+    @EventHandler
+    fun onDamage(event: EntityDamageEvent){
+        if(event.cause == EntityDamageEvent.DamageCause.SUFFOCATION
+            || event.cause == EntityDamageEvent.DamageCause.FALL
+            || event.cause == EntityDamageEvent.DamageCause.FLY_INTO_WALL){
+            event.isCancelled = true
+            return
+        }
     }
 
 }
