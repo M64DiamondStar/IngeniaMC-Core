@@ -15,13 +15,16 @@ class InteractListener: Listener {
     fun onInteract(event: PlayerInteractEvent){
         val player = event.player
 
-        //See if block has to be checked
-        if(event.action != Action.RIGHT_CLICK_BLOCK && event.action != Action.PHYSICAL) return
-        if(event.clickedBlock == null) return
-        if(event.clickedBlock!!.type == Material.TRIPWIRE){
-            event.isCancelled = true
-            return
+        //Always cancel tripwire (used for custom models like plants)
+        if (event.action == Action.PHYSICAL) {
+            if (event.clickedBlock?.type == Material.FARMLAND) {
+                event.isCancelled = true
+            }
         }
+
+        //See if block has to be checked
+        if(event.action != Action.RIGHT_CLICK_BLOCK) return
+        if(event.clickedBlock == null) return
         if(player.hasPermission("ingenia.admin") || player.isOp) return
 
         if(event.clickedBlock!!.type.toString().contains("PRESSURE_PLATE") || //is correct block?
@@ -31,7 +34,7 @@ class InteractListener: Listener {
             event.clickedBlock!!.type.toString().contains("LEVER")){
 
             val blockDataConfig = BlockDataConfig()
-            if(blockDataConfig.isApprovedBlock(event.clickedBlock!!.location)){
+            if(blockDataConfig.isApprovedBlock(event.clickedBlock!!.location)){ //See if the block is in the approved block list
                 event.isCancelled = false
                 return
             }
