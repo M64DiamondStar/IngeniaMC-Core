@@ -1,6 +1,7 @@
 package me.m64diamondstar.ingeniamccore.wands.wands
 
 import me.m64diamondstar.ingeniamccore.IngeniaMC
+import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.wands.Cooldowns
 import org.bukkit.Bukkit
@@ -11,6 +12,7 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
+import org.bukkit.scheduler.BukkitRunnable
 import org.bukkit.util.EulerAngle
 import org.bukkit.util.Vector
 import java.util.*
@@ -31,7 +33,7 @@ class Earth: Wand {
 
     override fun run(player: Player) {
         player.velocity = Vector(0, 1, 0)
-        val walkspeed = player.walkSpeed
+        val walkSpeed = player.walkSpeed
         Bukkit.getScheduler().scheduleSyncDelayedTask(
             IngeniaMC.plugin, {
                 player.velocity = Vector(0, -2, 0)
@@ -39,8 +41,18 @@ class Earth: Wand {
                 player.fallDistance = 0f
             }, 15L
         )
-        val schedule = Bukkit.getScheduler().scheduleSyncRepeatingTask(
-            IngeniaMC.plugin, {
+
+        object : BukkitRunnable() {
+
+            var c = 0
+
+            override fun run() {
+                if(IngeniaPlayer(player).isInGame || c == 125){
+                    player.walkSpeed = walkSpeed
+                    this.cancel()
+                    return
+                }
+
                 val `as` =
                     player.world.spawnEntity(player.location.add(0.0, -1.6, 0.0), EntityType.ARMOR_STAND) as ArmorStand
                 `as`.headPose = EulerAngle(
@@ -59,14 +71,11 @@ class Earth: Wand {
                 Bukkit.getScheduler().scheduleSyncDelayedTask(
                     IngeniaMC.plugin, { `as`.remove() }, 15L
                 )
-            }, 25L, 1L
-        )
-        Bukkit.getScheduler().scheduleSyncDelayedTask(
-            IngeniaMC.plugin, {
-                Bukkit.getScheduler().cancelTask(schedule)
-                player.walkSpeed = walkspeed
-            }, 125
-        )
+
+                c++
+            }
+        }.runTaskTimer(IngeniaMC.plugin, 0L, 1L)
+
         Cooldowns.addPlayer(player, 6500L, 8000L, 10000L, 14000L)
     }
 }

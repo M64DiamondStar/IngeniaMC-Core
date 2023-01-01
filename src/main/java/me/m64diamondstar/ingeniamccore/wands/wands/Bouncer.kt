@@ -1,10 +1,9 @@
 package me.m64diamondstar.ingeniamccore.wands.wands
 
 import me.m64diamondstar.ingeniamccore.IngeniaMC
+import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
-import java.lang.Runnable
 import me.m64diamondstar.ingeniamccore.wands.Cooldowns
-import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.entity.ArmorStand
@@ -12,8 +11,11 @@ import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffectType
+import org.bukkit.scheduler.BukkitRunnable
 import org.bukkit.util.EulerAngle
 import java.util.*
+import kotlin.math.cos
+import kotlin.math.sin
 
 class Bouncer: Wand {
     private val stands1: MutableList<ArmorStand> = ArrayList()
@@ -55,12 +57,23 @@ class Bouncer: Wand {
             Objects.requireNonNull(armorStand.equipment)?.setItemInMainHand(ItemStack(Material.LIME_STAINED_GLASS))
             stands2.add(armorStand)
         }
-        val s = Bukkit.getScheduler().scheduleSyncRepeatingTask(
-            IngeniaMC.plugin, {
+
+        object : BukkitRunnable() {
+
+            var c = 0
+
+            override fun run() {
+                if(IngeniaPlayer(player).isInGame || c == 200){
+                    this.cancel()
+                    for (stand in stands1) stand.remove()
+                    for (stand in stands2) stand.remove()
+                    return
+                }
+
                 for (stand in stands1) {
                     val loc = player.location.add(
                         0.0, -0.5 +
-                                Math.sin(y.toDouble() / 18 * Math.PI) / 2, 0.0
+                                sin(y.toDouble() / 18 * Math.PI) / 2, 0.0
                     )
                     loc.yaw = stand.location.yaw + 10
                     stand.teleport(loc)
@@ -68,7 +81,7 @@ class Bouncer: Wand {
                 for (stand in stands2) {
                     val loc = player.location.add(
                         0.0, -0.5 +
-                                Math.cos((y.toDouble() + 9) / 18 * Math.PI) / 2, 0.0
+                                cos((y.toDouble() + 9) / 18 * Math.PI) / 2, 0.0
                     )
                     loc.yaw = stand.location.yaw + 10
                     stand.teleport(loc)
@@ -83,16 +96,13 @@ class Bouncer: Wand {
                     0.0,
                     Material.SLIME_BLOCK.createBlockData()
                 )
+
                 y++
-            }, 0L, 1L
-        )
-        Bukkit.getScheduler().runTaskLater(
-            IngeniaMC.plugin, Runnable {
-                Bukkit.getScheduler().cancelTask(s)
-                for (stand in stands1) stand.remove()
-                for (stand in stands2) stand.remove()
-            }, 200L
-        )
+                c++
+            }
+        }.runTaskTimer(IngeniaMC.plugin, 0L, 1L)
+
+
         Cooldowns.addPlayer(player, 10000L, 11000L, 13000L, 15000L)
     }
 }

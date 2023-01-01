@@ -1,11 +1,12 @@
 package me.m64diamondstar.ingeniamccore.wands.wands
 
 import me.m64diamondstar.ingeniamccore.IngeniaMC
+import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.wands.Cooldowns
-import org.bukkit.Bukkit
 import org.bukkit.Particle
 import org.bukkit.entity.Player
+import org.bukkit.scheduler.BukkitRunnable
 
 class Fly: Wand {
 
@@ -24,18 +25,22 @@ class Fly: Wand {
 
     override fun run(player: Player) {
         player.setGravity(false)
-        val schedule = Bukkit.getScheduler().scheduleSyncRepeatingTask(
-            IngeniaMC.plugin, {
+
+        object : BukkitRunnable() {
+            var c = 0
+            override fun run() {
+                if(IngeniaPlayer(player).isInGame || c == 160){
+                    player.setGravity(true)
+                    this.cancel()
+                    return
+                }
                 player.velocity = player.location.direction.multiply(0.5)
                 player.world.spawnParticle(Particle.CLOUD, player.location, 3, 0.0, 0.0, 0.0, 0.0)
-            }, 0L, 1L
-        )
-        Bukkit.getScheduler().scheduleSyncDelayedTask(
-            IngeniaMC.plugin, {
-                Bukkit.getScheduler().cancelTask(schedule)
-                player.setGravity(true)
-            }, 160L
-        )
+
+                c++
+            }
+        }.runTaskTimer(IngeniaMC.plugin, 0L, 1L)
+
         Cooldowns.addPlayer(player, 8000L, 9000L, 12000L, 15000L)
     }
 }

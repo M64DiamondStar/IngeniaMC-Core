@@ -1,12 +1,13 @@
 package me.m64diamondstar.ingeniamccore.wands.wands
 
 import me.m64diamondstar.ingeniamccore.IngeniaMC
+import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.wands.Cooldowns
-import org.bukkit.Bukkit
 import org.bukkit.Color
 import org.bukkit.Particle
 import org.bukkit.entity.Player
+import org.bukkit.scheduler.BukkitRunnable
 
 class Speed: Wand {
 
@@ -23,9 +24,15 @@ class Speed: Wand {
     }
 
     override fun run(player: Player) {
-        player.walkSpeed = 0.5f
-        val s = Bukkit.getScheduler().scheduleSyncRepeatingTask(
-            IngeniaMC.plugin, {
+        player.walkSpeed = 0.6f
+        object : BukkitRunnable() {
+            var c = 0
+            override fun run() {
+                if(IngeniaPlayer(player).isInGame || c == 100){
+                    player.walkSpeed = 0.2f
+                    this.cancel()
+                    return
+                }
                 val dustTransition =
                     Particle.DustTransition(Color.fromRGB(60, 153, 176), Color.fromRGB(56, 205, 255), 1.5f)
                 player.world.spawnParticle(
@@ -38,14 +45,10 @@ class Speed: Wand {
                     0.0,
                     dustTransition
                 )
-            }, 0L, 1L
-        )
-        Bukkit.getScheduler().scheduleSyncDelayedTask(
-            IngeniaMC.plugin, {
-                player.walkSpeed = 0.2f
-                Bukkit.getScheduler().cancelTask(s)
-            }, 100L
-        )
+                c++
+            }
+        }.runTaskTimer(IngeniaMC.plugin, 0L, 1L)
+
         Cooldowns.addPlayer(player, 5000L, 5000L, 6000L, 8000L)
     }
 }

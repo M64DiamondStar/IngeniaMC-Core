@@ -1,6 +1,7 @@
 package me.m64diamondstar.ingeniamccore.wands.wands
 
 import me.m64diamondstar.ingeniamccore.IngeniaMC
+import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.wands.wandlistener.WandListener
 import org.bukkit.craftbukkit.v1_19_R1.entity.CraftPlayer
@@ -91,7 +92,7 @@ class Water: Wand {
         object : BukkitRunnable() {
             var c: Long = 0
             override fun run() {
-                if (c == 100L) {
+                if (c == 100L || IngeniaPlayer(player).isInGame) {
                     cancel()
                     WandListener.gliding.remove(player)
                     if (!player.hasGravity()) player.setGravity(true)

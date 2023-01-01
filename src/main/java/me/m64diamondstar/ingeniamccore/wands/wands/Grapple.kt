@@ -1,6 +1,7 @@
 package me.m64diamondstar.ingeniamccore.wands.wands
 
 import me.m64diamondstar.ingeniamccore.IngeniaMC
+import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.utils.entities.LeashablePacketEntity
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
@@ -51,7 +52,7 @@ class Grapple: Wand {
 
             override fun run(){
 
-                if(c == 400 || IngeniaMC.isDisabling){
+                if(c == 400 || IngeniaMC.isDisabling || IngeniaPlayer(player).isInGame){
                     Bukkit.getScheduler().callSyncMethod(IngeniaMC.plugin) {
                         leashableEntity.despawn()
                     }

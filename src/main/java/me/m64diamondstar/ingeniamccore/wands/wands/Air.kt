@@ -1,6 +1,7 @@
 package me.m64diamondstar.ingeniamccore.wands.wands
 
 import me.m64diamondstar.ingeniamccore.IngeniaMC
+import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.wands.wandlistener.WandListener
 import org.bukkit.craftbukkit.v1_19_R1.entity.CraftPlayer
@@ -41,7 +42,7 @@ class Air: Wand {
 
                 if (!(player as CraftPlayer).isOnGround) player.getWorld()
                     .spawnParticle(Particle.SPELL, player.getLocation(), 30, 0.1, 0.1, 0.1, 0.0)
-                if (c == 300 || player.isOnGround) {
+                if (c == 300 || player.isOnGround || IngeniaPlayer(player).isInGame) {
                     WandListener.gliding.remove(player)
                     cancel()
                     return

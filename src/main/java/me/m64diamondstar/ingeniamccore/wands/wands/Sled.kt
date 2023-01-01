@@ -1,6 +1,7 @@
 package me.m64diamondstar.ingeniamccore.wands.wands
 
 import me.m64diamondstar.ingeniamccore.IngeniaMC
+import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import org.bukkit.craftbukkit.v1_19_R1.entity.CraftPlayer
 import me.m64diamondstar.ingeniamccore.wands.Cooldowns
@@ -63,6 +64,14 @@ class Sled: Wand {
                         cancel()
                         return
                     }
+                }
+
+                if(IngeniaPlayer(player).isInGame){
+                    sled.remove()
+                    seat.remove()
+                    player.teleport(player.location.add(0.0, 0.5, 0.0))
+                    cancel()
+                    return
                 }
 
 
@@ -179,6 +188,14 @@ class Sled: Wand {
                     }
                 }
 
+                if(IngeniaPlayer(player).isInGame){
+                    sled.remove()
+                    seat.remove()
+                    player.teleport(player.location.add(0.0, 0.5, 0.0))
+                    cancel()
+                    return
+                }
+
 
                 //After 15 seconds
                 if (c == 35) {
@@ -293,6 +310,14 @@ class Sled: Wand {
                     }
                 }
 
+                if(IngeniaPlayer(player).isInGame){
+                    sled.remove()
+                    seat.remove()
+                    player.teleport(player.location.add(0.0, 0.5, 0.0))
+                    cancel()
+                    return
+                }
+
 
                 //After 15 seconds
                 if (c == 35) {
@@ -392,8 +417,7 @@ class Sled: Wand {
                         0.0
                     ).block.type != Material.AIR
                 ) {
-                    if (!player.location.add(1.0, 1.0, 0.0).block.type.toString().contains("BUTTON")
-                        && !player.location.add(1.0, 1.0, 0.0).block.type.toString().contains("PRESSURE_PLATE")
+                    if (player.location.add(1.0, 1.0, 0.0).block.type.isSolid
                     ) {
                         player.spigot().sendMessage(
                             ChatMessageType.ACTION_BAR,
@@ -407,6 +431,13 @@ class Sled: Wand {
                     }
                 }
 
+                if(IngeniaPlayer(player).isInGame){
+                    sled.remove()
+                    seat.remove()
+                    player.teleport(player.location.add(0.0, 0.5, 0.0))
+                    cancel()
+                    return
+                }
 
                 //After 15 seconds
                 if (c == 35) {
