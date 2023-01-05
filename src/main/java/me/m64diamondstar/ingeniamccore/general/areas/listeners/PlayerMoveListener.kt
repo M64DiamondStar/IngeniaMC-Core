@@ -9,6 +9,8 @@ import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
 import net.md_5.bungee.api.ChatColor
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
+import org.bukkit.Material
+import org.bukkit.Particle
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerMoveEvent
@@ -23,6 +25,14 @@ class PlayerMoveListener: Listener {
 
         val player = event.player
         val ingeniaPlayer = IngeniaPlayer(player)
+
+        if(!(player.hasPermission("ingenia.admin") && player.isOp) && (event.to!!.blockX >= 500 || event.to!!.blockX <= -500 ||
+            event.to!!.blockY >= 319 || event.to!!.blockY <= -64 ||
+            event.to!!.blockZ >= 500 || event.to!!.blockZ <= -500)){
+
+            player.spawnParticle(Particle.BLOCK_MARKER, player.eyeLocation, 1, 0.5, 0.5, 0.5, 0.0, Material.BARRIER.createBlockData())
+            event.isCancelled = true
+        }
 
         var currentArea: Area? = null
 
