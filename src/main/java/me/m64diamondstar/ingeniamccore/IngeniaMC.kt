@@ -110,12 +110,16 @@ class IngeniaMC : JavaPlugin() {
         Objects.requireNonNull(getCommand("gma"))?.setExecutor(GamemodeCommand())
         Objects.requireNonNull(getCommand("gmsp"))?.setExecutor(GamemodeCommand())
 
+
         Objects.requireNonNull(getCommand("ingenia"))?.setExecutor(IngeniaCommand())
         Objects.requireNonNull(getCommand("admin"))?.setExecutor(AdminCommand())
 
-        Objects.requireNonNull(getCommand("cosmetics"))?.setExecutor(CosmeticCommand())
 
-        Objects.requireNonNull(getCommand("wand"))?.setExecutor(WandCommand())
+        Objects.requireNonNull(getCommand("cosmetics"))?.setExecutor(MenuCommands())
+        Objects.requireNonNull(getCommand("wand"))?.setExecutor(MenuCommands())
+        Objects.requireNonNull(getCommand("rides"))?.setExecutor(MenuCommands())
+        Objects.requireNonNull(getCommand("shops"))?.setExecutor(MenuCommands())
+
 
         Objects.requireNonNull(getCommand("msg"))?.setExecutor(MessageCommand())
         Objects.requireNonNull(getCommand("react"))?.setExecutor(MessageCommand())
