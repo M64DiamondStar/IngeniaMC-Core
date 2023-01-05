@@ -16,6 +16,41 @@ class ShowSubcommand(private val sender: CommandSender, private val args: Array<
      * Executes the show sub-command
      */
     override fun execute() {
+
+        // Play a show from start, one specific effect or start from an effect ID
+        if(args.size >= 4 && args[1].equals("play", ignoreCase = true)){
+            if(!exists(sender))
+                return
+
+            val show = Show(args[2], args[3])
+
+            if(args.size == 4){
+                show.play()
+                sender.sendMessage(Colors.format(MessageType.SUCCESS + "Successfully started this show."))
+            }
+
+            else if(args.size == 6){
+                if(args[4].equals("only", ignoreCase = true)){
+                    try {
+                        if(show.playOnly(args[5].toInt()))
+                            sender.sendMessage(Colors.format(MessageType.SUCCESS + "Successfully played effect ${args[5]} of this show."))
+                        else
+                            sender.sendMessage(Colors.format("${MessageType.ERROR}&n${args[5]}&r ${MessageType.ERROR}is not a valid ID."))
+                    }catch (e: NumberFormatException){
+                        sender.sendMessage(Colors.format("${MessageType.ERROR}&n${args[5]}&r ${MessageType.ERROR}is not a valid number."))
+                    }
+                }else if(args[4].equals("from", ignoreCase = true)){
+                    try {
+                        show.playFrom(args[5].toInt())
+                        sender.sendMessage(Colors.format(MessageType.SUCCESS + "Successfully started from effect ${args[5]} of this show."))
+                    }catch (e: NumberFormatException){
+                        sender.sendMessage(Colors.format("${MessageType.ERROR}&n${args[5]}&r ${MessageType.ERROR}is not a valid number."))
+                    }
+                }else sender.sendMessage(Messages.invalidSubcommand("ig show play <category> <name> [<only/from> <id>]"))
+            }else sender.sendMessage(Messages.invalidSubcommand("ig show play <category> <name> [<only/from> <id>]"))
+
+        }
+
         if(sender !is Player){
             sender.sendMessage(Messages.noPlayer())
             return
@@ -56,40 +91,6 @@ class ShowSubcommand(private val sender: CommandSender, private val args: Array<
             //val show = Show(args[2], args[3])
 
         }
-
-        // Play a show from start, one specific effect or start from an effect ID
-        else if(args.size >= 4 && args[1].equals("play", ignoreCase = true)){
-            if(!exists(player))
-                return
-
-            val show = Show(args[2], args[3])
-
-            if(args.size == 4){
-                show.play()
-                player.sendMessage(Colors.format(MessageType.SUCCESS + "Successfully started this show."))
-            }
-
-            else if(args.size == 6){
-                if(args[4].equals("only", ignoreCase = true)){
-                    try {
-                        if(show.playOnly(args[5].toInt()))
-                            player.sendMessage(Colors.format(MessageType.SUCCESS + "Successfully played effect ${args[5]} of this show."))
-                        else
-                            player.sendMessage(Colors.format("${MessageType.ERROR}&n${args[5]}&r ${MessageType.ERROR}is not a valid ID."))
-                    }catch (e: NumberFormatException){
-                        player.sendMessage(Colors.format("${MessageType.ERROR}&n${args[5]}&r ${MessageType.ERROR}is not a valid number."))
-                    }
-                }else if(args[4].equals("from", ignoreCase = true)){
-                    try {
-                        show.playFrom(args[5].toInt())
-                        player.sendMessage(Colors.format(MessageType.SUCCESS + "Successfully started from effect ${args[5]} of this show."))
-                    }catch (e: NumberFormatException){
-                        player.sendMessage(Colors.format("${MessageType.ERROR}&n${args[5]}&r ${MessageType.ERROR}is not a valid number."))
-                    }
-                }else player.sendMessage(Messages.invalidSubcommand("ig show play <category> <name> [<only/from> <id>]"))
-            }else player.sendMessage(Messages.invalidSubcommand("ig show play <category> <name> [<only/from> <id>]"))
-
-        }
     }
 
     /**
@@ -122,13 +123,13 @@ class ShowSubcommand(private val sender: CommandSender, private val args: Array<
      * and sends error messages to player
      * @return true if it exists, false if it doesn't
      */
-    private fun exists(player: Player): Boolean{
+    private fun exists(sender: CommandSender): Boolean{
         if(!ShowUtils.existsCategory(args[2])){
-            player.sendMessage(Colors.format(MessageType.ERROR + "The category &o${args[2]}&r ${MessageType.ERROR}doesn't exist!"))
+            sender.sendMessage(Colors.format(MessageType.ERROR + "The category &o${args[2]}&r ${MessageType.ERROR}doesn't exist!"))
             return false
         }
         if(!ShowUtils.existsShow(args[2], args[3])){
-            player.sendMessage(Colors.format(MessageType.ERROR + "The attraction &o${args[3]}&r ${MessageType.ERROR}doesn't exist!"))
+            sender.sendMessage(Colors.format(MessageType.ERROR + "The attraction &o${args[3]}&r ${MessageType.ERROR}doesn't exist!"))
             return false
         }
         return true
