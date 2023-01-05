@@ -9,6 +9,7 @@ depend:
   - ProtocolLib
   - FastAsyncWorldEdit
   - OpenAudioMc
+  - Animatronics
 commands:
   wand:
     description: Open the wand selection menu.
@@ -52,5 +53,9 @@ commands:
     description: Leave the game you're currently playing.
   spawn:
     description: Teleport to the spawn.
+  rides:
+    description: Open the ride warp menu.
+  shops:
+    description: Open the shop warp menu.
 
 
