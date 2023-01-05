@@ -2,6 +2,7 @@ package me.m64diamondstar.ingeniamccore.attractions.utils
 
 import me.m64diamondstar.ingeniamccore.data.Configuration
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
+import me.m64diamondstar.ingeniamccore.shows.utils.Show
 import me.m64diamondstar.ingeniamccore.utils.entities.LeaderboardPacketEntity
 import me.m64diamondstar.ingeniamccore.utils.items.ItemDecoder
 import me.m64diamondstar.ingeniamccore.utils.items.ItemEncoder
@@ -139,6 +140,28 @@ open class Attraction(category: String, name: String): Configuration("rides/$cat
             return 15
         }
         return this.getConfig().getInt("CountdownTime")
+    }
+
+    /**
+     * Sets the show that will start when the ride starts.
+     * Set null to set no show.
+     */
+    fun setShow(show: Show?){
+        this.getConfig().set("Show.Enabled", show != null)
+        if (show != null) {
+            this.getConfig().set("Show.Category", show.getCategory())
+            this.getConfig().set("Show.Name", show.getName())
+        }
+        this.reloadConfig()
+    }
+
+    /**
+     * @return the show that starts with the ride
+     */
+    fun getShow(): Show? {
+        return if(!this.getConfig().getBoolean("Show.Enabled")) null
+        else Show(this.getConfig().getString("Show.Category")!!,
+                this.getConfig().getString("Show.Name")!!)
     }
 
     /**

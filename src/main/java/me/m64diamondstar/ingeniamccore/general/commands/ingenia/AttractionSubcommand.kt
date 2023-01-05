@@ -10,6 +10,8 @@ import me.m64diamondstar.ingeniamccore.general.commands.ingenia.attraction.Coast
 import me.m64diamondstar.ingeniamccore.general.commands.ingenia.attraction.FreefallSubcommand
 import me.m64diamondstar.ingeniamccore.general.commands.ingenia.attraction.SlideSubcommand
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
+import me.m64diamondstar.ingeniamccore.shows.utils.Show
+import me.m64diamondstar.ingeniamccore.shows.utils.ShowUtils
 import me.m64diamondstar.ingeniamccore.utils.IngeniaSubcommand
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
@@ -355,6 +357,42 @@ class AttractionSubcommand(private val sender: CommandSender, private val args: 
 
         }
 
+        if(args[1].equals("show", ignoreCase = true) && (args.size == 5 || args.size == 7)){
+
+            if (!AttractionUtils.existsCategory(args[2])) {
+                player.sendMessage(Colors.format(MessageType.ERROR + "The category &o${args[2]}&r ${MessageType.ERROR}doesn't exist!"))
+                return
+            }
+            if (!AttractionUtils.existsAttraction(args[2], args[3])) {
+                player.sendMessage(Colors.format(MessageType.ERROR + "The attraction &o${args[3]}&r ${MessageType.ERROR}doesn't exist!"))
+                return
+            }
+
+            val attraction = Attraction(args[2], args[3])
+
+            if(args.size == 5 && args[4].equals("remove", ignoreCase = true)){
+                attraction.setShow(null)
+                player.sendMessage(Colors.format(MessageType.SUCCESS + "Successfully removed the show from this ride."))
+            }
+
+            if(args.size == 7 && args[4].equals("set", ignoreCase = true)){
+                if(!ShowUtils.existsCategory(args[5])){
+                    player.sendMessage(Colors.format(MessageType.ERROR + "The show category &o${args[5]}&r ${MessageType.ERROR}doesn't exist!"))
+                    return
+                }
+                if(!ShowUtils.existsShow(args[5], args[6])){
+                    player.sendMessage(Colors.format(MessageType.ERROR + "The show &o${args[6]}&r ${MessageType.ERROR}doesn't exist!"))
+                    return
+                }
+
+                val show = Show(args[5], args[6])
+                attraction.setShow(show)
+                player.sendMessage(Colors.format(MessageType.SUCCESS + "Successfully set the show of this ride to ${args[6]} from category ${args[5]}."))
+            }
+
+
+        }
+
         /*
         Attraction Settings
         Set the settings for custom attractions like freefall towers or top spins
@@ -390,6 +428,7 @@ class AttractionSubcommand(private val sender: CommandSender, private val args: 
             tabs.add("operate")
             tabs.add("slide")
             tabs.add("countdown")
+            tabs.add("show")
         }
 
         //Global tab completer for attraction categories and names except for create and delete subcommand
@@ -461,6 +500,11 @@ class AttractionSubcommand(private val sender: CommandSender, private val args: 
                 tabs.add("setType")
                 tabs.add("setTime")
             }
+
+            if(args[1].equals("show", ignoreCase = true)){
+                tabs.add("set")
+                tabs.add("remove")
+            }
         }
 
         if(args.size == 6){
@@ -496,6 +540,10 @@ class AttractionSubcommand(private val sender: CommandSender, private val args: 
                     }
                 }
             }
+
+            if(args[1].equals("show", ignoreCase = true) && args[4].equals("set", ignoreCase = true)){
+                ShowUtils.getCategories().forEach { tabs.add(it.name) }
+            }
         }
 
         if(args.size == 7){
@@ -521,6 +569,14 @@ class AttractionSubcommand(private val sender: CommandSender, private val args: 
                 tabs.add("setspawn")
                 tabs.add("setdespawn")
             }
+
+            if(args[1].equals("show", ignoreCase = true) && args[4].equals("set", ignoreCase = true)){
+                if(!ShowUtils.existsCategory(args[5]))
+                    tabs.add("CATEGORY_DOES_NOT_EXIST")
+                else
+                    ShowUtils.getShows(args[5]).forEach { tabs.add(it.name) }
+            }
+
         }
 
         if(args.size == 8){
