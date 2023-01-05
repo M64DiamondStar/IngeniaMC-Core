@@ -248,7 +248,7 @@ class GameSubcommand(private val sender: CommandSender, private val args: Array<
                     if(!ParkourUtils.existsCategory(args[3]))
                         tabs.add("CATEGORY_DOES_NOT_EXIST")
                     else
-                        ParkourUtils.getAllParkours().forEach { tabs.add(it.name) }
+                        ParkourUtils.getParkours(args[3]).forEach { tabs.add(it.name) }
                 }
             }
 
@@ -257,7 +257,7 @@ class GameSubcommand(private val sender: CommandSender, private val args: Array<
                     if(!PresentHuntUtils.existsCategory(args[3]))
                         tabs.add("CATEGORY_DOES_NOT_EXIST")
                     else
-                        PresentHuntUtils.getAllPresentHunts().forEach { tabs.add(it.name) }
+                        PresentHuntUtils.getPresentHunts(args[3]).forEach { tabs.add(it.name) }
                 }
             }
         }
