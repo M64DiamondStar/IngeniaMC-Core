@@ -78,7 +78,7 @@ class AntiGravity: Wand {
 
                 c++
             }
-        }.runTaskTimer(IngeniaMC.plugin, 40L, 1L)
+        }.runTaskTimer(IngeniaMC.plugin, 0L, 1L)
 
         Cooldowns.addPlayer(player, 7500L, 8000L, 9500L, 12000L)
     }
