@@ -33,6 +33,10 @@ class SignActionAttraction: SignAction() {
                 info.member.group.properties.playersEnter = true
                 info.member.group.properties.playersExit = true
                 coaster.openGates()
+
+                if(coaster.existsRow(row + 1)) {
+                    coaster.activateRow(row + 1, false) // Deactivates previous station so train stops
+                }
             }else{
 
                 // Check if next row is occupied
@@ -41,6 +45,10 @@ class SignActionAttraction: SignAction() {
                 if(coaster.isRowOccupied(row - 1)){
                     coaster.activateRow(row, false) // Deactivates station so train stops
                     coaster.setRowOccupied(row, true)
+
+                    if(coaster.existsRow(row + 1)) {
+                        coaster.activateRow(row + 1, false) // Deactivates previous station so train stops
+                    }
                 }
 
                 //Row IS NOT occupied
