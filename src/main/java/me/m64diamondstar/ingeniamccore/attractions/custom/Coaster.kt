@@ -187,6 +187,8 @@ class Coaster(category: String, name: String): Attraction(category, name) {
     }
 
     fun dispatch(){
+        if(getShow() != null) getShow()!!.play()
+
         if(getRowStation(1) == null) {
             Bukkit.getLogger()
                 .warning("Station sign(s) for ${getName()} in ${getCategory()} still has to be made! Please do this as quickly as possible!")
