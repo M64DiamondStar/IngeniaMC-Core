@@ -15,6 +15,18 @@ object ParkourUtils {
         return files
     }
 
+    fun getParkours(category: String): ArrayList<File> {
+        val file = File(IngeniaMC.plugin.dataFolder, "games/parkour/$category")
+
+        val files = ArrayList<File>()
+        file.listFiles()?.forEach {
+            if(!it.name.contains(".DS_Store"))
+                files.add(it)
+        }
+
+        return files
+    }
+
     private fun existsCategory(category: File): Boolean{
         return File(IngeniaMC.plugin.dataFolder, "games/parkour").listFiles()!!.contains(category)
     }
