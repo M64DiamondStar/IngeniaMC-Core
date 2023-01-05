@@ -20,10 +20,6 @@ object AttractionUtils {
         return files
     }
 
-    fun getAttractions(category: File): Array<out File>? {
-        return category.listFiles()
-    }
-
     fun getAttractions(category: String): ArrayList<File> {
         val file = File(IngeniaMC.plugin.dataFolder, "rides/$category")
 
