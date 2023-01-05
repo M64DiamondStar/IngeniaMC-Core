@@ -14,12 +14,11 @@ class Activator(show: Show, id: Int) : EffectType(show, id) {
     override fun execute() {
         val location = LocationUtils.getLocationFromString(getSection().getString("Location")!!) ?: return
         val duration = if (getSection().get("Duration") != null) getSection().getLong("Duration") else 0
-        val material = location.block.type
 
         location.block.type = Material.REDSTONE_TORCH
 
         Bukkit.getScheduler().scheduleSyncDelayedTask(IngeniaMC.plugin, {
-            location.block.type = material
+            location.block.type = Material.AIR
         }, duration)
     }
 
