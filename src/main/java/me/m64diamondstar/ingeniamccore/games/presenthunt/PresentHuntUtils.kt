@@ -48,6 +48,18 @@ object PresentHuntUtils {
         return files
     }
 
+    fun getPresentHunts(category: String): ArrayList<File> {
+        val file = File(IngeniaMC.plugin.dataFolder, "games/presenthunt/$category")
+
+        val files = ArrayList<File>()
+        file.listFiles()?.forEach {
+            if(!it.name.contains(".DS_Store"))
+                files.add(it)
+        }
+
+        return files
+    }
+
     private fun existsCategory(category: File): Boolean{
         return File(IngeniaMC.plugin.dataFolder, "games/presenthunt").listFiles()!!.contains(category)
     }
