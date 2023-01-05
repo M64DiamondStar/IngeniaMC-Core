@@ -31,6 +31,9 @@ class Slide(category: String, name: String): Attraction(category, name) {
                     val attraction = Attraction(block.sign.sign.getLine(2), block.sign.sign.getLine(3))
                     if (attraction.getType() != AttractionType.SLIDE) return
 
+                    if(attraction.getShow() != null)
+                        attraction.getShow()!!.play()
+
 
                     object: BukkitRunnable(){
 

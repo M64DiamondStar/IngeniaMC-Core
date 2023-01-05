@@ -130,6 +130,7 @@ class FreeFall(private val category: String, private val name: String): Attracti
 
     override fun dispatch() {
         AttractionManager.setLocked(this@FreeFall, locked = true)
+        if(getShow() != null) getShow()!!.play()
         object : BukkitRunnable() {
             var c = 0.0
             val radius = 3.75f
