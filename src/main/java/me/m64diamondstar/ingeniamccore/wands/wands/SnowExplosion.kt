@@ -27,6 +27,9 @@ class SnowExplosion: Wand {
         fb.velocity = player.location.direction.multiply(1.5)
         fb.dropItem = false
         fb.customName = "SEWand"
+
+        player.velocity = player.location.direction.multiply(-0.2).add(player.velocity)
+
         Cooldowns.addPlayer(player, 0L, 500L, 1500L, 4000L)
     }
 }
