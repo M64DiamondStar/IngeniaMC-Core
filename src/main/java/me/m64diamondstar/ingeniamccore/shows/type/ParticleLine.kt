@@ -9,6 +9,7 @@ import org.bukkit.Color
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.Particle
+import org.bukkit.inventory.ItemStack
 import org.bukkit.scheduler.BukkitRunnable
 
 class ParticleLine(show: Show, id: Int) : EffectType(show, id) {
@@ -24,6 +25,7 @@ class ParticleLine(show: Show, id: Int) : EffectType(show, id) {
         val dY = if (getSection().get("dY") != null) getSection().getDouble("dY") else 0.0
         val dZ = if (getSection().get("dZ") != null) getSection().getDouble("dZ") else 0.0
         val force = if (getSection().get("Force") != null) getSection().getBoolean("Force") else false
+        val extra = if(amount == 0) 1.0 else 0.0
 
         val moveX: Double = (toLocation.x - fromLocation.x) / speed
         val moveY: Double = (toLocation.y - fromLocation.y) / speed
@@ -64,24 +66,21 @@ class ParticleLine(show: Show, id: Int) : EffectType(show, id) {
                             else
                                 1F
                         )
-                        location.world!!.spawnParticle(particle, location, amount, dX, dY, dZ, 0.0, dustOptions, force)
+                        location.world!!.spawnParticle(particle, location, amount, dX, dY, dZ, extra, dustOptions, force)
                     }
-                    Particle.BLOCK_CRACK, Particle.BLOCK_DUST -> {
+                    Particle.BLOCK_CRACK, Particle.BLOCK_DUST, Particle.FALLING_DUST -> {
                         val material =
                             if (getSection().get("Block") != null) Material.valueOf(getSection().getString("Block")!!) else Material.STONE
-                        location.world!!.spawnParticle(
-                            particle,
-                            location,
-                            amount,
-                            dX,
-                            dY,
-                            dZ,
-                            0.0,
-                            material.createBlockData(),
-                            force
+                        location.world!!.spawnParticle(particle, location, amount, dX, dY, dZ, extra, material.createBlockData(), force
                         )
                     }
-                    else -> {location.world!!.spawnParticle(particle, location, amount, dX, dY, dZ, 0.0, null, force)}
+                    Particle.ITEM_CRACK -> {
+                        val material =
+                            if (getSection().get("Block") != null) Material.valueOf(getSection().getString("Block")!!) else Material.STONE
+                        location.world!!.spawnParticle(particle, location, amount, dX, dY, dZ, extra, ItemStack(material), force
+                        )
+                    }
+                    else -> {location.world!!.spawnParticle(particle, location, amount, dX, dY, dZ, extra, null, force)}
                 }
                 location.add(x, y, z)
                 c++

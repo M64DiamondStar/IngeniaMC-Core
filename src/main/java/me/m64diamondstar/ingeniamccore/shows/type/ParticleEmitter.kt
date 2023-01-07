@@ -7,6 +7,7 @@ import me.m64diamondstar.ingeniamccore.utils.LocationUtils
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import org.bukkit.*
 import org.bukkit.Particle
+import org.bukkit.inventory.ItemStack
 import org.bukkit.scheduler.BukkitRunnable
 
 class ParticleEmitter(show: Show, id: Int) : EffectType(show, id) {
@@ -24,7 +25,7 @@ class ParticleEmitter(show: Show, id: Int) : EffectType(show, id) {
         val dZ = if (getSection().get("dZ") != null) getSection().getDouble("dZ") else 0.0
         val length = if (getSection().get("Length") != null) getSection().getInt("Length") else 1
         val force = if (getSection().get("Force") != null) getSection().getBoolean("Force") else false
-
+        val extra = if(amount == 0) 1.0 else 0.0
 
         when (particle) {
 
@@ -45,13 +46,13 @@ class ParticleEmitter(show: Show, id: Int) : EffectType(show, id) {
                             this.cancel()
                             return
                         }
-                        location.world!!.spawnParticle(particle, location, amount, dX, dY, dZ, 0.0, dustOptions, force)
+                        location.world!!.spawnParticle(particle, location, amount, dX, dY, dZ, extra, dustOptions, force)
                         c++
                     }
                 }.runTaskTimerAsynchronously(IngeniaMC.plugin, 0L, 1L)
             }
 
-            Particle.BLOCK_CRACK, Particle.BLOCK_DUST -> {
+            Particle.BLOCK_CRACK, Particle.BLOCK_DUST, Particle.FALLING_DUST -> {
                 val material =
                     if (getSection().get("Block") != null) Material.valueOf(getSection().getString("Block")!!) else Material.STONE
                 object: BukkitRunnable(){
@@ -62,7 +63,24 @@ class ParticleEmitter(show: Show, id: Int) : EffectType(show, id) {
                             this.cancel()
                             return
                         }
-                        location.world!!.spawnParticle(particle, location, amount, dX, dY, dZ, 0.0, material.createBlockData(), force)
+                        location.world!!.spawnParticle(particle, location, amount, dX, dY, dZ, extra, material.createBlockData(), force)
+                        c++
+                    }
+                }.runTaskTimerAsynchronously(IngeniaMC.plugin, 0L, 1L)
+            }
+
+            Particle.ITEM_CRACK -> {
+                val material =
+                    if (getSection().get("Block") != null) Material.valueOf(getSection().getString("Block")!!) else Material.STONE
+                object: BukkitRunnable(){
+                    var c = 0
+                    override fun run() {
+
+                        if(c == length){
+                            this.cancel()
+                            return
+                        }
+                        location.world!!.spawnParticle(particle, location, amount, dX, dY, dZ, extra, ItemStack(material), force)
                         c++
                     }
                 }.runTaskTimerAsynchronously(IngeniaMC.plugin, 0L, 1L)
@@ -76,7 +94,7 @@ class ParticleEmitter(show: Show, id: Int) : EffectType(show, id) {
                             this.cancel()
                             return
                         }
-                        location.world!!.spawnParticle(particle, location, amount, dX, dY, dZ, 0.0, null, force)
+                        location.world!!.spawnParticle(particle, location, amount, dX, dY, dZ, extra, null, force)
                         c++
                     }
                 }.runTaskTimerAsynchronously(IngeniaMC.plugin, 0L, 1L)
