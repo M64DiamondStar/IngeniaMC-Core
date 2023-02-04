@@ -2,19 +2,13 @@ package me.m64diamondstar.ingeniamccore.shows.utils
 
 import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.data.Configuration
-import me.m64diamondstar.ingeniamccore.shows.type.Animatronic
-import me.m64diamondstar.ingeniamccore.shows.type.AnimatronicGroup
-import me.m64diamondstar.ingeniamccore.shows.type.Particle
-import me.m64diamondstar.ingeniamccore.shows.type.ParticleEmitter
-import org.bukkit.Bukkit
+import org.bukkit.entity.Player
 import org.bukkit.scheduler.BukkitRunnable
-import java.lang.IllegalArgumentException
-import java.util.ArrayList
 
 /**
  * Play custom shows in the park, can be used in coasters and other rides for fun decoration.
  */
-class Show(private val category: String, private val name: String): Configuration("shows/$category", name, false, true) {
+class Show(private val category: String, private val name: String, val players: List<Player>?): Configuration("shows/$category", name, false, true) {
 
     /**
      * Adds the standard comments to the configuration file of this show.
@@ -23,10 +17,10 @@ class Show(private val category: String, private val name: String): Configuratio
         val header = ArrayList<String>()
         header.add("-----------------------------------------")
         header.add("This is the file for the show: ${getName()}.")
-        header.add("Please try to use in-game commands as much as possible, ")
-        header.add("but if it's really necessary you can edit this file.")
         header.add(" ")
         header.add("Reminder, all the times are in ticks! 20 ticks = 1 second.")
+        header.add("For extra information, check the wiki:")
+        header.add("https://github.com/M64DiamondStar/EffectMaster/wiki/Effect")
         header.add("-----------------------------------------")
 
         this.getConfig().options().setHeader(header)
@@ -34,7 +28,30 @@ class Show(private val category: String, private val name: String): Configuratio
         this.reloadConfig()
     }
 
-    private fun getIDAmount(): Int {
+    fun deleteShow(){
+        this.deleteFile()
+    }
+
+    fun deleteEffect(id: Int){
+        val keys = this.getConfig().getKeys(false).toList()
+
+        for(i in id until keys.size) {
+            val currentSection = this.getConfig().getConfigurationSection("$i")
+            val nextSection = this.getConfig().getConfigurationSection("${i + 1}")
+
+            currentSection?.getValues(true)?.forEach{
+                currentSection.set(it.key, null)
+            }
+
+            nextSection?.getValues(true)?.forEach{
+                currentSection?.set(it.key,it.value)
+            }
+        }
+        this.getConfig().set("${keys.size}", null)
+        this.reloadConfig()
+    }
+
+    fun getMaxId(): Int {
         var i = 1
         while (getConfig().getConfigurationSection("$i") != null) {
             i++
@@ -51,7 +68,7 @@ class Show(private val category: String, private val name: String): Configuratio
             var tasksDone = 0
             override fun run() {
 
-                if(tasksDone >= getIDAmount()){
+                if(tasksDone >= getMaxId()){
                     this.cancel()
                     return
                 }
@@ -59,7 +76,7 @@ class Show(private val category: String, private val name: String): Configuratio
                 var i = 1
                 while (getConfig().getConfigurationSection("$i") != null) {
                     if (getConfig().getConfigurationSection("$i")!!.getLong("Delay") == count) {
-                        getType(i)!!.execute()
+                        getEffect(i)?.execute(players)
                         tasksDone++
                     }
                     i++
@@ -80,7 +97,7 @@ class Show(private val category: String, private val name: String): Configuratio
             var tasksDone = 0
             override fun run() {
 
-                if(tasksDone >= getIDAmount()){
+                if(tasksDone >= getMaxId()){
                     this.cancel()
                     return
                 }
@@ -88,7 +105,7 @@ class Show(private val category: String, private val name: String): Configuratio
                 var i = id
                 while (getConfig().getConfigurationSection("$i") != null) {
                     if (getConfig().getConfigurationSection("$i")!!.getLong("Delay") == count) {
-                        getType(i)!!.execute()
+                        getEffect(i)?.execute(players)
                         tasksDone++
                     }
                     i++
@@ -105,7 +122,7 @@ class Show(private val category: String, private val name: String): Configuratio
      */
     fun playOnly(id: Int): Boolean{
         if(getConfig().getConfigurationSection("$id") == null) return false
-        getType(id)?.execute()
+        getEffect(id)?.execute(players)
         return true
     }
 
@@ -117,18 +134,27 @@ class Show(private val category: String, private val name: String): Configuratio
         return name
     }
 
-    fun getType(id: Int): EffectType? {
-        val type: EffectType.Types
-
-        val string = if(getConfig().get("$id.Type") != null) getConfig().getString("$id.Type")!! else return null
-
-        try{
-            type = EffectType.Types.valueOf(string.uppercase())
-        }catch (e: IllegalArgumentException){
-            return null
+    fun setDefaults(id: Int, defaults: List<Pair<String, Any>>){
+        for(pair in defaults){
+            this.getConfig().set("$id.${pair.first}", pair.second)
         }
+        this.reloadConfig()
+    }
 
-        return type.getTypeClass(this, id)
+    fun getAllEffects(): List<Effect>{
+        val list = ArrayList<Effect>()
+        for(id in 1..getMaxId()){
+            getEffect(id)?.let { list.add(it) }
+        }
+        return list
+    }
+
+    fun getEffect(id: Int): Effect? {
+        return try{
+            Effect.Type.valueOf(getConfig().getString("$id.Type")!!.uppercase()).getTypeClass(this, id)
+        }catch (e: IllegalArgumentException){
+            null
+        }
     }
 
 }

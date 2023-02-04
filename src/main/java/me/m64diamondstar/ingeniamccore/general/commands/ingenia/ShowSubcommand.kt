@@ -1,5 +1,8 @@
 package me.m64diamondstar.ingeniamccore.general.commands.ingenia
 
+import me.m64diamondstar.ingeniamccore.IngeniaMC
+import me.m64diamondstar.ingeniamccore.shows.editor.effect.EditEffectGui
+import me.m64diamondstar.ingeniamccore.shows.editor.show.EditShowGui
 import me.m64diamondstar.ingeniamccore.shows.utils.Show
 import me.m64diamondstar.ingeniamccore.shows.utils.ShowUtils
 import me.m64diamondstar.ingeniamccore.utils.IngeniaSubcommand
@@ -22,7 +25,7 @@ class ShowSubcommand(private val sender: CommandSender, private val args: Array<
             if(!exists(sender))
                 return
 
-            val show = Show(args[2], args[3])
+            val show = Show(args[2], args[3], null)
 
             if(args.size == 4){
                 show.play()
@@ -72,7 +75,7 @@ class ShowSubcommand(private val sender: CommandSender, private val args: Array<
                 }
             }
 
-            val show = Show(args[2], args[3])
+            val show = Show(args[2], args[3], null)
             show.createShow()
             player.sendMessage(Colors.format(MessageType.SUCCESS + "Successfully created this show."))
         }
@@ -81,15 +84,60 @@ class ShowSubcommand(private val sender: CommandSender, private val args: Array<
         else if (args.size == 4 && args[1].equals("delete", ignoreCase = true)){
             if(!exists(player))
                 return
+
+            val show = Show(args[2], args[3], null)
+            show.deleteShow()
         }
 
         //Edit a show
-        else if(args.size > 4 && args[1].equals("edit", ignoreCase = true)){
+        else if((args.size == 4 || args.size == 5) && args[1].equals("editor", ignoreCase = true)){
             if(!exists(player))
                 return
 
-            //val show = Show(args[2], args[3])
+            val show = Show(args[2], args[3], null)
+            if(args.size == 4) {
+                val editShowGui = EditShowGui(sender, show)
+                editShowGui.open()
+            }else{
+                val editEffectGui = EditEffectGui(sender, args[4].toInt(), show)
+                editEffectGui.open()
+            }
+        }
 
+        else if(args.size == 5 && args[1].equals("rename", ignoreCase = true)) {
+            if (!exists(sender))
+                return
+
+            val show = Show(args[2], args[3], null)
+            show.rename(args[4])
+
+            sender.sendMessage(Colors.format(MessageType.SUCCESS + "Renamed the show to ${args[4]}."))
+
+        }
+
+        else if(args.size > 4 && args[1].equals("privateplay", ignoreCase = true)){
+            if(!exists(sender))
+                return
+
+            val sb = StringBuilder()
+            for (loopArgs in 4 until args.size) {
+                sb.append(args[loopArgs]).append(" ")
+            }
+
+            val players = ArrayList<Player>()
+
+            try {
+                IngeniaMC.plugin.server.selectEntities(sender, sb.toString().dropLast(1))
+                    .forEach { if (it is Player) players.add(it) }
+            }catch (ex: IllegalArgumentException){
+                sender.sendMessage(Colors.format(MessageType.STANDARD + "The selector you entered couldn't be processed."))
+                sender.sendMessage(Colors.format(MessageType.STANDARD + "Information about selectors here:"))
+                sender.sendMessage(Colors.format(MessageType.STANDARD + "https://minecraft.fandom.com/wiki/Target_selectors"))
+                return
+            }
+            val show = Show(args[2], args[3], players)
+            show.play()
+            sender.sendMessage(Colors.format(MessageType.SUCCESS + "Successfully started this show."))
         }
     }
 
@@ -103,8 +151,10 @@ class ShowSubcommand(private val sender: CommandSender, private val args: Array<
         if(args.size == 2){
             tabs.add("create")
             tabs.add("delete")
-            tabs.add("edit")
             tabs.add("play")
+            tabs.add("editor")
+            tabs.add("rename")
+            tabs.add("privateplay")
         }
 
         if(args.size == 3 && !(args[1].equals("create", true) || args[1].equals("delete", true)))

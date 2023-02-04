@@ -18,10 +18,6 @@ object ShowUtils {
         return files
     }
 
-    fun getShows(category: File): Array<out File>? {
-        return category.listFiles()
-    }
-
     fun getShows(category: String): ArrayList<File> {
         val file = File(IngeniaMC.plugin.dataFolder, "shows/$category")
 
@@ -35,7 +31,7 @@ object ShowUtils {
     }
 
     private fun existsCategory(category: File): Boolean{
-        File(IngeniaMC.plugin.dataFolder, "shows").mkdir()
+        File(IngeniaMC.plugin.dataFolder, "shows").mkdirs()
         return File(IngeniaMC.plugin.dataFolder, "shows").listFiles()!!.contains(category)
     }
 
@@ -51,17 +47,8 @@ object ShowUtils {
         return existsShow(
             File(IngeniaMC.plugin.dataFolder, "shows/$category"), File(
                 IngeniaMC.plugin.dataFolder,
-            if(show.contains(".yml")) "shows/$category/$show" else "shows/$category/$show.yml")
+                if(show.contains(".yml")) "shows/$category/$show" else "shows/$category/$show.yml")
         )
-    }
-
-    fun getAllShows(): List<Show>{
-        val list = ArrayList<Show>()
-        for(category in getCategories()){
-            category.listFiles()?.forEach { if(!it.name.contains(".DS_Store"))
-                list.add(Show(category.name, it.name))}
-        }
-        return list
     }
 
     fun getFallingBlocks(): ArrayList<FallingBlock>{
