@@ -10,5 +10,6 @@ interface MessageType {
         const val PLAYER_UPDATE = "#f7d145"
         const val WARNING = "#cc9349"
         const val INGENIA = "#f4b734"
+        const val STANDARD = "#bfbfbf"
     }
 }
