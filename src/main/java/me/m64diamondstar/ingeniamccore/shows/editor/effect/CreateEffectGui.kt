@@ -1,0 +1,76 @@
+package me.m64diamondstar.ingeniamccore.shows.editor.effect
+
+import me.m64diamondstar.ingeniamccore.shows.editor.show.EditShowGui
+import me.m64diamondstar.ingeniamccore.shows.utils.Effect
+import me.m64diamondstar.ingeniamccore.shows.utils.Show
+import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
+import me.m64diamondstar.ingeniamccore.shows.editor.utils.GuiItems
+import me.m64diamondstar.ingeniamccore.utils.gui.Gui
+import me.m64diamondstar.ingeniamccore.utils.messages.Colors
+import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
+import org.bukkit.Material
+import org.bukkit.entity.Player
+import org.bukkit.event.inventory.InventoryClickEvent
+import org.bukkit.inventory.ItemStack
+
+class CreateEffectGui(private val player: Player, show: Show): Gui(IngeniaPlayer(player)) {
+
+    private val showCategory: String = show.getCategory()
+    private val showName: String = show.getName()
+
+    override fun setDisplayName(): String {
+        return "Creating effect for $showName..."
+    }
+
+    override fun setSize(): Int {
+        return 36
+    }
+
+    override fun handleInventory(event: InventoryClickEvent) {
+        if(event.currentItem == null) return
+
+        if(event.slot == 31){
+            val editShowGui = EditShowGui(event.whoClicked as Player, Show(showCategory, showName, null))
+            editShowGui.open()
+        }
+
+        if(event.slot !in 9..26) return
+
+        Effect.Type.values().forEach {
+            if(event.currentItem!!.itemMeta!!.lore?.last()?.split(": ")!![1] == it.toString()){
+
+                val show = Show(showCategory, showName, null)
+                val id = show.getMaxId() + 1
+                val effect = it.getTypeClass(show, id)
+                show.setDefaults(id, effect.getDefaults())
+
+                val editShowGui = EditShowGui(player, Show(showCategory, showName, null))
+                editShowGui.open()
+
+            }
+        }
+    }
+
+    override fun setInventoryItems() {
+        for(i in 0..8) inventory.setItem(i, GuiItems.getBlackPane())
+        for(i in 27..35) inventory.setItem(i, GuiItems.getBlackPane())
+
+        inventory.setItem(31, GuiItems.getBack())
+
+        val item = ItemStack(Material.STONE)
+        val meta = item.itemMeta!!
+        Effect.Type.values().forEach {
+            item.type = it.getDisplayMaterial()
+            meta.setDisplayName(
+                Colors.format("#dcb5ff&l${it.toString().lowercase().replace("_", " ")
+                .replaceFirstChar(Char::titlecase)}"))
+            meta.lore = listOf(
+                Colors.format(MessageType.BACKGROUND + "Click to choose this effect."),
+                Colors.format(MessageType.BACKGROUND + "Enum Type: $it")
+            )
+
+            item.itemMeta = meta
+            inventory.addItem(item)
+        }
+    }
+}
