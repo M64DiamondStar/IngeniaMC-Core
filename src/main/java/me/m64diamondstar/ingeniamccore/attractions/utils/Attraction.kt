@@ -160,8 +160,11 @@ open class Attraction(category: String, name: String): Configuration("rides/$cat
      */
     fun getShow(): Show? {
         return if(!this.getConfig().getBoolean("Show.Enabled")) null
-        else Show(this.getConfig().getString("Show.Category")!!,
-                this.getConfig().getString("Show.Name")!!)
+        else Show(
+            this.getConfig().getString("Show.Category")!!,
+            this.getConfig().getString("Show.Name")!!,
+            null
+        )
     }
 
     /**
@@ -455,8 +458,11 @@ open class Attraction(category: String, name: String): Configuration("rides/$cat
     /**
      * Set the ridecount of a specific player.
      */
-    fun setRidecount(player: OfflinePlayer, count: Int){
-        this.getConfig().set("Data.Ridecount.${player.uniqueId}.Count", count)
+    private fun setRidecount(player: OfflinePlayer, count: Int){
+        if(count <= 0)
+            this.getConfig().set("Data.Ridecount.${player.uniqueId}.Count", null)
+        else
+            this.getConfig().set("Data.Ridecount.${player.uniqueId}.Count", count)
         if(count >= getRidecountRewardAmount() && !this.getConfig().getBoolean("Data.Ridecount.${player.uniqueId}.Rewarded")
             && player.isOnline && getRidecountRewardAmount() != 0){
             getRidecountReward()?.execute(IngeniaPlayer(player = player.player!!))
@@ -519,66 +525,72 @@ open class Attraction(category: String, name: String): Configuration("rides/$cat
      * Returns the color of the leaderboard background
      */
     private fun getLeaderboardBackgroundColor(): Color{
-        if(this.getConfig().getString("Leaderboard.Colors.Background") == null){
+        if(this.getConfig().getString("Leaderboard.Colors.Background") == null
+            || Colors.getJavaColorFromString(this.getConfig().getString("Leaderboard.Colors.Background")!!) == null){
             this.getConfig().set("Leaderboard.Colors.Background", "49, 49, 49")
             this.reloadConfig()
         }
-        return Colors.getJavaColorFromString(this.getConfig().getString("Leaderboard.Colors.Background")!!)
+        return Colors.getJavaColorFromString(this.getConfig().getString("Leaderboard.Colors.Background")!!)!!
     }
 
     /**
      * Returns the color of the leaderboard outline
      */
     private fun getLeaderboardOutlineColor(): Color{
-        if(this.getConfig().getString("Leaderboard.Colors.Outline") == null){
+        if(this.getConfig().getString("Leaderboard.Colors.Outline") == null
+            || Colors.getJavaColorFromString(this.getConfig().getString("Leaderboard.Colors.Outline")!!) == null){
             this.getConfig().set("Leaderboard.Colors.Outline", "60, 60, 60")
             this.reloadConfig()
         }
-        return Colors.getJavaColorFromString(this.getConfig().getString("Leaderboard.Colors.Outline")!!)
+        return Colors.getJavaColorFromString(this.getConfig().getString("Leaderboard.Colors.Outline")!!)!!
     }
 
     /**
      * Returns the color of the leaderboard title
      */
     private fun getLeaderboardTitleColor(): Color{
-        if(this.getConfig().getString("Leaderboard.Colors.Title") == null){
+        if(this.getConfig().getString("Leaderboard.Colors.Title") == null
+            || Colors.getJavaColorFromString(this.getConfig().getString("Leaderboard.Colors.Title")!!) == null){
             this.getConfig().set("Leaderboard.Colors.Title", "153, 153, 153")
             this.reloadConfig()
         }
-        return Colors.getJavaColorFromString(this.getConfig().getString("Leaderboard.Colors.Title")!!)
+        return Colors.getJavaColorFromString(this.getConfig().getString("Leaderboard.Colors.Title")!!)!!
     }
 
     /**
      * Returns the color of the leaderboard position
      */
     private fun getLeaderboardPositionColor(): Color{
-        if(this.getConfig().getString("Leaderboard.Colors.PositionRidecount") == null){
+        if(this.getConfig().getString("Leaderboard.Colors.PositionRidecount") == null
+            || Colors.getJavaColorFromString(this.getConfig().getString("Leaderboard.Colors.PositionRidecount")!!) == null){
             this.getConfig().set("Leaderboard.Colors.PositionRidecount", "180, 180, 180")
             this.reloadConfig()
         }
-        return Colors.getJavaColorFromString(this.getConfig().getString("Leaderboard.Colors.PositionRidecount")!!)
+        return Colors.getJavaColorFromString(this.getConfig().getString("Leaderboard.Colors.PositionRidecount")!!)!!
     }
 
     /**
      * Returns the color of the leaderboard player name
      */
     private fun getLeaderboardNameColor(): Color{
-        if(this.getConfig().getString("Leaderboard.Colors.Name") == null){
+        if(this.getConfig().getString("Leaderboard.Colors.Name") == null
+            || Colors.getJavaColorFromString(this.getConfig().getString("Leaderboard.Colors.Name")!!) == null){
             this.getConfig().set("Leaderboard.Colors.Name", "250, 250, 250")
             this.reloadConfig()
         }
-        return Colors.getJavaColorFromString(this.getConfig().getString("Leaderboard.Colors.Name")!!)
+        return Colors.getJavaColorFromString(this.getConfig().getString("Leaderboard.Colors.Name")!!)!!
     }
 
     /**
      * Returns the color of the leaderboard line
      */
     private fun getLeaderboardLineColor(): Color{
-        if(this.getConfig().getString("Leaderboard.Colors.Line") == null){
+        if(this.getConfig().getString("Leaderboard.Colors.Line") == null
+            || Colors.getJavaColorFromString(this.getConfig().getString("Leaderboard.Colors.Line")!!) == null){
             this.getConfig().set("Leaderboard.Colors.Line", "210, 210, 210")
             this.reloadConfig()
         }
-        return Colors.getJavaColorFromString(this.getConfig().getString("Leaderboard.Colors.Line")!!)
+        return Colors.getJavaColorFromString(this.getConfig().getString("Leaderboard.Colors.Line")!!)!!
     }
 
 }

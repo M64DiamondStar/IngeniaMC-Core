@@ -5,12 +5,10 @@ import com.bergerkiller.bukkit.tc.events.SignChangeActionEvent
 import com.bergerkiller.bukkit.tc.signactions.SignAction
 import com.bergerkiller.bukkit.tc.signactions.SignActionType
 import com.bergerkiller.bukkit.tc.utils.SignBuildOptions
-import me.m64diamondstar.ingeniamccore.attractions.utils.AttractionUtils
 import me.m64diamondstar.ingeniamccore.shows.utils.Show
 import me.m64diamondstar.ingeniamccore.shows.utils.ShowUtils
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
-import java.lang.NumberFormatException
 
 class SignActionShow: SignAction() {
 
@@ -20,7 +18,7 @@ class SignActionShow: SignAction() {
 
     override fun execute(info: SignActionEvent) {
         if (info.isAction(SignActionType.GROUP_ENTER)) {
-            val show = Show(info.getLine(2), info.getLine(3))
+            val show = Show(info.getLine(2), info.getLine(3), null)
             show.play()
         }
     }
