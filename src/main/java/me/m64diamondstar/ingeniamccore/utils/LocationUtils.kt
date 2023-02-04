@@ -4,6 +4,8 @@ import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.util.Vector
 import java.lang.NumberFormatException
+import java.math.BigDecimal
+import java.math.RoundingMode
 
 object LocationUtils {
 
@@ -64,6 +66,13 @@ object LocationUtils {
         }
 
         return Vector(x, y, z)
+    }
+
+    fun getStringFromLocation(location: Location): String{
+        return "${location.world?.name}," +
+                " ${BigDecimal(location.x).setScale(3, RoundingMode.HALF_EVEN)}," +
+                " ${BigDecimal(location.y).setScale(3, RoundingMode.HALF_EVEN)}," +
+                " ${BigDecimal(location.z).setScale(3, RoundingMode.HALF_EVEN)}"
     }
 
 }
