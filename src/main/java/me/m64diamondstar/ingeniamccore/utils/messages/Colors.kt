@@ -1,7 +1,6 @@
 package me.m64diamondstar.ingeniamccore.utils.messages
 
 import net.md_5.bungee.api.ChatColor
-import org.bukkit.Bukkit
 import java.awt.Color
 import java.util.regex.Pattern
 
@@ -9,29 +8,28 @@ object Colors {
     private val pattern = Pattern.compile("#[a-fA-F0-9]{6}")
     @JvmStatic
     fun format(msg: String): String {
-        var msg = msg
-        var match = pattern.matcher(msg)
+        var msg1 = msg
+        var match = pattern.matcher(msg1)
         while (match.find()) {
-            val color = msg.substring(match.start(), match.end())
-            msg = msg.replace(color, ChatColor.of(color).toString() + "")
-            match = pattern.matcher(msg)
+            val color = msg1.substring(match.start(), match.end())
+            msg1 = msg1.replace(color, ChatColor.of(color).toString() + "")
+            match = pattern.matcher(msg1)
         }
-        return ChatColor.translateAlternateColorCodes('&', msg).replace(":gs:", "✪")
+        return ChatColor.translateAlternateColorCodes('&', msg1).replace(":gs:", "✪")
     }
 
-    fun getJavaColorFromString(string: String): Color {
+    fun getJavaColorFromString(string: String): Color? {
         val args = string.split(", ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-        var r = 0
-        var g = 0
-        var b = 0
-        try {
-            r = args[0].toInt()
-            g = args[1].toInt()
-            b = args[2].toInt()
+        return try {
+            val r = args[0].toInt()
+            val g = args[1].toInt()
+            val b = args[2].toInt()
+            Color(r, g, b)
         } catch (e: NumberFormatException) {
-            Bukkit.getLogger().warning(e.cause.toString() + ": Error with converting String to Int in " + e.javaClass)
+            null
+        } catch (e: IllegalArgumentException) {
+            null
         }
-        return Color(r, g, b)
     }
 
     fun format(msg: String, messageType: MessageType): String {
