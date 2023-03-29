@@ -175,6 +175,7 @@ class IngeniaMC : JavaPlugin() {
             Show Events
          */
         Bukkit.getServer().pluginManager.registerEvents(EntityChangeBlockListener(), this)
+        Bukkit.getServer().pluginManager.registerEvents(me.m64diamondstar.ingeniamccore.shows.editor.listeners.ChatListener(), this)
 
         /*
             Attraction Events
