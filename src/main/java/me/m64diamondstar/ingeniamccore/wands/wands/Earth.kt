@@ -61,6 +61,7 @@ class Earth: Wand {
                 )
                 `as`.setGravity(false)
                 `as`.isVisible = false
+                `as`.isMarker = true
                 Objects.requireNonNull(`as`.equipment)?.helmet = ItemStack(player.location.add(0.0, -1.0, 0.0).block.type)
                 `as`.world.spawnParticle(
                     Particle.BLOCK_CRACK, `as`.location.add(0.0, 2.2, 0.0), 30, 0.0, 0.0, 0.0, 0.0,

@@ -42,6 +42,7 @@ class AntiGravity: Wand {
             val armorStand = player.world.spawnEntity(loc, EntityType.ARMOR_STAND) as ArmorStand
             armorStand.isVisible = false
             armorStand.setGravity(false)
+            armorStand.isMarker = true
             armorStand.rightArmPose = EulerAngle(Math.toRadians(0.0), Math.toRadians(90.0), Math.toRadians(90.0))
             Objects.requireNonNull(armorStand.equipment)?.setItemInMainHand(ItemStack(Material.PINK_STAINED_GLASS))
             stands.add(armorStand)
