@@ -1,7 +1,15 @@
 # The motd is seen in the server list. Please edit this.
 Motd: '                   #d6a12e&lp#dba834&ll#e0b03a&la#e5b740&ly#ebbf46&l.#f0c64c&lI#f5cd52&ln#fad558&lg#ffdc5e&le#ffdc5e&ln#fad558&li#f5cd52&la#f0c64c&lM#ebbf46&lC#e5b740&l.#e0b03a&ln#dba834&le#d6a12e&lt                              #a34841Project is in developement'
-#
-#
+
+# The database URL can be found on the panel. It's called JDBC Connection String.
+Database:
+  Url: 'jdbc:mysql://please_update_this/'
+  Address: 0.0.0.0
+  Port: 25565
+  Name: database-name
+  User: database-user
+  Password: database-password
+
 # The list that is shown when a player clicks on tab.
 # This is animated!
 Tablist:
