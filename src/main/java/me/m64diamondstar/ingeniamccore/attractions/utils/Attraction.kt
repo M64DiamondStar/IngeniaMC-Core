@@ -207,6 +207,15 @@ open class Attraction(category: String, name: String): Configuration("rides/$cat
     }
 
     /**
+     * @return whether the warp is enabled or not
+     */
+    fun isWarpEnabled(): Boolean{
+        if(this.getConfig().get("Warp.Enabled") == null)
+            return false
+        return this.getConfig().getBoolean("Warp.Enabled")
+    }
+
+    /**
      * Set the warp location
      * @return is last setting to enable warp?
      */

@@ -40,7 +40,7 @@ class AttractionInventory(player: IngeniaPlayer): Gui(player) {
 
     override fun setInventoryItems() {
         for(attraction in AttractionUtils.getAllAttractions()){
-            if(attraction.getWarpItem() != null && attraction.getWarpLocation() != null){
+            if(attraction.isWarpEnabled() && attraction.getWarpItem() != null && attraction.getWarpLocation() != null){
                 slots[inventory.firstEmpty()] = attraction
                 inventory.setItem(inventory.firstEmpty(), attraction.getWarpItem())
             }
