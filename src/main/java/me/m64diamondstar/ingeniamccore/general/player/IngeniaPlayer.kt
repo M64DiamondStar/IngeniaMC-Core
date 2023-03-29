@@ -104,15 +104,15 @@ class IngeniaPlayer(val player: Player) {
                     NamespacedKey(IngeniaMC.plugin, "current-area"), PersistentDataType.STRING, "$value")
         }
 
-    fun sendMessage(string: String?) {
+    fun sendMessage(string: String) {
         player.sendMessage(Colors.format(string))
     }
 
-    fun sendMessage(string: String?, messageType: MessageType?) {
+    fun sendMessage(string: String, messageType: MessageType) {
         player.sendMessage(Colors.format(string, messageType))
     }
 
-    fun sendMessage(string: String?, messageLocation: MessageLocation) {
+    fun sendMessage(string: String, messageLocation: MessageLocation) {
         if (messageLocation == MessageLocation.CHAT) player.sendMessage(Colors.format(string))
         if (messageLocation == MessageLocation.HOTBAR) player.spigot().sendMessage(
             ChatMessageType.ACTION_BAR, TextComponent(
@@ -294,8 +294,11 @@ class IngeniaPlayer(val player: Player) {
         }
 
     fun openInventory(inventory: Inventory?) {
-        if (player.openInventory.type != InventoryType.CRAFTING) previousInventory = player.openInventory.topInventory
-        player.openInventory(inventory!!)
+        Bukkit.getScheduler().runTask(IngeniaMC.plugin, Runnable {
+            if (player.openInventory.type != InventoryType.CRAFTING) previousInventory =
+                player.openInventory.topInventory
+            player.openInventory(inventory!!)
+        })
     }
 
     fun giveMenuItem() {
