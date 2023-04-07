@@ -4,6 +4,7 @@ import com.craftmend.openaudiomc.api.interfaces.AudioApi
 import me.m64diamondstar.ingeniamccore.attractions.listeners.PlayerInteractEntityListener
 import me.m64diamondstar.ingeniamccore.attractions.traincarts.SignRegistry
 import me.m64diamondstar.ingeniamccore.attractions.utils.AttractionUtils
+import me.m64diamondstar.ingeniamccore.discord.webhook.DiscordWebhook
 import me.m64diamondstar.ingeniamccore.games.guesstheword.GuessTheWord
 import me.m64diamondstar.ingeniamccore.games.guesstheword.GuessTheWordListener
 import me.m64diamondstar.ingeniamccore.games.presenthunt.PresentHuntUtils
@@ -30,6 +31,9 @@ import me.m64diamondstar.ingeniamccore.wands.wandlistener.WandListener
 import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.scheduler.BukkitRunnable
+import java.awt.Color
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 class IngeniaMC : JavaPlugin() {
@@ -79,7 +83,7 @@ class IngeniaMC : JavaPlugin() {
         Bukkit.getScheduler().scheduleSyncDelayedTask(this) { AttractionUtils.spawnAllAttractions() }
         Bukkit.getLogger().info("Attractions loaded ✓")
 
-        AreaUtils.getAllAreas().forEach { AreaUtils.setArea(it) }
+        AreaUtils.getAllAreasFromData().forEach { AreaUtils.addArea(it) }
         Bukkit.getLogger().info("Areas loaded ✓")
 
         loadTasks()
@@ -88,11 +92,30 @@ class IngeniaMC : JavaPlugin() {
         WarpUtils.reloadWarpList()
         PresentHuntUtils.loadActivePresents()
         TeamHandler.load()
-        Bukkit.getLogger().info("Small tasks ✓")
+        Bukkit.getLogger().info("" +
+                "Small tasks ✓")
 
         Bukkit.getLogger().info(" ")
         Bukkit.getLogger().info("Finished loading, IngeniaMC-Core is enabled!")
         Bukkit.getLogger().info("---------------------------")
+
+        // Send Discord Webhook
+        val discordWebhook = DiscordWebhook(plugin.config.getString("Discord.Webhook.Chat"))
+
+        val dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+        val timeNow = LocalDateTime.now()
+
+        discordWebhook.addEmbed(
+            DiscordWebhook.EmbedObject()
+            .setAuthor("Server Starting...", null, null)
+            .setImage("https://ingeniamc.net/images/startup.gif")
+            .setFooter("Online: ${Bukkit.getServer().onlinePlayers.size}/${Bukkit.getServer().maxPlayers}" +
+                    "  ${dateTimeFormatter.format(timeNow)}", null)
+            .setColor(Color.decode("#f4b734"))
+        )
+
+        discordWebhook.execute()
+
     }
 
     override fun onDisable() {
@@ -102,6 +125,24 @@ class IngeniaMC : JavaPlugin() {
         PresentHuntUtils.saveActivePresents()
         TeamHandler.unload()
         saveConfig()
+
+        // Send Discord Webhook
+        val discordWebhook = DiscordWebhook(plugin.config.getString("Discord.Webhook.Chat"))
+
+        val dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+        val timeNow = LocalDateTime.now()
+
+        discordWebhook.addEmbed(
+            DiscordWebhook.EmbedObject()
+                .setAuthor("Server Shutting Down...", null, null)
+                .setImage("https://ingeniamc.net/images/shutdown.gif")
+                .setFooter("Online: ${Bukkit.getServer().onlinePlayers.size}/${Bukkit.getServer().maxPlayers}" +
+                        "  ${dateTimeFormatter.format(timeNow)}", null)
+                .setColor(Color.decode("#f4b734"))
+        )
+
+        discordWebhook.execute()
+
     }
 
     private fun loadCommandExecutors() {
