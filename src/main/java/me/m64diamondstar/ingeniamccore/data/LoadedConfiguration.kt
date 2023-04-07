@@ -8,7 +8,7 @@ import java.lang.Exception
 import java.nio.file.Files
 import java.nio.file.Paths
 
-abstract class Configuration (path: String, name: String, resource: Boolean, instantCreation: Boolean) {
+abstract class LoadedConfiguration (path: String, name: String, resource: Boolean, instantCreation: Boolean) {
 
     private lateinit var config: FileConfiguration
     private var path: File

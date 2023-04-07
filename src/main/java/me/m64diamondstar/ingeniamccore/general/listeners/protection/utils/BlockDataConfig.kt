@@ -1,9 +1,9 @@
 package me.m64diamondstar.ingeniamccore.general.listeners.protection.utils
 
-import me.m64diamondstar.ingeniamccore.data.Configuration
+import me.m64diamondstar.ingeniamccore.data.LoadedConfiguration
 import org.bukkit.Location
 
-class BlockDataConfig: Configuration("protect", "blockdata", resource = false, instantCreation = true) {
+class BlockDataConfig: LoadedConfiguration("protect", "blockdata", resource = false, instantCreation = true) {
 
     fun addApprovedBlock(location: Location){
         val list = this.getConfig().getStringList("Allowed-Blocks")

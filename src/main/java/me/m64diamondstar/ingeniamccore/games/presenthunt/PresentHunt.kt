@@ -1,6 +1,6 @@
 package me.m64diamondstar.ingeniamccore.games.presenthunt
 
-import me.m64diamondstar.ingeniamccore.data.Configuration
+import me.m64diamondstar.ingeniamccore.data.LoadedConfiguration
 import me.m64diamondstar.ingeniamccore.utils.LocationUtils
 import me.m64diamondstar.ingeniamccore.utils.items.Items
 import net.minecraft.core.BlockPosition
@@ -14,7 +14,7 @@ import org.bukkit.block.data.Rotatable
 import org.bukkit.craftbukkit.v1_19_R1.CraftWorld
 import kotlin.random.Random
 
-class PresentHunt(val category: String, val name: String): Configuration("games/presenthunt/$category", name, false, true)  {
+class PresentHunt(val category: String, val name: String): LoadedConfiguration("games/presenthunt/$category", name, false, true)  {
 
     /**
      * Generate the config file

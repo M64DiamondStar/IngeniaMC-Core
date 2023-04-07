@@ -1,6 +1,6 @@
 package me.m64diamondstar.ingeniamccore.attractions.utils
 
-import me.m64diamondstar.ingeniamccore.data.Configuration
+import me.m64diamondstar.ingeniamccore.data.LoadedConfiguration
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.shows.utils.Show
 import me.m64diamondstar.ingeniamccore.utils.entities.LeaderboardPacketEntity
@@ -29,7 +29,7 @@ import org.bukkit.inventory.ItemStack
 import java.awt.Color
 import java.util.*
 
-open class Attraction(category: String, name: String): Configuration("rides/$category", name, false, true) {
+open class Attraction(category: String, name: String): LoadedConfiguration("rides/$category", name, false, true) {
 
     private val name: String
     private val category: String
