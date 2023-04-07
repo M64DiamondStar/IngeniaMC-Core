@@ -11,7 +11,7 @@ object WarpUtils {
     fun reloadWarpList(){
         list.clear()
         AttractionUtils.getAllAttractions().forEach {
-            if(it.getWarpLocation() != null)
+            if(it.isWarpEnabled() && it.getWarpLocation() != null)
                 list.add(it.getWarpLocation()!!)
         }
     }
