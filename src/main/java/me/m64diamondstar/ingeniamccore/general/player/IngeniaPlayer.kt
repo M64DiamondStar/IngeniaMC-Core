@@ -33,13 +33,11 @@ import org.bukkit.persistence.PersistentDataType
 import org.bukkit.scheduler.BukkitRunnable
 import java.util.*
 
+
 class IngeniaPlayer(val player: Player) {
     private var scoreboard: Scoreboard? = null
     private var previousInventory: Inventory? = null
-
-    private fun getConfig(): PlayerConfig {
-        return PlayerConfig(player.uniqueId)
-    }
+    private val playerConfig: PlayerConfig = PlayerConfig(player.uniqueId)
 
     fun startUp() {
         game = null
@@ -179,16 +177,16 @@ class IngeniaPlayer(val player: Player) {
         }
 
     var exp: Long
-        get() = getConfig().getExp()
+        get() = playerConfig.getExp()
         set(l) {
             if (isLevelUp(exp, l)) levelUp(exp, l)
-            getConfig().setExp(l)
+            playerConfig.setExp(l)
         }
 
     fun addExp(l: Long) {
         if (isLevelUp(exp, exp + l)) levelUp(exp, exp + l)
         val newExp = l + exp
-        getConfig().setExp(newExp)
+        playerConfig.setExp(newExp)
     }
 
     fun getLevel(): Int{
@@ -221,13 +219,13 @@ class IngeniaPlayer(val player: Player) {
     }
 
     var bal: Long
-        get() = getConfig().getBal()
+        get() = playerConfig.getBal()
         set(l) {
-            getConfig().setBal(l)
+            playerConfig.setBal(l)
         }
 
     fun addBal(l: Long) {
-        getConfig().setBal(l + bal)
+        playerConfig.setBal(l + bal)
     }
 
     var allowDamage: Boolean
@@ -283,14 +281,14 @@ class IngeniaPlayer(val player: Player) {
     }
 
     var joinMessage: String?
-        get() = getConfig().getJoinMessage()!!.replace("%player%", Colors.format(getConfig().getJoinColor() + player.name + "#ababab"))
+        get() = playerConfig.getJoinMessage()!!.replace("%player%", Colors.format(playerConfig.getJoinColor() + player.name + "#ababab"))
         set(msg) {
-            getConfig().setJoinMessage(msg!!)
+            playerConfig.setJoinMessage(msg!!)
         }
     var leaveMessage: String?
-        get() = getConfig().getLeaveMessage()!!.replace("%player%", Colors.format(getConfig().getJoinColor() + player.name + "#ababab"))
+        get() = playerConfig.getLeaveMessage()!!.replace("%player%", Colors.format(playerConfig.getJoinColor() + player.name + "#ababab"))
         set(msg) {
-            getConfig().setLeaveMessage(msg!!)
+            playerConfig.setLeaveMessage(msg!!)
         }
 
     fun openInventory(inventory: Inventory?) {
