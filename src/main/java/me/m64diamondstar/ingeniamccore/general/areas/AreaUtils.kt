@@ -1,13 +1,11 @@
 package me.m64diamondstar.ingeniamccore.general.areas
 
-import com.sk89q.worldedit.regions.Polygonal2DRegion
 import me.m64diamondstar.ingeniamccore.IngeniaMC
-import org.bukkit.Bukkit
 import java.io.File
 
 object AreaUtils {
 
-    private val regions = HashMap<String, HashMap<String, Polygonal2DRegion>>()
+    private val areas = ArrayList<Area>()
 
     fun getCategories(): ArrayList<File> {
         val file = File(IngeniaMC.plugin.dataFolder, "area")
@@ -38,6 +36,14 @@ object AreaUtils {
     }
 
     fun getAllAreas(): List<Area>{
+        return areas
+    }
+
+    fun addArea(area: Area) {
+        areas.add(area)
+    }
+
+    fun getAllAreasFromData(): List<Area>{
         val list = ArrayList<Area>()
         for(category in getCategories()){
             category.listFiles()?.forEach {
@@ -46,31 +52,6 @@ object AreaUtils {
             }
         }
         return list
-    }
-
-    fun getAreas(): MutableMap<String, HashMap<String, Polygonal2DRegion>> {
-        return regions
-    }
-
-    private fun setArea(category: String, name: String, polygonal2DRegion: Polygonal2DRegion){
-        if(regions[category] == null){
-            val map = HashMap<String, Polygonal2DRegion>()
-            map[name] = polygonal2DRegion
-            regions[category] = map
-        }else{
-            val cat = regions[category]
-            cat!![name] = polygonal2DRegion
-            regions[category] = cat
-        }
-
-    }
-
-    fun setArea(area: Area){
-        try {
-            setArea(area.category, area.name, area.area!!)
-        }catch (ex: Exception){
-            Bukkit.getLogger().warning("The area ${area.name} doesn't have a selection!")
-        }
     }
 
 }

@@ -110,6 +110,12 @@ class AreaSubcommand(private val sender: CommandSender, private val args: Array<
 
         }
 
+        // Reload area configurations
+        if(args[1].equals("reload", ignoreCase = true) && args.size == 2) {
+            AreaUtils.getAllAreas().forEach { it.reload() }
+            player.sendMessage(Colors.format(MessageType.SUCCESS + "Reloaded the config of all areas!"))
+        }
+
     }
 
     override fun getTabCompleters(): ArrayList<String> {
@@ -118,6 +124,7 @@ class AreaSubcommand(private val sender: CommandSender, private val args: Array<
         if (args.size == 2) {
             tabs.add("modify")
             tabs.add("create")
+            tabs.add("reload")
         }
 
         if(args.size == 3)

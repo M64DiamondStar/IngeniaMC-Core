@@ -3,13 +3,11 @@ package me.m64diamondstar.ingeniamccore.general.areas
 import com.sk89q.worldedit.bukkit.BukkitAdapter
 import com.sk89q.worldedit.math.BlockVector3
 import com.sk89q.worldedit.regions.Polygonal2DRegion
-import me.m64diamondstar.ingeniamccore.data.Configuration
+import me.m64diamondstar.ingeniamccore.data.DataConfiguration
 import org.bukkit.Bukkit
 import org.bukkit.World
-import javax.swing.text.StyledEditorKit.BoldAction
-import kotlin.random.Random
 
-class Area(category: String, name: String): Configuration("area/$category", name.replace(".yml", ""), false, true) {
+class Area(category: String, name: String): DataConfiguration("area/$category", name.replace(".yml", "")) {
 
     val name: String
     val category: String
@@ -33,35 +31,35 @@ class Area(category: String, name: String): Configuration("area/$category", name
         list.add("If two or more areas are overlapping, the area with the highest Weight will be selected.")
 
         this.getConfig().options().setHeader(list)
-        this.reloadConfig()
+        this.save()
     }
 
     var minY: Int
         get() = this.getConfig().getInt("Min-Y")
         set(value) {
             this.getConfig().set("Min-Y", value)
-            this.reloadConfig()
+            this.save()
         }
 
     var maxY: Int
         get() = this.getConfig().getInt("Max-Y")
         set(value) {
             this.getConfig().set("Max-Y", value)
-            this.reloadConfig()
+            this.save()
         }
 
     var weight: Int
         get() = this.getConfig().getInt("Weight")
         set(value) {
             this.getConfig().set("Weight", value)
-            this.reloadConfig()
+            this.save()
         }
 
     var displayName: String
         get() = this.getConfig().getString("Display-Name")!!
         set(value) {
             this.getConfig().set("Display-Name", value)
-            this.reloadConfig()
+            this.save()
         }
 
     var area: Polygonal2DRegion?
@@ -81,14 +79,13 @@ class Area(category: String, name: String): Configuration("area/$category", name
                 val list = ArrayList<String>()
                 value.points.forEach { list.add(it.toBlockVector3().toLongPackedForm().toString()) }
                 this.getConfig().set("Vertices", list)
-                this.reloadConfig()
+                this.save()
             }
-            AreaUtils.setArea(this)
         }
 
     fun setMusic(url: String){
         this.getConfig().set("Music", url)
-        this.reloadConfig()
+        this.save()
     }
     fun getMusic(): String?{
         return this.getConfig().getString("Music")
