@@ -57,5 +57,9 @@ commands:
     description: Open the ride warp menu.
   shops:
     description: Open the shop warp menu.
+  link:
+    description: Link your Minecraft Account to your Discord Account.
+  unlink:
+    description: Unlink your Minecraft Account from your Discord Account.
 
 
