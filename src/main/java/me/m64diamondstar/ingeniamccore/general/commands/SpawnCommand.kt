@@ -9,7 +9,7 @@ import org.bukkit.entity.Player
 
 class SpawnCommand: CommandExecutor {
 
-    override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>?): Boolean {
+    override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<String>): Boolean {
 
         if (sender !is Player) {
             sender.sendMessage(Messages.noPlayer())
