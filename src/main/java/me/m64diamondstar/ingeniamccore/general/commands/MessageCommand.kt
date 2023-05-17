@@ -15,14 +15,14 @@ class MessageCommand: CommandExecutor {
         private var msgplayers: HashMap<Player, Player> = HashMap()
     }
 
-    override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>?): Boolean {
+    override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<String>): Boolean {
 
         if (sender !is Player) {
             sender.sendMessage(Messages.noPlayer())
             return false
         }
 
-        if ((label.equals("msg", ignoreCase = true) || label.equals("tell", ignoreCase = true)) && args!!.size >= 2) {
+        if ((label.equals("msg", ignoreCase = true) || label.equals("tell", ignoreCase = true)) && args.size >= 2) {
             val sb = StringBuilder()
 
             for (loopArgs in 1 until args.size) {
@@ -45,13 +45,13 @@ class MessageCommand: CommandExecutor {
             msgplayers.remove(sender)
             msgplayers[sender] = target
             msgplayers[target] = sender
-        } else if (label.equals("msg", ignoreCase = true) && args!!.size < 2) {
+        } else if (label.equals("msg", ignoreCase = true) && args.size < 2) {
             sender.sendMessage(Messages.commandUsage("msg <player> <message>"))
         }
 
 
 
-        if ((label.equals("r", ignoreCase = true) || label.equals("react", ignoreCase = true)) && args!!.isNotEmpty()) {
+        if ((label.equals("r", ignoreCase = true) || label.equals("react", ignoreCase = true)) && args.isNotEmpty()) {
 
             val sb = StringBuilder()
 
@@ -70,7 +70,7 @@ class MessageCommand: CommandExecutor {
             msgplayers[target] = sender
             target.sendMessage(Colors.format("#ffcb52" + sender.name + " » You: " + sb))
             sender.sendMessage(Colors.format("#ffcb52You » " + target.name + ": " + sb))
-        } else if (label.equals("r", ignoreCase = true) && args!!.isEmpty()) {
+        } else if (label.equals("r", ignoreCase = true) && args.isEmpty()) {
             sender.sendMessage(Messages.commandUsage("r <message>"))
         }
 
