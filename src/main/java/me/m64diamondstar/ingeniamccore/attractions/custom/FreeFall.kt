@@ -87,7 +87,8 @@ class FreeFall(private val category: String, private val name: String): Attracti
     }
 
     override fun despawn() {
-        if(getConfig().getConfigurationSection("Data.Stands")!!.getValues(false).isEmpty())
+        if(getConfig().getConfigurationSection("Data.Stands") == null ||
+            getConfig().getConfigurationSection("Data.Stands")!!.getValues(false).isEmpty())
             return
 
         for(uuid in getConfig().getConfigurationSection("Data.Stands")!!.getValues(false)){
