@@ -25,6 +25,8 @@ class IngeniaTabCompleter: TabCompleter {
             tc.add("protect")
             tc.add("area")
             tc.add("warps")
+            tc.add("database")
+            tc.add("discord")
         }else if(args.size > 1){
 
             tc.clear()
@@ -55,6 +57,12 @@ class IngeniaTabCompleter: TabCompleter {
                 tc.addAll(sub.getTabCompleters())
             }else if(args[0].equals("area", true)){
                 val sub = AreaSubcommand(sender, args)
+                tc.addAll(sub.getTabCompleters())
+            }else if(args[0].equals("database", true)){
+                val sub = DatabaseSubcommand(sender, args)
+                tc.addAll(sub.getTabCompleters())
+            }else if(args[0].equals("discord", true)){
+                val sub = DiscordSubcommand(sender, args)
                 tc.addAll(sub.getTabCompleters())
             }
 
