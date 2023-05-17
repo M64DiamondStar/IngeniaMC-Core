@@ -26,7 +26,7 @@ class LeaveListener : Listener {
         // Send Discord Webhook
         val discordWebhook = DiscordWebhook(IngeniaMC.plugin.config.getString("Discord.Webhook.Chat"))
 
-        val dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+        val dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")
         val timeNow = LocalDateTime.now()
 
         discordWebhook.addEmbed(
