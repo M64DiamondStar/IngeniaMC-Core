@@ -143,6 +143,7 @@
     </dependencyManagement>
 
     <dependencies>
+
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot</artifactId>
@@ -155,10 +156,30 @@
             <version>1.19.2-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/net.dv8tion/JDA -->
+        <dependency>
+            <groupId>com.github.DV8FromTheWorld</groupId>
+            <artifactId>JDA</artifactId>
+            <version>v5.0.0-beta.7</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.Blad3Mak3r</groupId>
+            <artifactId>Memes4J</artifactId>
+            <version>0.1.1</version>
+        </dependency>
+
         <dependency>
             <groupId>io.socket</groupId>
             <artifactId>socket.io-client</artifactId>
             <version>2.1.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <version>5.0.1</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -195,6 +216,11 @@
             <version>1.6.4</version>
         </dependency>
         <dependency>
+            <groupId>com.github.minndevelopment</groupId>
+            <artifactId>jda-ktx</artifactId>
+            <version>9fc90f616b</version>
+        </dependency>
+        <dependency>
             <groupId>com.fastasyncworldedit</groupId>
             <artifactId>FastAsyncWorldEdit-Core</artifactId>
             <scope>provided</scope>
@@ -210,11 +236,15 @@
                 </exclusion>
             </exclusions>
         </dependency>
+
+
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-stdlib-jdk8</artifactId>
             <version>${kotlin.version}</version>
         </dependency>
+
+
         <dependency>
             <groupId>com.craftmend.openaudiomc</groupId>
             <artifactId>OpenAudioMc</artifactId>
@@ -226,16 +256,6 @@
             <artifactId>ProtocolLib</artifactId>
             <version>4.7.0</version>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>net.dv8tion</groupId>
-            <artifactId>JDA</artifactId>
-            <version>5.0.0-alpha.9</version>
-        </dependency>
-        <dependency>
-            <groupId>com.github.Blad3Mak3r</groupId>
-            <artifactId>Memes4J</artifactId>
-            <version>0.1.1</version>
         </dependency>
     </dependencies>
 </project>
