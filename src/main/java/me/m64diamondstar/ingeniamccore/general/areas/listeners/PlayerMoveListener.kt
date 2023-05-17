@@ -36,16 +36,15 @@ class PlayerMoveListener: Listener {
 
         var currentArea: Area? = null
 
-        for(category in AreaUtils.getCategories()){
-            for(areaName in AreaUtils.getAreas()[category.name]?.keys!!){
-                val area = Area(category.name, areaName)
-
-                if (AreaUtils.getAreas()[category.name]?.get(areaName)!!.contains(player.location.blockX, player.location.blockZ) &&
-                    player.location.blockY in area.minY..area.maxY){
-                    if(currentArea == null)
+        for(area in AreaUtils.getAllAreas()){
+            if(area.area != null) {
+                if (area.area!!.contains(player.location.blockX, player.location.blockZ) &&
+                    player.location.blockY in area.minY..area.maxY
+                ) {
+                    if (currentArea == null)
                         currentArea = area
-                    else{
-                        if(area.weight > currentArea.weight)
+                    else {
+                        if (area.weight > currentArea.weight)
                             currentArea = area
                     }
                 }
