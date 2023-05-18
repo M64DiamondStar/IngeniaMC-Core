@@ -1,12 +1,12 @@
 package me.m64diamondstar.ingeniamccore.games.parkour
 
-import me.m64diamondstar.ingeniamccore.data.Configuration
+import me.m64diamondstar.ingeniamccore.data.LoadedConfiguration
 import me.m64diamondstar.ingeniamccore.utils.LocationUtils
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.World
 
-class Parkour(category: String, val name: String): Configuration("games/parkour/$category", name, false, true) {
+class Parkour(category: String, val name: String): LoadedConfiguration("games/parkour/$category", name, false, true) {
 
     fun createParkour(world: World){
         this.getConfig().set("Display-Name", name)
