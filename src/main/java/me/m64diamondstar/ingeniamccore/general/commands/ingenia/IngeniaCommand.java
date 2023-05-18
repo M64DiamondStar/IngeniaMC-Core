@@ -90,6 +90,20 @@ public class IngeniaCommand implements CommandExecutor {
                 areaSubcommand.execute();
             }
 
+            // Database sub-command
+            // Used for database actions
+            case "database" -> {
+                DatabaseSubcommand databaseSubcommand = new DatabaseSubcommand(sender, args);
+                databaseSubcommand.execute();
+            }
+
+            // Discord sub-command
+            // Used for discord actions and controls
+            case "discord" -> {
+                DiscordSubcommand discordSubcommand = new DiscordSubcommand(sender, args);
+                discordSubcommand.execute();
+            }
+
 
             /*case "backpack" -> {
 
