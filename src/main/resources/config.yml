@@ -6,6 +6,7 @@ Discord:
   Bot:
     Token: 'token here'
     Guild-ID: 809319930754498580
+    Linked-Role-ID: 1107022838109573160
   Webhook:
     # Webhook URL for the chat messages
     Chat: 'webhook here'
