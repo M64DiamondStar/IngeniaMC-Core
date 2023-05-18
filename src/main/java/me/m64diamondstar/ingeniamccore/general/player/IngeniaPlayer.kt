@@ -31,13 +31,14 @@ import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
 import org.bukkit.scheduler.BukkitRunnable
+import java.text.SimpleDateFormat
 import java.util.*
 
 
 class IngeniaPlayer(val player: Player) {
     private var scoreboard: Scoreboard? = null
     private var previousInventory: Inventory? = null
-    private val playerConfig: PlayerConfig = PlayerConfig(player.uniqueId)
+    val playerConfig: PlayerConfig = PlayerConfig(player.uniqueId)
 
     fun startUp() {
         game = null
@@ -66,10 +67,6 @@ class IngeniaPlayer(val player: Player) {
         ) else player.setPlayerListName(Colors.format("#a1a1a1Visitor #cccccc$name"))
 
         AttractionUtils.getAllAttractions().forEach { it.spawnRidecountSign(player) }
-    }
-
-    fun shutDown(){
-
     }
 
     val name: String
@@ -104,6 +101,34 @@ class IngeniaPlayer(val player: Player) {
 
     fun sendMessage(string: String) {
         player.sendMessage(Colors.format(string))
+    }
+
+    fun setNewLinkAttempt(){
+        val container = player.persistentDataContainer
+        container.set(
+            NamespacedKey(IngeniaMC.plugin, "discord-link-cooldown"), PersistentDataType.LONG, System.currentTimeMillis())
+    }
+
+    fun isNewLinkingAttemptAvailable(): Boolean{
+        val container = player.persistentDataContainer
+        val cooldown = container.get(NamespacedKey(IngeniaMC.plugin, "discord-link-cooldown"), PersistentDataType.LONG)
+            ?: return true
+        if(System.currentTimeMillis() - cooldown < 82800000)
+            return false // Still on cooldown
+        return true // Difference in time is bigger than 1 day -> May attempt new linking session
+    }
+
+    fun getLinkingCooldown(): String{
+        val container = player.persistentDataContainer
+        val cooldown = container.get(NamespacedKey(IngeniaMC.plugin, "discord-link-cooldown"), PersistentDataType.LONG)!! + 82800000 - System.currentTimeMillis()
+        val format = SimpleDateFormat("kk:mm:ss")
+        val args = format.format(Date(cooldown)).split(":")
+        return "${args[0]}h ${args[1]}m ${args[2]}s"
+    }
+
+    fun resetLinkingCooldown(){
+        val container = player.persistentDataContainer
+        container.remove(NamespacedKey(IngeniaMC.plugin, "discord-link-cooldown"),)
     }
 
     fun sendMessage(string: String, messageType: MessageType) {
