@@ -4,6 +4,7 @@ import com.craftmend.openaudiomc.api.interfaces.AudioApi
 import me.m64diamondstar.ingeniamccore.attractions.listeners.PlayerInteractEntityListener
 import me.m64diamondstar.ingeniamccore.attractions.traincarts.SignRegistry
 import me.m64diamondstar.ingeniamccore.attractions.utils.AttractionUtils
+import me.m64diamondstar.ingeniamccore.discord.bot.DiscordBot
 import me.m64diamondstar.ingeniamccore.discord.webhook.DiscordWebhook
 import me.m64diamondstar.ingeniamccore.games.guesstheword.GuessTheWord
 import me.m64diamondstar.ingeniamccore.games.guesstheword.GuessTheWordListener
@@ -86,6 +87,9 @@ class IngeniaMC : JavaPlugin() {
         AreaUtils.getAllAreasFromData().forEach { AreaUtils.addArea(it) }
         Bukkit.getLogger().info("Areas loaded ✓")
 
+        DiscordBot.start()
+        Bukkit.getLogger().info("Discord Bot loaded ✓")
+
         loadTasks()
         Bukkit.getLogger().info("Tasks loaded ✓")
 
@@ -102,13 +106,12 @@ class IngeniaMC : JavaPlugin() {
         // Send Discord Webhook
         val discordWebhook = DiscordWebhook(plugin.config.getString("Discord.Webhook.Chat"))
 
-        val dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+        val dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")
         val timeNow = LocalDateTime.now()
 
         discordWebhook.addEmbed(
             DiscordWebhook.EmbedObject()
-            .setAuthor("Server Starting...", null, null)
-            .setImage("https://ingeniamc.net/images/startup.gif")
+            .setAuthor("Server Starting...", null, "https://ingeniamc.net/images/startup.gif")
             .setFooter("Online: ${Bukkit.getServer().onlinePlayers.size}/${Bukkit.getServer().maxPlayers}" +
                     "  ${dateTimeFormatter.format(timeNow)}", null)
             .setColor(Color.decode("#f4b734"))
@@ -120,6 +123,8 @@ class IngeniaMC : JavaPlugin() {
 
     override fun onDisable() {
         isDisabling = true
+
+        // Basic shutdown properties
         AttractionUtils.despawnAllAttractions()
         SignRegistry.unregisterSigns()
         PresentHuntUtils.saveActivePresents()
@@ -129,13 +134,12 @@ class IngeniaMC : JavaPlugin() {
         // Send Discord Webhook
         val discordWebhook = DiscordWebhook(plugin.config.getString("Discord.Webhook.Chat"))
 
-        val dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+        val dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")
         val timeNow = LocalDateTime.now()
 
         discordWebhook.addEmbed(
             DiscordWebhook.EmbedObject()
-                .setAuthor("Server Shutting Down...", null, null)
-                .setImage("https://ingeniamc.net/images/shutdown.gif")
+                .setAuthor("Server Shutting Down...", null, "https://ingeniamc.net/images/shutdown.gif")
                 .setFooter("Online: ${Bukkit.getServer().onlinePlayers.size}/${Bukkit.getServer().maxPlayers}" +
                         "  ${dateTimeFormatter.format(timeNow)}", null)
                 .setColor(Color.decode("#f4b734"))
@@ -143,6 +147,8 @@ class IngeniaMC : JavaPlugin() {
 
         discordWebhook.execute()
 
+        // Shut the discord but down
+        DiscordBot.shutdown()
     }
 
     private fun loadCommandExecutors() {
@@ -168,6 +174,9 @@ class IngeniaMC : JavaPlugin() {
         Objects.requireNonNull(getCommand("leave"))?.setExecutor(LeaveCommand())
 
         Objects.requireNonNull(getCommand("spawn"))?.setExecutor(SpawnCommand())
+
+        Objects.requireNonNull(getCommand("link"))?.setExecutor(LinkCommand())
+        Objects.requireNonNull(getCommand("unlink"))?.setExecutor(LinkCommand())
     }
 
     private fun loadTabCompleters() {
