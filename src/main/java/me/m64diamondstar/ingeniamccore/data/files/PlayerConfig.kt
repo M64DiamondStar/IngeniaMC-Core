@@ -1,7 +1,6 @@
 package me.m64diamondstar.ingeniamccore.data.files
 
 import me.m64diamondstar.ingeniamccore.data.DataConfiguration
-import me.m64diamondstar.ingeniamccore.data.LoadedConfiguration
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
@@ -125,6 +124,28 @@ class PlayerConfig(uuid: UUID) : DataConfiguration("data/player", uuid.toString(
     fun setLeaveColor(color: String){
         getConfig().set("Messages.LeaveColor", color)
         save()
+    }
+
+    /**
+     * Check if the player already linked its Discord.
+     */
+    fun hasDiscord(): Boolean{
+        return getConfig().get("Discord.ID") != null
+    }
+
+    /**
+     * Link a player account to a Discord account.
+     */
+    fun setDiscord(id: Long?){
+        getConfig().set("Discord.ID", id)
+        save()
+    }
+
+    /**
+     * Get the player's Discord ID.
+     */
+    fun getDiscordID(): Long {
+        return getConfig().getLong("Discord.ID")
     }
 
 }
