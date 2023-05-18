@@ -6,18 +6,26 @@ import me.m64diamondstar.ingeniamccore.discord.commands.BotUtils
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
+import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.channel.ChannelType
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import org.bukkit.Bukkit
+import java.awt.Color
+
 
 class LinkCommand: ListenerAdapter() {
+
+    override fun onSlashCommandInteraction(event: SlashCommandInteractionEvent) {
+        if (event.name != "ticket") return
+        event.deferReply(true).queue()
+        event.hook.sendMessage("Please use `/link <Discord ID>` in-game.")
+    }
 
     override fun onButtonInteraction(event: ButtonInteractionEvent) {
         if(event.button.id != "verifyDiscordLink") return
         if(event.channelType != ChannelType.PRIVATE) return
-
-        event.deferReply().queue()
 
         val id = event.user.idLong
 
@@ -36,7 +44,18 @@ class LinkCommand: ListenerAdapter() {
             ingeniaPlayer.playerConfig.setDiscord(event.user.idLong)
             ingeniaPlayer.setNewLinkAttempt()
 
-            event.hook.sendMessage("Successfully linked!").queue()
+            val embedBuilder = EmbedBuilder()
+
+            embedBuilder.setTitle("**Link Request Accepted**")
+            embedBuilder.setDescription(
+                "Your account is now successfully linked to `${player.name}`.\n" +
+                        "Use `/unlink` in-game to unlink your account."
+            )
+            embedBuilder.setThumbnail("https://visage.surgeplay.com/full/${player.uniqueId}.png")
+            embedBuilder.setColor(Color.decode("#73db70"))
+
+            event.message.delete().queue()
+            event.channel.sendMessageEmbeds(embedBuilder.build()).queue()
 
             val guild = DiscordBot.jda.getGuildById(IngeniaMC.plugin.config.getLong("Discord.Bot.Guild-ID"))
             val linkedRole = guild?.getRoleById(IngeniaMC.plugin.config.getLong("Discord.Bot.Linked-Role-ID"))
@@ -44,6 +63,8 @@ class LinkCommand: ListenerAdapter() {
             if (linkedRole != null) {
                 guild.addRoleToMember(event.user, linkedRole).queue()
             }
+
+            BotUtils.LinkingUtils.removeLinking(id)
         }else{
             event.hook.sendMessage("The Minecraft account has to be online in order to verify.").queue()
         }
