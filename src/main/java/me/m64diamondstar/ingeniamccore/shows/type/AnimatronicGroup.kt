@@ -2,15 +2,14 @@ package me.m64diamondstar.ingeniamccore.shows.type
 
 import me.m64diamondstar.ingeniamccore.shows.utils.Effect
 import me.m64diamondstar.ingeniamccore.shows.utils.Show
-import me.thundertnt33.animatronics.api.Group
+import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 
 class AnimatronicGroup(show: Show, id: Int) : Effect(show, id) {
 
     override fun execute(players: List<Player>?) {
         val name = getSection().getString("Name")!!
-        val group = Group(name)
-        group.play()
+        Bukkit.dispatchCommand(Bukkit.getServer().consoleSender, "anima group $name play")
     }
 
     override fun getType(): Type {

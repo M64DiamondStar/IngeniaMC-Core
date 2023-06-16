@@ -12,7 +12,6 @@ import net.kyori.adventure.text.format.TextColor
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Material
-import org.bukkit.craftbukkit.v1_19_R1.CraftWorld
 import org.bukkit.entity.Player
 import org.bukkit.scheduler.BukkitRunnable
 import org.bukkit.util.Vector
@@ -46,7 +45,7 @@ class Grapple: Wand {
             var lastVelocity: Vector = player.velocity
             lateinit var hookLocation: Location
             var isHooked: Boolean = false
-            var leashableEntity = LeashablePacketEntity((player.world as CraftWorld).handle, player.location, player)
+            var leashableEntity = LeashablePacketEntity(player.world, player.location, player)
 
             var c: Int = 0
 
@@ -70,7 +69,7 @@ class Grapple: Wand {
                         isHooked = true
 
                         Bukkit.getScheduler().callSyncMethod(IngeniaMC.plugin) {
-                            leashableEntity = LeashablePacketEntity((player.world as CraftWorld).handle, hookLocation, player)
+                            leashableEntity = LeashablePacketEntity(player.world, hookLocation, player)
                             leashableEntity.spawn()
                         }
 

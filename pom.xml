@@ -85,6 +85,39 @@
                     <target>16</target>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>net.md-5</groupId>
+                <artifactId>specialsource-maven-plugin</artifactId>
+                <version>1.2.2</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>remap</goal>
+                        </goals>
+                        <id>remap-obf</id>
+                        <configuration>
+                            <srgIn>org.spigotmc:minecraft-server:1.20-R0.1-SNAPSHOT:txt:maps-mojang</srgIn>
+                            <reverse>true</reverse>
+                            <remappedDependencies>org.spigotmc:spigot:1.20-R0.1-SNAPSHOT:jar:remapped-mojang</remappedDependencies>
+                            <remappedArtifactAttached>true</remappedArtifactAttached>
+                            <remappedClassifierName>remapped-obf</remappedClassifierName>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>remap</goal>
+                        </goals>
+                        <id>remap-spigot</id>
+                        <configuration>
+                            <inputFile>${project.build.directory}/${project.artifactId}-${project.version}-remapped-obf.jar</inputFile>
+                            <srgIn>org.spigotmc:minecraft-server:1.20-R0.1-SNAPSHOT:csrg:maps-spigot</srgIn>
+                            <remappedDependencies>org.spigotmc:spigot:1.20-R0.1-SNAPSHOT:jar:remapped-obf</remappedDependencies>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
         <resources>
             <resource>
@@ -116,10 +149,6 @@
             <url>https://ci.mg-dev.eu/plugin/repository/everything</url>
         </repository>
         <repository>
-            <id>papermc</id>
-            <url>https://repo.papermc.io/repository/maven-public/</url>
-        </repository>
-        <repository>
             <id>dmulloy2-repo</id>
             <url>https://repo.dmulloy2.net/repository/public/</url>
         </repository>
@@ -147,13 +176,14 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot</artifactId>
-            <version>1.19.2-R0.1-SNAPSHOT</version>
+            <version>1.20-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
+            <classifier>remapped-mojang</classifier>
         </dependency>
         <dependency>
             <groupId>io.papermc.paper</groupId>
             <artifactId>paper-api</artifactId>
-            <version>1.19.2-R0.1-SNAPSHOT</version>
+            <version>1.20-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
 
@@ -205,15 +235,9 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.bergerkiller.bukkit</groupId>
-            <artifactId>BKCommonLib</artifactId>
-            <version>1.19.2-v2</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>org.jetbrains.kotlinx</groupId>
             <artifactId>kotlinx-coroutines-core</artifactId>
-            <version>1.6.4</version>
+            <version>1.7.1</version>
         </dependency>
         <dependency>
             <groupId>com.github.minndevelopment</groupId>

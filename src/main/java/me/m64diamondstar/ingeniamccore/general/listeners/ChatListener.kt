@@ -13,6 +13,7 @@ import org.bukkit.event.player.PlayerCommandSendEvent
 import java.awt.Color
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import kotlin.concurrent.thread
 
 class ChatListener: Listener {
 
@@ -32,23 +33,26 @@ class ChatListener: Listener {
         else
             event.format = ingeniaPlayer.prefix + Colors.format("&r ") + "${ingeniaPlayer.name} » ${event.message.replace("%", "%%")}"
 
+        thread {
+            // Send Discord Webhook
+            val discordWebhook = DiscordWebhook(IngeniaMC.plugin.config.getString("Discord.Webhook.Chat"))
 
-        // Send Discord Webhook
-        val discordWebhook = DiscordWebhook(IngeniaMC.plugin.config.getString("Discord.Webhook.Chat"))
+            val dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")
+            val timeNow = LocalDateTime.now()
 
-        val dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")
-        val timeNow = LocalDateTime.now()
+            discordWebhook.addEmbed(
+                DiscordWebhook.EmbedObject()
+                    .setAuthor(player.name, null, "https://visage.surgeplay.com/face/${player.uniqueId}.png")
+                    .setDescription(" » ${event.message}")
+                    .setFooter(
+                        "Online: ${Bukkit.getServer().onlinePlayers.size}/${Bukkit.getServer().maxPlayers}" +
+                                "  ${dateTimeFormatter.format(timeNow)}", null
+                    )
+                    .setColor(Color.decode("#87B9E8"))
+            )
 
-        discordWebhook.addEmbed(
-            DiscordWebhook.EmbedObject()
-                .setAuthor(player.name, null, "https://visage.surgeplay.com/face/${player.uniqueId}.png")
-                .setDescription(" » ${event.message}")
-                .setFooter("Online: ${Bukkit.getServer().onlinePlayers.size}/${Bukkit.getServer().maxPlayers}" +
-                        "  ${dateTimeFormatter.format(timeNow)}", null)
-                .setColor(Color.decode("#87B9E8"))
-        )
-
-        discordWebhook.execute()
+            discordWebhook.execute()
+        }
 
     }
 

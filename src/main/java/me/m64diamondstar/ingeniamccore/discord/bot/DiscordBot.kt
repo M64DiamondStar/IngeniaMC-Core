@@ -20,6 +20,9 @@ object DiscordBot {
     lateinit var jda: JDA
 
     fun start() {
+        if(IngeniaMC.plugin.config.getString("Discord.Bot.Token") == null)
+            return
+
         jda = JDABuilder.createDefault(IngeniaMC.plugin.config.getString("Discord.Bot.Token"))
             .enableIntents(GatewayIntent.GUILD_MEMBERS, GatewayIntent.DIRECT_MESSAGES)
             .addEventListeners(GuildReadyListener(), MemeCommand(), EmbedCommand(), TicketCommand(),

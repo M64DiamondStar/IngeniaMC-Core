@@ -11,6 +11,7 @@ import org.bukkit.event.player.PlayerQuitEvent
 import java.awt.Color
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import kotlin.concurrent.thread
 
 class LeaveListener : Listener {
 
@@ -23,22 +24,26 @@ class LeaveListener : Listener {
         if(TeamHandler.containsPlayer(bukkitPlayer))
             TeamHandler.removePlayer(bukkitPlayer)
 
-        // Send Discord Webhook
-        val discordWebhook = DiscordWebhook(IngeniaMC.plugin.config.getString("Discord.Webhook.Chat"))
+        thread {
+            // Send Discord Webhook
+            val discordWebhook = DiscordWebhook(IngeniaMC.plugin.config.getString("Discord.Webhook.Chat"))
 
-        val dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")
-        val timeNow = LocalDateTime.now()
+            val dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")
+            val timeNow = LocalDateTime.now()
 
-        discordWebhook.addEmbed(
-            DiscordWebhook.EmbedObject()
-            .setAuthor(player.name, null, "https://visage.surgeplay.com/face/${player.player.uniqueId}.png")
-            .setDescription("*Left the server*")
-            .setFooter("Online: ${Bukkit.getServer().onlinePlayers.size - 1}/${Bukkit.getServer().maxPlayers}" +
-                    "  ${dateTimeFormatter.format(timeNow)}", null)
-            .setColor(Color.decode("#D14B4B"))
-        )
+            discordWebhook.addEmbed(
+                DiscordWebhook.EmbedObject()
+                    .setAuthor(player.name, null, "https://visage.surgeplay.com/face/${player.player.uniqueId}.png")
+                    .setDescription("*Left the server*")
+                    .setFooter(
+                        "Online: ${Bukkit.getServer().onlinePlayers.size - 1}/${Bukkit.getServer().maxPlayers}" +
+                                "  ${dateTimeFormatter.format(timeNow)}", null
+                    )
+                    .setColor(Color.decode("#D14B4B"))
+            )
 
-        discordWebhook.execute()
+            discordWebhook.execute()
+        }
     }
 
 }

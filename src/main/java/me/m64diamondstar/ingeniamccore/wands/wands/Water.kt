@@ -4,9 +4,9 @@ import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.wands.wandlistener.WandListener
-import org.bukkit.craftbukkit.v1_19_R1.entity.CraftPlayer
 import me.m64diamondstar.ingeniamccore.wands.Cooldowns
 import org.bukkit.Particle
+import org.bukkit.craftbukkit.v1_20_R1.entity.CraftPlayer
 import org.bukkit.entity.Player
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType

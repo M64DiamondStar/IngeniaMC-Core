@@ -1,44 +1,24 @@
 package me.m64diamondstar.ingeniamccore.utils.entities
 
 import me.m64diamondstar.ingeniamccore.utils.leaderboard.Leaderboard
-import me.m64diamondstar.ingeniamccore.utils.leaderboard.LeaderboardRegistry
 import me.m64diamondstar.ingeniamccore.utils.leaderboard.LeaderboardRenderer
-import net.minecraft.core.BlockPosition
-import net.minecraft.core.EnumDirection
-import net.minecraft.network.protocol.game.PacketPlayOutEntityMetadata
-import net.minecraft.network.protocol.game.PacketPlayOutSpawnEntity
-import net.minecraft.world.entity.EntityTypes
-import net.minecraft.world.entity.decoration.EntityItemFrame
-import net.minecraft.world.level.World
+import net.minecraft.core.BlockPos
+import net.minecraft.core.Direction
+import net.minecraft.network.protocol.game.ClientboundAddEntityPacket
+import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket
+import net.minecraft.world.entity.EntityType
+import net.minecraft.world.entity.decoration.ItemFrame
+import net.minecraft.world.level.Level
 import org.bukkit.Bukkit
 import org.bukkit.Material
-import org.bukkit.craftbukkit.v1_19_R1.entity.CraftPlayer
-import org.bukkit.craftbukkit.v1_19_R1.inventory.CraftItemStack
+import org.bukkit.craftbukkit.v1_20_R1.entity.CraftPlayer
+import org.bukkit.craftbukkit.v1_20_R1.inventory.CraftItemStack
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.MapMeta
 
-class LeaderboardPacketEntity(leaderboard: Leaderboard, world: World?, blockPosition: BlockPosition, direction: EnumDirection)
-    : EntityItemFrame(EntityTypes.U, world, blockPosition, direction) {
-
-    private val leaderboard: Leaderboard
-    private val world: World?
-    private val direction: EnumDirection
-    private var directionInt: Int
-
-    init {
-        this.leaderboard = leaderboard
-        this.world = world
-        this.direction = direction
-        this.directionInt = 2
-
-        if(direction == EnumDirection.d)
-            directionInt = 3
-        if(direction == EnumDirection.e)
-            directionInt = 4
-        if(direction == EnumDirection.f)
-            directionInt = 5
-    }
+class LeaderboardPacketEntity(private val leaderboard: Leaderboard, private val world: Level?, blockPosition: BlockPos, direction: Direction)
+    : ItemFrame(EntityType.ITEM_FRAME, world, blockPosition, direction) {
 
     fun spawn(player: Player){
         val mapView = world?.let { Bukkit.createMap(it.world) }
@@ -54,12 +34,12 @@ class LeaderboardPacketEntity(leaderboard: Leaderboard, world: World?, blockPosi
         meta.mapView = mapView
         map.itemMeta = meta
 
-        this.a(CraftItemStack.asNMSCopy(map))
+        this.item = CraftItemStack.asNMSCopy(map)
 
-        (player as CraftPlayer).handle.b.a(PacketPlayOutSpawnEntity(this, directionInt))
-        player.handle.b.a(PacketPlayOutEntityMetadata(this.ae() /*ID*/, this.ai() /*Data Watcher*/, true /*Clean*/))
+        (player as CraftPlayer).handle.connection.send(ClientboundAddEntityPacket(this, direction.get3DDataValue()))
+        player.handle.connection.send(ClientboundSetEntityDataPacket(this.id, this.entityData.packDirty()))
 
-        EntityRegistry.addEntity(this.ae(), this.javaClass)
+        EntityRegistry.addEntity(this.id, this.javaClass)
     }
 
 }

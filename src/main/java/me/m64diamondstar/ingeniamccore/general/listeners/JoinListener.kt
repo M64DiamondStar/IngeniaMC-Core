@@ -11,6 +11,7 @@ import org.bukkit.event.player.PlayerJoinEvent
 import java.awt.Color
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import kotlin.concurrent.thread
 
 class JoinListener : Listener {
 
@@ -22,21 +23,26 @@ class JoinListener : Listener {
 
         player.startUp()
 
-        // Send Discord Webhook
-        val discordWebhook = DiscordWebhook(IngeniaMC.plugin.config.getString("Discord.Webhook.Chat"))
+        thread {
+            // Send Discord Webhook
+            val discordWebhook = DiscordWebhook(IngeniaMC.plugin.config.getString("Discord.Webhook.Chat"))
 
-        val dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")
-        val timeNow = LocalDateTime.now()
+            val dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")
+            val timeNow = LocalDateTime.now()
 
-        discordWebhook.addEmbed(DiscordWebhook.EmbedObject()
-            .setAuthor(player.name, null, "https://visage.surgeplay.com/face/${player.player.uniqueId}.png")
-            .setDescription("*Joined the server*")
-            .setFooter("Online: ${Bukkit.getServer().onlinePlayers.size}/${Bukkit.getServer().maxPlayers}" +
-                    "  ${dateTimeFormatter.format(timeNow)}", null)
-            .setColor(Color.decode("#76D173"))
-        )
+            discordWebhook.addEmbed(
+                DiscordWebhook.EmbedObject()
+                    .setAuthor(player.name, null, "https://visage.surgeplay.com/face/${player.player.uniqueId}.png")
+                    .setDescription("*Joined the server*")
+                    .setFooter(
+                        "Online: ${Bukkit.getServer().onlinePlayers.size}/${Bukkit.getServer().maxPlayers}" +
+                                "  ${dateTimeFormatter.format(timeNow)}", null
+                    )
+                    .setColor(Color.decode("#76D173"))
+            )
 
-        discordWebhook.execute()
+            discordWebhook.execute()
+        }
     }
 
 }

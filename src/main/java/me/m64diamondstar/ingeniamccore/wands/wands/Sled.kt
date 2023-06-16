@@ -3,17 +3,17 @@ package me.m64diamondstar.ingeniamccore.wands.wands
 import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
-import org.bukkit.craftbukkit.v1_19_R1.entity.CraftPlayer
 import me.m64diamondstar.ingeniamccore.wands.Cooldowns
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
-import net.minecraft.world.phys.Vec3D
-import net.minecraft.world.entity.EnumMoveType
+import net.minecraft.world.entity.MoverType
+import net.minecraft.world.phys.Vec3
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.Particle
-import org.bukkit.craftbukkit.v1_19_R1.entity.CraftEntity
+import org.bukkit.craftbukkit.v1_20_R1.entity.CraftEntity
+import org.bukkit.craftbukkit.v1_20_R1.entity.CraftPlayer
 import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
@@ -82,9 +82,9 @@ class Sled: Wand {
                     seat.remove()
                     sled.removePassenger(player)
                     sled.setGravity(true)
-                    val vec3D = Vec3D(0.0, 2.0, 0.0)
-                    (player as CraftPlayer).handle.a(EnumMoveType.e, vec3D)
-                    (sled as CraftEntity).handle.a(EnumMoveType.e, vec3D)
+                    val vec3D = Vec3(0.0, 2.0, 0.0)
+                    (player as CraftPlayer).handle.move(MoverType.SELF, vec3D)
+                    (sled as CraftEntity).handle.move(MoverType.SELF, vec3D)
                     player.setVelocity(Vector(0F, 0.8F, 2F))
                     sled.setVelocity(Vector(0F, 0.8F, 2F))
                     object : BukkitRunnable() {
@@ -128,9 +128,9 @@ class Sled: Wand {
                     )
                     return
                 }
-                val vec3D = Vec3D(0.0, 0.0, c.toDouble() / 90)
-                (sled as CraftEntity).handle.a(EnumMoveType.e, vec3D)
-                (seat as CraftEntity).handle.a(EnumMoveType.e, vec3D)
+                val vec3D = Vec3(0.0, 0.0, c.toDouble() / 90)
+                (player as CraftPlayer).handle.move(MoverType.SELF, vec3D)
+                (sled as CraftEntity).handle.move(MoverType.SELF, vec3D)
                 player.world.spawnParticle(
                     Particle.BLOCK_CRACK,
                     player.location.add(0.0, 0.3, 0.0),
@@ -204,9 +204,9 @@ class Sled: Wand {
                     seat.remove()
                     sled.removePassenger(player)
                     sled.setGravity(true)
-                    val vec3D = Vec3D(0.0, 2.0, 0.0)
-                    (player as CraftPlayer).handle.a(EnumMoveType.e, vec3D)
-                    (sled as CraftEntity).handle.a(EnumMoveType.e, vec3D)
+                    val vec3D = Vec3(0.0, 2.0, 0.0)
+                    (player as CraftPlayer).handle.move(MoverType.SELF, vec3D)
+                    (sled as CraftEntity).handle.move(MoverType.SELF, vec3D)
                     player.setVelocity(Vector(-2F, 0.8F, 0F))
                     sled.setVelocity(Vector(-2F, 0.8F, 0F))
                     object : BukkitRunnable() {
@@ -250,9 +250,9 @@ class Sled: Wand {
                     )
                     return
                 }
-                val vec3D = Vec3D(-(c.toDouble() / 90), 0.0, 0.0)
-                (sled as CraftEntity).handle.a(EnumMoveType.e, vec3D)
-                (seat as CraftEntity).handle.a(EnumMoveType.e, vec3D)
+                val vec3D = Vec3(-(c.toDouble() / 90), 0.0, 0.0)
+                (player as CraftPlayer).handle.move(MoverType.SELF, vec3D)
+                (sled as CraftEntity).handle.move(MoverType.SELF, vec3D)
                 player.world.spawnParticle(
                     Particle.BLOCK_CRACK,
                     player.location.add(0.0, 0.3, 0.0),
@@ -326,9 +326,9 @@ class Sled: Wand {
                     seat.remove()
                     sled.removePassenger(player)
                     sled.setGravity(true)
-                    val vec3D = Vec3D(0.0, 2.0, 0.0)
-                    (player as CraftPlayer).handle.a(EnumMoveType.e, vec3D)
-                    (sled as CraftEntity).handle.a(EnumMoveType.e, vec3D)
+                    val vec3D = Vec3(0.0, 2.0, 0.0)
+                    (player as CraftPlayer).handle.move(MoverType.SELF, vec3D)
+                    (sled as CraftEntity).handle.move(MoverType.SELF, vec3D)
                     player.setVelocity(Vector(0F, 0.8F, -2F))
                     sled.setVelocity(Vector(0F, 0.8F, -2F))
                     object : BukkitRunnable() {
@@ -372,9 +372,9 @@ class Sled: Wand {
                     )
                     return
                 }
-                val vec3D = Vec3D(0.0, 0.0, -(c.toDouble() / 90))
-                (sled as CraftEntity).handle.a(EnumMoveType.e, vec3D)
-                (seat as CraftEntity).handle.a(EnumMoveType.e, vec3D)
+                val vec3D = Vec3(0.0, 0.0, -(c.toDouble() / 90))
+                (player as CraftPlayer).handle.move(MoverType.SELF, vec3D)
+                (sled as CraftEntity).handle.move(MoverType.SELF, vec3D)
                 player.world.spawnParticle(
                     Particle.BLOCK_CRACK,
                     player.location.add(0.0, 0.3, 0.0),
@@ -446,9 +446,9 @@ class Sled: Wand {
                     seat.remove()
                     sled.removePassenger(player)
                     sled.setGravity(true)
-                    val vec3D = Vec3D(0.0, 2.0, 0.0)
-                    (player as CraftPlayer).handle.a(EnumMoveType.e, vec3D)
-                    (sled as CraftEntity).handle.a(EnumMoveType.e, vec3D)
+                    val vec3D = Vec3(0.0, 2.0, 0.0)
+                    (player as CraftPlayer).handle.move(MoverType.SELF, vec3D)
+                    (sled as CraftEntity).handle.move(MoverType.SELF, vec3D)
                     player.setVelocity(Vector(2F, 0.8F, 0F))
                     sled.setVelocity(Vector(2F, 0.8F, 0F))
                     object : BukkitRunnable() {
@@ -492,9 +492,9 @@ class Sled: Wand {
                     )
                     return
                 }
-                val vec3D = Vec3D(c.toDouble() / 90, 0.0, 0.0)
-                (sled as CraftEntity).handle.a(EnumMoveType.e, vec3D)
-                (seat as CraftEntity).handle.a(EnumMoveType.e, vec3D)
+                val vec3D = Vec3(c.toDouble() / 90, 0.0, 0.0)
+                (player as CraftPlayer).handle.move(MoverType.SELF, vec3D)
+                (sled as CraftEntity).handle.move(MoverType.SELF, vec3D)
                 player.world.spawnParticle(
                     Particle.BLOCK_CRACK,
                     player.location.add(0.0, 0.3, 0.0),
@@ -588,19 +588,19 @@ class Sled: Wand {
             object : BukkitRunnable() {
                 var c = 0
                 override fun run() {
-                    var vec3D = Vec3D(0.0, 0.35, 0.0)
+                    var vec3D = Vec3(0.0, 0.35, 0.0)
                     if (c <= 5) {
-                        (s1 as CraftEntity).handle.a(EnumMoveType.e, vec3D)
-                        (s2 as CraftEntity).handle.a(EnumMoveType.e, vec3D)
-                        (s3 as CraftEntity).handle.a(EnumMoveType.e, vec3D)
-                        (s4 as CraftEntity).handle.a(EnumMoveType.e, vec3D)
+                        (s1 as CraftEntity).handle.move(MoverType.SELF, vec3D)
+                        (s2 as CraftEntity).handle.move(MoverType.SELF, vec3D)
+                        (s3 as CraftEntity).handle.move(MoverType.SELF, vec3D)
+                        (s4 as CraftEntity).handle.move(MoverType.SELF, vec3D)
                     }
                     if (c > 40) {
-                        vec3D = Vec3D(0.0, -0.15, 0.0)
-                        (s1 as CraftEntity).handle.a(EnumMoveType.e, vec3D)
-                        (s2 as CraftEntity).handle.a(EnumMoveType.e, vec3D)
-                        (s3 as CraftEntity).handle.a(EnumMoveType.e, vec3D)
-                        (s4 as CraftEntity).handle.a(EnumMoveType.e, vec3D)
+                        vec3D = Vec3(0.0, -0.15, 0.0)
+                        (s1 as CraftEntity).handle.move(MoverType.SELF, vec3D)
+                        (s2 as CraftEntity).handle.move(MoverType.SELF, vec3D)
+                        (s3 as CraftEntity).handle.move(MoverType.SELF, vec3D)
+                        (s4 as CraftEntity).handle.move(MoverType.SELF, vec3D)
                     }
                     if (c == 80) {
                         cancel()

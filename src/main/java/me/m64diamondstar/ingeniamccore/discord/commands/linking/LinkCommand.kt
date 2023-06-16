@@ -18,9 +18,9 @@ import java.awt.Color
 class LinkCommand: ListenerAdapter() {
 
     override fun onSlashCommandInteraction(event: SlashCommandInteractionEvent) {
-        if (event.name != "ticket") return
+        if (event.name != "link") return
         event.deferReply(true).queue()
-        event.hook.sendMessage("Please use `/link <Discord ID>` in-game.")
+        event.hook.sendMessage("Please use `/link <Discord ID>` in-game.").queue()
     }
 
     override fun onButtonInteraction(event: ButtonInteractionEvent) {

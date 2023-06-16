@@ -12,9 +12,10 @@ import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
 import me.m64diamondstar.ingeniamccore.utils.rewards.Reward
 import me.m64diamondstar.ingeniamccore.utils.rewards.RewardUtils
-import net.minecraft.core.BlockPosition
-import net.minecraft.core.EnumDirection
-import net.minecraft.network.protocol.game.PacketPlayOutEntityDestroy
+import net.minecraft.core.BlockPos
+import net.minecraft.core.Direction
+import net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket
+import net.minecraft.world.level.Level
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.OfflinePlayer
@@ -22,8 +23,8 @@ import org.bukkit.World
 import org.bukkit.block.BlockFace
 import org.bukkit.block.data.type.Gate
 import org.bukkit.configuration.ConfigurationSection
-import org.bukkit.craftbukkit.v1_19_R1.CraftWorld
-import org.bukkit.craftbukkit.v1_19_R1.entity.CraftPlayer
+import org.bukkit.craftbukkit.v1_20_R1.CraftWorld
+import org.bukkit.craftbukkit.v1_20_R1.entity.CraftPlayer
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import java.awt.Color
@@ -196,7 +197,7 @@ open class Attraction(category: String, name: String): LoadedConfiguration("ride
     /**
      * Returns the world of the attraction
      */
-    private fun getNMSWorld(): net.minecraft.world.level.World?{
+    private fun getNMSWorld(): Level?{
         return (getWorld() as CraftWorld).handle
     }
 
@@ -375,9 +376,9 @@ open class Attraction(category: String, name: String): LoadedConfiguration("ride
     /**
      * Returns the location of the leaderboard sign
      */
-    private fun getLeaderboardLocation(): BlockPosition {
+    private fun getLeaderboardLocation(): BlockPos {
         val args = this.getConfig().getString("Leaderboard.Location")?.split(", ")
-        return BlockPosition(args!![0].toInt(), args[1].toInt(), args[2].toInt())
+        return BlockPos(args!![0].toInt(), args[1].toInt(), args[2].toInt())
     }
 
     /**
@@ -396,17 +397,14 @@ open class Attraction(category: String, name: String): LoadedConfiguration("ride
     /**
      * Returns the rotation of the leaderboard sign. Returns NORTH if null
      */
-    private fun getLeaderboardDirection(): EnumDirection{
-        var enumDirection = EnumDirection.c
-
-        if(this.getConfig().getString("Leaderboard.Face") == "SOUTH")
-            enumDirection = EnumDirection.d
-        if(this.getConfig().getString("Leaderboard.Face") == "WEST")
-            enumDirection = EnumDirection.e
-        if(this.getConfig().getString("Leaderboard.Face") == "EAST")
-            enumDirection = EnumDirection.f
-
-        return enumDirection
+    private fun getLeaderboardDirection(): Direction{
+        try {
+            if(this.getConfig().getString("Leaderboard.Face") == null)
+                return Direction.NORTH
+            return Direction.valueOf(this.getConfig().getString("Leaderboard.Face")!!)
+        }catch (ex: IllegalArgumentException){
+            return Direction.NORTH
+        }
     }
 
     /**
@@ -421,14 +419,14 @@ open class Attraction(category: String, name: String): LoadedConfiguration("ride
     /**
      * @return the reward you get when you reach the given ridecount
      */
-    fun getRidecountReward(): Reward? {
+    private fun getRidecountReward(): Reward? {
         return this.getConfig().getString("Ridecount-Reward.Reward")?.let { RewardUtils.fromString(it) }
     }
 
     /**
      * @return the reward you need to reach for getting the reward
      */
-    fun getRidecountRewardAmount(): Int {
+    private fun getRidecountRewardAmount(): Int {
         return this.getConfig().getInt("Ridecount-Reward.Ridecount")
     }
 
@@ -454,7 +452,7 @@ open class Attraction(category: String, name: String): LoadedConfiguration("ride
         val leaderboardPacketEntity = LeaderboardPacketEntity(leaderboard, getNMSWorld(),
             getLeaderboardLocation(), getLeaderboardDirection())
         leaderboardPacketEntity.spawn(player)
-        LeaderboardRegistry.setBoard(getName(), player, leaderboardPacketEntity.ae())
+        LeaderboardRegistry.setBoard(getName(), player, leaderboardPacketEntity.id)
     }
 
     /**
@@ -495,7 +493,7 @@ open class Attraction(category: String, name: String): LoadedConfiguration("ride
      */
     private fun despawnRidecountSign(player: Player){
         if(LeaderboardRegistry.getId(getName(), player) != null)
-            (player as CraftPlayer).handle.b.a(PacketPlayOutEntityDestroy(LeaderboardRegistry.getId(getName(), player)))
+            (player as CraftPlayer).handle.connection.send(ClientboundRemoveEntitiesPacket(LeaderboardRegistry.getId(getName(), player)))
     }
 
     /**

@@ -1,12 +1,11 @@
 name: IngeniaMC-Core
-version: '${project.version}'
+version: '1.1'
 main: me.m64diamondstar.ingeniamccore.IngeniaMC
-api-version: 1.19
+api-version: '1.20'
 authors: [ M64DiamondStar ]
 description: The Core plugin of IngeniaMC.
 depend:
   - Train_Carts
-  - ProtocolLib
   - FastAsyncWorldEdit
   - OpenAudioMc
   - Animatronics
@@ -49,6 +48,12 @@ commands:
     permission: ingenia.admin
     aliases:
       - adm
+  operate:
+    description: Open the operation panel of a ride.
+    permission: ingenia.admin
+  dispatch:
+    description: Dispatch a ride.
+    permission: ingenia.admin
   leave:
     description: Leave the game you're currently playing.
   spawn:

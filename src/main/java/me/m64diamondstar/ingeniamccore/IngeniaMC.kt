@@ -15,6 +15,7 @@ import me.m64diamondstar.ingeniamccore.general.areas.listeners.PlayerMoveListene
 import me.m64diamondstar.ingeniamccore.general.commands.*
 import me.m64diamondstar.ingeniamccore.general.commands.ingenia.IngeniaCommand
 import me.m64diamondstar.ingeniamccore.general.commands.tabcompleters.AdminTabCompleter
+import me.m64diamondstar.ingeniamccore.general.commands.tabcompleters.AttractionTabCompleter
 import me.m64diamondstar.ingeniamccore.general.commands.tabcompleters.IngeniaTabCompleter
 import me.m64diamondstar.ingeniamccore.general.commands.tabcompleters.MessageTabCompleter
 import me.m64diamondstar.ingeniamccore.general.listeners.*
@@ -177,13 +178,20 @@ class IngeniaMC : JavaPlugin() {
 
         Objects.requireNonNull(getCommand("link"))?.setExecutor(LinkCommand())
         Objects.requireNonNull(getCommand("unlink"))?.setExecutor(LinkCommand())
+
+        Objects.requireNonNull(getCommand("dispatch"))?.setExecutor(AttractionCommands())
+        Objects.requireNonNull(getCommand("operate"))?.setExecutor(AttractionCommands())
     }
 
     private fun loadTabCompleters() {
         Objects.requireNonNull(getCommand("ingenia")?.setTabCompleter(IngeniaTabCompleter()))
         Objects.requireNonNull(getCommand("admin")?.setTabCompleter(AdminTabCompleter ()))
+
         Objects.requireNonNull(getCommand("msg")?.setTabCompleter(MessageTabCompleter()))
         Objects.requireNonNull(getCommand("react")?.setTabCompleter(MessageTabCompleter()))
+
+        Objects.requireNonNull(getCommand("dispatch")?.setTabCompleter(AttractionTabCompleter()))
+        Objects.requireNonNull(getCommand("operate")?.setTabCompleter(AttractionTabCompleter()))
     }
 
     private fun loadEventListeners() {

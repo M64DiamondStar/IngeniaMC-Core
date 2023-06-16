@@ -6,12 +6,12 @@ import me.m64diamondstar.ingeniamccore.attractions.utils.AttractionManager
 import me.m64diamondstar.ingeniamccore.attractions.utils.AttractionType
 import me.m64diamondstar.ingeniamccore.attractions.utils.CustomAttraction
 import me.m64diamondstar.ingeniamccore.utils.messages.Messages
-import net.minecraft.world.entity.EnumMoveType
-import net.minecraft.world.phys.Vec3D
+import net.minecraft.world.entity.MoverType
+import net.minecraft.world.phys.Vec3
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Material
-import org.bukkit.craftbukkit.v1_19_R1.entity.CraftArmorStand
+import org.bukkit.craftbukkit.v1_20_R1.entity.CraftArmorStand
 import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
@@ -235,7 +235,7 @@ class FreeFall(private val category: String, private val name: String): Attracti
                         deltaX = 0.0
                         deltaZ = 0.0
                     } else stand.setRotation(standYaw - 1.25f, 0f)
-                    (stand as CraftArmorStand).handle.a(EnumMoveType.e, Vec3D(deltaX, y, deltaZ))
+                    (stand as CraftArmorStand).handle.move(MoverType.SELF, Vec3(deltaX, y, deltaZ))
                     if (c == 1160.0) {
 
                         if (stand.getPassengers().isNotEmpty()) {

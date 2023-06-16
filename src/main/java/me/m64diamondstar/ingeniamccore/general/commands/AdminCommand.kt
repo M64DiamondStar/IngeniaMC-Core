@@ -1,5 +1,6 @@
 package me.m64diamondstar.ingeniamccore.general.commands
 
+import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.utils.LocationUtils
 import me.m64diamondstar.ingeniamccore.utils.items.Items
@@ -11,19 +12,22 @@ import net.md_5.bungee.api.chat.ClickEvent
 import net.md_5.bungee.api.chat.ComponentBuilder
 import net.md_5.bungee.api.chat.HoverEvent
 import net.md_5.bungee.api.chat.TextComponent
-import net.minecraft.core.BlockPosition
-import net.minecraft.world.level.block.entity.TileEntitySkull
+import net.minecraft.core.BlockPos
+import net.minecraft.world.level.block.entity.SkullBlockEntity
+import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.block.BlockFace
 import org.bukkit.block.data.Rotatable
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
-import org.bukkit.craftbukkit.v1_19_R1.CraftWorld
+import org.bukkit.craftbukkit.v1_20_R1.CraftWorld
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
+import java.sql.DriverManager
+import java.sql.SQLException
 
 
 class AdminCommand: CommandExecutor {
@@ -139,8 +143,8 @@ class AdminCommand: CommandExecutor {
             val block = sender.location.block
             block.type = Material.PLAYER_HEAD
 
-            val tileEntitySkull = (block.world as CraftWorld).handle.getBlockEntity(BlockPosition(block.x, block.y, block.z), true) as TileEntitySkull
-            tileEntitySkull.a(Items.getRandomPresentProfile())
+            val tileEntitySkull = (block.world as CraftWorld).handle.getBlockEntity(BlockPos(block.x, block.y, block.z), true) as SkullBlockEntity
+            tileEntitySkull.setOwner(Items.getRandomPresentProfile())
 
             val faces = BlockFace.values().toMutableList()
             faces.remove(BlockFace.DOWN)
@@ -199,6 +203,26 @@ class AdminCommand: CommandExecutor {
                 sender.spigot().sendMessage(clickableComponent)
             }
             sender.sendMessage(Colors.format(MessageType.BACKGROUND + "-------------------"))
+        }
+
+        if(args[0].equals("database", ignoreCase = true)){
+            if(args.size == 2 && args[1].equals("connection-test", ignoreCase = true)){
+                val url = IngeniaMC.plugin.config.getString("Database-Url")
+
+                Bukkit.getScheduler().runTaskAsynchronously(IngeniaMC.plugin, Runnable {
+                    try{
+                        val connection = DriverManager.getConnection(url)
+                        if(connection != null && !connection.isClosed){
+                            sender.sendMessage(Colors.format(MessageType.SUCCESS + "Successfully connected!"))
+                            connection.close()
+                        }else{
+                            sender.sendMessage(Colors.format(MessageType.ERROR + "Couldn't connect to the database."))
+                        }
+                    }catch (ex: SQLException){
+                        sender.sendMessage(Colors.format(MessageType.ERROR + "Couldn't connect to the database."))
+                    }
+                })
+            }
         }
 
         return false

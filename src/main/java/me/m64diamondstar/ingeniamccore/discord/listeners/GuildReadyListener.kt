@@ -14,8 +14,6 @@ class GuildReadyListener: ListenerAdapter() {
 
         guild.updateCommands()
 
-            .addCommands(Commands.slash("help", "Opens the help menu."))
-
             .addCommands(Commands.slash("close", "Closes a ticket."))
 
             .addCommands(Commands.slash("meme", "Show a random meme."))
@@ -24,8 +22,7 @@ class GuildReadyListener: ListenerAdapter() {
 
             .addCommands(Commands.slash("ip", "Retrieve the server IP and version."))
 
-            .addCommands(Commands.slash("link", "Link your Minecraft account with your Discord account.")
-                .addOption(OptionType.STRING, "name", "Your in-game Minecraft username.", true))
+            .addCommands(Commands.slash("link", "Link your Minecraft account with your Discord account."))
 
             // ADMIN-ONLY COMMANDS
             .addCommands(Commands.slash("ticket", "Edit ticket configuration.")
