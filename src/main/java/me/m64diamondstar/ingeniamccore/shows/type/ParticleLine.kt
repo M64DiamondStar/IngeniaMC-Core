@@ -1,7 +1,7 @@
 package me.m64diamondstar.ingeniamccore.shows.type
 
 import me.m64diamondstar.ingeniamccore.shows.utils.Effect
-import me.m64diamondstar.ingeniamccore.shows.utils.Show
+import me.m64diamondstar.ingeniamccore.shows.EffectShow
 import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.utils.LocationUtils
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
@@ -13,7 +13,7 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.scheduler.BukkitRunnable
 
-class ParticleLine(show: Show, private val id: Int) : Effect(show, id) {
+class ParticleLine(effectShow: EffectShow, private val id: Int) : Effect(effectShow, id) {
 
     override fun execute(players: List<Player>?) {
 

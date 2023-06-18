@@ -1,11 +1,11 @@
 package me.m64diamondstar.ingeniamccore.shows.type
 
 import me.m64diamondstar.ingeniamccore.shows.utils.Effect
-import me.m64diamondstar.ingeniamccore.shows.utils.Show
+import me.m64diamondstar.ingeniamccore.shows.EffectShow
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 
-class Animatronic(show: Show, id: Int): Effect(show, id) {
+class Animatronic(effectShow: EffectShow, id: Int): Effect(effectShow, id) {
 
     override fun execute(players: List<Player>?) {
         val name = getSection().getString("Name")!!

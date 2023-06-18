@@ -1,55 +1,80 @@
 package me.m64diamondstar.ingeniamccore.shows.utils
 
+import me.m64diamondstar.ingeniamccore.shows.EffectShow
 import me.m64diamondstar.ingeniamccore.shows.type.*
 import org.bukkit.Material
 import org.bukkit.configuration.ConfigurationSection
 import org.bukkit.entity.Player
 
-abstract class Effect(private val show: Show, private val id: Int) {
+abstract class Effect(private val effectShow: EffectShow, private val id: Int) {
 
     enum class Type {
         ANIMATRONIC {
-            override fun getTypeClass(show: Show, id: Int): Effect = Animatronic(show, id)
+            override fun getTypeClass(effectShow: EffectShow, id: Int): Effect = Animatronic(effectShow, id)
             override fun getDisplayMaterial(): Material = Material.ARMOR_STAND
         },
         ANIMATRONIC_GROUP {
-            override fun getTypeClass(show: Show, id: Int): Effect = AnimatronicGroup(show, id)
+            override fun getTypeClass(effectShow: EffectShow, id: Int): Effect = AnimatronicGroup(effectShow, id)
             override fun getDisplayMaterial(): Material = Material.ARMOR_STAND
         },
         FALLING_BLOCK {
-            override fun getTypeClass(show: Show, id: Int): Effect = FallingBlock(show, id)
+            override fun getTypeClass(effectShow: EffectShow, id: Int): Effect = FallingBlock(effectShow, id)
             override fun getDisplayMaterial(): Material = Material.SAND
         },
         FILL_BLOCK {
-            override fun getTypeClass(show: Show, id: Int): Effect = FillBlock(show, id)
+            override fun getTypeClass(effectShow: EffectShow, id: Int): Effect = FillBlock(effectShow, id)
             override fun getDisplayMaterial(): Material = Material.DEEPSLATE
         },
+        SET_BLOCK {
+            override fun getTypeClass(effectShow: EffectShow, id: Int): Effect = SetBlock(effectShow, id)
+            override fun getDisplayMaterial(): Material = Material.STONE
+        },
+        REPLACE_FILL {
+            override fun getTypeClass(effectShow: EffectShow, id: Int): Effect = ReplaceFill(effectShow, id)
+            override fun getDisplayMaterial(): Material = Material.GRANITE
+        },
         FOUNTAIN {
-            override fun getTypeClass(show: Show, id: Int): Effect = Fountain(show, id)
+            override fun getTypeClass(effectShow: EffectShow, id: Int): Effect = Fountain(effectShow, id)
             override fun getDisplayMaterial(): Material = Material.WATER_BUCKET
         },
         PARTICLE {
-            override fun getTypeClass(show: Show, id: Int): Effect = Particle(show, id)
+            override fun getTypeClass(effectShow: EffectShow, id: Int): Effect = Particle(effectShow, id)
             override fun getDisplayMaterial(): Material = Material.GLOWSTONE_DUST
         },
         PARTICLE_EMITTER {
-            override fun getTypeClass(show: Show, id: Int): Effect = ParticleEmitter(show, id)
+            override fun getTypeClass(effectShow: EffectShow, id: Int): Effect = ParticleEmitter(effectShow, id)
             override fun getDisplayMaterial(): Material = Material.DISPENSER
         },
         PARTICLE_LINE {
-            override fun getTypeClass(show: Show, id: Int): Effect = ParticleLine(show, id)
+            override fun getTypeClass(effectShow: EffectShow, id: Int): Effect = ParticleLine(effectShow, id)
             override fun getDisplayMaterial(): Material = Material.REPEATER
         },
-        SET_BLOCK {
-            override fun getTypeClass(show: Show, id: Int): Effect = SetBlock(show, id)
-            override fun getDisplayMaterial(): Material = Material.STONE
-        },
         ACTIVATOR{
-            override fun getTypeClass(show: Show, id: Int): Effect = Activator(show, id)
+            override fun getTypeClass(effectShow: EffectShow, id: Int): Effect = Activator(effectShow, id)
             override fun getDisplayMaterial(): Material = Material.REDSTONE_TORCH
+        },
+        FOUNTAIN_LINE{
+            override fun getTypeClass(effectShow: EffectShow, id: Int): Effect = FountainLine(effectShow, id)
+            override fun getDisplayMaterial(): Material = Material.LIGHT_BLUE_CONCRETE
+        },
+        ITEM_FOUNTAIN{
+            override fun getTypeClass(effectShow: EffectShow, id: Int): Effect = ItemFountain(effectShow, id)
+            override fun getDisplayMaterial(): Material = Material.SPLASH_POTION
+        },
+        ITEM_FOUNTAIN_LINE{
+            override fun getTypeClass(effectShow: EffectShow, id: Int): Effect = ItemFountainLine(effectShow, id)
+            override fun getDisplayMaterial(): Material = Material.LINGERING_POTION
+        },
+        CONSOLE_COMMAND{
+            override fun getTypeClass(effectShow: EffectShow, id: Int): Effect = ConsoleCommand(effectShow, id)
+            override fun getDisplayMaterial(): Material = Material.COMMAND_BLOCK
+        },
+        FIREWORK{
+            override fun getTypeClass(effectShow: EffectShow, id: Int): Effect = Firework(effectShow, id)
+            override fun getDisplayMaterial(): Material = Material.FIREWORK_ROCKET
         };
 
-        abstract fun getTypeClass(show: Show, id: Int): Effect
+        abstract fun getTypeClass(effectShow: EffectShow, id: Int): Effect
 
         abstract fun getDisplayMaterial(): Material
     }
@@ -67,8 +92,8 @@ abstract class Effect(private val show: Show, private val id: Int) {
 
     fun getDelay(): Long = getSection().getLong("Delay")
 
-    fun getSection(): ConfigurationSection = show.getConfig().getConfigurationSection("$id")!!
+    fun getSection(): ConfigurationSection = effectShow.getConfig().getConfigurationSection("$id")!!
 
-    fun getShow(): Show = show
+    fun getShow(): EffectShow = effectShow
 
 }

@@ -1,19 +1,21 @@
 package me.m64diamondstar.ingeniamccore.shows.type
 
-import me.m64diamondstar.ingeniamccore.shows.utils.Effect
 import me.m64diamondstar.ingeniamccore.shows.EffectShow
+import me.m64diamondstar.ingeniamccore.shows.utils.Effect
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 
-class AnimatronicGroup(effectShow: EffectShow, id: Int) : Effect(effectShow, id) {
-
+class ConsoleCommand(effectShow: EffectShow, id: Int) : Effect(effectShow, id) {
     override fun execute(players: List<Player>?) {
-        val name = getSection().getString("Name")!!
-        Bukkit.dispatchCommand(Bukkit.getServer().consoleSender, "anima group $name play")
+        val command = getSection().getString("Command") ?: return
+        if(command.startsWith("/"))
+            command.drop(1)
+
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command)
     }
 
     override fun getType(): Type {
-        return Type.ANIMATRONIC_GROUP
+        return Type.CONSOLE_COMMAND
     }
 
     override fun isSync(): Boolean {
@@ -22,8 +24,8 @@ class AnimatronicGroup(effectShow: EffectShow, id: Int) : Effect(effectShow, id)
 
     override fun getDefaults(): List<Pair<String, Any>> {
         val list = ArrayList<Pair<String, Any>>()
-        list.add(Pair("Type", "ANIMATRONIC_GROUP"))
-        list.add(Pair("Name", "anima"))
+        list.add(Pair("Type", "CONSOLE_COMMAND"))
+        list.add(Pair("Command", "say Hey there!"))
         list.add(Pair("Delay", 0))
         return list
     }

@@ -2,7 +2,7 @@ package me.m64diamondstar.ingeniamccore.shows.type
 
 import me.m64diamondstar.ingeniamccore.shows.utils.Effect
 import me.m64diamondstar.ingeniamccore.IngeniaMC
-import me.m64diamondstar.ingeniamccore.shows.utils.Show
+import me.m64diamondstar.ingeniamccore.shows.EffectShow
 import me.m64diamondstar.ingeniamccore.utils.LocationUtils
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import org.bukkit.Color
@@ -11,7 +11,7 @@ import org.bukkit.Particle
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 
-class Particle(show: Show, private val id: Int) : Effect(show, id) {
+class Particle(effectShow: EffectShow, private val id: Int) : Effect(effectShow, id) {
 
     init{
         getShow().getConfig().set("$id.Type", "Particle")

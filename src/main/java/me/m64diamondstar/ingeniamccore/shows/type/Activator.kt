@@ -2,7 +2,7 @@ package me.m64diamondstar.ingeniamccore.shows.type
 
 import me.m64diamondstar.ingeniamccore.shows.utils.Effect
 import me.m64diamondstar.ingeniamccore.IngeniaMC
-import me.m64diamondstar.ingeniamccore.shows.utils.Show
+import me.m64diamondstar.ingeniamccore.shows.EffectShow
 import me.m64diamondstar.ingeniamccore.utils.LocationUtils
 import org.bukkit.Bukkit
 import org.bukkit.Material
@@ -11,7 +11,7 @@ import org.bukkit.entity.Player
 /**
  * Spawns a redstone torch for the given amount of time on a specific location.
  */
-class Activator(show: Show, id: Int) : Effect(show, id) {
+class Activator(effectShow: EffectShow, id: Int) : Effect(effectShow, id) {
     override fun execute(players: List<Player>?) {
         val location = LocationUtils.getLocationFromString(getSection().getString("Location")!!) ?: return
         val duration = if (getSection().get("Duration") != null) getSection().getLong("Duration") else 0

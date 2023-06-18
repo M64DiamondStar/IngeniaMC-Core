@@ -1,14 +1,15 @@
-package me.m64diamondstar.ingeniamccore.shows.utils
+package me.m64diamondstar.ingeniamccore.shows
 
 import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.data.LoadedConfiguration
+import me.m64diamondstar.ingeniamccore.shows.utils.Effect
 import org.bukkit.entity.Player
 import org.bukkit.scheduler.BukkitRunnable
 
 /**
  * Play custom shows in the park, can be used in coasters and other rides for fun decoration.
  */
-class Show(private val category: String, private val name: String, val players: List<Player>?): LoadedConfiguration("shows/$category", name, false, true) {
+class EffectShow(private val category: String, private val name: String, val players: List<Player>?): LoadedConfiguration("shows/$category", name, false, true) {
 
     /**
      * Adds the standard comments to the configuration file of this show.

@@ -2,7 +2,7 @@ package me.m64diamondstar.ingeniamccore.shows.editor.show
 
 import me.m64diamondstar.ingeniamccore.shows.editor.effect.CreateEffectGui
 import me.m64diamondstar.ingeniamccore.shows.editor.effect.EditEffectGui
-import me.m64diamondstar.ingeniamccore.shows.utils.Show
+import me.m64diamondstar.ingeniamccore.shows.EffectShow
 import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.shows.editor.utils.GuiItems
@@ -19,12 +19,14 @@ import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
+import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
+import java.awt.MultipleGradientPaint.ColorSpaceType
 
-class EditShowGui(private val player: Player, show: Show): Gui(IngeniaPlayer(player)) {
+class EditShowGui(private val player: Player, effectShow: EffectShow): Gui(IngeniaPlayer(player)) {
 
-    private val showCategory: String = show.getCategory()
-    private val showName: String = show.getName()
+    private val showCategory: String = effectShow.getCategory()
+    private val showName: String = effectShow.getName()
 
     override fun setDisplayName(): String {
 
@@ -39,26 +41,26 @@ class EditShowGui(private val player: Player, show: Show): Gui(IngeniaPlayer(pla
 
         if(event.slot in 9..17 && event.currentItem != null){ // Start editing one of the effects
             val id = event.currentItem!!.itemMeta!!.displayName.split(": ")[1].toInt()
-            val show = Show(showCategory, showName, null)
-            val editEffectGui = EditEffectGui(player, id, show)
+            val effectShow = EffectShow(showCategory, showName, null)
+            val editEffectGui = EditEffectGui(player, id, effectShow)
             editEffectGui.open()
         }
 
         if(event.slot == 38){ // 'New Effect' is clicked
-            val show = Show(showCategory, showName, null)
-            val createEffectGui = CreateEffectGui(event.whoClicked as Player, show)
+            val effectShow = EffectShow(showCategory, showName, null)
+            val createEffectGui = CreateEffectGui(event.whoClicked as Player, effectShow)
             createEffectGui.open()
         }
 
         if(event.slot == 40){ // 'Play' is clicked
-            val show = Show(showCategory, showName, null)
+            val effectShow = EffectShow(showCategory, showName, null)
             Bukkit.getScheduler().runTask(IngeniaMC.plugin, Runnable {
-                show.play()
+                effectShow.play()
             })
             player.closeInventory()
             val clickableComponent = TextComponent(TextComponent("Click here to re-open the edit gui."))
             clickableComponent.color = ChatColor.of(MessageType.BACKGROUND)
-            clickableComponent.clickEvent = ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ig show editor ${show.getCategory()} ${show.getName()}")
+            clickableComponent.clickEvent = ClickEvent(ClickEvent.Action.RUN_COMMAND, "/em editor ${effectShow.getCategory()} ${effectShow.getName()}")
             clickableComponent.hoverEvent = HoverEvent(
                 HoverEvent.Action.SHOW_TEXT,
                 ComponentBuilder("Click me to re-open the edit gui.").create())
@@ -67,10 +69,9 @@ class EditShowGui(private val player: Player, show: Show): Gui(IngeniaPlayer(pla
 
         if(event.slot == 42){ // 'Delete' is clicked
             if(event.currentItem!!.containsEnchantment(Enchantment.DURABILITY)){ // Already clicked once.
-                val show = Show(showCategory, showName, null)
-                show.deleteFile()
-                event.whoClicked.sendMessage(
-                    Colors.format(MessageType.SUCCESS +
+                val effectShow = EffectShow(showCategory, showName, null)
+                effectShow.deleteFile()
+                event.whoClicked.sendMessage(Colors.format(MessageType.SUCCESS +
                         "Successfully deleted the show $showName in category $showCategory."))
                 event.whoClicked.closeInventory()
             }else{ // Add glow and add lore to confirm deletion
@@ -92,7 +93,7 @@ class EditShowGui(private val player: Player, show: Show): Gui(IngeniaPlayer(pla
                 inventory.getItem(9)!!.itemMeta!!.displayName.split(" ").last().toInt() - 1
             val maxID = minID + 8
 
-            val show = Show(showCategory, showName, null)
+            val effectShow = EffectShow(showCategory, showName, null)
             for(i in 9..17){ // Clear all slots
                 event.inventory.setItem(i, ItemStack(Material.AIR))
             }
@@ -101,7 +102,7 @@ class EditShowGui(private val player: Player, show: Show): Gui(IngeniaPlayer(pla
             event.inventory.setItem(8, GuiItems.getBlackPane())
             event.inventory.setItem(26, GuiItems.getBlackPane())
 
-            val effects = show.getAllEffects()
+            val effects = effectShow.getAllEffects()
             var i = 1
             effects.forEach {
 
@@ -120,6 +121,7 @@ class EditShowGui(private val player: Player, show: Show): Gui(IngeniaPlayer(pla
                     lore.add(Colors.format("#a8a8a8$section: &r#e0e0e0&o${it.getSection().get(section).toString()}"))
                 }
                 meta.lore = lore
+                meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS)
 
                 item.itemMeta = meta
 
@@ -137,9 +139,9 @@ class EditShowGui(private val player: Player, show: Show): Gui(IngeniaPlayer(pla
             if(event.inventory.getItem(17) == null)
                 return
 
-            val show = Show(showCategory, showName, null)
+            val effectShow = EffectShow(showCategory, showName, null)
 
-            val minID = if(inventory.getItem(17)!!.itemMeta!!.displayName.split(" ").last().toInt() == show.getMaxId()) // Gets the ID of the current item
+            val minID = if(inventory.getItem(17)!!.itemMeta!!.displayName.split(" ").last().toInt() == effectShow.getMaxId()) // Gets the ID of the current item
                 return
             else
                 inventory.getItem(9)!!.itemMeta!!.displayName.split(" ").last().toInt() + 1
@@ -153,7 +155,7 @@ class EditShowGui(private val player: Player, show: Show): Gui(IngeniaPlayer(pla
             event.inventory.setItem(0, GuiItems.getBlackPane())
             event.inventory.setItem(18, GuiItems.getBlackPane())
 
-            val effects = show.getAllEffects()
+            val effects = effectShow.getAllEffects()
             var i = 1
             effects.forEach { //Add all effects
 
@@ -172,6 +174,7 @@ class EditShowGui(private val player: Player, show: Show): Gui(IngeniaPlayer(pla
                     lore.add(Colors.format("#a8a8a8$section: &r#e0e0e0&o${it.getSection().get(section).toString()}"))
                 }
                 meta.lore = lore
+                meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS)
 
                 item.itemMeta = meta
 
@@ -179,7 +182,7 @@ class EditShowGui(private val player: Player, show: Show): Gui(IngeniaPlayer(pla
                 i++
             }
 
-            if(maxID == show.getMaxId()){
+            if(maxID == effectShow.getMaxId()){
                 event.inventory.setItem(8, GuiItems.getRedPane())
                 event.inventory.setItem(26, GuiItems.getRedPane())
             }
@@ -189,7 +192,7 @@ class EditShowGui(private val player: Player, show: Show): Gui(IngeniaPlayer(pla
 
     override fun setInventoryItems() {
 
-        val show = Show(showCategory, showName, null)
+        val effectShow = EffectShow(showCategory, showName, null)
 
         // Add glass panes
         for(i in 0..8) inventory.setItem(i, GuiItems.getBlackPane())
@@ -208,7 +211,7 @@ class EditShowGui(private val player: Player, show: Show): Gui(IngeniaPlayer(pla
         inventory.setItem(0, GuiItems.getGreenPane())
         inventory.setItem(18, GuiItems.getGreenPane())
 
-        val effects = show.getAllEffects()
+        val effects = effectShow.getAllEffects()
         var i = 1
         effects.forEach {
             if(i >= 10)
@@ -221,9 +224,12 @@ class EditShowGui(private val player: Player, show: Show): Gui(IngeniaPlayer(pla
             meta.setDisplayName(Colors.format("#dcb5ff&l${it.getType().toString().lowercase().replace("_", " ").replaceFirstChar(Char::titlecase)} &r#8f8f8f&oID: ${it.getID()}"))
             lore.add(" ")
             it.getSection().getKeys(false).forEach { section ->
-                lore.add(Colors.format("#a8a8a8$section: &r#e0e0e0&o${it.getSection().get(section).toString()}"))
+                lore.add(Colors.format("#a8a8a8$section: &r#e0e0e0&o") + it.getSection().get(section).toString())
             }
+            lore.add(" ")
+            lore.add(Colors.format(MessageType.SUCCESS + "Click to edit!"))
             meta.lore = lore
+            meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS)
 
             item.itemMeta = meta
 

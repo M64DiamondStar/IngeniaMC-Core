@@ -3,22 +3,26 @@ package me.m64diamondstar.ingeniamccore.shows.type
 import com.comphenix.protocol.PacketType
 import com.comphenix.protocol.ProtocolLibrary
 import com.comphenix.protocol.events.PacketContainer
-import me.m64diamondstar.ingeniamccore.shows.utils.Effect
-import me.m64diamondstar.ingeniamccore.shows.EffectShow
-import me.m64diamondstar.ingeniamccore.shows.utils.ShowUtils
 import me.m64diamondstar.ingeniamccore.IngeniaMC
+import me.m64diamondstar.ingeniamccore.shows.EffectShow
+import me.m64diamondstar.ingeniamccore.shows.utils.Effect
+import me.m64diamondstar.ingeniamccore.shows.utils.ShowUtils
 import me.m64diamondstar.ingeniamccore.utils.LocationUtils
 import org.bukkit.Bukkit
 import org.bukkit.Material
+import org.bukkit.entity.EntityType
+import org.bukkit.entity.Item
 import org.bukkit.entity.Player
+import org.bukkit.inventory.ItemStack
 import org.bukkit.scheduler.BukkitRunnable
 import org.bukkit.util.Vector
 
-class Fountain(effectShow: EffectShow, id: Int) : Effect(effectShow, id) {
+class ItemFountain(effectShow: EffectShow, id: Int): Effect(effectShow, id) {
 
     override fun execute(players: List<Player>?) {
         val location = LocationUtils.getLocationFromString(getSection().getString("Location")!!) ?: return
-        val material = if (getSection().get("Block") != null) Material.valueOf(getSection().getString("Block")!!.uppercase()) else Material.STONE
+        val material = if (getSection().get("Material") != null) Material.valueOf(getSection().getString("Material")!!.uppercase()) else Material.STONE
+        val customModelData = if(getSection().get("CustomModelData") != null) getSection().getInt("CustomModelData") else 0
         val velocity =
             if (getSection().get("Velocity") != null)
                 if(LocationUtils.getVectorFromString(getSection().getString("Velocity")!!) != null)
@@ -27,6 +31,7 @@ class Fountain(effectShow: EffectShow, id: Int) : Effect(effectShow, id) {
             else Vector(0.0, 0.0, 0.0)
         val length = if (getSection().get("Length") != null) getSection().getInt("Length") else 1
         val randomizer = if (getSection().get("Randomizer") != null) getSection().getDouble("Randomizer") / 10 else 0.0
+        val lifetime = if (getSection().get("Lifetime") != null) getSection().getInt("Lifetime") else 40
 
         object: BukkitRunnable(){
             var c = 0
@@ -36,27 +41,31 @@ class Fountain(effectShow: EffectShow, id: Int) : Effect(effectShow, id) {
                     return
                 }
 
-                val fallingBlock = location.world!!.spawnFallingBlock(location, material.createBlockData())
-                fallingBlock.dropItem = false
+                // Create item
+                val item = location.world!!.spawnEntity(location, EntityType.DROPPED_ITEM) as Item
+                item.pickupDelay = Integer.MAX_VALUE
+                item.itemStack = ItemStack(material)
+                if(item.itemStack.itemMeta != null) {
+                    val meta = item.itemStack.itemMeta!!
+                    meta.setCustomModelData(customModelData)
+                    item.itemStack.itemMeta = meta
+                }
 
+                // Fix velocity
                 if(randomizer != 0.0)
-                    fallingBlock.velocity = Vector(velocity.x + Math.random() * (randomizer * 2) - randomizer,
+                    item.velocity = Vector(velocity.x + Math.random() * (randomizer * 2) - randomizer,
                         velocity.y + Math.random() * (randomizer * 2) - randomizer / 3,
                         velocity.z + Math.random() * (randomizer * 2) - randomizer)
                 else
-                    fallingBlock.velocity = velocity
+                    item.velocity = velocity
 
-                ShowUtils.addFallingBlock(fallingBlock)
+                // Register dropped item (this prevents it from merging with others)
+                ShowUtils.addDroppedItem(item)
 
-                if(players != null)
-                    for(player in Bukkit.getOnlinePlayers()){
-                        if(!players.contains(player)){
-                            val protocolManager = ProtocolLibrary.getProtocolManager()
-                            val removePacket = PacketContainer(PacketType.Play.Server.ENTITY_DESTROY)
-                            removePacket.intLists.write(0, listOf(fallingBlock.entityId))
-                            protocolManager.sendServerPacket(player, removePacket)
-                        }
-                    }
+                // Remove item after given time
+                Bukkit.getScheduler().scheduleSyncDelayedTask(IngeniaMC.plugin, {
+                    item.remove()
+                }, lifetime.toLong())
 
                 c++
             }
@@ -64,7 +73,7 @@ class Fountain(effectShow: EffectShow, id: Int) : Effect(effectShow, id) {
     }
 
     override fun getType(): Type {
-        return Type.FOUNTAIN
+        return Type.ITEM_FOUNTAIN
     }
 
     override fun isSync(): Boolean {
@@ -73,11 +82,13 @@ class Fountain(effectShow: EffectShow, id: Int) : Effect(effectShow, id) {
 
     override fun getDefaults(): List<Pair<String, Any>> {
         val list = ArrayList<Pair<String, Any>>()
-        list.add(Pair("Type", "FOUNTAIN"))
+        list.add(Pair("Type", "ITEM_FOUNTAIN"))
         list.add(Pair("Location", "world, 0, 0, 0"))
         list.add(Pair("Velocity", "0, 0, 0"))
-        list.add(Pair("Block", "BLUE_STAINED_GLASS"))
+        list.add(Pair("Material", "BLUE_STAINED_GLASS"))
+        list.add(Pair("CustomModelData", 0))
         list.add(Pair("Length", 20))
+        list.add(Pair("Lifetime", 40))
         list.add(Pair("Randomizer", 0))
         list.add(Pair("Delay", 0))
         return list

@@ -2,13 +2,13 @@ package me.m64diamondstar.ingeniamccore.shows.type
 
 import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.shows.utils.Effect
-import me.m64diamondstar.ingeniamccore.shows.utils.Show
+import me.m64diamondstar.ingeniamccore.shows.EffectShow
 import me.m64diamondstar.ingeniamccore.utils.LocationUtils
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.entity.Player
 
-class SetBlock(show: Show, private val id: Int) : Effect(show, id) {
+class SetBlock(effectShow: EffectShow, private val id: Int) : Effect(effectShow, id) {
 
     override fun execute(players: List<Player>?) {
         try {

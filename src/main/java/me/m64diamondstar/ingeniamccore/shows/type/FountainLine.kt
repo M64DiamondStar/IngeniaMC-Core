@@ -1,0 +1,125 @@
+package me.m64diamondstar.ingeniamccore.shows.type
+
+import me.m64diamondstar.ingeniamccore.IngeniaMC
+import me.m64diamondstar.ingeniamccore.shows.EffectShow
+import me.m64diamondstar.ingeniamccore.shows.utils.Effect
+import me.m64diamondstar.ingeniamccore.shows.utils.ShowUtils
+import me.m64diamondstar.ingeniamccore.utils.LocationUtils
+import org.bukkit.Bukkit
+import org.bukkit.Location
+import org.bukkit.Material
+import org.bukkit.entity.Player
+import org.bukkit.scheduler.BukkitRunnable
+import org.bukkit.util.Vector
+
+class FountainLine(effectShow: EffectShow, private val id: Int) : Effect(effectShow, id) {
+
+    override fun execute(players: List<Player>?) {
+
+        try {
+            val fromLocation = LocationUtils.getLocationFromString(getSection().getString("FromLocation")!!) ?: return
+            val toLocation = LocationUtils.getLocationFromString(getSection().getString("ToLocation")!!) ?: return
+            val material = if (getSection().get("Block") != null) Material.valueOf(
+                getSection().getString("Block")!!.uppercase()
+            ) else Material.STONE
+
+            if (!material.isBlock) {
+                IngeniaMC.plugin.logger.warning("Couldn't play effect with ID $id from ${getShow().getName()} in category ${getShow().getCategory()}.")
+                IngeniaMC.plugin.logger.warning("The material entered is not a block.")
+                return
+            }
+
+            val blockData = if (getSection().get("BlockData") != null)
+                Bukkit.createBlockData(material, getSection().getString("BlockData")!!) else material.createBlockData()
+            val velocity =
+                if (getSection().get("Velocity") != null)
+                    if (LocationUtils.getVectorFromString(getSection().getString("Velocity")!!) != null)
+                        LocationUtils.getVectorFromString(getSection().getString("Velocity")!!)!!
+                    else Vector(0.0, 0.0, 0.0)
+                else Vector(0.0, 0.0, 0.0)
+            val randomizer =
+                if (getSection().get("Randomizer") != null) getSection().getDouble("Randomizer") / 10 else 0.0
+            val speed = if (getSection().get("Speed") != null) getSection().getDouble("Speed") * 0.05 else 0.05
+
+            if (speed <= 0) {
+                IngeniaMC.plugin.logger.warning("Couldn't play effect with ID $id from ${getShow().getName()} in category ${getShow().getCategory()}.")
+                Bukkit.getLogger().warning("The speed has to be greater than 0!")
+                return
+            }
+
+            val moveX: Double = (toLocation.x - fromLocation.x) / speed
+            val moveY: Double = (toLocation.y - fromLocation.y) / speed
+            val moveZ: Double = (toLocation.z - fromLocation.z) / speed
+
+            var nx = moveX
+            var ny = moveY
+            var nz = moveZ
+            if (nx < 0) nx = -nx
+            if (ny < 0) ny = -ny
+            if (nz < 0) nz = -nz
+
+            var move = nx
+            if (ny > nx && ny > nz) move = ny
+            if (nz > ny && nz > nx) move = nz
+
+            val x: Double = moveX / move / 20.0 * (speed * 20.0)
+            val y: Double = moveY / move / 20.0 * (speed * 20.0)
+            val z: Double = moveZ / move / 20.0 * (speed * 20.0)
+
+            val finalMove = move
+
+            object : BukkitRunnable() {
+                var c = 0
+                var location: Location = fromLocation
+                override fun run() {
+                    if (c > finalMove) {
+                        cancel()
+                        return
+                    }
+
+                    val fallingBlock = location.world!!.spawnFallingBlock(location, blockData)
+                    fallingBlock.dropItem = false
+
+                    if (randomizer != 0.0)
+                        fallingBlock.velocity = Vector(
+                            velocity.x + Math.random() * (randomizer * 2) - randomizer,
+                            velocity.y + Math.random() * (randomizer * 2) - randomizer / 3,
+                            velocity.z + Math.random() * (randomizer * 2) - randomizer
+                        )
+                    else
+                        fallingBlock.velocity = velocity
+
+                    ShowUtils.addFallingBlock(fallingBlock)
+
+                    location.add(x, y, z)
+                    c++
+                }
+            }.runTaskTimer(IngeniaMC.plugin, 0L, 1L)
+        } catch (ex: IllegalArgumentException) {
+            IngeniaMC.plugin.logger.warning("Couldn't play effect with ID $id from ${getShow().getName()} in category ${getShow().getCategory()}.")
+            IngeniaMC.plugin.logger.warning("The Block entered doesn't exist or the BlockData doesn't exist.")
+        }
+    }
+
+    override fun getType(): Type {
+        return Type.FOUNTAIN_LINE
+    }
+
+    override fun isSync(): Boolean {
+        return true
+    }
+
+    override fun getDefaults(): List<Pair<String, Any>> {
+        val list = ArrayList<Pair<String, Any>>()
+        list.add(Pair("Type", "FOUNTAIN_LINE"))
+        list.add(Pair("FromLocation", "world, 0, 0, 0"))
+        list.add(Pair("ToLocation", "world, 0, 3, 0"))
+        list.add(Pair("Velocity", "0, 0, 0"))
+        list.add(Pair("Block", "BLUE_STAINED_GLASS"))
+        list.add(Pair("BlockData", "[]"))
+        list.add(Pair("Randomizer", 0))
+        list.add(Pair("Speed", 1))
+        list.add(Pair("Delay", 0))
+        return list
+    }
+}

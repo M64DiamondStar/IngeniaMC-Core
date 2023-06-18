@@ -2,11 +2,13 @@ package me.m64diamondstar.ingeniamccore.shows.utils
 
 import me.m64diamondstar.ingeniamccore.IngeniaMC
 import org.bukkit.entity.FallingBlock
+import org.bukkit.entity.Item
 import java.io.File
 
 object ShowUtils {
 
     private val fallingBlocks = ArrayList<FallingBlock>()
+    private val droppedItems = ArrayList<Item>()
 
     fun getCategories(): ArrayList<File> {
         val file = File(IngeniaMC.plugin.dataFolder, "shows")
@@ -61,6 +63,18 @@ object ShowUtils {
 
     fun removeFallingBlock(fallingBlock: FallingBlock){
         fallingBlocks.remove(fallingBlock)
+    }
+
+    fun getDroppedItems(): ArrayList<Item>{
+        return droppedItems
+    }
+
+    fun addDroppedItem(item: Item){
+        droppedItems.add(item)
+    }
+
+    fun removeDroppedItem(item: Item){
+        droppedItems.remove(item)
     }
 
 }

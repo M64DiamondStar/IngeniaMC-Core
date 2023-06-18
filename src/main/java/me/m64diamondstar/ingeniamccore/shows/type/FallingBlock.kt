@@ -4,7 +4,7 @@ import com.comphenix.protocol.PacketType
 import com.comphenix.protocol.ProtocolLibrary
 import com.comphenix.protocol.events.PacketContainer
 import me.m64diamondstar.ingeniamccore.shows.utils.Effect
-import me.m64diamondstar.ingeniamccore.shows.utils.Show
+import me.m64diamondstar.ingeniamccore.shows.EffectShow
 import me.m64diamondstar.ingeniamccore.shows.utils.ShowUtils
 import me.m64diamondstar.ingeniamccore.utils.LocationUtils
 import org.bukkit.Bukkit
@@ -12,7 +12,7 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.util.Vector
 
-class FallingBlock(show: Show, id: Int) : Effect(show, id) {
+class FallingBlock(effectShow: EffectShow, id: Int) : Effect(effectShow, id) {
 
     override fun execute(players: List<Player>?) {
 

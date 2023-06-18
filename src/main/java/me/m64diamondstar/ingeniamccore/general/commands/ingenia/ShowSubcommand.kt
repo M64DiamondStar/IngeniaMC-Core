@@ -3,7 +3,7 @@ package me.m64diamondstar.ingeniamccore.general.commands.ingenia
 import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.shows.editor.effect.EditEffectGui
 import me.m64diamondstar.ingeniamccore.shows.editor.show.EditShowGui
-import me.m64diamondstar.ingeniamccore.shows.utils.Show
+import me.m64diamondstar.ingeniamccore.shows.EffectShow
 import me.m64diamondstar.ingeniamccore.shows.utils.ShowUtils
 import me.m64diamondstar.ingeniamccore.utils.IngeniaSubcommand
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
@@ -25,17 +25,17 @@ class ShowSubcommand(private val sender: CommandSender, private val args: Array<
             if(!exists(sender))
                 return
 
-            val show = Show(args[2], args[3], null)
+            val effectShow = EffectShow(args[2], args[3], null)
 
             if(args.size == 4){
-                show.play()
+                effectShow.play()
                 sender.sendMessage(Colors.format(MessageType.SUCCESS + "Successfully started this show."))
             }
 
             else if(args.size == 6){
                 if(args[4].equals("only", ignoreCase = true)){
                     try {
-                        if(show.playOnly(args[5].toInt()))
+                        if(effectShow.playOnly(args[5].toInt()))
                             sender.sendMessage(Colors.format(MessageType.SUCCESS + "Successfully played effect ${args[5]} of this show."))
                         else
                             sender.sendMessage(Colors.format("${MessageType.ERROR}&n${args[5]}&r ${MessageType.ERROR}is not a valid ID."))
@@ -44,7 +44,7 @@ class ShowSubcommand(private val sender: CommandSender, private val args: Array<
                     }
                 }else if(args[4].equals("from", ignoreCase = true)){
                     try {
-                        show.playFrom(args[5].toInt())
+                        effectShow.playFrom(args[5].toInt())
                         sender.sendMessage(Colors.format(MessageType.SUCCESS + "Successfully started from effect ${args[5]} of this show."))
                     }catch (e: NumberFormatException){
                         sender.sendMessage(Colors.format("${MessageType.ERROR}&n${args[5]}&r ${MessageType.ERROR}is not a valid number."))
@@ -75,8 +75,8 @@ class ShowSubcommand(private val sender: CommandSender, private val args: Array<
                 }
             }
 
-            val show = Show(args[2], args[3], null)
-            show.createShow()
+            val effectShow = EffectShow(args[2], args[3], null)
+            effectShow.createShow()
             player.sendMessage(Colors.format(MessageType.SUCCESS + "Successfully created this show."))
         }
 
@@ -85,8 +85,8 @@ class ShowSubcommand(private val sender: CommandSender, private val args: Array<
             if(!exists(player))
                 return
 
-            val show = Show(args[2], args[3], null)
-            show.deleteShow()
+            val effectShow = EffectShow(args[2], args[3], null)
+            effectShow.deleteShow()
         }
 
         //Edit a show
@@ -94,12 +94,12 @@ class ShowSubcommand(private val sender: CommandSender, private val args: Array<
             if(!exists(player))
                 return
 
-            val show = Show(args[2], args[3], null)
+            val effectShow = EffectShow(args[2], args[3], null)
             if(args.size == 4) {
-                val editShowGui = EditShowGui(sender, show)
+                val editShowGui = EditShowGui(sender, effectShow)
                 editShowGui.open()
             }else{
-                val editEffectGui = EditEffectGui(sender, args[4].toInt(), show)
+                val editEffectGui = EditEffectGui(sender, args[4].toInt(), effectShow)
                 editEffectGui.open()
             }
         }
@@ -108,8 +108,8 @@ class ShowSubcommand(private val sender: CommandSender, private val args: Array<
             if (!exists(sender))
                 return
 
-            val show = Show(args[2], args[3], null)
-            show.rename(args[4])
+            val effectShow = EffectShow(args[2], args[3], null)
+            effectShow.rename(args[4])
 
             sender.sendMessage(Colors.format(MessageType.SUCCESS + "Renamed the show to ${args[4]}."))
 
@@ -135,8 +135,8 @@ class ShowSubcommand(private val sender: CommandSender, private val args: Array<
                 sender.sendMessage(Colors.format(MessageType.STANDARD + "https://minecraft.fandom.com/wiki/Target_selectors"))
                 return
             }
-            val show = Show(args[2], args[3], players)
-            show.play()
+            val effectShow = EffectShow(args[2], args[3], players)
+            effectShow.play()
             sender.sendMessage(Colors.format(MessageType.SUCCESS + "Successfully started this show."))
         }
     }
