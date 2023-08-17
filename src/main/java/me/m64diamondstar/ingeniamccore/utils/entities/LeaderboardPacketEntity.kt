@@ -20,11 +20,11 @@ import org.bukkit.inventory.meta.MapMeta
 class LeaderboardPacketEntity(private val leaderboard: Leaderboard, private val world: Level?, blockPosition: BlockPos, direction: Direction)
     : ItemFrame(EntityType.ITEM_FRAME, world, blockPosition, direction) {
 
-    fun spawn(player: Player){
+    fun spawn(player: Player, title: String){
         val mapView = world?.let { Bukkit.createMap(it.world) }
         mapView?.renderers?.clear()
 
-        val renderer = LeaderboardRenderer(leaderboard, player)
+        val renderer = LeaderboardRenderer(leaderboard, player, title)
         mapView!!.addRenderer(renderer)
 
         player.sendMap(mapView)

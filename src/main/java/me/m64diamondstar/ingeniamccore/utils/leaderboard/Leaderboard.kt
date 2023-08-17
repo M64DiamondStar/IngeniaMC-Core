@@ -24,7 +24,6 @@ class Leaderboard (scores: Map<String, Int>, backgroundColor: Color, outlineColo
 
     init{
         this.scores = scores
-
         this.backgroundColor = backgroundColor
         this.outlineColor = outlineColor
         this.titleColor = titleColor
@@ -35,22 +34,22 @@ class Leaderboard (scores: Map<String, Int>, backgroundColor: Color, outlineColo
     }
 
     private fun writeCenteredText(text: String, y: Int) {
-        graphics2D.drawString(text, (256 - graphics2D.fontMetrics.stringWidth(text)) / 2, y)
+        graphics2D.drawString(text, (128 - graphics2D.fontMetrics.stringWidth(text)) / 2, y)
     }
 
 
     private fun writeName(place: Int, score: Int, name: String?, isOwn: Boolean) {
         if (name == null) return
-        var y = place * 46 + 10
+        var y = place * 23 + 5
 
         if (isOwn) {
-            y = 210
+            y = 105
             //POSITION + COUNT
             graphics2D.color = positionColor
             writeCenteredText("#$place - $score", y)
 
             //NAME
-            writeCenteredText(name, y + 16)
+            writeCenteredText(name, y + 8)
         }
         else {
             //POSITION + COUNT
@@ -59,12 +58,12 @@ class Leaderboard (scores: Map<String, Int>, backgroundColor: Color, outlineColo
 
             //NAME
             graphics2D.color = nameColor
-            writeCenteredText(name, y + 16)
+            writeCenteredText(name, y + 8)
 
             //LINE
             graphics2D.color = lineColor
-            graphics2D.stroke = BasicStroke(2F)
-            graphics2D.drawLine(30, y + 24, 225, y + 24)
+            graphics2D.stroke = BasicStroke(1F)
+            graphics2D.drawLine(15, y + 12, 113, y + 12)
         }
     }
 
@@ -77,29 +76,29 @@ class Leaderboard (scores: Map<String, Int>, backgroundColor: Color, outlineColo
         return resultScores.asIterable().reversed()
     }
 
-    fun getImage(player: Player): BufferedImage{
+    fun getImage(player: Player, title: String): BufferedImage{
 
-        bufferedImage = BufferedImage(256, 256, BufferedImage.TYPE_INT_BGR)
+        bufferedImage = BufferedImage(128, 128, BufferedImage.TYPE_INT_RGB)
         graphics2D = bufferedImage.createGraphics()
 
         graphics2D.color = backgroundColor
-        graphics2D.fillRect(0, 0, 256, 256)
+        graphics2D.fillRect(0, 0, 128, 128)
 
         graphics2D.color = outlineColor
-        graphics2D.stroke = BasicStroke(8F)
-        graphics2D.drawRect(0, 0, 256, 256)
+        graphics2D.stroke = BasicStroke(4F)
+        graphics2D.drawRect(0, 0, 128, 128)
 
         graphics2D.color = titleColor
 
         try {
             val ge = GraphicsEnvironment.getLocalGraphicsEnvironment()
-            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, File(IngeniaMC.plugin.dataFolder, "fonts/Minecraft.otf")).deriveFont(20F))
+            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, File(IngeniaMC.plugin.dataFolder, "fonts/Minecraft.otf")).deriveFont(10F))
         }catch (e: IOException){
             e.printStackTrace()
         }
 
-        graphics2D.font = Font.createFont(Font.TRUETYPE_FONT, File(IngeniaMC.plugin.dataFolder, "fonts/Minecraft.otf")).deriveFont(20F)
-        writeCenteredText("Top Ridecount", 25)
+        graphics2D.font = Font.createFont(Font.TRUETYPE_FONT, File(IngeniaMC.plugin.dataFolder, "fonts/Minecraft.otf")).deriveFont(10F)
+        writeCenteredText(title, 13)
 
         for (top in 0..2){
             if(sortedScores().size > top)
