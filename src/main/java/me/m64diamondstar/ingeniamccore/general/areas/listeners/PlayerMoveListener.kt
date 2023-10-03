@@ -1,7 +1,5 @@
 package me.m64diamondstar.ingeniamccore.general.areas.listeners
 
-import com.craftmend.openaudiomc.generic.media.objects.MediaOptions
-import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.general.areas.Area
 import me.m64diamondstar.ingeniamccore.general.areas.AreaUtils
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
@@ -51,11 +49,9 @@ class PlayerMoveListener: Listener {
             }
         }
 
-        val client = IngeniaMC.audioApi.getClient(player.uniqueId)
-
         if(currentArea == null){
             ingeniaPlayer.currentAreaName = null
-            IngeniaMC.audioApi.mediaApi.stopMedia(client)
+            // IMPLEMENT: STOP AUDIO
             return
         }
 
@@ -65,7 +61,7 @@ class PlayerMoveListener: Listener {
             if(ingeniaPlayer.currentAreaName == "${currentArea.category}/${currentArea.name}")
                 return
 
-        IngeniaMC.audioApi.mediaApi.stopMedia(client)
+        // IMPLEMENT: STOP AUDIO
 
         val textComponent = TextComponent(currentArea.displayName)
         textComponent.color = ChatColor.of(MessageType.PLAYER_UPDATE)
@@ -73,13 +69,9 @@ class PlayerMoveListener: Listener {
         player.spigot().sendMessage(ChatMessageType.ACTION_BAR, textComponent)
         ingeniaPlayer.currentAreaName = "${currentArea.category}/${currentArea.name}"
 
-        val options = MediaOptions()
-        options.volume = 100
-        options.fadeTime = 2
-        options.isLoop = true
-        val music = currentArea.getMusic()
-        if(music != null)
-            IngeniaMC.audioApi.mediaApi.playMedia(client, music, options)
+        //val music = currentArea.getMusic()
+        //if(music != null)
+            // IMPLEMENT: PLAY AUDIO
 
     }
 
