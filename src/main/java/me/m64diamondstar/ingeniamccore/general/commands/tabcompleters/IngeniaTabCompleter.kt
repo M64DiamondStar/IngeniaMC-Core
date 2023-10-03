@@ -34,9 +34,6 @@ class IngeniaTabCompleter: TabCompleter {
             if(args[0].equals("balance", true)) {
                 val sub = BalanceSubcommand(sender, args)
                 tc.addAll(sub.getTabCompleters())
-            }else if(args[0].equals("scoreboard", true)) {
-                val sub = ScoreboardSubcommand(sender, args)
-                tc.addAll(sub.getTabCompleters())
             }else if(args[0].equals("exp", true)) {
                 val sub = ExpSubcommand(sender, args)
                 tc.addAll(sub.getTabCompleters())

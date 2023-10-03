@@ -5,15 +5,14 @@ import me.m64diamondstar.ingeniamccore.attractions.utils.AttractionUtils
 import me.m64diamondstar.ingeniamccore.data.files.PlayerConfig
 import me.m64diamondstar.ingeniamccore.games.PhysicalGameType
 import me.m64diamondstar.ingeniamccore.games.parkour.Parkour
+import me.m64diamondstar.ingeniamccore.games.parkour.ParkourUtils
+import me.m64diamondstar.ingeniamccore.games.splashbattle.SplashBattleUtils
 import me.m64diamondstar.ingeniamccore.general.levels.LevelUtils.getLevel
 import me.m64diamondstar.ingeniamccore.general.levels.LevelUtils.getLevelUpLevels
 import me.m64diamondstar.ingeniamccore.general.levels.LevelUtils.getRewards
 import me.m64diamondstar.ingeniamccore.general.levels.LevelUtils.isLevelUp
-import me.m64diamondstar.ingeniamccore.general.scoreboard.Scoreboard
-import me.m64diamondstar.ingeniamccore.general.tablist.TabList
 import me.m64diamondstar.ingeniamccore.general.warps.WarpUtils
 import me.m64diamondstar.ingeniamccore.utils.LocationUtils.getLocationFromString
-import me.m64diamondstar.ingeniamccore.utils.TeamHandler
 import me.m64diamondstar.ingeniamccore.utils.Times
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageLocation
@@ -24,7 +23,9 @@ import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
+import net.minecraft.network.protocol.game.ClientboundTabListPacket
 import org.bukkit.*
+import org.bukkit.craftbukkit.v1_20_R1.entity.CraftPlayer
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryType
 import org.bukkit.inventory.Inventory
@@ -36,7 +37,6 @@ import java.util.*
 
 
 class IngeniaPlayer(val player: Player) {
-    private var scoreboard: Scoreboard? = null
     private var previousInventory: Inventory? = null
     val playerConfig: PlayerConfig = PlayerConfig(player.uniqueId)
 
@@ -44,11 +44,10 @@ class IngeniaPlayer(val player: Player) {
         game = null
         allowDamage = false
         player.teleport(WarpUtils.getNearestLocation(player))
-        setScoreboard(true)
-        setTablist(true)
+        setTablist()
         giveMenuItem()
-        TeamHandler.addPlayer(player)
-        player.isCollidable = false
+        //TeamHandler.addPlayer(player)
+       // player.isCollidable = false
         if (player.isOp) player.setPlayerListName(Colors.format("#c43535&lLead #ffdede$name")) else if (player.hasPermission(
                 "ingenia.team"
             )
@@ -67,6 +66,11 @@ class IngeniaPlayer(val player: Player) {
         ) else player.setPlayerListName(Colors.format("#a1a1a1Visitor #cccccc$name"))
 
         AttractionUtils.getAllAttractions().forEach { it.spawnRidecountSign(player) }
+        SplashBattleUtils.getAllSplashBattles().forEach { it.getLeaderboard().spawnSoaksSign(player) }
+        ParkourUtils.getAllParkours().forEach { it.getLeaderboard().spawnSign(player) }
+
+        if(!player.hasPermission("ingenia.team") && !player.isOp)
+            player.gameMode = GameMode.ADVENTURE
     }
 
     val name: String
@@ -264,37 +268,37 @@ class IngeniaPlayer(val player: Player) {
                 NamespacedKey(IngeniaMC.plugin, "allow-damage"), PersistentDataType.STRING, "$value")
         }
 
-    fun setScoreboard(on: Boolean) {
-        if (scoreboard == null) scoreboard = Scoreboard(this)
-        if (on) {
-            scoreboard!!.createBoard()
-            scoreboard!!.startUpdating()
-            scoreboard!!.showBoard()
-        } else {
-            scoreboard!!.hideBoard()
-        }
-    }
+    private fun setTablist() {
 
-    private fun setTablist(on: Boolean) {
-        val tabList = TabList(IngeniaMC.plugin)
-        if (on) {
-            for (header in Objects.requireNonNull(IngeniaMC.plugin.config.getConfigurationSection("Tablist"))
-                !!.getStringList("Header")) {
-                tabList.addHeader(header, player)
-            }
-            for (footer in Objects.requireNonNull(IngeniaMC.plugin.config.getConfigurationSection("Tablist"))
-                !!.getStringList("Footer")) {
-                tabList.addFooter(
-                    footer.replace(
-                        "%online%", Bukkit.getOnlinePlayers().size.toString() + ""
-                    )
+        object: BukkitRunnable(){
+            override fun run() {
+
+                if(!player.isOnline){
+                    this.cancel()
+                    return
+                }
+
+                val header = net.minecraft.network.chat.Component.Serializer.fromJson(
+                    "{\"text\":\"" +
+                            "\n" +
+                            "    \uE005\uF801\uE006\uF801\uE007\uF801\uE008    " +
+                            "\n\n\n\n" +
+                            "\"}"
                 )
+
+                val footer = net.minecraft.network.chat.Component.Serializer.fromJson(
+                    "[\"\",{\"text\":\"" +
+                            "\n" +
+                            "» Golden Stars:\",\"color\":\"#F4B734\"},{\"text\":\" $bal✪\n\"},{\"text\":\"" +
+                            "» Online:\",\"color\":\"#F4B734\"},{\"text\":\" ${Bukkit.getOnlinePlayers().size}\n\n \"},{\"text\":\"" +
+                            "" +
+                            "A Theme Park With A Story...\"},{\"text\":\"" +
+                            "\nplay.ingeniamc.net\n\",\"color\":\"#F4B734\",\"font\":\"ingeniamc:ten\"}]"
+                )
+
+                (player as CraftPlayer).handle.connection.send(ClientboundTabListPacket(header, footer))
             }
-        } else {
-            tabList.clearHeader()
-            tabList.clearFooter()
-        }
-        tabList.showTab(player)
+        }.runTaskTimer(IngeniaMC.plugin, 0L, 10L)
     }
 
     val wands: List<ItemStack>
@@ -383,6 +387,12 @@ class IngeniaPlayer(val player: Player) {
 
                 //If player is at end
                 if(player.location.distanceSquared(parkour.endLocation!!) <= parkour.endRadius){
+
+                    if(parkour.getLeaderboard().getRecord(player) == 0L || parkour.getLeaderboard().getRecord(player) > (currentTime - startTime)) {
+                        sendMessage(MessageType.PLAYER_UPDATE + "&lNEW RECORD!")
+                        parkour.getLeaderboard().setRecord(player, currentTime - startTime)
+                        ParkourUtils.getAllParkours().forEach { it.getLeaderboard().spawnSign(player) }
+                    }
 
                     (player as Audience).sendActionBar(Component.text("${parkour.displayName} finished in: $timeDisplay").color(TextColor
                         .fromHexString(MessageType.PLAYER_UPDATE)))

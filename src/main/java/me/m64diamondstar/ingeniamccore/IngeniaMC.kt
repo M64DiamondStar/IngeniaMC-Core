@@ -1,6 +1,5 @@
 package me.m64diamondstar.ingeniamccore
 
-import com.craftmend.openaudiomc.api.interfaces.AudioApi
 import me.m64diamondstar.ingeniamccore.attractions.listeners.PlayerInteractEntityListener
 import me.m64diamondstar.ingeniamccore.attractions.traincarts.SignRegistry
 import me.m64diamondstar.ingeniamccore.attractions.utils.AttractionUtils
@@ -10,6 +9,8 @@ import me.m64diamondstar.ingeniamccore.games.guesstheword.GuessTheWord
 import me.m64diamondstar.ingeniamccore.games.guesstheword.GuessTheWordListener
 import me.m64diamondstar.ingeniamccore.games.presenthunt.PresentHuntUtils
 import me.m64diamondstar.ingeniamccore.games.presenthunt.listeners.PlayerInteractListener
+import me.m64diamondstar.ingeniamccore.games.splashbattle.SplashBattleUtils
+import me.m64diamondstar.ingeniamccore.games.splashbattle.listeners.*
 import me.m64diamondstar.ingeniamccore.general.areas.AreaUtils
 import me.m64diamondstar.ingeniamccore.general.areas.listeners.PlayerMoveListener
 import me.m64diamondstar.ingeniamccore.general.commands.*
@@ -19,18 +20,19 @@ import me.m64diamondstar.ingeniamccore.general.commands.tabcompleters.Attraction
 import me.m64diamondstar.ingeniamccore.general.commands.tabcompleters.IngeniaTabCompleter
 import me.m64diamondstar.ingeniamccore.general.commands.tabcompleters.MessageTabCompleter
 import me.m64diamondstar.ingeniamccore.general.listeners.*
+import me.m64diamondstar.ingeniamccore.general.listeners.InteractListener
+import me.m64diamondstar.ingeniamccore.general.listeners.LeaveListener
 import me.m64diamondstar.ingeniamccore.general.listeners.helpers.BonemealListener
-import me.m64diamondstar.ingeniamccore.general.listeners.protection.BlockListener
+import me.m64diamondstar.ingeniamccore.general.listeners.protection.*
 import me.m64diamondstar.ingeniamccore.general.listeners.protection.DamageListener
-import me.m64diamondstar.ingeniamccore.general.listeners.protection.EntityDismountListener
-import me.m64diamondstar.ingeniamccore.general.listeners.protection.HungerListener
-import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.general.warps.WarpUtils
 import me.m64diamondstar.ingeniamccore.shows.listeners.EntityChangeBlockListener
+import me.m64diamondstar.ingeniamccore.utils.LocationUtils
 import me.m64diamondstar.ingeniamccore.utils.TeamHandler
 import me.m64diamondstar.ingeniamccore.utils.gui.GuiListener
 import me.m64diamondstar.ingeniamccore.wands.wandlistener.WandListener
 import org.bukkit.Bukkit
+import org.bukkit.Location
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.scheduler.BukkitRunnable
 import java.awt.Color
@@ -42,13 +44,11 @@ class IngeniaMC : JavaPlugin() {
 
     companion object {
         lateinit var plugin: IngeniaMC
-        lateinit var audioApi: AudioApi
         var isDisabling: Boolean = false
+        lateinit var spawn: Location
     }
 
     override fun onEnable() {
-
-        audioApi = AudioApi.getInstance()
 
         plugin = this
 
@@ -76,10 +76,6 @@ class IngeniaMC : JavaPlugin() {
         SignRegistry.registerSigns()
         Bukkit.getLogger().info("TrainCarts Signs loaded ✓")
 
-        for(player in Bukkit.getOnlinePlayers()){
-            val ingeniaPlayer = IngeniaPlayer(player)
-            ingeniaPlayer.setScoreboard(true)
-        }
         Bukkit.getLogger().info("Player Scoreboards loaded ✓")
 
         Bukkit.getScheduler().scheduleSyncDelayedTask(this) { AttractionUtils.spawnAllAttractions() }
@@ -105,20 +101,26 @@ class IngeniaMC : JavaPlugin() {
         Bukkit.getLogger().info("---------------------------")
 
         // Send Discord Webhook
-        val discordWebhook = DiscordWebhook(plugin.config.getString("Discord.Webhook.Chat"))
+        if(plugin.config.getBoolean("Discord.Webhook.Enable")){
+            val discordWebhook = DiscordWebhook(plugin.config.getString("Discord.Webhook.Chat"))
 
-        val dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")
-        val timeNow = LocalDateTime.now()
+            val dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")
+            val timeNow = LocalDateTime.now()
 
-        discordWebhook.addEmbed(
-            DiscordWebhook.EmbedObject()
-            .setAuthor("Server Starting...", null, "https://ingeniamc.net/images/startup.gif")
-            .setFooter("Online: ${Bukkit.getServer().onlinePlayers.size}/${Bukkit.getServer().maxPlayers}" +
-                    "  ${dateTimeFormatter.format(timeNow)}", null)
-            .setColor(Color.decode("#f4b734"))
-        )
+            discordWebhook.addEmbed(
+                DiscordWebhook.EmbedObject()
+                    .setAuthor("Server Starting...", null, "https://ingeniamc.net/images/startup.gif")
+                    .setFooter(
+                        "Online: ${Bukkit.getServer().onlinePlayers.size}/${Bukkit.getServer().maxPlayers}" +
+                                "  ${dateTimeFormatter.format(timeNow)}", null
+                    )
+                    .setColor(Color.decode("#f4b734"))
+            )
 
-        discordWebhook.execute()
+            discordWebhook.execute()
+        }
+
+        spawn = LocationUtils.getLocationFromString(plugin.config.getString("Spawn")) ?: Location(Bukkit.getWorlds().first(), 0.5, 52.0, 0.5)
 
     }
 
@@ -129,24 +131,29 @@ class IngeniaMC : JavaPlugin() {
         AttractionUtils.despawnAllAttractions()
         SignRegistry.unregisterSigns()
         PresentHuntUtils.saveActivePresents()
+        SplashBattleUtils.players.forEach { SplashBattleUtils.leave(it) }
         TeamHandler.unload()
+        reloadConfig()
         saveConfig()
 
-        // Send Discord Webhook
-        val discordWebhook = DiscordWebhook(plugin.config.getString("Discord.Webhook.Chat"))
+        if(plugin.config.getBoolean("Discord.Webhook.Enable")){// Send Discord Webhook
+            val discordWebhook = DiscordWebhook(plugin.config.getString("Discord.Webhook.Chat"))
 
-        val dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")
-        val timeNow = LocalDateTime.now()
+            val dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")
+            val timeNow = LocalDateTime.now()
 
-        discordWebhook.addEmbed(
-            DiscordWebhook.EmbedObject()
-                .setAuthor("Server Shutting Down...", null, "https://ingeniamc.net/images/shutdown.gif")
-                .setFooter("Online: ${Bukkit.getServer().onlinePlayers.size}/${Bukkit.getServer().maxPlayers}" +
-                        "  ${dateTimeFormatter.format(timeNow)}", null)
-                .setColor(Color.decode("#f4b734"))
-        )
+            discordWebhook.addEmbed(
+                DiscordWebhook.EmbedObject()
+                    .setAuthor("Server Shutting Down...", null, "https://ingeniamc.net/images/shutdown.gif")
+                    .setFooter(
+                        "Online: ${Bukkit.getServer().onlinePlayers.size}/${Bukkit.getServer().maxPlayers}" +
+                                "  ${dateTimeFormatter.format(timeNow)}", null
+                    )
+                    .setColor(Color.decode("#f4b734"))
+            )
 
-        discordWebhook.execute()
+            discordWebhook.execute()
+        }
 
         // Shut the discord but down
         DiscordBot.shutdown()
@@ -260,6 +267,19 @@ class IngeniaMC : JavaPlugin() {
         Bukkit.getServer().pluginManager.registerEvents(DamageListener(), this)
         Bukkit.getServer().pluginManager.registerEvents(HungerListener(), this)
         Bukkit.getServer().pluginManager.registerEvents(EntityDismountListener(), this)
+        Bukkit.getServer().pluginManager.registerEvents(BoatListener(), this)
+
+        /*
+            Splash Battle Events
+         */
+        Bukkit.getServer().pluginManager.registerEvents(TeleportListener(), this)
+        Bukkit.getServer().pluginManager.registerEvents(CommandListener(), this)
+        Bukkit.getServer().pluginManager.registerEvents(me.m64diamondstar.ingeniamccore.games.splashbattle.listeners.InteractListener(), this)
+        Bukkit.getServer().pluginManager.registerEvents(me.m64diamondstar.ingeniamccore.games.splashbattle.listeners.LeaveListener(), this)
+        Bukkit.getServer().pluginManager.registerEvents(me.m64diamondstar.ingeniamccore.games.splashbattle.listeners.DamageListener(), this)
+        Bukkit.getServer().pluginManager.registerEvents(SnowballListener(), this)
+        Bukkit.getServer().pluginManager.registerEvents(GunListener(), this)
+        Bukkit.getServer().pluginManager.registerEvents(SneakListener(), this)
     }
 
     private fun loadPacketListeners(){

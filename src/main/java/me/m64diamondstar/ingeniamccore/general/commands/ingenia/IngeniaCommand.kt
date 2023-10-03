@@ -24,11 +24,6 @@ class IngeniaCommand : CommandExecutor {
                 bal.execute()
             }
 
-            "scoreboard" -> {
-                val scoreboard = ScoreboardSubcommand(sender, args)
-                scoreboard.execute()
-            }
-
             "menu" -> {
                 val menuSubcommand = MenuSubcommand(sender, args)
                 menuSubcommand.execute()
