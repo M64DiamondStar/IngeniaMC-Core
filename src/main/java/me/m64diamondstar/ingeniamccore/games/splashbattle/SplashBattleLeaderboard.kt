@@ -87,7 +87,7 @@ class SplashBattleLeaderboard(private val splashBattle: SplashBattle) {
         }
 
         val leaderboard = Leaderboard(getSoaksInMap(), getLeaderboardBackgroundColor(), getLeaderboardOutlineColor(),
-            getLeaderboardTitleColor(), getLeaderboardPositionColor(), getLeaderboardNameColor(), getLeaderboardLineColor())
+            getLeaderboardTitleColor(), getLeaderboardPositionColor(), getLeaderboardNameColor(), getLeaderboardLineColor(), false)
 
         despawnSoaksSign(player)
 
@@ -141,15 +141,15 @@ class SplashBattleLeaderboard(private val splashBattle: SplashBattle) {
     /**
      * Returns the soaks list with player names
      */
-    private fun getSoaksInMap(): Map<String, Int>{
-        val map: MutableMap<String, Int> = HashMap()
+    private fun getSoaksInMap(): Map<String, Long>{
+        val map: MutableMap<String, Long> = HashMap()
 
         if(splashBattle.getConfig().getConfigurationSection("Soaks") == null)
             return map
 
         for(key in splashBattle.getConfig().getConfigurationSection("Soaks")?.getKeys(false)!!){
             if(Bukkit.getOfflinePlayer(UUID.fromString(key)).name != null)
-                map[Bukkit.getOfflinePlayer(UUID.fromString(key)).name!!] = splashBattle.getConfig().getInt("Soaks.$key")
+                map[Bukkit.getOfflinePlayer(UUID.fromString(key)).name!!] = splashBattle.getConfig().getLong("Soaks.$key")
         }
 
         return map

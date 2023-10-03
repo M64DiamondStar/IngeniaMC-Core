@@ -1,6 +1,7 @@
 package me.m64diamondstar.ingeniamccore.general.commands
 
 import me.m64diamondstar.ingeniamccore.games.PhysicalGameType
+import me.m64diamondstar.ingeniamccore.games.splashbattle.SplashBattleUtils
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
 import me.m64diamondstar.ingeniamccore.utils.messages.Messages
@@ -30,6 +31,10 @@ class LeaveCommand: CommandExecutor {
 
                 PhysicalGameType.PARKOUR -> {
                     ingeniaPlayer.isInGameLeavingState = true
+                }
+
+                PhysicalGameType.SPLASH_BATTLE -> {
+                    SplashBattleUtils.leave(sender)
                 }
 
                 else -> {

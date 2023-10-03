@@ -1,6 +1,7 @@
 package me.m64diamondstar.ingeniamccore.games.parkour
 
 import me.m64diamondstar.ingeniamccore.data.LoadedConfiguration
+import me.m64diamondstar.ingeniamccore.games.parkour.listeners.ParkourLeaderboard
 import me.m64diamondstar.ingeniamccore.utils.LocationUtils
 import org.bukkit.Bukkit
 import org.bukkit.Location
@@ -8,21 +9,19 @@ import org.bukkit.World
 
 class Parkour(category: String, val name: String): LoadedConfiguration("games/parkour/$category", name, false, true) {
 
-    fun createParkour(world: World){
+    fun create(world: World){
         this.getConfig().set("Display-Name", name)
         this.getConfig().set("World", world.name)
 
         val list = ArrayList<String>()
 
-        list.add("An area is used so that the player can locate himself, and to play the correct music.")
-        list.add("You can change the Display-Name to whatever you like, but NO COLOR CODES!")
-        list.add("If two or more areas are overlapping, the area with the highest Weight will be selected.")
+        list.add("Parkour Configuration of $name")
 
         this.getConfig().options().setHeader(list)
         this.reloadConfig()
     }
 
-    private val world: World
+    val world: World
         get() {
             return Bukkit.getWorld(this.getConfig().getString("World")!!)!!
         }
@@ -87,9 +86,7 @@ class Parkour(category: String, val name: String): LoadedConfiguration("games/pa
         return true
     }
 
-
-
-
-
-
+    fun getLeaderboard(): ParkourLeaderboard {
+        return ParkourLeaderboard(this)
+    }
 }
