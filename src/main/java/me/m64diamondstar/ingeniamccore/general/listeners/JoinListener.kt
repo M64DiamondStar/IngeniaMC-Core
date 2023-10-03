@@ -23,26 +23,27 @@ class JoinListener : Listener {
 
         player.startUp()
 
-        thread {
-            // Send Discord Webhook
-            val discordWebhook = DiscordWebhook(IngeniaMC.plugin.config.getString("Discord.Webhook.Chat"))
+        if(IngeniaMC.plugin.config.getBoolean("Discord.Webhook.Enable"))
+            thread {
+                // Send Discord Webhook
+                val discordWebhook = DiscordWebhook(IngeniaMC.plugin.config.getString("Discord.Webhook.Chat"))
 
-            val dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")
-            val timeNow = LocalDateTime.now()
+                val dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")
+                val timeNow = LocalDateTime.now()
 
-            discordWebhook.addEmbed(
-                DiscordWebhook.EmbedObject()
-                    .setAuthor(player.name, null, "https://visage.surgeplay.com/face/${player.player.uniqueId}.png")
-                    .setDescription("*Joined the server*")
-                    .setFooter(
-                        "Online: ${Bukkit.getServer().onlinePlayers.size}/${Bukkit.getServer().maxPlayers}" +
-                                "  ${dateTimeFormatter.format(timeNow)}", null
-                    )
-                    .setColor(Color.decode("#76D173"))
-            )
+                discordWebhook.addEmbed(
+                    DiscordWebhook.EmbedObject()
+                        .setAuthor(player.name, null, "https://visage.surgeplay.com/face/${player.player.uniqueId}.png")
+                        .setDescription("*Joined the server*")
+                        .setFooter(
+                            "Online: ${Bukkit.getServer().onlinePlayers.size}/${Bukkit.getServer().maxPlayers}" +
+                                    "  ${dateTimeFormatter.format(timeNow)}", null
+                        )
+                        .setColor(Color.decode("#76D173"))
+                )
 
-            discordWebhook.execute()
-        }
+                discordWebhook.execute()
+            }
     }
 
 }
