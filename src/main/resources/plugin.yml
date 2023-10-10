@@ -8,6 +8,7 @@ depend:
   - Train_Carts
   - FastAsyncWorldEdit
   - Animatronics
+  - EffectMasterPlus
 commands:
   wand:
     description: Open the wand selection menu.

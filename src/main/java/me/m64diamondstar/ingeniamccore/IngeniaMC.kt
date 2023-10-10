@@ -26,7 +26,6 @@ import me.m64diamondstar.ingeniamccore.general.listeners.helpers.BonemealListene
 import me.m64diamondstar.ingeniamccore.general.listeners.protection.*
 import me.m64diamondstar.ingeniamccore.general.listeners.protection.DamageListener
 import me.m64diamondstar.ingeniamccore.general.warps.WarpUtils
-import me.m64diamondstar.ingeniamccore.shows.listeners.EntityChangeBlockListener
 import me.m64diamondstar.ingeniamccore.utils.LocationUtils
 import me.m64diamondstar.ingeniamccore.utils.TeamHandler
 import me.m64diamondstar.ingeniamccore.utils.gui.GuiListener
@@ -235,12 +234,6 @@ class IngeniaMC : JavaPlugin() {
             Help Events
          */
         Bukkit.getServer().pluginManager.registerEvents(BonemealListener(), this)
-
-        /*
-            Show Events
-         */
-        Bukkit.getServer().pluginManager.registerEvents(EntityChangeBlockListener(), this)
-        Bukkit.getServer().pluginManager.registerEvents(me.m64diamondstar.ingeniamccore.shows.editor.listeners.ChatListener(), this)
 
         /*
             Attraction Events

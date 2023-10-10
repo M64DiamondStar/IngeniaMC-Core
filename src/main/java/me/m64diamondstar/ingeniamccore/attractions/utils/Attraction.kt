@@ -1,8 +1,8 @@
 package me.m64diamondstar.ingeniamccore.attractions.utils
 
+import me.m64diamondstar.effectmasterplus.shows.EffectShow
 import me.m64diamondstar.ingeniamccore.data.LoadedConfiguration
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
-import me.m64diamondstar.ingeniamccore.shows.utils.Show
 import me.m64diamondstar.ingeniamccore.utils.entities.LeaderboardPacketEntity
 import me.m64diamondstar.ingeniamccore.utils.items.ItemDecoder
 import me.m64diamondstar.ingeniamccore.utils.items.ItemEncoder
@@ -52,7 +52,7 @@ open class Attraction(category: String, name: String): LoadedConfiguration("ride
         this.getConfig().set("Name", getName())
         this.getConfig().set("DisplayName", "&c${getName()}")
         this.getConfig().set("World", world.name)
-        this.getConfig().set("CountdownType", CountdownType.COUNTDOWN)
+        this.getConfig().set("CountdownType", CountdownType.COUNTDOWN.toString())
         this.getConfig().set("CountdownTime", 15)
 
         this.getConfig().set("Warp.Enabled", false)
@@ -147,11 +147,11 @@ open class Attraction(category: String, name: String): LoadedConfiguration("ride
      * Sets the show that will start when the ride starts.
      * Set null to set no show.
      */
-    fun setShow(show: Show?){
-        this.getConfig().set("Show.Enabled", show != null)
-        if (show != null) {
-            this.getConfig().set("Show.Category", show.getCategory())
-            this.getConfig().set("Show.Name", show.getName())
+    fun setShow(effectShow: EffectShow?){
+        this.getConfig().set("Show.Enabled", effectShow != null)
+        if (effectShow != null) {
+            this.getConfig().set("Show.Category", effectShow.getCategory())
+            this.getConfig().set("Show.Name", effectShow.getName())
         }
         this.reloadConfig()
     }
@@ -159,9 +159,9 @@ open class Attraction(category: String, name: String): LoadedConfiguration("ride
     /**
      * @return the show that starts with the ride
      */
-    fun getShow(): Show? {
+    fun getShow(): EffectShow? {
         return if(!this.getConfig().getBoolean("Show.Enabled")) null
-        else Show(
+        else EffectShow(
             this.getConfig().getString("Show.Category")!!,
             this.getConfig().getString("Show.Name")!!,
             null
@@ -445,13 +445,13 @@ open class Attraction(category: String, name: String): LoadedConfiguration("ride
             return
 
         val leaderboard = Leaderboard(getRidecountInMap(), getLeaderboardBackgroundColor(), getLeaderboardOutlineColor(),
-        getLeaderboardTitleColor(), getLeaderboardPositionColor(), getLeaderboardNameColor(), getLeaderboardLineColor())
+        getLeaderboardTitleColor(), getLeaderboardPositionColor(), getLeaderboardNameColor(), getLeaderboardLineColor(), false)
 
         despawnRidecountSign(player)
 
         val leaderboardPacketEntity = LeaderboardPacketEntity(leaderboard, getNMSWorld(),
             getLeaderboardLocation(), getLeaderboardDirection())
-        leaderboardPacketEntity.spawn(player)
+        leaderboardPacketEntity.spawn(player, "Top Ridecount")
         LeaderboardRegistry.setBoard(getName(), player, leaderboardPacketEntity.id)
     }
 
@@ -499,14 +499,15 @@ open class Attraction(category: String, name: String): LoadedConfiguration("ride
     /**
      * Returns the ridecount list with player names
      */
-    fun getRidecountInMap(): Map<String, Int>{
-        val map: MutableMap<String, Int> = HashMap()
+    fun getRidecountInMap(): Map<String, Long>{
+        val map: MutableMap<String, Long> = HashMap()
 
         if(this.getConfig().getConfigurationSection("Data.Ridecount") == null)
             return map
 
         for(key in this.getConfig().getConfigurationSection("Data.Ridecount")?.getKeys(false)!!){
-            map[Bukkit.getOfflinePlayer(UUID.fromString(key)).name!!] = this.getConfig().getInt("Data.Ridecount.$key.Count")
+            if(Bukkit.getOfflinePlayer(UUID.fromString(key)).name != null)
+                map[Bukkit.getOfflinePlayer(UUID.fromString(key)).name!!] = this.getConfig().getLong("Data.Ridecount.$key.Count")
         }
 
         return map

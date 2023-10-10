@@ -239,13 +239,11 @@
             </exclusions>
         </dependency>
 
-
         <dependency>
             <groupId>net.kyori</groupId>
             <artifactId>adventure-text-minimessage</artifactId>
             <version>4.14.0</version>
         </dependency>
-
 
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
@@ -253,12 +251,20 @@
             <version>${kotlin.version}</version>
         </dependency>
 
-
         <dependency>
             <groupId>com.comphenix.protocol</groupId>
             <artifactId>ProtocolLib</artifactId>
             <version>4.7.0</version>
             <scope>provided</scope>
+        </dependency>
+
+        <!-- I know this isn't the best option, but I'm just using it because it's easy... -->
+        <dependency>
+            <groupId>me.m64diamondstar</groupId>
+            <artifactId>EffectMasterPlus</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/src/main/resources/EffectMaster+.jar</systemPath>
         </dependency>
     </dependencies>
 </project>

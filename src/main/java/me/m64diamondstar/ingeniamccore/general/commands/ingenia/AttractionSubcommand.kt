@@ -1,5 +1,7 @@
 package me.m64diamondstar.ingeniamccore.general.commands.ingenia
 
+import me.m64diamondstar.effectmasterplus.shows.EffectShow
+import me.m64diamondstar.effectmasterplus.shows.utils.ShowUtils
 import me.m64diamondstar.ingeniamccore.attractions.custom.Coaster
 import me.m64diamondstar.ingeniamccore.attractions.operate.OperateInventory
 import me.m64diamondstar.ingeniamccore.attractions.utils.AttractionType
@@ -10,8 +12,6 @@ import me.m64diamondstar.ingeniamccore.general.commands.ingenia.attraction.Coast
 import me.m64diamondstar.ingeniamccore.general.commands.ingenia.attraction.FreefallSubcommand
 import me.m64diamondstar.ingeniamccore.general.commands.ingenia.attraction.SlideSubcommand
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
-import me.m64diamondstar.ingeniamccore.shows.utils.Show
-import me.m64diamondstar.ingeniamccore.shows.utils.ShowUtils
 import me.m64diamondstar.ingeniamccore.utils.IngeniaSubcommand
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
@@ -385,8 +385,8 @@ class AttractionSubcommand(private val sender: CommandSender, private val args: 
                     return
                 }
 
-                val show = Show(args[5], args[6], null)
-                attraction.setShow(show)
+                val effectShow = EffectShow(args[5], args[6], null)
+                attraction.setShow(effectShow)
                 player.sendMessage(Colors.format(MessageType.SUCCESS + "Successfully set the show of this ride to ${args[6]} from category ${args[5]}."))
             }
 
