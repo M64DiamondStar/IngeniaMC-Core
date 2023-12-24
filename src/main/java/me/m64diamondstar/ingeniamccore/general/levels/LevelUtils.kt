@@ -1,8 +1,8 @@
 package me.m64diamondstar.ingeniamccore.general.levels
 
 import me.m64diamondstar.ingeniamccore.IngeniaMC
-import me.m64diamondstar.ingeniamccore.utils.rewards.Reward
-import me.m64diamondstar.ingeniamccore.utils.rewards.RewardType
+import me.m64diamondstar.ingeniamccore.general.rewards.Reward
+import me.m64diamondstar.ingeniamccore.general.rewards.RewardType
 
 object LevelUtils {
 

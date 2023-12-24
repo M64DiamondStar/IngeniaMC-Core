@@ -1,6 +1,9 @@
 package me.m64diamondstar.ingeniamccore.general.commands.ingenia
 
 import me.m64diamondstar.ingeniamccore.IngeniaMC
+import me.m64diamondstar.ingeniamccore.general.commands.ingenia.cosmetic.CosmeticColorSubcommand
+import me.m64diamondstar.ingeniamccore.general.commands.ingenia.cosmetic.CosmeticMessageSubcommand
+import me.m64diamondstar.ingeniamccore.general.commands.ingenia.cosmetic.CosmeticSubcommand
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors.format
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
 import me.m64diamondstar.ingeniamccore.utils.messages.Messages.invalidSubcommand
@@ -34,11 +37,6 @@ class IngeniaCommand : CommandExecutor {
                 attractionSubcommand.execute()
             }
 
-            "show" -> {
-                val showSubcommand = ShowSubcommand(sender, args)
-                showSubcommand.execute()
-            }
-
             "game" -> {
                 val gameSubcommand = GameSubcommand(sender, args)
                 gameSubcommand.execute()
@@ -67,6 +65,41 @@ class IngeniaCommand : CommandExecutor {
             "discord" -> {
                 val discordSubcommand = DiscordSubcommand(sender, args)
                 discordSubcommand.execute()
+            }
+
+            "item" -> {
+                val itemSubcommand = ItemSubcommand(sender, args)
+                itemSubcommand.execute()
+            }
+
+            "messages" -> {
+                val messagesSubcommand = MessagesSubcommand(sender, args)
+                messagesSubcommand.execute()
+            }
+
+            "colors" -> {
+                val colorsSubcommand = ColorsSubcommand(sender, args)
+                colorsSubcommand.execute()
+            }
+
+            "cosmetic" -> {
+                val cosmeticSubcommand = CosmeticSubcommand(sender, args)
+                cosmeticSubcommand.execute()
+            }
+
+            "cosmeticmessage" -> {
+                val cosmeticSubcommand = CosmeticMessageSubcommand(sender, args)
+                cosmeticSubcommand.execute()
+            }
+
+            "cosmeticcolor" -> {
+                val cosmeticSubcommand = CosmeticColorSubcommand(sender, args)
+                cosmeticSubcommand.execute()
+            }
+
+            "shop" -> {
+                val shopSubcommand = ShopSubcommand(sender, args)
+                shopSubcommand.execute()
             }
 
             else -> sender.sendMessage(invalidSubcommand("ig"))

@@ -16,8 +16,8 @@ import me.m64diamondstar.ingeniamccore.utils.IngeniaSubcommand
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
 import me.m64diamondstar.ingeniamccore.utils.messages.Messages
-import me.m64diamondstar.ingeniamccore.utils.rewards.Reward
-import me.m64diamondstar.ingeniamccore.utils.rewards.RewardType
+import me.m64diamondstar.ingeniamccore.general.rewards.Reward
+import me.m64diamondstar.ingeniamccore.general.rewards.RewardType
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.Particle

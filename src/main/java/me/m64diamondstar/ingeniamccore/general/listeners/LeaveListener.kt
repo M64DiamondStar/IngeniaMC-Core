@@ -1,6 +1,7 @@
 package me.m64diamondstar.ingeniamccore.general.listeners
 
 import me.m64diamondstar.ingeniamccore.IngeniaMC
+import me.m64diamondstar.ingeniamccore.cosmetics.utils.MessageBuilder
 import me.m64diamondstar.ingeniamccore.discord.webhook.DiscordWebhook
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.utils.TeamHandler
@@ -19,7 +20,7 @@ class LeaveListener : Listener {
     fun onPlayerLeave(e: PlayerQuitEvent) {
         val bukkitPlayer = e.player
         val player = IngeniaPlayer(bukkitPlayer)
-        e.quitMessage = player.leaveMessage
+        e.quitMessage = MessageBuilder.LeaveMessageBuilder(player.name, player.leaveColor, player.leaveMessage).build()
 
         if(TeamHandler.containsPlayer(bukkitPlayer))
             TeamHandler.removePlayer(bukkitPlayer)

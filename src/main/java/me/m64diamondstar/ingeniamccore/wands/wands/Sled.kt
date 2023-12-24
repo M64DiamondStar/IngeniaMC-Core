@@ -3,7 +3,8 @@ package me.m64diamondstar.ingeniamccore.wands.wands
 import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
-import me.m64diamondstar.ingeniamccore.wands.Cooldowns
+import me.m64diamondstar.ingeniamccore.wands.utils.Cooldowns
+import me.m64diamondstar.ingeniamccore.wands.utils.Wand
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
 import net.minecraft.world.entity.MoverType

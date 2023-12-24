@@ -9,6 +9,7 @@ depend:
   - FastAsyncWorldEdit
   - Animatronics
   - EffectMasterPlus
+  - OpenAudioMc
 commands:
   wand:
     description: Open the wand selection menu.
@@ -66,5 +67,22 @@ commands:
     description: Link your Minecraft Account to your Discord Account.
   unlink:
     description: Unlink your Minecraft Account from your Discord Account.
+  editjoinmessage:
+    permission: ingenia.vip
+    description: Edit your join message.
+  editleavemessage:
+    permission: ingenia.vip
+    description: Edit your leave message.
+  hats:
+    description: Open the hat selection menu.
+  pants:
+    description: Open the pants selection menu.
+  shirts:
+    description: Open the shirt selection menu.
+  shoes:
+    description: Open the shoes selection menu.
+  testgui:
+    description: Just a test GUI.
+    permission: ingenia.admin
 
 

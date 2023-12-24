@@ -34,8 +34,7 @@ class BalanceSubcommand(private val sender: CommandSender, private val args: Arr
                         Messages.commandUsage("ig balance <add/set/subtract/get> <player> [amount]")))
             }
         } else if (args.size == 4) {
-            val gs: Long
-            gs = try {
+            val gs: Long = try {
                 args[3].toLong()
             } catch (e: NumberFormatException) {
                 sender.sendMessage(Messages.invalidNumber())

@@ -72,7 +72,9 @@ object LocationUtils {
         return "${location.world?.name}," +
                 " ${BigDecimal(location.x).setScale(3, RoundingMode.HALF_EVEN)}," +
                 " ${BigDecimal(location.y).setScale(3, RoundingMode.HALF_EVEN)}," +
-                " ${BigDecimal(location.z).setScale(3, RoundingMode.HALF_EVEN)}"
+                " ${BigDecimal(location.z).setScale(3, RoundingMode.HALF_EVEN)}," +
+                " ${location.yaw}," +
+                " ${location.pitch}"
     }
 
 }

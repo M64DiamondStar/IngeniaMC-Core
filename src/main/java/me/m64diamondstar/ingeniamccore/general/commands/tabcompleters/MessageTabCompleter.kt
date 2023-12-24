@@ -4,6 +4,8 @@ import org.bukkit.Bukkit
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.command.TabCompleter
+import java.util.*
+import kotlin.collections.ArrayList
 
 class MessageTabCompleter: TabCompleter {
 

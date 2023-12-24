@@ -2,7 +2,7 @@ package me.m64diamondstar.ingeniamccore.wands.wandlistener
 
 import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
-import me.m64diamondstar.ingeniamccore.wands.Cooldowns.isOnCooldown
+import me.m64diamondstar.ingeniamccore.wands.utils.Cooldowns.isOnCooldown
 import me.m64diamondstar.ingeniamccore.wands.wands.*
 import org.bukkit.Color
 import org.bukkit.Material

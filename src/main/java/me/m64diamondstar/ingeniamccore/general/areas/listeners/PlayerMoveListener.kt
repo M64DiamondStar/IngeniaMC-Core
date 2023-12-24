@@ -1,12 +1,13 @@
 package me.m64diamondstar.ingeniamccore.general.areas.listeners
 
+import com.craftmend.openaudiomc.generic.media.objects.MediaOptions
+import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.general.areas.Area
 import me.m64diamondstar.ingeniamccore.general.areas.AreaUtils
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
-import net.md_5.bungee.api.ChatColor
-import net.md_5.bungee.api.ChatMessageType
-import net.md_5.bungee.api.chat.TextComponent
+import net.kyori.adventure.audience.Audience
+import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.event.EventHandler
@@ -49,9 +50,11 @@ class PlayerMoveListener: Listener {
             }
         }
 
+        val client = IngeniaMC.audioApi.getClient(player.uniqueId)
+
         if(currentArea == null){
             ingeniaPlayer.currentAreaName = null
-            // IMPLEMENT: STOP AUDIO
+            IngeniaMC.audioApi.mediaApi.stopMedia(client)
             return
         }
 
@@ -61,17 +64,21 @@ class PlayerMoveListener: Listener {
             if(ingeniaPlayer.currentAreaName == "${currentArea.category}/${currentArea.name}")
                 return
 
-        // IMPLEMENT: STOP AUDIO
+        IngeniaMC.audioApi.mediaApi.stopMedia(client, "${ingeniaPlayer.currentAreaName}_music")
 
-        val textComponent = TextComponent(currentArea.displayName)
-        textComponent.color = ChatColor.of(MessageType.PLAYER_UPDATE)
-
-        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, textComponent)
+        (player as Audience).sendActionBar(MiniMessage.miniMessage().deserialize("<${MessageType.PLAYER_UPDATE}>${currentArea.displayName}"))
         ingeniaPlayer.currentAreaName = "${currentArea.category}/${currentArea.name}"
 
-        //val music = currentArea.getMusic()
-        //if(music != null)
-            // IMPLEMENT: PLAY AUDIO
+        val options = MediaOptions()
+        options.id = "${ingeniaPlayer.currentAreaName}_music"
+        options.isPickUp = true
+        options.volume = 100
+        options.fadeTime = 2
+        options.isLoop = true
+        options.expirationTimeout = 3600000
+        val music = currentArea.getMusic()
+        if(music != null)
+            IngeniaMC.audioApi.mediaApi.playMedia(client, music, options)
 
     }
 

@@ -1,9 +1,9 @@
-package me.m64diamondstar.ingeniamccore.utils.rewards
+package me.m64diamondstar.ingeniamccore.general.rewards
 
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
-import me.m64diamondstar.ingeniamccore.wands.Wands
+import me.m64diamondstar.ingeniamccore.wands.utils.Wands
 
 class Reward(private val rewardType: RewardType, private val arg: String) {
 
@@ -15,19 +15,17 @@ class Reward(private val rewardType: RewardType, private val arg: String) {
 
     fun getDisplay(): String{
 
-        var string = ""
-
-        when (rewardType){
+        val string: String = when (rewardType){
             RewardType.EXP -> {
-                string = Colors.format(MessageType.SUCCESS + "$arg exp")
+                Colors.format("#ffffff$arg${MessageType.SUCCESS} exp")
             }
 
             RewardType.GS -> {
-                string = Colors.format(MessageType.SUCCESS + "$arg:gs:")
+                Colors.format("#ffffff$arg${MessageType.INGENIA}:gs:")
             }
 
             RewardType.WAND -> {
-                string = Colors.format(Wands.getWandDisplayName(arg))
+                Colors.format(Wands.getWandDisplayName(arg) ?: "null")
             }
         }
 

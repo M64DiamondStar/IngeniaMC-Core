@@ -1,13 +1,19 @@
 # The motd is seen in the server list. Please edit this.
 Motd: '                   #d6a12e&lp#dba834&ll#e0b03a&la#e5b740&ly#ebbf46&l.#f0c64c&lI#f5cd52&ln#fad558&lg#ffdc5e&le#ffdc5e&ln#fad558&li#f5cd52&la#f0c64c&lM#ebbf46&lC#e5b740&l.#e0b03a&ln#dba834&le#d6a12e&lt                              #a34841Project is in developement'
 
+# Spawn Location
+# Don't forget the world
+Spawn: ThemePark, 0.5, 52, 0.5, 0, 0
+
 # Discord settings
 Discord:
   Bot:
+    Enable: true
     Token: 'token here'
     Guild-ID: 809319930754498580
     Linked-Role-ID: 1107022838109573160
   Webhook:
+    Enable: true
     # Webhook URL for the chat messages
     Chat: 'webhook here'
 
@@ -19,21 +25,6 @@ Database:
   Name: database-name
   User: database-user
   Password: database-password
-
-# The list that is shown when a player clicks on tab.
-# This is animated!
-Tablist:
-  Header:
-    - "#ffea00&lI#ffe600&ln#ffe100&lg#ffdd00&le#ffd900&ln#ffd500&li#ffd000&la\n&7Welcome %player%\n"
-    - "#ffe600&lI#ffea00&ln#ffe600&lg#ffe100&le#ffdd00&ln#ffd900&li#ffd500&la\n&7Welcome %player%\n"
-    - "#ffe100&lI#ffe600&ln#ffea00&lg#ffe600&le#ffe100&ln#ffdd00&li#ffd900&la\n&7Welcome %player%\n"
-    - "#ffdd00&lI#ffe100&ln#ffe600&lg#ffea00&le#ffe600&ln#ffe100&li#ffdd00&la\n&7Welcome %player%\n"
-    - "#ffd900&lI#ffdd00&ln#ffe100&lg#ffe600&le#ffea00&ln#ffe600&li#ffe100&la\n&7Welcome %player%\n"
-    - "#ffd500&lI#ffd900&ln#ffdd00&lg#ffe100&le#ffe600&ln#ffea00&li#ffe600&la\n&7Welcome %player%\n"
-    - "#ffd000&lI#ffd500&ln#ffd900&lg#ffdd00&le#ffe100&ln#ffe600&li#ffea00&la\n&7Welcome %player%\n"
-  Footer:
-    - "\n&7play.IngeniaMC.net"
-
 
 # These commands are allowed for players to execute and are put in the
 # auto tab completion when a players presses tab in chat.
@@ -50,6 +41,8 @@ Player-Commands:
   - plugins
   - pl
   - tps
+  - shops
+  - rides
   - link
   - unlink
 
@@ -313,3 +306,18 @@ Guess-The-Word:
   - forest
   - sakura
   - sakura valley
+  - bonzai
+  - tree
+  - green
+  - orange
+  - elytra
+  - bedrock
+  - free fall
+  - tnt
+  - pine
+  - snow
+  - cotton candy
+  - carousel
+  - popcorn
+  - bumper cars
+  - picnic

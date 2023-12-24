@@ -3,7 +3,8 @@ package me.m64diamondstar.ingeniamccore.wands.wands
 import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
-import me.m64diamondstar.ingeniamccore.wands.Cooldowns
+import me.m64diamondstar.ingeniamccore.wands.utils.Cooldowns
+import me.m64diamondstar.ingeniamccore.wands.utils.Wand
 import org.bukkit.Bukkit
 import org.bukkit.Particle
 import org.bukkit.entity.ArmorStand

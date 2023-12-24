@@ -1,6 +1,7 @@
 package me.m64diamondstar.ingeniamccore.general.listeners
 
 import me.m64diamondstar.ingeniamccore.IngeniaMC
+import me.m64diamondstar.ingeniamccore.cosmetics.utils.MessageBuilder
 import me.m64diamondstar.ingeniamccore.discord.webhook.DiscordWebhook
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import org.bukkit.Bukkit
@@ -19,7 +20,7 @@ class JoinListener : Listener {
     fun onPlayerJoin(e: PlayerJoinEvent) {
         val bukkitPlayer = e.player
         val player = IngeniaPlayer(bukkitPlayer)
-        e.joinMessage = player.joinMessage
+        e.joinMessage = MessageBuilder.JoinMessageBuilder(player.name, player.joinColor, player.joinMessage).build()
 
         player.startUp()
 

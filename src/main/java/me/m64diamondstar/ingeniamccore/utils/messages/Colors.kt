@@ -15,7 +15,16 @@ object Colors {
             msg1 = msg1.replace(color, ChatColor.of(color).toString() + "")
             match = pattern.matcher(msg1)
         }
-        return ChatColor.translateAlternateColorCodes('&', msg1).replace(":gs:", "✪")
+        return ChatColor.translateAlternateColorCodes('&', msg1).replace(":gs:", "\uE016")
+    }
+
+    fun getJavaColorFromHex(hex: String): Color {
+        var hexString = hex.lowercase()
+        if (hexString.startsWith("#")) {
+            hexString = hexString.substring(1)
+        }
+        val rgbValue: Int = hexString.toInt(16)
+        return Color(rgbValue)
     }
 
     fun getJavaColorFromString(string: String): Color? {
@@ -30,30 +39,6 @@ object Colors {
         } catch (e: IllegalArgumentException) {
             null
         }
-    }
-
-    fun getBukkitColorList(string: String): List<org.bukkit.Color>{
-        val arg = string.split(", ")
-        val list = ArrayList<org.bukkit.Color>()
-
-        arg.forEach {
-            if(it.matches(pattern.toRegex()))
-                list.add(org.bukkit.Color.fromRGB(
-                    java.awt.Color.decode(it).red,
-                    java.awt.Color.decode(it).green,
-                    java.awt.Color.decode(it).blue)
-                )
-        }
-        return list
-    }
-
-    fun isColorList(string: String): Boolean {
-        val arg = string.split(", ")
-
-        arg.forEach {
-            if(!it.matches(pattern.toRegex())) return false
-        }
-        return true
     }
 
     fun format(msg: String, messageType: MessageType): String {

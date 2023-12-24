@@ -1,7 +1,7 @@
 package me.m64diamondstar.ingeniamccore.general.commands
 
+import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.utils.messages.Messages
-import org.bukkit.Location
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
@@ -16,7 +16,7 @@ class SpawnCommand: CommandExecutor {
             return false
         }
 
-        sender.teleport(Location(sender.world, 0.5, 52.0, 0.5, 0F, 0F))
+        sender.teleport(IngeniaMC.spawn)
 
         return false
     }

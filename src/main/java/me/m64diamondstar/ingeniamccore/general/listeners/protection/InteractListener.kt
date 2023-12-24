@@ -56,4 +56,15 @@ class InteractListener: Listener {
         event.isCancelled = true
     }
 
+    @EventHandler
+    fun onPlayerInteract(event: PlayerInteractEvent){
+        val player = event.player
+        if(event.action != Action.RIGHT_CLICK_BLOCK) return
+        if(event.clickedBlock == null || event.clickedBlock!!.type.isAir) return
+        if(!event.clickedBlock!!.type.toString().contains("SIGN")) return
+        if(player.hasPermission("ingenia.team") || player.hasPermission("ingenia.admin") || player.isOp) return
+
+        event.isCancelled = true
+    }
+
 }

@@ -1,4 +1,4 @@
-package me.m64diamondstar.ingeniamccore.utils.rewards
+package me.m64diamondstar.ingeniamccore.general.rewards
 
 object RewardUtils {
 

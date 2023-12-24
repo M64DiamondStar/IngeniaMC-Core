@@ -1,6 +1,9 @@
 package me.m64diamondstar.ingeniamccore.general.commands.tabcompleters
 
 import me.m64diamondstar.ingeniamccore.general.commands.ingenia.*
+import me.m64diamondstar.ingeniamccore.general.commands.ingenia.cosmetic.CosmeticColorSubcommand
+import me.m64diamondstar.ingeniamccore.general.commands.ingenia.cosmetic.CosmeticMessageSubcommand
+import me.m64diamondstar.ingeniamccore.general.commands.ingenia.cosmetic.CosmeticSubcommand
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.command.TabCompleter
@@ -27,6 +30,13 @@ class IngeniaTabCompleter: TabCompleter {
             tc.add("warps")
             tc.add("database")
             tc.add("discord")
+            tc.add("item")
+            tc.add("colors")
+            tc.add("messages")
+            tc.add("cosmetic")
+            tc.add("cosmeticmessage")
+            tc.add("cosmeticcolor")
+            tc.add("shop")
         }else if(args.size > 1){
 
             tc.clear()
@@ -43,9 +53,6 @@ class IngeniaTabCompleter: TabCompleter {
             }else if(args[0].equals("attraction", true)){
                 val sub = AttractionSubcommand(sender, args)
                 tc.addAll(sub.getTabCompleters())
-            }else if(args[0].equals("show", true)){
-                val sub = ShowSubcommand(sender, args)
-                tc.addAll(sub.getTabCompleters())
             }else if(args[0].equals("game", true)){
                 val sub = GameSubcommand(sender, args)
                 tc.addAll(sub.getTabCompleters())
@@ -61,7 +68,29 @@ class IngeniaTabCompleter: TabCompleter {
             }else if(args[0].equals("discord", true)){
                 val sub = DiscordSubcommand(sender, args)
                 tc.addAll(sub.getTabCompleters())
+            }else if(args[0].equals("item", true)){
+                val sub = ItemSubcommand(sender, args)
+                tc.addAll(sub.getTabCompleters())
+            }else if(args[0].equals("messages", true)){
+                val sub = MessagesSubcommand(sender, args)
+                tc.addAll(sub.getTabCompleters())
+            }else if(args[0].equals("colors", true)){
+                val sub = ColorsSubcommand(sender, args)
+                tc.addAll(sub.getTabCompleters())
+            }else if(args[0].equals("cosmetic", true)){
+                val sub = CosmeticSubcommand(sender, args)
+                tc.addAll(sub.getTabCompleters())
+            }else if(args[0].equals("cosmeticmessage", true)){
+                val sub = CosmeticMessageSubcommand(sender, args)
+                tc.addAll(sub.getTabCompleters())
+            }else if(args[0].equals("cosmeticcolor", true)) {
+                val sub = CosmeticColorSubcommand(sender, args)
+                tc.addAll(sub.getTabCompleters())
+            }else if(args[0].equals("shop", true)) {
+                val sub = ShopSubcommand(sender, args)
+                tc.addAll(sub.getTabCompleters())
             }
+
 
         }else
             tc.clear()

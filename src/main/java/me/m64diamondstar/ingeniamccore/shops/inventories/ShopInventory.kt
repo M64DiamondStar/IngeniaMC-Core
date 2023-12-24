@@ -1,0 +1,69 @@
+package me.m64diamondstar.ingeniamccore.shops.inventories
+
+import me.m64diamondstar.ingeniamccore.IngeniaMC
+import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
+import me.m64diamondstar.ingeniamccore.shops.Shop
+import me.m64diamondstar.ingeniamccore.utils.gui.Gui
+import me.m64diamondstar.ingeniamccore.utils.messages.Colors
+import me.m64diamondstar.ingeniamccore.utils.messages.Font
+import org.bukkit.NamespacedKey
+import org.bukkit.entity.Player
+import org.bukkit.event.inventory.InventoryClickEvent
+import org.bukkit.persistence.PersistentDataType
+
+class ShopInventory(player: Player, private val category: String, private val name: String): Gui(IngeniaPlayer(player)) {
+
+    private val itemSlots = Array(28) { i -> if(i in  0..6) i + 10 else if(i in 7..13) i + 12 else if(i in 14..20) i + 14 else i + 16}
+
+    override fun setDisplayName(): String {
+        val shop = Shop(category, name)
+        return Colors.format("&f${Font.getGuiNegativeSpace(0)}${shop.skin ?: "\uED00"}")
+    }
+
+    override fun setSize(): Int {
+        return 54
+    }
+
+    override fun handleInventory(event: InventoryClickEvent) {
+        if(event.currentItem != null && event.currentItem!!.hasItemMeta() &&
+            event.currentItem!!.itemMeta!!.persistentDataContainer
+                .has(NamespacedKey(IngeniaMC.plugin, "shop-item-id"), PersistentDataType.STRING)){
+
+            if(!event.currentItem!!.itemMeta!!.persistentDataContainer.get(NamespacedKey(IngeniaMC.plugin, "can-buy"), PersistentDataType.BOOLEAN)!!) return
+
+            val confirmInventory = ConfirmInventory(getPlayer().player, category, name,
+                event.currentItem!!.itemMeta!!.persistentDataContainer.get(NamespacedKey(IngeniaMC.plugin, "shop-item-id"), PersistentDataType.STRING)!!)
+            confirmInventory.open()
+        }
+    }
+
+    override fun setInventoryItems() {
+        val shop = Shop(category, name)
+
+        val slottedItems = ArrayList<String>() // Contains all items which have a slot configured
+        val autoItems = ArrayList<String>() // All items that do not have a slot configured, so are placed in the first free slot
+
+        shop.getAllShopIDs().forEach {
+            if(shop.getSlot(it) != null)
+                slottedItems.add(it)
+            else
+                autoItems.add(it)
+
+        }
+
+        slottedItems.forEach {
+            val item = shop.getItemStack(it, getPlayer().player)
+            inventory.setItem(shop.getSlot(it)!!, item)
+        }
+
+        autoItems.forEach {
+            val item = shop.getItemStack(it, getPlayer().player)
+            for(slot in itemSlots) {
+                if (inventory.getItem(slot) == null) {
+                    inventory.setItem(slot, item)
+                    return@forEach
+                }
+            }
+        }
+    }
+}

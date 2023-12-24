@@ -169,7 +169,7 @@ class AdminCommand: CommandExecutor {
             val playerTopLocation = sender.location.clone().add(0.0, 2.0, 0.0)
 
             var clickableComponent = TextComponent(TextComponent("Click here to copy your location."))
-            clickableComponent.color = ChatColor.of(MessageType.STANDARD)
+            clickableComponent.color = ChatColor.of(MessageType.DEFAULT)
             clickableComponent.clickEvent = ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, LocationUtils.getStringFromLocation(playerLocation))
             clickableComponent.hoverEvent = HoverEvent(
                 HoverEvent.Action.SHOW_TEXT,
@@ -185,7 +185,7 @@ class AdminCommand: CommandExecutor {
             sender.spigot().sendMessage(clickableComponent)
 
             clickableComponent = TextComponent(TextComponent("Click here to copy your top location."))
-            clickableComponent.color = ChatColor.of(MessageType.STANDARD)
+            clickableComponent.color = ChatColor.of(MessageType.DEFAULT)
             clickableComponent.clickEvent = ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, LocationUtils.getStringFromLocation(playerTopLocation))
             clickableComponent.hoverEvent = HoverEvent(
                 HoverEvent.Action.SHOW_TEXT,

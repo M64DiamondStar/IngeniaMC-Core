@@ -7,6 +7,10 @@ import java.io.IOException
 import java.lang.ClassNotFoundException
 import java.util.*
 
+/**
+ * Decode items from an ItemStack to a string
+ * @param encodedItem the string to decode into an ItemStack
+ */
 class ItemDecoder(private val encodedItem: String) {
     fun decodedItem(): ItemStack? {
         var item: ItemStack? = null

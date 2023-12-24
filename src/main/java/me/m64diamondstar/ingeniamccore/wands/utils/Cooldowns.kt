@@ -1,8 +1,8 @@
-package me.m64diamondstar.ingeniamccore.wands
+package me.m64diamondstar.ingeniamccore.wands.utils
 
-import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
-import me.m64diamondstar.ingeniamccore.utils.messages.MessageLocation
-import java.util.HashMap
+import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
+import net.kyori.adventure.audience.Audience
+import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.entity.Player
 import kotlin.time.Duration.Companion.seconds
 
@@ -26,9 +26,8 @@ object Cooldowns {
     fun isOnCooldown(player: Player): Boolean {
         if (cooldowns.containsKey(player.name)) {
             if (cooldowns[player.name]!! > System.currentTimeMillis()) {
-                val timeleft = (cooldowns[player.name]!! - System.currentTimeMillis()) / 1000
-                val ingeniaPlayer = IngeniaPlayer(player)
-                ingeniaPlayer.sendMessage("&cThis wand is on cooldown for ${timeleft.seconds}.", MessageLocation.HOTBAR)
+                val timeLeft = (cooldowns[player.name]!! - System.currentTimeMillis()) / 1000
+                (player as Audience).sendActionBar(MiniMessage.miniMessage().deserialize("<${MessageType.ERROR}>Wand on cooldown for ${timeLeft.seconds}"))
                 return true
             }
         }

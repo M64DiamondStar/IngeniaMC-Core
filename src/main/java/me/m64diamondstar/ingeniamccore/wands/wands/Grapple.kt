@@ -5,7 +5,8 @@ import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.utils.entities.LeashablePacketEntity
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
-import me.m64diamondstar.ingeniamccore.wands.Cooldowns
+import me.m64diamondstar.ingeniamccore.wands.utils.Cooldowns
+import me.m64diamondstar.ingeniamccore.wands.utils.Wand
 import net.kyori.adventure.audience.Audience
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
@@ -51,7 +52,7 @@ class Grapple: Wand {
 
             override fun run(){
 
-                if(c == 400 || IngeniaMC.isDisabling || IngeniaPlayer(player).isInGame){
+                if(!player.isOnline || c == 400 || IngeniaMC.isDisabling || IngeniaPlayer(player).isInGame){
                     Bukkit.getScheduler().callSyncMethod(IngeniaMC.plugin) {
                         leashableEntity.despawn()
                     }

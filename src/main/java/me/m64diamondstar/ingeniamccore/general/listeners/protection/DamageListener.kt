@@ -29,7 +29,10 @@ class DamageListener: Listener {
     fun onDamage(event: EntityDamageEvent){
         if(event.cause == EntityDamageEvent.DamageCause.SUFFOCATION
             || event.cause == EntityDamageEvent.DamageCause.FALL
-            || event.cause == EntityDamageEvent.DamageCause.FLY_INTO_WALL){
+            || event.cause == EntityDamageEvent.DamageCause.FLY_INTO_WALL
+            || event.cause == EntityDamageEvent.DamageCause.DRYOUT
+            || event.cause == EntityDamageEvent.DamageCause.DROWNING
+            || event.cause == EntityDamageEvent.DamageCause.CONTACT){
             event.isCancelled = true
             return
         }

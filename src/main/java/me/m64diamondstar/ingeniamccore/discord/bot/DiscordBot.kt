@@ -2,7 +2,6 @@ package me.m64diamondstar.ingeniamccore.discord.bot
 
 import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.discord.commands.admin.EmbedCommand
-import me.m64diamondstar.ingeniamccore.discord.commands.`fun`.MemeCommand
 import me.m64diamondstar.ingeniamccore.discord.commands.linking.LinkCommand
 import me.m64diamondstar.ingeniamccore.discord.commands.profile.ProfileCommand
 import me.m64diamondstar.ingeniamccore.discord.commands.tickets.CloseCommand
@@ -20,18 +19,24 @@ object DiscordBot {
     lateinit var jda: JDA
 
     fun start() {
+        if(!IngeniaMC.plugin.config.getBoolean("Discord.Webhook.Enable"))
+            return
         if(IngeniaMC.plugin.config.getString("Discord.Bot.Token") == null)
             return
 
         jda = JDABuilder.createDefault(IngeniaMC.plugin.config.getString("Discord.Bot.Token"))
             .enableIntents(GatewayIntent.GUILD_MEMBERS, GatewayIntent.DIRECT_MESSAGES)
-            .addEventListeners(GuildReadyListener(), MemeCommand(), EmbedCommand(), TicketCommand(),
+            .addEventListeners(GuildReadyListener(), EmbedCommand(), TicketCommand(),
                 CloseCommand(), WhatismyidCommand(), LinkCommand(), ProfileCommand(), IpCommand()
             )
-            .setActivity(Activity.playing("play.IngeniaMC.net on 1.19.x"))
+            .setActivity(Activity.playing("play.IngeniaMC.net on 1.20.1"))
             .build()
     }
 
-    fun shutdown() = jda.shutdown()
+    fun shutdown(){
+        if(!IngeniaMC.plugin.config.getBoolean("Discord.Webhook.Enable"))
+            return
+        jda.shutdown()
+    }
 
 }

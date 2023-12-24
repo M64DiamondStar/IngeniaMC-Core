@@ -2,7 +2,6 @@ package me.m64diamondstar.ingeniamccore.general.player
 
 import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.attractions.utils.AttractionUtils
-import me.m64diamondstar.ingeniamccore.data.files.PlayerConfig
 import me.m64diamondstar.ingeniamccore.games.PhysicalGameType
 import me.m64diamondstar.ingeniamccore.games.parkour.Parkour
 import me.m64diamondstar.ingeniamccore.games.parkour.ParkourUtils
@@ -11,13 +10,14 @@ import me.m64diamondstar.ingeniamccore.general.levels.LevelUtils.getLevel
 import me.m64diamondstar.ingeniamccore.general.levels.LevelUtils.getLevelUpLevels
 import me.m64diamondstar.ingeniamccore.general.levels.LevelUtils.getRewards
 import me.m64diamondstar.ingeniamccore.general.levels.LevelUtils.isLevelUp
+import me.m64diamondstar.ingeniamccore.general.player.data.PlayerConfig
 import me.m64diamondstar.ingeniamccore.general.warps.WarpUtils
 import me.m64diamondstar.ingeniamccore.utils.LocationUtils.getLocationFromString
 import me.m64diamondstar.ingeniamccore.utils.Times
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageLocation
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
-import me.m64diamondstar.ingeniamccore.wands.Wands.getAccessibleWands
+import me.m64diamondstar.ingeniamccore.wands.utils.Wands.getAccessibleWands
 import net.kyori.adventure.audience.Audience
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
@@ -32,9 +32,10 @@ import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
 import org.bukkit.scheduler.BukkitRunnable
+import org.bukkit.util.Vector
+import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.*
-
 
 class IngeniaPlayer(val player: Player) {
     private var previousInventory: Inventory? = null
@@ -46,44 +47,52 @@ class IngeniaPlayer(val player: Player) {
         player.teleport(WarpUtils.getNearestLocation(player))
         setTablist()
         giveMenuItem()
-        //TeamHandler.addPlayer(player)
-       // player.isCollidable = false
-        if (player.isOp) player.setPlayerListName(Colors.format("#c43535&lLead #ffdede$name")) else if (player.hasPermission(
-                "ingenia.team"
-            )
-        ) player.setPlayerListName(
-            Colors.format(
-                "#4180bf&lTeam #deefff$name"
-            )
-        ) else if (player.hasPermission("ingenia.vip+")) player.setPlayerListName(
-            Colors.format(
-                "#9054b0VIP+ #f9deff$name"
-            )
-        ) else if (player.hasPermission("ingenia.vip")) player.setPlayerListName(
-            Colors.format(
-                "#54b0b0VIP #defdff$name"
-            )
-        ) else player.setPlayerListName(Colors.format("#a1a1a1Visitor #cccccc$name"))
+
+        if(joinColor == null)
+            joinColor = "default"
+        if(leaveColor == null)
+            leaveColor = "default"
+        if(joinMessage == null)
+            joinMessage = "default"
+        if(leaveMessage == null)
+            leaveMessage = "default"
+
+        if (player.isOp)
+            player.setPlayerListName(Colors.format("#c43535&lLead #ffdede$name"))
+        else if (player.hasPermission("ingenia.team"))
+            player.setPlayerListName(Colors.format("#4180bf&lTeam #deefff$name"))
+        else if (player.hasPermission("ingenia.teamtrial"))
+            player.setPlayerListName(Colors.format("#4180bf&lTeam Trial #deefff$name"))
+        else if (player.hasPermission("ingenia.vip+"))
+            player.setPlayerListName(Colors.format("#9054b0VIP+ #f9deff$name"))
+        else if (player.hasPermission("ingenia.vip"))
+            player.setPlayerListName(Colors.format("#54b0b0VIP #defdff$name"))
+        else
+            player.setPlayerListName(Colors.format("#a1a1a1Visitor #cccccc$name"))
 
         AttractionUtils.getAllAttractions().forEach { it.spawnRidecountSign(player) }
         SplashBattleUtils.getAllSplashBattles().forEach { it.getLeaderboard().spawnSoaksSign(player) }
         ParkourUtils.getAllParkours().forEach { it.getLeaderboard().spawnSign(player) }
 
-        if(!player.hasPermission("ingenia.team") && !player.isOp)
+        if(!(player.hasPermission("ingenia.team") || player.hasPermission("ingenia.team-trial")) && !player.isOp)
             player.gameMode = GameMode.ADVENTURE
     }
 
     val name: String
         get() = player.name
     val prefix: String
-        get() = if (player.isOp) Colors.format("#c43535&lLead") else if (player.hasPermission(
-                "ingenia.team"
-            )
-        ) Colors.format("#4180bf&lTeam") else if (player.hasPermission("ingenia.vip+")) Colors.format(
-            "#9054b0VIP+"
-        ) else if (player.hasPermission("ingenia.vip")) Colors.format("#54b0b0VIP") else Colors.format(
-            "#a1a1a1Visitor"
-        )
+        get() = if (player.isOp)
+                    Colors.format("#c43535&lLead")
+                else if (player.hasPermission("ingenia.team"))
+                    Colors.format("#4180bf&lTeam")
+                else if (player.hasPermission("ingenia.teamtrial"))
+                    Colors.format("#4180bf&lTeam Trial")
+                else if (player.hasPermission("ingenia.vip+"))
+                    Colors.format("#9054b0VIP+")
+                else if (player.hasPermission("ingenia.vip"))
+                    Colors.format("#54b0b0VIP")
+                else
+                    Colors.format("#a1a1a1Visitor")
 
     var currentAreaName: String?
         get() {
@@ -270,6 +279,8 @@ class IngeniaPlayer(val player: Player) {
 
     private fun setTablist() {
 
+        val numberFormat = NumberFormat.getNumberInstance(Locale.US)
+
         object: BukkitRunnable(){
             override fun run() {
 
@@ -289,7 +300,7 @@ class IngeniaPlayer(val player: Player) {
                 val footer = net.minecraft.network.chat.Component.Serializer.fromJson(
                     "[\"\",{\"text\":\"" +
                             "\n" +
-                            "» Golden Stars:\",\"color\":\"#F4B734\"},{\"text\":\" $bal✪\n\"},{\"text\":\"" +
+                            "» Golden Stars:\",\"color\":\"#F4B734\"},{\"text\":\" \uE016${numberFormat.format(bal)}\n\"},{\"text\":\"" +
                             "» Online:\",\"color\":\"#F4B734\"},{\"text\":\" ${Bukkit.getOnlinePlayers().size}\n\n \"},{\"text\":\"" +
                             "" +
                             "A Theme Park With A Story...\"},{\"text\":\"" +
@@ -306,18 +317,29 @@ class IngeniaPlayer(val player: Player) {
 
     fun setWand(item: ItemStack?) {
         player.inventory.setItem(5, item)
-        player.playSound(player.location, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 2f, 1.5f)
     }
 
     var joinMessage: String?
-        get() = playerConfig.getJoinMessage()!!.replace("%player%", Colors.format(playerConfig.getJoinColor() + player.name + "#ababab"))
-        set(msg) {
-            playerConfig.setJoinMessage(msg!!)
+        get() = playerConfig.getJoinMessage()
+        set(id) {
+            playerConfig.setJoinMessage(id)
         }
     var leaveMessage: String?
-        get() = playerConfig.getLeaveMessage()!!.replace("%player%", Colors.format(playerConfig.getJoinColor() + player.name + "#ababab"))
-        set(msg) {
-            playerConfig.setLeaveMessage(msg!!)
+        get() = playerConfig.getLeaveMessage()
+        set(id) {
+            playerConfig.setLeaveMessage(id)
+        }
+
+    var joinColor: String?
+        get() = playerConfig.getJoinColor()
+        set(id) {
+            playerConfig.setJoinColor(id)
+        }
+
+    var leaveColor: String?
+        get() = playerConfig.getLeaveColor()
+        set(id) {
+            playerConfig.setLeaveColor(id)
         }
 
     fun openInventory(inventory: Inventory?) {
@@ -361,14 +383,16 @@ class IngeniaPlayer(val player: Player) {
         }
 
     fun givePermission(permission: String) {
-        Bukkit.dispatchCommand(
-            Bukkit.getConsoleSender(),
-            "lp user " + player.name + " permission set " + permission + " true"
-        )
+        Bukkit.getScheduler().runTask(IngeniaMC.plugin, Runnable {
+            Bukkit.dispatchCommand(
+                Bukkit.getConsoleSender(),
+                "lp user " + player.name + " permission set " + permission + " true"
+            )
+        })
     }
 
     fun startParkour(parkour: Parkour){
-
+        player.velocity = Vector(0.0, 0.0, 0.0)
         game = PhysicalGameType.PARKOUR
         isInGameLeavingState = false
         sendMessage(MessageType.PLAYER_UPDATE + "Use '/leave' to cancel the parkour.")

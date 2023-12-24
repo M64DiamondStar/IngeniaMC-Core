@@ -10,8 +10,8 @@ import me.m64diamondstar.ingeniamccore.utils.leaderboard.Leaderboard
 import me.m64diamondstar.ingeniamccore.utils.leaderboard.LeaderboardRegistry
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
-import me.m64diamondstar.ingeniamccore.utils.rewards.Reward
-import me.m64diamondstar.ingeniamccore.utils.rewards.RewardUtils
+import me.m64diamondstar.ingeniamccore.general.rewards.Reward
+import me.m64diamondstar.ingeniamccore.general.rewards.RewardUtils
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket

@@ -2,6 +2,7 @@ package me.m64diamondstar.ingeniamccore.wands.wands
 
 import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
+import me.m64diamondstar.ingeniamccore.wands.utils.Wand
 import org.bukkit.Color
 import org.bukkit.Particle
 import org.bukkit.entity.Player

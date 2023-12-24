@@ -6,13 +6,18 @@ import me.m64diamondstar.ingeniamccore.games.parkour.Parkour
 import me.m64diamondstar.ingeniamccore.games.parkour.ParkourUtils
 import me.m64diamondstar.ingeniamccore.games.presenthunt.PresentHunt
 import me.m64diamondstar.ingeniamccore.games.presenthunt.PresentHuntUtils
+import me.m64diamondstar.ingeniamccore.games.splashbattle.SplashBattle
+import me.m64diamondstar.ingeniamccore.games.splashbattle.SplashBattleUtils
 import me.m64diamondstar.ingeniamccore.utils.IngeniaSubcommand
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
 import me.m64diamondstar.ingeniamccore.utils.messages.Messages
+import org.bukkit.FluidCollisionMode
 import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.command.CommandSender
+import org.bukkit.entity.EntityType
+import org.bukkit.entity.ItemFrame
 import org.bukkit.entity.Player
 
 class GameSubcommand(private val sender: CommandSender, private val args: Array<String>): IngeniaSubcommand {
@@ -69,7 +74,7 @@ class GameSubcommand(private val sender: CommandSender, private val args: Array<
                 }
 
                 val parkour = Parkour(args[3], args[4])
-                parkour.createParkour(player.world)
+                parkour.create(player.world)
 
                 player.sendMessage(Colors.format(MessageType.SUCCESS + "Parkour has successfully been created!"))
             }
@@ -115,12 +120,63 @@ class GameSubcommand(private val sender: CommandSender, private val args: Array<
                     }
                 }
 
+                /*
+                    Leaderboard subcommand
+                    Manage/reload the leaderboard of given splash battle
+                 */
+                if(args[5].equals("leaderboard", ignoreCase = true)){
+                    if(args.size == 7 && args[6].equals("setlocation", true)){
+                        var found = false
+
+                        player.getNearbyEntities(5.0, 5.0, 5.0).forEach {
+                            if(it.type != EntityType.ITEM_FRAME)
+                                return@forEach
+                            it as ItemFrame
+
+                            val toFrame = it.location.toVector().subtract(player.eyeLocation.toVector())
+                            val dot = toFrame.normalize().dot(player.eyeLocation.direction)
+
+                            //if the player looks at the direction of the itemframe
+                            if(dot > 0.95){
+                                it.remove()
+
+                                found = true
+                                player.sendMessage(Colors.format(MessageType.SUCCESS + "Leaderboard location has been set."))
+                                player.spawnParticle(Particle.SMOKE_NORMAL, it.location, 100, 0.23, 0.23, 0.23, 0.0)
+
+                                parkour.getLeaderboard().setLeaderboardEnabled(true)
+                                parkour.getLeaderboard().setLeaderboardLocation(it.location.blockX, it.location.blockY, it.location.blockZ)
+                                parkour.getLeaderboard().setLeaderboardDirection(it.facing.toString())
+                                parkour.getLeaderboard().spawnSign()
+
+                                return
+                            }
+                        }
+
+                        if(!found){
+                            player.sendMessage(Colors.format(MessageType.ERROR + "Didn't find an ItemFrame, please place an ItemFrame" +
+                                    " and look at it while executing this command."))
+                        }
+
+                    }else if(args.size == 7 && args[6].equals("reload", true)){
+                        parkour.getLeaderboard().spawnSign()
+
+                        player.sendMessage(Colors.format(MessageType.SUCCESS + "Leaderboard has been reloaded."))
+                    }
+                }
+
             }
 
             else{
                 sender.sendMessage(Colors.format(MessageType.ERROR + "Please use a valid sub-command! Check the auto tab-completion!"))
             }
-        }else if(args[1].equals("presenthunt", ignoreCase = true)){
+        }
+
+
+
+
+
+        else if(args[1].equals("presenthunt", ignoreCase = true)){
             if(args[2].equals("create", ignoreCase = true)){
                 if(PresentHuntUtils.existsPresentHunt(args[3], args[4])){
                     player.sendMessage(Colors.format(MessageType.ERROR + "The present hunt ${args[4]} already exists. " +
@@ -201,6 +257,113 @@ class GameSubcommand(private val sender: CommandSender, private val args: Array<
             }
         }
 
+
+
+
+        else if(args[1].equals("splashbattle", ignoreCase = true)) {
+            if(args.size < 3){
+                player.sendMessage(Colors.format(MessageType.ERROR + "Not enough arguments."))
+                return
+            }
+
+            if(args.size == 4 && args[2].equals("create", ignoreCase = true)){
+                val splashBattle = SplashBattle(args[3])
+                splashBattle.create(player.world)
+                player.sendMessage(Colors.format(MessageType.SUCCESS + "Successfully created the Splash Battle."))
+            }
+
+            if(args.size > 4 && args[2].equals("modify", ignoreCase = true)){
+                if(!SplashBattleUtils.existsSplashBattle(args[3])){
+                    player.sendMessage(Colors.format(MessageType.ERROR + "Splash Battle doesn't exist."))
+                    return
+                }
+
+                val splashBattle = SplashBattle(args[3])
+
+                if(args.size == 5) {
+
+                    if (args[4].equals("addSpawnPoint", ignoreCase = true)) {
+                        splashBattle.addSpawnPoint(player.location)
+                        player.sendMessage(Colors.format(MessageType.SUCCESS + "Added Spawn Point."))
+                    }
+
+                    else if (args[4].equals("setJoinSign", ignoreCase = true)) {
+
+                        if(player.getTargetBlockExact(5, FluidCollisionMode.NEVER) == null) {
+                            player.sendMessage(Colors.format(MessageType.ERROR + "No block in radius. Please look at a sign."))
+                            return
+                        }
+
+                        if(!player.getTargetBlockExact(5, FluidCollisionMode.NEVER)!!.type.toString().contains("SIGN")) {
+                            player.sendMessage(Colors.format(MessageType.ERROR + "Please look at a sign."))
+                            return
+                        }
+
+                        val location = player.getTargetBlockExact(5, FluidCollisionMode.NEVER)!!.location
+
+                        splashBattle.joinSignLocation = location
+                        player.sendMessage(Colors.format(MessageType.SUCCESS + "Set sign as join sign."))
+                        player.spawnParticle(Particle.SMOKE_NORMAL, location.add(0.5, 0.5, 0.5),
+                            100, 0.0, 0.2, 0.0, 0.0)
+                    }
+
+                }
+
+                if(args.size == 6)
+                    if(args[4].equals("setDisplay", ignoreCase = true)){
+                        splashBattle.displayName = args[5].replace("_", " ").replace("-", " ")
+                        player.sendMessage(Colors.format(MessageType.SUCCESS + "Successfully changed the display name of the Splash Battle!"))
+                    }
+
+                /*
+                    Leaderboard subcommand
+                    Manage/reload the leaderboard of given splash battle
+                 */
+                if(args[4].equals("leaderboard", ignoreCase = true)){
+                    if(args.size == 6 && args[5].equals("setlocation", true)){
+                        var found = false
+
+                        player.getNearbyEntities(5.0, 5.0, 5.0).forEach {
+                            if(it.type != EntityType.ITEM_FRAME)
+                                return@forEach
+                            it as ItemFrame
+
+                            val toFrame = it.location.toVector().subtract(player.eyeLocation.toVector())
+                            val dot = toFrame.normalize().dot(player.eyeLocation.direction)
+
+                            //if the player looks at the direction of the itemframe
+                            if(dot > 0.95){
+                                it.remove()
+
+                                found = true
+                                player.sendMessage(Colors.format(MessageType.SUCCESS + "Leaderboard location has been set."))
+                                player.spawnParticle(Particle.SMOKE_NORMAL, it.location, 100, 0.23, 0.23, 0.23, 0.0)
+
+                                splashBattle.getLeaderboard().setLeaderboardEnabled(true)
+                                splashBattle.getLeaderboard().setLeaderboardLocation(it.location.blockX, it.location.blockY, it.location.blockZ)
+                                splashBattle.getLeaderboard().setLeaderboardDirection(it.facing.toString())
+                                splashBattle.getLeaderboard().spawnSoaksSign()
+
+                                return
+                            }
+                        }
+
+                        if(!found){
+                            player.sendMessage(Colors.format(MessageType.ERROR + "Didn't find an ItemFrame, please place an ItemFrame" +
+                                    " and look at it while executing this command."))
+                        }
+
+                    }else if(args.size == 6 && args[5].equals("reload", true)){
+                        splashBattle.getLeaderboard().spawnSoaksSign()
+
+                        player.sendMessage(Colors.format(MessageType.SUCCESS + "Leaderboard has been reloaded."))
+                    }
+                }
+
+            }
+
+        }
+
         else{
             sender.sendMessage(Colors.format(MessageType.ERROR + "Please use a valid sub-command! Check the auto tab-completion!"))
         }
@@ -213,6 +376,8 @@ class GameSubcommand(private val sender: CommandSender, private val args: Array<
             tabs.add("guesstheword")
             tabs.add("parkour")
             tabs.add("presenthunt")
+            tabs.add("splashbattle")
+            tabs.add("leaderboard")
         }
 
         if(args.size == 3){
@@ -222,7 +387,8 @@ class GameSubcommand(private val sender: CommandSender, private val args: Array<
                 tabs.add("remove")
             }
 
-            if(args[1].equals("parkour", ignoreCase = true) || args[1].equals("presenthunt", ignoreCase = true)){
+            if(args[1].equals("parkour", ignoreCase = true) || args[1].equals("presenthunt", ignoreCase = true)
+                || args[1].equals("splashbattle", ignoreCase = true)){
                 tabs.add("create")
                 tabs.add("modify")
             }
@@ -238,6 +404,12 @@ class GameSubcommand(private val sender: CommandSender, private val args: Array<
             if(args[1].equals("presenthunt", ignoreCase = true)){
                 if(args[2].equals("modify", ignoreCase = true)){
                     PresentHuntUtils.getCategories().forEach { tabs.add(it.name) }
+                }
+            }
+
+            if(args[1].equals("splashbattle", ignoreCase = true)){
+                if(args[2].equals("modify", ignoreCase = true)){
+                    SplashBattleUtils.getSplashBattles().forEach { tabs.add(it.name) }
                 }
             }
         }
@@ -260,6 +432,19 @@ class GameSubcommand(private val sender: CommandSender, private val args: Array<
                         PresentHuntUtils.getPresentHunts(args[3]).forEach { tabs.add(it.name) }
                 }
             }
+
+            if(args[1].equals("splashbattle", ignoreCase = true)){
+                if(args[2].equals("modify", ignoreCase = true)){
+                    if(!SplashBattleUtils.existsSplashBattle(args[3]))
+                        tabs.add("BATTLE_DOES_NOT_EXIST")
+                    else{
+                        tabs.add("addSpawnPoint")
+                        tabs.add("setDisplay")
+                        tabs.add("setJoinSign")
+                        tabs.add("leaderboard")
+                    }
+                }
+            }
         }
 
         if(args.size == 6){
@@ -273,6 +458,7 @@ class GameSubcommand(private val sender: CommandSender, private val args: Array<
                         tabs.add("setStartRadius")
                         tabs.add("setEndRadius")
                         tabs.add("setDisplay")
+                        tabs.add("leaderboard")
                     }
                 }
             }
@@ -286,6 +472,30 @@ class GameSubcommand(private val sender: CommandSender, private val args: Array<
                         tabs.add("removePresent")
                         tabs.add("spawnRandomPresent")
                         tabs.add("despawnAllPresents")
+                    }
+                }
+            }
+
+            if(args[1].equals("splashbattle", ignoreCase = true)){
+                if(args[2].equals("modify", ignoreCase = true) && args[4].equals("leaderboard", ignoreCase = true)){
+                    if(!SplashBattleUtils.existsSplashBattle(args[3]))
+                        tabs.add("BATTLE_DOES_NOT_EXIST")
+                    else{
+                        tabs.add("reload")
+                        tabs.add("setLocation")
+                    }
+                }
+            }
+        }
+
+        if(args.size == 7) {
+            if (args[1].equals("parkour", ignoreCase = true)) {
+                if (args[2].equals("modify", ignoreCase = true)) {
+                    if (!ParkourUtils.existsParkour(args[3], args[4]))
+                        tabs.add("PARKOUR_DOES_NOT_EXIST")
+                    else {
+                        tabs.add("setLocation")
+                        tabs.add("reload")
                     }
                 }
             }

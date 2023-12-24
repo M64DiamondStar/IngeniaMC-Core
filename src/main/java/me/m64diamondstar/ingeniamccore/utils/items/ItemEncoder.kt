@@ -6,6 +6,10 @@ import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.util.*
 
+/**
+ * Encode items from an ItemStack to a string
+ * @param item the ItemStack to encode
+ */
 class ItemEncoder(private val item: ItemStack) {
     fun encodedItem(): String? {
         var encodedItem: String? = null

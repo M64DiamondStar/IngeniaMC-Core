@@ -54,7 +54,14 @@ class TicketCommand: ListenerAdapter() {
 
                 embedBuilder.setTitle("Tickets")
                 embedBuilder.setDescription("Please click the button below to create \na new ticket. Further " +
-                        "details will\nbe given inside of the ticket.")
+                        "details will\n" +
+                        "be given inside of the ticket.\n" +
+                        "\n" +
+                        "*What is a ticket used for?*\n" +
+                        "- When you want to **apply for team**\n" +
+                        "- When you get an **error on the store**\n" +
+                        "- To **report players or bugs**\n" +
+                        "- **Questions** that can't be asked publicly")
                 embedBuilder.setThumbnail("https://ingeniamc.net/images/nametag.png")
                 embedBuilder.setColor(Color.decode("#ffb833"))
 
@@ -128,7 +135,7 @@ class TicketCommand: ListenerAdapter() {
                         it.sendMessageEmbeds(embedBuilder.build()).addActionRow(applyButton, purchaseButton, playerButton)
                             .addActionRow(bugButton, otherButton, closeButton).queue()
 
-                        it.manager.putPermissionOverride(event.member!!, 1024, 2048)
+                        it.manager.putPermissionOverride(event.member!!, 139586751552, 2048)
                             .putPermissionOverride(event.guild!!.getRolesByName("@everyone", true)[0],
                                 0L, 1024L).queue()
                     }

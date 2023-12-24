@@ -2,7 +2,8 @@ package me.m64diamondstar.ingeniamccore.wands.wands
 
 import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
-import me.m64diamondstar.ingeniamccore.wands.Cooldowns
+import me.m64diamondstar.ingeniamccore.wands.utils.Cooldowns
+import me.m64diamondstar.ingeniamccore.wands.utils.Wand
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.Particle
@@ -12,7 +13,7 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import java.util.*
 
-class Bush:Wand {
+class Bush: Wand {
 
     override fun getDisplayName(): String{
         return Colors.format("#188c00&lB#179b00&lu#15ab00&ls#14ba00&lh #14ba00&lW#15ab00&la#179b00&ln#188c00&ld")
