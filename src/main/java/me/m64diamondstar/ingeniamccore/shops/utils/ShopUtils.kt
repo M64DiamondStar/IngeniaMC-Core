@@ -2,17 +2,7 @@ package me.m64diamondstar.ingeniamccore.shops.utils
 
 import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.games.parkour.Parkour
-import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
-import me.m64diamondstar.ingeniamccore.utils.messages.Colors
-import me.m64diamondstar.ingeniamccore.utils.messages.Font
-import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
-import org.bukkit.entity.Player
-import org.bukkit.inventory.ItemStack
 import java.io.File
-import java.lang.Exception
-import java.text.NumberFormat
-import java.util.*
-import kotlin.collections.ArrayList
 
 object ShopUtils {
 
