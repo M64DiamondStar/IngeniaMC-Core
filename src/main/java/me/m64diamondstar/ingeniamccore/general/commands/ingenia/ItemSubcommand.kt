@@ -65,6 +65,11 @@ class ItemSubcommand(private val sender: CommandSender, private val args: Array<
                     sender.sendMessage(Colors.format(MessageType.SUCCESS + "Successfully set the cosmetic ${args[3]} to the item " +
                             "${sender.inventory.itemInMainHand.type}."))
                 }
+
+                "reload" -> {
+                    cosmeticItems.reload()
+                    sender.sendMessage(Colors.format(MessageType.SUCCESS + "Successfully reloaded the saved items."))
+                }
             }
         }catch (ex: IllegalArgumentException){
             sender.sendMessage(Colors.format(MessageType.ERROR + "Please enter a valid cosmetic type."))
@@ -80,13 +85,16 @@ class ItemSubcommand(private val sender: CommandSender, private val args: Array<
             tabs.add("set")
             tabs.add("get")
             tabs.add("exists")
+            tabs.add("reload")
         }
 
         if(args.size == 3){
+            if(args[1].equals("reload", ignoreCase = true)) return tabs
             CosmeticType.values().forEach { tabs.add(it.toString()) }
         }
 
         if(args.size == 4){
+            if(args[1].equals("reload", ignoreCase = true)) return tabs
             try{
                 val cosmeticType = CosmeticType.valueOf(args[2])
                 val cosmeticItems = CosmeticItems(cosmeticType)

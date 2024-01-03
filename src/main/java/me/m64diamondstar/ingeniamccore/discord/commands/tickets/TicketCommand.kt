@@ -2,12 +2,14 @@ package me.m64diamondstar.ingeniamccore.discord.commands.tickets
 
 import me.m64diamondstar.ingeniamccore.discord.commands.BotUtils
 import net.dv8tion.jda.api.EmbedBuilder
+import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import net.dv8tion.jda.api.interactions.components.buttons.Button
 import java.awt.Color
+import java.util.*
 import kotlin.concurrent.thread
 
 class TicketCommand: ListenerAdapter() {
@@ -34,7 +36,7 @@ class TicketCommand: ListenerAdapter() {
             embedBuilder.setColor(Color.decode("#ffb833"))
 
             val setTicketChannel = Button.primary("setTicketChannel", "Set Ticket Channel")
-            val setLogChannel = Button.primary("setLogChannel", "Set Log Channel")
+            val setLogChannel = Button.primary("setTicketLogChannel", "Set Log Channel")
 
             event.hook.sendMessageEmbeds(embedBuilder.build()).addActionRow(setTicketChannel, setLogChannel).queue()
         }
@@ -42,6 +44,8 @@ class TicketCommand: ListenerAdapter() {
     }
 
     override fun onButtonInteraction(event: ButtonInteractionEvent) {
+        if(event.member == null) return
+
         when (event.button.id) {
 
             "setTicketChannel" -> {
@@ -77,7 +81,7 @@ class TicketCommand: ListenerAdapter() {
                 event.deferEdit().queue()
             }
 
-            "setLogChannel" -> {
+            "setTicketLogChannel" -> {
                 event.deferReply(true).queue()
 
                 BotUtils.TicketUtils.logChannel = event.channel as TextChannel
@@ -111,7 +115,7 @@ class TicketCommand: ListenerAdapter() {
                     event.guild?.getCategoriesByName(
                         "tickets",
                         true
-                    )!![0]?.createTextChannel("ticket-${BotUtils.TicketUtils.ticketCount}")?.queue {
+                    )!![0]?.createTextChannel("ticket-${BotUtils.TicketUtils.ticketCount}")?.addPermissionOverride(event.member!!, getTicketHolderPermissions(), null)?.queue {
                         event.hook.sendMessage("Successfully created ${it.asMention}").queue()
                         it.manager.setTopic("ID: ${event.user.id}").queue()
 
@@ -135,8 +139,7 @@ class TicketCommand: ListenerAdapter() {
                         it.sendMessageEmbeds(embedBuilder.build()).addActionRow(applyButton, purchaseButton, playerButton)
                             .addActionRow(bugButton, otherButton, closeButton).queue()
 
-                        it.manager.putPermissionOverride(event.member!!, 139586751552, 2048)
-                            .putPermissionOverride(event.guild!!.getRolesByName("@everyone", true)[0],
+                        it.manager.putPermissionOverride(event.guild!!.getRolesByName("@everyone", true)[0],
                                 0L, 1024L).queue()
                     }
 
@@ -159,7 +162,9 @@ class TicketCommand: ListenerAdapter() {
                         "5) Do you already have experience? Proof will also help!\n" +
                         "6) What is your motivation to work with us?\n" +
                         "\n" +
-                        "Thank you very much for applying, we'll get in contact as soon as possible!")
+                        "Thank you very much for applying, we'll get in contact as soon as possible!" +
+                        "\n" +
+                        "By applying you agree to our [Terms and Conditions](https://ingeniamc.net/team-tac).")
                 embedBuilder.setThumbnail("https://ingeniamc.net/images/bricks.png")
                 embedBuilder.setColor(Color.decode("#ffb833"))
 
@@ -268,5 +273,19 @@ class TicketCommand: ListenerAdapter() {
                 event.channel.asTextChannel().manager.setName(event.channel.name + "-o").queue()
             }
         }
+    }
+
+    private fun getTicketHolderPermissions(): EnumSet<Permission>? {
+        return EnumSet.of(
+            Permission.VIEW_CHANNEL,
+            Permission.MESSAGE_SEND,
+            Permission.MESSAGE_EMBED_LINKS,
+            Permission.MESSAGE_HISTORY,
+            Permission.MESSAGE_ATTACH_FILES,
+            Permission.MESSAGE_EXT_EMOJI,
+            Permission.MESSAGE_ADD_REACTION,
+            Permission.MESSAGE_TTS,
+            Permission.MESSAGE_EXT_STICKER
+        )
     }
 }

@@ -19,8 +19,10 @@ class SignActionRandomGravity: SignAction() {
         if (info.isAction(SignActionType.GROUP_ENTER)) {
             if (!info.hasGroup()) return
 
-            val random = Random.nextDouble(info.getLine(2).toDouble(), info.getLine(3).toDouble())
-            info.group.properties.gravity += random
+            val times = if(Random.nextBoolean()) 1 else -1
+            val distance = Random.nextDouble(0.0, info.getLine(3).toDouble()) * times
+            val range = Random.nextDouble(0.0, info.getLine(3).toDouble()) * times
+            info.group.properties.gravity += distance + range
         }
     }
 
@@ -31,26 +33,20 @@ class SignActionRandomGravity: SignAction() {
                 event.player.sendMessage(Colors.format(MessageType.ERROR + "Please use this format:"))
                 event.player.sendMessage(Colors.format(MessageType.ERROR + "    [train]"))
                 event.player.sendMessage(Colors.format(MessageType.ERROR + "  randomgravity"))
-                event.player.sendMessage(Colors.format(MessageType.ERROR + " <lowest random>"))
-                event.player.sendMessage(Colors.format(MessageType.ERROR + "<highest random>"))
+                event.player.sendMessage(Colors.format(MessageType.ERROR + "   <distance>"))
+                event.player.sendMessage(Colors.format(MessageType.ERROR + "    <range>"))
                 return false
             }
         }
 
-        try{
-            if(event.getLine(2).toDouble() >= event.getLine(3).toDouble()){
-                event.player.sendMessage(Colors.format(MessageType.ERROR +
-                        "The second number has to be bigger than the first one."))
+            if(event.getLine(2).toDoubleOrNull() == null ||  event.getLine(3).toDoubleOrNull() == null){
+                event.player.sendMessage(Colors.format(MessageType.ERROR + "Please use a valid numbers."))
                 return false
             }
-        }catch (e: NumberFormatException){
-            event.player.sendMessage(Colors.format(MessageType.ERROR + "Please use a valid numbers."))
-            return false
-        }
 
         return SignBuildOptions.create()
             .setName("Set Random Gravity")
-            .setDescription("set the gravity to a random value between 2 numbers")
+            .setDescription("set the gravity to a random value")
             .handle(event.player)
     }
 

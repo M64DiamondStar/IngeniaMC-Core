@@ -16,9 +16,9 @@ class CosmeticPlayerConfig(uuid: UUID) : DataConfiguration("data/cosmetic-user",
      * Gets all cosmetics a player has obtained from a specific cosmetic type
      * @param cosmeticType the type of cosmetic to check
      */
-    fun getAllCosmetics(cosmeticType: CosmeticType): SortedSet<String> {
-        if(this.getConfig().getConfigurationSection(cosmeticType.toString()) == null) return emptyArray<String>().toSortedSet()
-        return this.getConfig().getConfigurationSection(cosmeticType.toString())!!.getKeys(false).toSortedSet()
+    fun getAllCosmetics(cosmeticType: CosmeticType): List<String> {
+        if(this.getConfig().getConfigurationSection(cosmeticType.toString()) == null) return emptyList()
+        return this.getConfig().getConfigurationSection(cosmeticType.toString())!!.getKeys(false).toList()
     }
 
     /**

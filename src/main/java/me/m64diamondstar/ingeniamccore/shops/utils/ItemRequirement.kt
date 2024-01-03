@@ -1,13 +1,57 @@
 package me.m64diamondstar.ingeniamccore.shops.utils
 
 import me.m64diamondstar.ingeniamccore.attractions.utils.Attraction
+import me.m64diamondstar.ingeniamccore.games.parkour.Parkour
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.utils.EnumUtilities
 import me.m64diamondstar.ingeniamccore.utils.Rank
 import org.bukkit.entity.Player
+import java.time.format.DateTimeFormatter
 
 enum class ItemRequirement {
 
+    PARKOUR_TIME{
+        /**
+         * Checks if the player has completed a parkour in a certain time
+         * @param player the player
+         * @param value a string in the format of "category,name,time"
+         */
+        override fun isCompleted(player: Player, value: String): Boolean {
+            val args = value.split(",")
+            if(args[2].toLongOrNull() == null) return false
+            val parkour = Parkour(args[0], args[1])
+            if(parkour.getLeaderboard().getRecord(player) == 0L) return false
+            return parkour.getLeaderboard().getRecord(player) <= args[2].toLong()
+        }
+
+        /**
+         *
+         */
+        override fun getDisplay(value: String): String {
+            val args = value.split(",")
+            if(args[2].toLongOrNull() == null) return "Internal error"
+            val time = args[2].toLong()
+
+            val minutes = (time / (1000 * 60)) % 60
+            val seconds = (time / 1000) % 60
+            val remainingMilliseconds = time % 1000
+
+            val parkour = Parkour(args[0], args[1])
+            return "Parkour ${parkour.displayName} completion in under ${
+                if(minutes == 0L)
+                    String.format("%02ds %03dms", seconds, remainingMilliseconds)
+                else
+                    String.format("%02dm %02ds %03dms", minutes, seconds, remainingMilliseconds)
+            }."
+        }
+
+        /**
+         *
+         */
+        override fun getValueFormat(): String {
+            return "category,name,time"
+        }
+    },
     RIDECOUNT{
         /**
         * @param player the player

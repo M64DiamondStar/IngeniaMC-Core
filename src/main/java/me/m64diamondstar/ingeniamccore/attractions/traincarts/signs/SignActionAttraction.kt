@@ -23,6 +23,8 @@ class SignActionAttraction: SignAction() {
 
         if(info.isAction(SignActionType.GROUP_ENTER)) {
 
+            info.group.properties.displayName = info.getLine(2) + "_" + info.getLine(3)
+
             // Register some default variables
             val coaster = Coaster(info.getLine(2), info.getLine(3))
             val row = info.getLine(1).split(" ")[1].toInt()

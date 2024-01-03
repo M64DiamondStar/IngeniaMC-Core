@@ -31,7 +31,7 @@ class CosmeticItems(cosmeticType: CosmeticType): DataConfiguration("data/items",
     fun create(id: String, item: ItemStack, override: Boolean): Boolean {
         if(this.getConfig().get(id) != null && !override)
             return false // Operation was cancelled because item already existed
-        this.getConfig().set("$id.Data", ItemEncoder(item).encodedItem())
+        this.getConfig().set("$id.Data", item.serialize())
         this.save()
         return true // Operation has been completed successfully
     }
@@ -49,10 +49,9 @@ class CosmeticItems(cosmeticType: CosmeticType): DataConfiguration("data/items",
      * Get the ItemStack of a cosmetic item
      * @param id the ID of the cosmetic item
      */
-    fun getItem(id: String): ItemStack? {
-        val item = this.getConfig().getString("$id.Data") ?: return null
-        val decodedItem = ItemDecoder(item).decodedItem() ?: return null
-        return applyID(decodedItem, id)
+    fun getItem(id: String?): ItemStack? {
+        val item = ItemStack.deserialize(getConfig().getConfigurationSection("$id.Data")?.getValues(true) ?: return null)
+        return applyID(item, id ?: return null)
     }
 
     /**
@@ -89,8 +88,8 @@ class CosmeticItems(cosmeticType: CosmeticType): DataConfiguration("data/items",
      * @param item the item
      * @param id the ID
      */
-    private fun applyID(item: ItemStack, id: String): ItemStack{
-        val meta = item.itemMeta!!
+    private fun applyID(item: ItemStack, id: String): ItemStack?{
+        val meta = item.itemMeta ?: return null
         meta.persistentDataContainer.set(NamespacedKey(IngeniaMC.plugin, "cosmetic"), PersistentDataType.STRING, id)
         item.itemMeta = meta
         return item

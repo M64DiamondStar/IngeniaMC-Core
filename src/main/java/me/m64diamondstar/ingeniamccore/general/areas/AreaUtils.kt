@@ -54,4 +54,11 @@ object AreaUtils {
         return list
     }
 
+    fun getAreaFromName(name: String?): Area? {
+        if(name == null) return null
+        if(name.split("/").size != 2) return null
+        if(!existsArea(name.split("/")[0], name.split("/")[1])) return null
+        return Area(name.split("/")[0], name.split("/")[1])
+    }
+
 }

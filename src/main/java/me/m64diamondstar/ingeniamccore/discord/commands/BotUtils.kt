@@ -144,4 +144,15 @@ object BotUtils {
 
     }
 
+    object LogsUtils {
+        var logChannel: TextChannel?
+            set(value) {
+                if(value != null) {
+                    IngeniaMC.plugin.config.set("Discord.Bot.Logs.LogChannelID", value.idLong)
+                    IngeniaMC.plugin.saveConfig()
+                }
+            }
+            get() = DiscordBot.jda.getTextChannelById(IngeniaMC.plugin.config.getLong("Discord.Bot.Logs.LogChannelID"))
+    }
+
 }

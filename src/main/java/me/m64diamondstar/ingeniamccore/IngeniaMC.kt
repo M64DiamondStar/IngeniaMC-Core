@@ -15,6 +15,7 @@ import me.m64diamondstar.ingeniamccore.games.presenthunt.listeners.PlayerInterac
 import me.m64diamondstar.ingeniamccore.games.splashbattle.SplashBattleUtils
 import me.m64diamondstar.ingeniamccore.games.splashbattle.listeners.*
 import me.m64diamondstar.ingeniamccore.general.areas.AreaUtils
+import me.m64diamondstar.ingeniamccore.general.areas.listeners.AudioConnectListener
 import me.m64diamondstar.ingeniamccore.general.areas.listeners.PlayerMoveListener
 import me.m64diamondstar.ingeniamccore.general.commands.*
 import me.m64diamondstar.ingeniamccore.general.commands.ingenia.IngeniaCommand
@@ -314,6 +315,11 @@ class IngeniaMC : JavaPlugin() {
             Shop Events
          */
         Bukkit.getServer().pluginManager.registerEvents(ShopListener(), this)
+
+        /*
+            Audio Events
+         */
+        AudioConnectListener.startListeners()
     }
 
     private fun loadPacketListeners(){

@@ -34,6 +34,10 @@ class GuildReadyListener: ListenerAdapter() {
                 .addOption(OptionType.STRING, "color", "The color.", false)
                 .addOption(OptionType.CHANNEL, "channel", "The channel to send the message in", false)
                 .setDefaultPermissions(DefaultMemberPermissions.enabledFor(Permission.ADMINISTRATOR)))
+
+            .addCommands(Commands.slash("logs", "Edit logs configuration.")
+                .setDefaultPermissions(DefaultMemberPermissions.enabledFor(Permission.ADMINISTRATOR)))
+
             .queue()
     }
 

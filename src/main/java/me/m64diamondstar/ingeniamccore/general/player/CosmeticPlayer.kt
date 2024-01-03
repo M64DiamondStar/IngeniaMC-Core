@@ -36,7 +36,7 @@ class CosmeticPlayer(private val player: Player) {
      * Gets all cosmetics a player has obtained from a specific cosmetic type
      * @param cosmeticType the type of cosmetic to check
      */
-    fun getAllCosmetics(cosmeticType: CosmeticType): SortedSet<String> {
+    fun getAllCosmetics(cosmeticType: CosmeticType): List<String> {
         return cosmeticPlayerConfig.getAllCosmetics(cosmeticType)
     }
 

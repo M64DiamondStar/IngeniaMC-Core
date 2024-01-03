@@ -1,7 +1,6 @@
 package me.m64diamondstar.ingeniamccore.cosmetics.inventory
 
 import me.m64diamondstar.ingeniamccore.cosmetics.data.CosmeticItems
-import me.m64diamondstar.ingeniamccore.cosmetics.data.CosmeticLore
 import me.m64diamondstar.ingeniamccore.cosmetics.utils.CosmeticType
 import me.m64diamondstar.ingeniamccore.general.inventory.MainInventory
 import me.m64diamondstar.ingeniamccore.general.player.CosmeticPlayer
@@ -17,9 +16,12 @@ import org.bukkit.event.inventory.InventoryType
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.ItemMeta
 
-class CosmeticsInventory(private var player: Player, private var selected: String): Gui(IngeniaPlayer(player)) {
+class CosmeticsInventory(private var player: Player, private var selected: String, private val page: Int): Gui(IngeniaPlayer(player)) {
 
     private val freeSlots = Array(21) {i -> if(i in  0..6) i + 19 else if(i in 7..13) i + 21 else i + 23}
+
+    private val previousPage = intArrayOf(18, 27, 36)
+    private val nextPage = intArrayOf(26, 35, 44)
 
     override fun setDisplayName(): String {
         return Colors.format("\uF808&f田\uF81C\uF81A\uF819\uF811$selected")
@@ -44,20 +46,72 @@ class CosmeticsInventory(private var player: Player, private var selected: Strin
         }
 
         if(event.slot in 1..7 && event.slot != 4) {
-            var inventory = CosmeticsInventory(player, "國")
+            var newInventory = CosmeticsInventory(player, "國", 0)
 
             //All the different options
 
             when (event.slot) {
-                1 -> inventory = CosmeticsInventory(player, "國") // Hats
-                2 -> inventory = CosmeticsInventory(player, "因") // Shirts
-                3 -> inventory = CosmeticsInventory(player, "圖") // Wands
-                5 -> inventory = CosmeticsInventory(player, "果") // Balloons
-                6 -> inventory = CosmeticsInventory(player, "四") // Pants
-                7 -> inventory = CosmeticsInventory(player, "界") // Boots
+                1 -> { // Hats
+                    newInventory = CosmeticsInventory(player, "國", 0)
+                    if(event.isRightClick){
+                        cosmeticPlayer.getEquipment().unEquipCosmetic(CosmeticType.HAT)
+                        inventory.setItem(1, null)
+                    }
+                }
+                2 -> { // Shirts
+                    newInventory = CosmeticsInventory(player, "因", 0)
+                    if(event.isRightClick){
+                        cosmeticPlayer.getEquipment().unEquipCosmetic(CosmeticType.SHIRT)
+                        inventory.setItem(2, null)
+                    }
+                }
+                3 -> { // Wands
+                    newInventory = CosmeticsInventory(player, "圖", 0)
+                    if(event.isRightClick){
+                        if(player.inventory.getItem(5) != null
+                            && player.inventory.getItem(5)!!.type == Material.BLAZE_ROD
+                            && player.inventory.getItem(5)!!.hasItemMeta())
+                            player.inventory.setItem(5, null)
+                        inventory.setItem(3, null)
+                    }
+                }
+                5 -> { // Balloons
+                    newInventory = CosmeticsInventory(player, "果", 0)
+                    if(event.isRightClick){
+                        cosmeticPlayer.getEquipment().unEquipCosmetic(CosmeticType.BALLOON)
+                        inventory.setItem(5, null)
+                    }
+                }
+                6 -> { // Pants
+                    newInventory = CosmeticsInventory(player, "四", 0)
+                    if(event.isRightClick){
+                        cosmeticPlayer.getEquipment().unEquipCosmetic(CosmeticType.PANTS)
+                        inventory.setItem(6, null)
+                    }
+                }
+                7 -> { // Shoes
+                    newInventory = CosmeticsInventory(player, "界", 0)
+                    if(event.isRightClick){
+                        cosmeticPlayer.getEquipment().unEquipCosmetic(CosmeticType.SHOES)
+                        inventory.setItem(7, null)
+                    }
+                }
             }
 
+            if(event.isLeftClick)
+                newInventory.open()
+        }
+
+        if(nextPage.contains(event.slot) && event.currentItem != null){
+            val inventory = CosmeticsInventory(player, selected, page + 1)
             inventory.open()
+            return
+        }
+
+        if(previousPage.contains(event.slot) && event.currentItem != null){
+            val inventory = CosmeticsInventory(player, selected, page - 1)
+            inventory.open()
+            return
         }
 
         when(selected){
@@ -68,13 +122,12 @@ class CosmeticsInventory(private var player: Player, private var selected: Strin
 
                     if(currentHatID == hatID){
                         cosmeticPlayer.getEquipment().unEquipCosmetic(CosmeticType.HAT)
-                        addHats()
                         return
                     }
 
                     cosmeticPlayer.getEquipment().equipCosmetic(CosmeticType.HAT, CosmeticItems(CosmeticType.HAT).getID(event.currentItem!!)!!)
-                    addHats()
                     player.playSound(player.location, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 2f, 1.5f)
+                    inventory.setItem(1, addEquipmentLore(event.currentItem!!.clone(), "Hats"))
                 }
             }
 
@@ -85,20 +138,19 @@ class CosmeticsInventory(private var player: Player, private var selected: Strin
 
                     if(currentShirtID == shirtID){
                         cosmeticPlayer.getEquipment().unEquipCosmetic(CosmeticType.SHIRT)
-                        addShirts()
                         return
                     }
 
                     cosmeticPlayer.getEquipment().equipCosmetic(CosmeticType.SHIRT, CosmeticItems(CosmeticType.SHIRT).getID(event.currentItem!!)!!)
-                    addShirts()
                     player.playSound(player.location, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 2f, 1.5f)
+                    inventory.setItem(2, addEquipmentLore(event.currentItem!!.clone(), "Shirts"))
                 }
             }
 
             "圖" -> { // Wands
                 if (freeSlots.contains(event.slot) && event.currentItem != null) {
                     ingeniaPlayer.setWand(event.currentItem)
-                    inventory.setItem(3, event.currentItem)
+                    inventory.setItem(3, addEquipmentLore(event.currentItem!!.clone(), "Wands"))
                     player.playSound(player.location, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 2f, 1.5f)
                 }
             }
@@ -114,13 +166,12 @@ class CosmeticsInventory(private var player: Player, private var selected: Strin
 
                     if(currentPantsID == pantsID){
                         cosmeticPlayer.getEquipment().unEquipCosmetic(CosmeticType.PANTS)
-                        addPants()
                         return
                     }
 
                     cosmeticPlayer.getEquipment().equipCosmetic(CosmeticType.PANTS, CosmeticItems(CosmeticType.PANTS).getID(event.currentItem!!)!!)
-                    addPants()
                     player.playSound(player.location, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 2f, 1.5f)
+                    inventory.setItem(6, addEquipmentLore(event.currentItem!!.clone(), "Pants"))
                 }
             }
 
@@ -131,13 +182,12 @@ class CosmeticsInventory(private var player: Player, private var selected: Strin
 
                     if(currentShoesID == shoesID){
                         cosmeticPlayer.getEquipment().unEquipCosmetic(CosmeticType.SHOES)
-                        addShoes()
                         return
                     }
 
                     cosmeticPlayer.getEquipment().equipCosmetic(CosmeticType.SHOES, CosmeticItems(CosmeticType.SHOES).getID(event.currentItem!!)!!)
-                    addShoes()
                     player.playSound(player.location, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 2f, 1.5f)
+                    inventory.setItem(7, addEquipmentLore(event.currentItem!!.clone(), "Shoes"))
                 }
             }
         }
@@ -158,16 +208,34 @@ class CosmeticsInventory(private var player: Player, private var selected: Strin
         if(player.inventory.getItem(5) != null
             && player.inventory.getItem(5)!!.type == Material.BLAZE_ROD
             && player.inventory.getItem(5)!!.hasItemMeta()){
-            inventory.setItem(3, player.inventory.getItem(5))
+            inventory.setItem(3, addEquipmentLore(player.inventory.getItem(5)!!.clone(), "Wands"))
         }
 
+        val cosmeticPlayer = CosmeticPlayer(player)
+        inventory.setItem(1,
+            addEquipmentLore(CosmeticItems(CosmeticType.HAT).getItem(cosmeticPlayer.getEquipment().getEquippedId(CosmeticType.HAT)),
+                "Hats"))
+        inventory.setItem(2,
+            addEquipmentLore(CosmeticItems(CosmeticType.SHIRT).getItem(cosmeticPlayer.getEquipment().getEquippedId(CosmeticType.SHIRT)),
+            "Shirts"))
+
+        inventory.setItem(5,
+            addEquipmentLore(CosmeticItems(CosmeticType.BALLOON).getItem(cosmeticPlayer.getEquipment().getEquippedId(CosmeticType.BALLOON)),
+                "Balloons"))
+        inventory.setItem(6,
+            addEquipmentLore(CosmeticItems(CosmeticType.PANTS).getItem(cosmeticPlayer.getEquipment().getEquippedId(CosmeticType.PANTS)),
+                "Pants"))
+        inventory.setItem(7,
+            addEquipmentLore(CosmeticItems(CosmeticType.SHOES).getItem(cosmeticPlayer.getEquipment().getEquippedId(CosmeticType.SHOES)),
+                "Shoes"))
+
         when(selected){
-            "國" -> addHats()
-            "因" -> addShirts()
+            "國" -> addCosmetics(CosmeticType.HAT)
+            "因" -> addCosmetics(CosmeticType.SHIRT)
             "圖" -> addWands()
-            //"果" -> addBalloons()
-            "四" -> addPants()
-            "界" -> addShoes()
+            "果" -> addCosmetics(CosmeticType.BALLOON)
+            "四" -> addCosmetics(CosmeticType.PANTS)
+            "界" -> addCosmetics(CosmeticType.SHOES)
         }
     }
 
@@ -182,81 +250,55 @@ class CosmeticsInventory(private var player: Player, private var selected: Strin
         }
     }
 
-    /**
-     * Run when hat gui is chosen.
-     */
-    private fun addHats(){
+    private fun addCosmetics(cosmeticType: CosmeticType){
         val cosmeticPlayer = CosmeticPlayer(player)
-        val currentHatID = cosmeticPlayer.getEquipment().getEquippedId(CosmeticType.HAT)
-        if(cosmeticPlayer.getAllCosmeticsAsItemStack(CosmeticType.HAT).isEmpty())
+        if(cosmeticPlayer.getAllCosmeticsAsItemStack(cosmeticType).isEmpty())
             return
 
-        for(i in 0 until cosmeticPlayer.getAllCosmetics(CosmeticType.HAT).size){
-            val item = cosmeticPlayer.getAllCosmeticsAsItemStack(CosmeticType.HAT).toList()[i]
-            inventory.setItem(freeSlots[i],
-                if(currentHatID == cosmeticPlayer.getAllCosmetics(CosmeticType.HAT).toList()[i])
-                    CosmeticLore.getAsDeselect(item)
-                else
-                    CosmeticLore.getAsSelect(item))
+        var maxSize = cosmeticPlayer.getAllCosmetics(cosmeticType).size - freeSlots.size * page
+
+        if(maxSize > freeSlots.size) {
+            maxSize = freeSlots.size
+            addNextButton()
+        }
+
+        if(page > 0) {
+            addPreviousButton()
+        }
+
+        for(i in 0 until maxSize){
+            val item = cosmeticPlayer.getAllCosmeticsAsItemStack(cosmeticType).toList()[i + freeSlots.size * page]
+            inventory.setItem(freeSlots[i], item)
 
         }
     }
 
-    /**
-     * Run when shirt gui is chosen.
-     */
-    private fun addShirts(){
-        val cosmeticPlayer = CosmeticPlayer(player)
-        val currentShirtID = cosmeticPlayer.getEquipment().getEquippedId(CosmeticType.SHIRT)
-        if(cosmeticPlayer.getAllCosmeticsAsItemStack(CosmeticType.SHIRT).isEmpty())
-            return
-
-        for(i in 0 until cosmeticPlayer.getAllCosmetics(CosmeticType.SHIRT).size){
-            val item = cosmeticPlayer.getAllCosmeticsAsItemStack(CosmeticType.SHIRT).toList()[i]
-            inventory.setItem(freeSlots[i],
-                if(currentShirtID == cosmeticPlayer.getAllCosmetics(CosmeticType.SHIRT).toList()[i])
-                    CosmeticLore.getAsDeselect(item)
-                else
-                    CosmeticLore.getAsSelect(item))
-        }
+    private fun addNextButton(){
+        val item = ItemStack(Material.FEATHER)
+        val meta = item.itemMeta!!
+        meta.setCustomModelData(1)
+        meta.setDisplayName(Colors.format(MessageType.INGENIA + "&lNext Page"))
+        item.itemMeta = meta
+        nextPage.forEach { inventory.setItem(it, item) }
     }
 
-    /**
-     * Run when pants gui is chosen.
-     */
-    private fun addPants(){
-        val cosmeticPlayer = CosmeticPlayer(player)
-        val currentPantsID = cosmeticPlayer.getEquipment().getEquippedId(CosmeticType.PANTS)
-        if(cosmeticPlayer.getAllCosmeticsAsItemStack(CosmeticType.PANTS).isEmpty())
-            return
-
-        for(i in 0 until cosmeticPlayer.getAllCosmetics(CosmeticType.PANTS).size){
-            val item = cosmeticPlayer.getAllCosmeticsAsItemStack(CosmeticType.PANTS).toList()[i]
-            inventory.setItem(freeSlots[i],
-                if(currentPantsID == cosmeticPlayer.getAllCosmetics(CosmeticType.PANTS).toList()[i])
-                    CosmeticLore.getAsDeselect(item)
-                else
-                    CosmeticLore.getAsSelect(item))
-        }
+    private fun addPreviousButton(){
+        val item = ItemStack(Material.FEATHER)
+        val meta = item.itemMeta!!
+        meta.setCustomModelData(1)
+        meta.setDisplayName(Colors.format(MessageType.INGENIA + "&lPrevious Page"))
+        item.itemMeta = meta
+        previousPage.forEach { inventory.setItem(it, item) }
     }
 
-    /**
-     * Run when boots gui is chosen.
-     */
-    private fun addShoes(){
-        val cosmeticPlayer = CosmeticPlayer(player)
-        val currentShoesID = cosmeticPlayer.getEquipment().getEquippedId(CosmeticType.SHOES)
-        if(cosmeticPlayer.getAllCosmeticsAsItemStack(CosmeticType.SHOES).isEmpty())
-            return
-
-        for(i in 0 until cosmeticPlayer.getAllCosmetics(CosmeticType.SHOES).size){
-            val item = cosmeticPlayer.getAllCosmeticsAsItemStack(CosmeticType.SHOES).toList()[i]
-            inventory.setItem(freeSlots[i],
-                if(currentShoesID == cosmeticPlayer.getAllCosmetics(CosmeticType.SHOES).toList()[i])
-                    CosmeticLore.getAsDeselect(item)
-                else
-                    CosmeticLore.getAsSelect(item))
-        }
+    private fun addEquipmentLore(itemStack: ItemStack?, cosmeticType: String): ItemStack?{
+        val meta = itemStack?.itemMeta ?: return null
+        meta.setDisplayName(Colors.format(MessageType.INGENIA + cosmeticType))
+        meta.lore = listOf("",
+            Colors.format(MessageType.LORE + "Left Click to change"),
+            Colors.format(MessageType.LORE + "Right Click to un-equip"))
+        itemStack.itemMeta = meta
+        return itemStack
     }
 
 }

@@ -32,10 +32,11 @@ abstract class DataConfiguration(private val path: String, name: String) {
         createConfig()
         try {
             config?.save(file)
+            LoadedFiles.loadFile(file.path, config!!)
+            config = LoadedFiles.getFile(file.path)
         } catch (ex: Exception) {
             ex.printStackTrace()
         }
-        LoadedFiles.loadFile(file.path, config!!)
     }
 
     private fun createConfig() {

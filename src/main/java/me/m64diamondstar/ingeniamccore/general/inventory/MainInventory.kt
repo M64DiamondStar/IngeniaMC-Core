@@ -95,7 +95,7 @@ class MainInventory(player: IngeniaPlayer): Gui(player) {
         if(event.clickedInventory?.type == InventoryType.PLAYER) return
 
         if(wardrobeSlots.contains(event.slot)){
-            val cosmeticsInventory = CosmeticsInventory(getPlayer().player, "國")
+            val cosmeticsInventory = CosmeticsInventory(getPlayer().player, "國", 0)
             cosmeticsInventory.open()
         }
 
