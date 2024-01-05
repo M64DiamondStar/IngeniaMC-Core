@@ -1,4 +1,4 @@
-package me.m64diamondstar.ingeniamccore.general.listeners.protection
+package me.m64diamondstar.ingeniamccore.protect.listeners
 
 import org.bukkit.Material
 import org.bukkit.entity.EntityType

@@ -84,5 +84,16 @@ commands:
   testgui:
     description: Just a test GUI.
     permission: ingenia.admin
+  warp:
+    description: Teleport to a location.
+  feature:
+    description: Enable or disable a feature.
+    permission: ingenia.admin
+    aliases:
+      - features
+  fixaudio:
+    description: Attempt to fix audio issues.
+  audiocredits:
+    description: Open the credits of audio.
 
 

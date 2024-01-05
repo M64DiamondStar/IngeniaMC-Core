@@ -2,10 +2,13 @@ package me.m64diamondstar.ingeniamccore.shops.listeners
 
 import com.jeff_media.customblockdata.CustomBlockData
 import me.m64diamondstar.ingeniamccore.IngeniaMC
+import me.m64diamondstar.ingeniamccore.protect.FeatureManager
+import me.m64diamondstar.ingeniamccore.protect.FeatureType
 import me.m64diamondstar.ingeniamccore.shops.inventories.ShopInventory
 import me.m64diamondstar.ingeniamccore.shops.utils.ShopUtils
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
+import me.m64diamondstar.ingeniamccore.utils.messages.Messages
 import org.bukkit.NamespacedKey
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -28,6 +31,13 @@ class ShopListener: Listener {
         if(data.has(NamespacedKey(IngeniaMC.plugin, "shop-category"), PersistentDataType.STRING) &&
             data.has(NamespacedKey(IngeniaMC.plugin, "shop-name"), PersistentDataType.STRING)){
                 event.isCancelled = true
+
+                val featureManager = FeatureManager()
+                if(!featureManager.isFeatureEnabled(FeatureType.SHOPS) && !player.hasPermission("ingenia.admin")){
+                    player.sendMessage(Messages.featureDisabled())
+                    return
+                }
+
                 val category = data.get(NamespacedKey(IngeniaMC.plugin, "shop-category"), PersistentDataType.STRING)!!
                 val name = data.get(NamespacedKey(IngeniaMC.plugin, "shop-name"), PersistentDataType.STRING)!!
                 val shopInventory = ShopInventory(player, category, name)

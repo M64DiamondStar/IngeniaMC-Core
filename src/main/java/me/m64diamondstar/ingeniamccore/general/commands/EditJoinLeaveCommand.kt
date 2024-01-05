@@ -1,5 +1,7 @@
 package me.m64diamondstar.ingeniamccore.general.commands
 
+import me.m64diamondstar.ingeniamccore.protect.FeatureManager
+import me.m64diamondstar.ingeniamccore.protect.FeatureType
 import me.m64diamondstar.ingeniamccore.ranks.joinleavemessage.JoinLeaveInventory
 import me.m64diamondstar.ingeniamccore.utils.messages.Messages
 import org.bukkit.command.Command
@@ -12,6 +14,12 @@ class EditJoinLeaveCommand: CommandExecutor {
 
         if (sender !is Player) {
             sender.sendMessage(Messages.noPlayer())
+            return false
+        }
+
+        val featureManager = FeatureManager()
+        if(!featureManager.isFeatureEnabled(FeatureType.MENU) && !sender.hasPermission("ingenia.admin")){
+            sender.sendMessage(Messages.featureDisabled())
             return false
         }
 

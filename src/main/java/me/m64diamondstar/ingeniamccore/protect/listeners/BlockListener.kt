@@ -1,4 +1,4 @@
-package me.m64diamondstar.ingeniamccore.general.listeners.protection
+package me.m64diamondstar.ingeniamccore.protect.listeners
 
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener

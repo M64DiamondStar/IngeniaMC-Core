@@ -288,7 +288,12 @@ class JoinLeaveInventory(val player: Player, private var selected: Selected) : G
             inventory.setItem(17, transparentItem)
         }
 
-        if(9 + messageScroll * 2 >= cosmeticPlayer.getAllMessageColors().size){
+        if(9 + messageScroll * 2 >=
+            if(messageType == me.m64diamondstar.ingeniamccore.cosmetics.utils.MessageType.JOIN)
+                cosmeticPlayer.getAllJoinMessages().size
+            else
+                cosmeticPlayer.getAllLeaveMessages().size
+            ){
             barrierMeta.setDisplayName(Colors.format("#AA8143Scroll down"))
             barrier.itemMeta = barrierMeta
             inventory.setItem(26, barrier)

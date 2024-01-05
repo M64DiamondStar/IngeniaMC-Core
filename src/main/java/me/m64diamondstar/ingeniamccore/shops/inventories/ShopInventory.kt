@@ -2,10 +2,13 @@ package me.m64diamondstar.ingeniamccore.shops.inventories
 
 import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
+import me.m64diamondstar.ingeniamccore.protect.FeatureManager
+import me.m64diamondstar.ingeniamccore.protect.FeatureType
 import me.m64diamondstar.ingeniamccore.shops.Shop
 import me.m64diamondstar.ingeniamccore.utils.gui.Gui
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.utils.messages.Font
+import me.m64diamondstar.ingeniamccore.utils.messages.Messages
 import org.bukkit.NamespacedKey
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
@@ -30,6 +33,12 @@ class ShopInventory(player: Player, private val category: String, private val na
                 .has(NamespacedKey(IngeniaMC.plugin, "shop-item-id"), PersistentDataType.STRING)){
 
             if(!event.currentItem!!.itemMeta!!.persistentDataContainer.get(NamespacedKey(IngeniaMC.plugin, "can-buy"), PersistentDataType.BOOLEAN)!!) return
+
+            val featureManager = FeatureManager()
+            if(!featureManager.isFeatureEnabled(FeatureType.SHOPS) && !getPlayer().player.hasPermission("ingenia.admin")){
+                getPlayer().player.sendMessage(Messages.featureDisabled())
+                return
+            }
 
             val confirmInventory = ConfirmInventory(getPlayer().player, category, name,
                 event.currentItem!!.itemMeta!!.persistentDataContainer.get(NamespacedKey(IngeniaMC.plugin, "shop-item-id"), PersistentDataType.STRING)!!)

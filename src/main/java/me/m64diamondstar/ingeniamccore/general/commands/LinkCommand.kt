@@ -4,6 +4,8 @@ import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.discord.bot.DiscordBot
 import me.m64diamondstar.ingeniamccore.discord.commands.BotUtils
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
+import me.m64diamondstar.ingeniamccore.protect.FeatureManager
+import me.m64diamondstar.ingeniamccore.protect.FeatureType
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
 import me.m64diamondstar.ingeniamccore.utils.messages.Messages
@@ -24,6 +26,12 @@ class LinkCommand: CommandExecutor {
 
         if (sender !is Player) {
             sender.sendMessage(Messages.noPlayer())
+            return false
+        }
+
+        val featureManager = FeatureManager()
+        if(!featureManager.isFeatureEnabled(FeatureType.DISCORD_LINKING) && !sender.hasPermission("ingenia.admin")){
+            sender.sendMessage(Messages.featureDisabled())
             return false
         }
 

@@ -1,5 +1,6 @@
 package me.m64diamondstar.ingeniamccore.general.commands.tabcompleters
 
+import org.bukkit.Bukkit
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.command.TabCompleter
@@ -26,6 +27,12 @@ class AdminTabCompleter: TabCompleter {
             tc.add("night")
             tc.add("spawnRandomPresent")
             tc.add("location")
+            tc.add("invsee")
+        }else if(args.size == 2){
+            if(args[0].equals("invsee", ignoreCase = true)){
+                tc.clear()
+                tc.addAll(Bukkit.getOnlinePlayers().map { it.name })
+            }
         }else
             tc.clear()
 

@@ -4,8 +4,8 @@ import me.m64diamondstar.ingeniamccore.attractions.utils.AttractionUtils
 import me.m64diamondstar.ingeniamccore.cosmetics.inventory.CosmeticsInventory
 import me.m64diamondstar.ingeniamccore.general.levels.LevelUtils
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
-import me.m64diamondstar.ingeniamccore.general.warps.AttractionInventory
-import me.m64diamondstar.ingeniamccore.general.warps.ShopInventory
+import me.m64diamondstar.ingeniamccore.warps.inventories.AttractionInventory
+import me.m64diamondstar.ingeniamccore.warps.inventories.ShopInventory
 import me.m64diamondstar.ingeniamccore.ranks.RankPerksInventory
 import me.m64diamondstar.ingeniamccore.utils.gui.Gui
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors

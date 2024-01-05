@@ -225,6 +225,13 @@ class AdminCommand: CommandExecutor {
             }
         }
 
+        if(args[0].equals("invsee", ignoreCase = true)){
+            if(args.size == 2){
+                val player = Bukkit.getPlayerExact(args[1]) ?: return false
+                sender.openInventory(player.inventory)
+            }
+        }
+
         return false
     }
 }

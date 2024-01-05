@@ -19,17 +19,13 @@ import me.m64diamondstar.ingeniamccore.general.areas.listeners.AudioConnectListe
 import me.m64diamondstar.ingeniamccore.general.areas.listeners.PlayerMoveListener
 import me.m64diamondstar.ingeniamccore.general.commands.*
 import me.m64diamondstar.ingeniamccore.general.commands.ingenia.IngeniaCommand
-import me.m64diamondstar.ingeniamccore.general.commands.tabcompleters.AdminTabCompleter
-import me.m64diamondstar.ingeniamccore.general.commands.tabcompleters.AttractionTabCompleter
-import me.m64diamondstar.ingeniamccore.general.commands.tabcompleters.IngeniaTabCompleter
-import me.m64diamondstar.ingeniamccore.general.commands.tabcompleters.MessageTabCompleter
+import me.m64diamondstar.ingeniamccore.general.commands.tabcompleters.*
 import me.m64diamondstar.ingeniamccore.general.listeners.*
 import me.m64diamondstar.ingeniamccore.general.listeners.InteractListener
 import me.m64diamondstar.ingeniamccore.general.listeners.LeaveListener
 import me.m64diamondstar.ingeniamccore.general.listeners.helpers.BonemealListener
-import me.m64diamondstar.ingeniamccore.general.listeners.protection.*
-import me.m64diamondstar.ingeniamccore.general.listeners.protection.DamageListener
-import me.m64diamondstar.ingeniamccore.general.warps.WarpUtils
+import me.m64diamondstar.ingeniamccore.protect.listeners.*
+import me.m64diamondstar.ingeniamccore.protect.listeners.DamageListener
 import me.m64diamondstar.ingeniamccore.shops.listeners.ShopListener
 import me.m64diamondstar.ingeniamccore.utils.LocationUtils
 import me.m64diamondstar.ingeniamccore.utils.TeamHandler
@@ -104,7 +100,6 @@ class IngeniaMC : JavaPlugin() {
         WandRegistry.registerWands()
         Bukkit.getLogger().info("Wands loaded ✓")
 
-        WarpUtils.reloadWarpList()
         PresentHuntUtils.loadActivePresents()
         TeamHandler.load()
         Bukkit.getLogger().info("" +
@@ -224,6 +219,13 @@ class IngeniaMC : JavaPlugin() {
         Objects.requireNonNull(getCommand("editleavemessage"))?.setExecutor(EditJoinLeaveCommand())
 
         Objects.requireNonNull(getCommand("testgui"))?.setExecutor(TestGuiCommand())
+
+        Objects.requireNonNull(getCommand("warp"))?.setExecutor(WarpCommand())
+
+        Objects.requireNonNull(getCommand("feature"))?.setExecutor(FeatureCommand())
+
+        Objects.requireNonNull(getCommand("fixaudio"))?.setExecutor(FixAudioCommand())
+        Objects.requireNonNull(getCommand("audiocredits"))?.setExecutor(AudioCreditsCommand())
     }
 
     private fun loadTabCompleters() {
@@ -235,6 +237,10 @@ class IngeniaMC : JavaPlugin() {
 
         Objects.requireNonNull(getCommand("dispatch")?.setTabCompleter(AttractionTabCompleter()))
         Objects.requireNonNull(getCommand("operate")?.setTabCompleter(AttractionTabCompleter()))
+
+        Objects.requireNonNull(getCommand("warp")?.setTabCompleter(WarpTabCompleter()))
+
+        Objects.requireNonNull(getCommand("feature")?.setTabCompleter(FeatureTabCompleter()))
     }
 
     private fun loadEventListeners() {
@@ -293,11 +299,13 @@ class IngeniaMC : JavaPlugin() {
             Protection Events
          */
         Bukkit.getServer().pluginManager.registerEvents(BlockListener(), this)
-        Bukkit.getServer().pluginManager.registerEvents(me.m64diamondstar.ingeniamccore.general.listeners.protection.InteractListener(), this)
+        Bukkit.getServer().pluginManager.registerEvents(me.m64diamondstar.ingeniamccore.protect.listeners.InteractListener(), this)
         Bukkit.getServer().pluginManager.registerEvents(DamageListener(), this)
         Bukkit.getServer().pluginManager.registerEvents(HungerListener(), this)
         Bukkit.getServer().pluginManager.registerEvents(EntityDismountListener(), this)
         Bukkit.getServer().pluginManager.registerEvents(BoatListener(), this)
+        Bukkit.getServer().pluginManager.registerEvents(EntityListener(), this)
+        Bukkit.getServer().pluginManager.registerEvents(PlayerListeners(), this)
 
         /*
             Splash Battle Events

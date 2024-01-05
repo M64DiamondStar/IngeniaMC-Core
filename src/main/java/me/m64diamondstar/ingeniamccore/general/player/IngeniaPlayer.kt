@@ -11,7 +11,7 @@ import me.m64diamondstar.ingeniamccore.general.levels.LevelUtils.getLevelUpLevel
 import me.m64diamondstar.ingeniamccore.general.levels.LevelUtils.getRewards
 import me.m64diamondstar.ingeniamccore.general.levels.LevelUtils.isLevelUp
 import me.m64diamondstar.ingeniamccore.general.player.data.PlayerConfig
-import me.m64diamondstar.ingeniamccore.general.warps.WarpUtils
+import me.m64diamondstar.ingeniamccore.warps.WarpUtils
 import me.m64diamondstar.ingeniamccore.utils.LocationUtils.getLocationFromString
 import me.m64diamondstar.ingeniamccore.utils.Times
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors

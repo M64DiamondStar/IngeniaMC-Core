@@ -8,6 +8,8 @@ import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.entity.Player
+import kotlin.math.cos
+import kotlin.math.sin
 
 class Fire: Wand {
 
@@ -42,8 +44,8 @@ class Fire: Wand {
                     var x: Double
                     var z: Double
                     val angle: Double = 2 * Math.PI * i / particles
-                    x = Math.cos(angle) * radius
-                    z = Math.sin(angle) * radius
+                    x = cos(angle) * radius
+                    z = sin(angle) * radius
                     location1.add(x, 0.0, z)
                     player.world.spawnParticle(Particle.FLAME, location1, 1, 0.0, 0.0, 0.0, 0.0)
                     location1.subtract(x, 0.0, z)
@@ -59,8 +61,8 @@ class Fire: Wand {
                     var x: Double
                     var z: Double
                     val angle: Double = 2 * Math.PI * i / particles
-                    x = Math.cos(angle) * radius
-                    z = Math.sin(angle) * radius
+                    x = cos(angle) * radius
+                    z = sin(angle) * radius
                     location2.add(x, -0.66, z)
                     player.world.spawnParticle(Particle.FLAME, location2, 1, 0.0, 0.0, 0.0, 0.0)
                     location2.subtract(x, -0.66, z)
@@ -76,8 +78,8 @@ class Fire: Wand {
                     var x: Double
                     var z: Double
                     val angle: Double = 2 * Math.PI * i / particles
-                    x = Math.cos(angle) * radius
-                    z = Math.sin(angle) * radius
+                    x = cos(angle) * radius
+                    z = sin(angle) * radius
                     location3.add(x, -1.33, z)
                     player.world.spawnParticle(Particle.FLAME, location3, 1, 0.0, 0.0, 0.0, 0.0)
                     location3.subtract(x, -1.33, z)

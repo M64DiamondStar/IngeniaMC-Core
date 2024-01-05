@@ -117,14 +117,6 @@ class CosmeticsInventory(private var player: Player, private var selected: Strin
         when(selected){
             "國" -> { // Hats
                 if (freeSlots.contains(event.slot) && event.currentItem != null) {
-                    val currentHatID = cosmeticPlayer.getEquipment().getEquippedId(CosmeticType.HAT)
-                    val hatID = CosmeticItems(CosmeticType.HAT).getID(event.currentItem!!) ?: return
-
-                    if(currentHatID == hatID){
-                        cosmeticPlayer.getEquipment().unEquipCosmetic(CosmeticType.HAT)
-                        return
-                    }
-
                     cosmeticPlayer.getEquipment().equipCosmetic(CosmeticType.HAT, CosmeticItems(CosmeticType.HAT).getID(event.currentItem!!)!!)
                     player.playSound(player.location, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 2f, 1.5f)
                     inventory.setItem(1, addEquipmentLore(event.currentItem!!.clone(), "Hats"))
@@ -133,14 +125,6 @@ class CosmeticsInventory(private var player: Player, private var selected: Strin
 
             "因" -> { // Shirts
                 if (freeSlots.contains(event.slot) && event.currentItem != null) {
-                    val currentShirtID = cosmeticPlayer.getEquipment().getEquippedId(CosmeticType.SHIRT)
-                    val shirtID = CosmeticItems(CosmeticType.SHIRT).getID(event.currentItem!!) ?: return
-
-                    if(currentShirtID == shirtID){
-                        cosmeticPlayer.getEquipment().unEquipCosmetic(CosmeticType.SHIRT)
-                        return
-                    }
-
                     cosmeticPlayer.getEquipment().equipCosmetic(CosmeticType.SHIRT, CosmeticItems(CosmeticType.SHIRT).getID(event.currentItem!!)!!)
                     player.playSound(player.location, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 2f, 1.5f)
                     inventory.setItem(2, addEquipmentLore(event.currentItem!!.clone(), "Shirts"))
@@ -161,14 +145,6 @@ class CosmeticsInventory(private var player: Player, private var selected: Strin
 
             "四" -> { // Pants
                 if (freeSlots.contains(event.slot) && event.currentItem != null) {
-                    val currentPantsID = cosmeticPlayer.getEquipment().getEquippedId(CosmeticType.PANTS)
-                    val pantsID = CosmeticItems(CosmeticType.PANTS).getID(event.currentItem!!) ?: return
-
-                    if(currentPantsID == pantsID){
-                        cosmeticPlayer.getEquipment().unEquipCosmetic(CosmeticType.PANTS)
-                        return
-                    }
-
                     cosmeticPlayer.getEquipment().equipCosmetic(CosmeticType.PANTS, CosmeticItems(CosmeticType.PANTS).getID(event.currentItem!!)!!)
                     player.playSound(player.location, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 2f, 1.5f)
                     inventory.setItem(6, addEquipmentLore(event.currentItem!!.clone(), "Pants"))
@@ -177,14 +153,6 @@ class CosmeticsInventory(private var player: Player, private var selected: Strin
 
             "界" -> { // Shoes
                 if (freeSlots.contains(event.slot) && event.currentItem != null) {
-                    val currentShoesID = cosmeticPlayer.getEquipment().getEquippedId(CosmeticType.SHOES)
-                    val shoesID = CosmeticItems(CosmeticType.SHOES).getID(event.currentItem!!) ?: return
-
-                    if(currentShoesID == shoesID){
-                        cosmeticPlayer.getEquipment().unEquipCosmetic(CosmeticType.SHOES)
-                        return
-                    }
-
                     cosmeticPlayer.getEquipment().equipCosmetic(CosmeticType.SHOES, CosmeticItems(CosmeticType.SHOES).getID(event.currentItem!!)!!)
                     player.playSound(player.location, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 2f, 1.5f)
                     inventory.setItem(7, addEquipmentLore(event.currentItem!!.clone(), "Shoes"))

@@ -32,10 +32,8 @@ object Messages {
         return Colors.format(MessageType.PLAYER_UPDATE + "Your ridecount for this ride is now at $ridecount.")
     }
 
-    fun rideCountdown(currentCount: Int): String {
-        return if(currentCount != 1)
-            "This ride will start in $currentCount seconds."
-        else
-            "This ride will start in $currentCount second."
+    fun featureDisabled(): String {
+        return Colors.format(MessageType.ERROR + "This feature is currently disabled. Please notify a team member if you think this is an error.")
     }
+
 }

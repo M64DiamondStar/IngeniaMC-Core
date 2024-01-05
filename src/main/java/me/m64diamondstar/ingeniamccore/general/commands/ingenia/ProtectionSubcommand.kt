@@ -1,7 +1,7 @@
 package me.m64diamondstar.ingeniamccore.general.commands.ingenia
 
 import me.m64diamondstar.ingeniamccore.IngeniaMC
-import me.m64diamondstar.ingeniamccore.general.listeners.protection.utils.BlockDataConfig
+import me.m64diamondstar.ingeniamccore.protect.utils.BlockDataConfig
 import me.m64diamondstar.ingeniamccore.utils.IngeniaSubcommand
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType

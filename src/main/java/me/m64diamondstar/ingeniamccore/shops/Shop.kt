@@ -144,7 +144,7 @@ class Shop(val category: String, val name: String): DataConfiguration("shops/$ca
         val meta = item.itemMeta!!
 
         val numberFormat = NumberFormat.getNumberInstance(Locale.US)
-        val lore = meta.lore ?: ArrayList()
+        val lore = meta.lore?.map { it.replace("%player%", player.name) }?.toMutableList() ?: ArrayList()
         lore.add(Colors.format(MessageType.TYPE + "&o") + getShopItemType(shopId)!!.getDisplayName())
 
         var hasAllRequirements = true

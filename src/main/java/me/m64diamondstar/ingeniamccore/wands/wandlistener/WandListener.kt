@@ -2,6 +2,9 @@ package me.m64diamondstar.ingeniamccore.wands.wandlistener
 
 import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
+import me.m64diamondstar.ingeniamccore.protect.FeatureManager
+import me.m64diamondstar.ingeniamccore.protect.FeatureType
+import me.m64diamondstar.ingeniamccore.utils.messages.Messages
 import me.m64diamondstar.ingeniamccore.wands.utils.Cooldowns.isOnCooldown
 import me.m64diamondstar.ingeniamccore.wands.wands.*
 import org.bukkit.Color
@@ -21,6 +24,9 @@ import org.bukkit.util.Vector
 import java.util.*
 
 class WandListener : Listener {
+
+    private val featureDisabledCooldown = HashMap<Player, Long>()
+
     @EventHandler
     fun onUseWand(e: PlayerInteractEvent) {
         val player = e.player
@@ -33,6 +39,14 @@ class WandListener : Listener {
                 !player.isInsideVehicle &&
                 !ingeniaPlayer.isInGame
             ) {
+                val featureManager = FeatureManager()
+                if(!featureManager.isFeatureEnabled(FeatureType.WANDS) && !player.hasPermission("ingenia.admin")){
+                    if(!featureDisabledCooldown.containsKey(player) || featureDisabledCooldown[player]!! < System.currentTimeMillis()){
+                        player.sendMessage(Messages.featureDisabled())
+                        featureDisabledCooldown[player] = System.currentTimeMillis() + 2000
+                    }
+                    return
+                }
                 if (player.inventory.itemInMainHand.itemMeta!!.customModelData == 1) Launch().run(player)
                 if (player.inventory.itemInMainHand.itemMeta!!.customModelData == 2) Fly().run(player)
                 if (player.inventory.itemInMainHand.itemMeta!!.customModelData == 3) SnowCannon().run(player)

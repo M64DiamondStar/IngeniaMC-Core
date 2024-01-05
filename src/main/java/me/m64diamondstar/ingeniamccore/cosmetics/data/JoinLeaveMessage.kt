@@ -110,7 +110,7 @@ class JoinLeaveMessage(private val messageType: MessageType): DataConfiguration(
                         me.m64diamondstar.ingeniamccore.utils.messages.MessageType.DEFAULT + getName(id)))
             }
         }
-        meta.lore = listOf(Colors.format(me.m64diamondstar.ingeniamccore.utils.messages.MessageType.DEFAULT + "Message: "),
+        meta.lore = listOf(Colors.format(me.m64diamondstar.ingeniamccore.utils.messages.MessageType.BACKGROUND + "Message: "),
             Colors.format(me.m64diamondstar.ingeniamccore.utils.messages.MessageType.DEFAULT + getMessage(id)))
         item.itemMeta = meta
         return item

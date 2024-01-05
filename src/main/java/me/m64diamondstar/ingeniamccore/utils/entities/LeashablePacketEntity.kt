@@ -25,10 +25,12 @@ class LeashablePacketEntity(world: World?, loc: Location, private val leashHolde
     }
 
     fun spawn(){
+        val entityData = this.getEntityData().nonDefaultValues
+
         for(player in Bukkit.getOnlinePlayers()){
             (player as CraftPlayer).handle.connection.send(ClientboundAddEntityPacket(this))
             player.handle.connection.send(ClientboundSetEntityLinkPacket(this, (leashHolder as CraftEntity).handle))
-            player.handle.connection.send(ClientboundSetEntityDataPacket(this.id /*ID*/, this.getEntityData().packDirty() /*Data Watcher*/))
+            player.handle.connection.send(ClientboundSetEntityDataPacket(this.id /*ID*/, entityData /*Data Watcher*/))
         }
     }
 

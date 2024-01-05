@@ -213,7 +213,6 @@ class AttractionSubcommand(private val sender: CommandSender, private val args: 
                     }
                 }
 
-
                 else
                     player.sendMessage(Messages.commandUsage("ig attraction ridecount <category> <attraction> <get/add/set/remove> <player> [amount]"))
 

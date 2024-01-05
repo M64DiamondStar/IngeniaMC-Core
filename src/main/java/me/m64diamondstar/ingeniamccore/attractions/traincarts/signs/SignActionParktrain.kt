@@ -9,9 +9,6 @@ import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
 import net.kyori.adventure.audience.Audience
 import net.kyori.adventure.text.minimessage.MiniMessage
-import net.md_5.bungee.api.ChatColor
-import net.md_5.bungee.api.ChatMessageType
-import net.md_5.bungee.api.chat.TextComponent
 import org.bukkit.scheduler.BukkitRunnable
 
 class SignActionParktrain : SignAction() {
@@ -39,8 +36,8 @@ class SignActionParktrain : SignAction() {
                         for (player in member.entity.playerPassengers) {
                             (player as Audience).sendActionBar(MiniMessage.miniMessage()
                                 .deserialize(
-                                    if(c != 1) MessageType.INGENIA + "Train is leaving in $c seconds..."
-                                    else MessageType.INGENIA + "Train is leaving in $c second..."
+                                    if(c != 1) "<${MessageType.INGENIA}>Train is leaving in $c seconds..."
+                                    else "<${MessageType.INGENIA}>Train is leaving in $c second..."
                                 ))
                         }
                     }

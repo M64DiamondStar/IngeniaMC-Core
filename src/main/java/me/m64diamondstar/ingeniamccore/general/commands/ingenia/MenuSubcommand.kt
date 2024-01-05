@@ -2,6 +2,8 @@ package me.m64diamondstar.ingeniamccore.general.commands.ingenia
 
 import me.m64diamondstar.ingeniamccore.general.inventory.MainInventory
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
+import me.m64diamondstar.ingeniamccore.protect.FeatureManager
+import me.m64diamondstar.ingeniamccore.protect.FeatureType
 import me.m64diamondstar.ingeniamccore.utils.IngeniaSubcommand
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.utils.messages.Messages
@@ -14,6 +16,12 @@ class MenuSubcommand(private val sender: CommandSender, private val args: Array<
      * Execute the command
      */
     override fun execute() {
+        val featureManager = FeatureManager()
+        if(!featureManager.isFeatureEnabled(FeatureType.MENU) && !sender.hasPermission("ingenia.admin")){
+            sender.sendMessage(Messages.featureDisabled())
+            return
+        }
+
         if (args.size !in 1..3) {
             sender.sendMessage(Colors.format(Messages.commandUsage("ig menu [give/open] [player]")))
             return

@@ -102,6 +102,11 @@ class IngeniaCommand : CommandExecutor {
                 shopSubcommand.execute()
             }
 
+            "warp" -> {
+                val warpSubcommand = WarpSubcommand(sender, args)
+                warpSubcommand.execute()
+            }
+
             else -> sender.sendMessage(invalidSubcommand("ig"))
         }
         return false

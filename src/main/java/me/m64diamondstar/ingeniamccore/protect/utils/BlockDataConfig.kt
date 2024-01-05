@@ -1,4 +1,4 @@
-package me.m64diamondstar.ingeniamccore.general.listeners.protection.utils
+package me.m64diamondstar.ingeniamccore.protect.utils
 
 import me.m64diamondstar.ingeniamccore.data.LoadedConfiguration
 import org.bukkit.Location

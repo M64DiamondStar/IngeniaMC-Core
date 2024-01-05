@@ -27,7 +27,6 @@ class IngeniaTabCompleter: TabCompleter {
             tc.add("game")
             tc.add("protect")
             tc.add("area")
-            tc.add("warps")
             tc.add("database")
             tc.add("discord")
             tc.add("item")
@@ -37,6 +36,7 @@ class IngeniaTabCompleter: TabCompleter {
             tc.add("cosmeticmessage")
             tc.add("cosmeticcolor")
             tc.add("shop")
+            tc.add("warp")
         }else if(args.size > 1){
 
             tc.clear()
@@ -88,6 +88,9 @@ class IngeniaTabCompleter: TabCompleter {
                 tc.addAll(sub.getTabCompleters())
             }else if(args[0].equals("shop", true)) {
                 val sub = ShopSubcommand(sender, args)
+                tc.addAll(sub.getTabCompleters())
+            }else if(args[0].equals("warp", true)) {
+                val sub = WarpSubcommand(sender, args)
                 tc.addAll(sub.getTabCompleters())
             }
 
