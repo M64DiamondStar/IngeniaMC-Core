@@ -1,5 +1,6 @@
 package me.m64diamondstar.ingeniamccore.attractions.utils
 
+import me.m64diamondstar.ingeniamccore.attractions.Attraction
 import org.bukkit.Location
 import org.bukkit.entity.ArmorStand
 

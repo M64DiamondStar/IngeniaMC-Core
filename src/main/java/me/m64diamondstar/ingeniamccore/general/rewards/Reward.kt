@@ -21,7 +21,7 @@ class Reward(private val rewardType: RewardType, private val arg: String) {
             }
 
             RewardType.GS -> {
-                Colors.format("#ffffff$arg${MessageType.INGENIA}:gs:")
+                Colors.format("#ffffff:gs:$arg")
             }
 
             RewardType.WAND -> {

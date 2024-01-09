@@ -1,6 +1,5 @@
-package me.m64diamondstar.ingeniamccore.games.parkour.listeners
+package me.m64diamondstar.ingeniamccore.games.parkour
 
-import me.m64diamondstar.ingeniamccore.games.parkour.Parkour
 import me.m64diamondstar.ingeniamccore.utils.entities.LeaderboardPacketEntity
 import me.m64diamondstar.ingeniamccore.utils.leaderboard.Leaderboard
 import me.m64diamondstar.ingeniamccore.utils.leaderboard.LeaderboardRegistry
@@ -31,7 +30,7 @@ class ParkourLeaderboard(private val parkour: Parkour) {
      */
     fun setLeaderboardLocation(x: Int, y: Int, z: Int){
         parkour.getConfig().set("Leaderboard.Location", "$x, $y, $z")
-        parkour.reloadConfig()
+        parkour.save()
     }
 
     /**
@@ -39,7 +38,7 @@ class ParkourLeaderboard(private val parkour: Parkour) {
      */
     fun setLeaderboardEnabled(enabled: Boolean){
         parkour.getConfig().set("Leaderboard.Enabled", enabled)
-        parkour.reloadConfig()
+        parkour.save()
     }
 
     /**
@@ -60,7 +59,7 @@ class ParkourLeaderboard(private val parkour: Parkour) {
 
 
         parkour.getConfig().set("Leaderboard.Face", realDirection)
-        parkour.reloadConfig()
+        parkour.save()
     }
 
     /**
@@ -81,25 +80,19 @@ class ParkourLeaderboard(private val parkour: Parkour) {
      */
     fun spawnSign(player: Player){
 
-        if(!parkour.existsConfig()){
-            Bukkit.getLogger().warning("The configuration of ${parkour.name} has not been created yet! Cannot spawn frame without needed data. " +
-                    "Please create this file first.")
-            return
-        }
-
         val leaderboard = Leaderboard(getRecordsInMap(), getLeaderboardBackgroundColor(), getLeaderboardOutlineColor(),
             getLeaderboardTitleColor(), getLeaderboardPositionColor(), getLeaderboardNameColor(), getLeaderboardLineColor(), true)
 
-        despawnSoaksSign(player)
+        despawnParkourSign(player)
 
         val leaderboardPacketEntity = LeaderboardPacketEntity(leaderboard, getNMSWorld(),
             getLeaderboardLocation(), getLeaderboardDirection())
         leaderboardPacketEntity.spawn(player, "Best Times")
-        LeaderboardRegistry.setBoard(parkour.name, player, leaderboardPacketEntity.id)
+        LeaderboardRegistry.setBoard(ParkourUtils.getParkourID(parkour), player, leaderboardPacketEntity.id)
     }
 
     /**
-     * Spawn an EntityItemFrame with top 3 and personal soaks of the current battle for every player.
+     * Spawn an EntityItemFrame with top 3 and personal records for every player.
      */
     fun spawnSign(){
         Bukkit.getOnlinePlayers().forEach { spawnSign(it) }
@@ -113,7 +106,7 @@ class ParkourLeaderboard(private val parkour: Parkour) {
             parkour.getConfig().set("Records.${player.uniqueId}", null)
         else
             parkour.getConfig().set("Records.${player.uniqueId}", record)
-        parkour.reloadConfig()
+        parkour.save()
     }
 
     /**
@@ -127,9 +120,9 @@ class ParkourLeaderboard(private val parkour: Parkour) {
     /**
      * Despawn the leaderboard for everyone on the server.
      */
-    private fun despawnSoaksSign(player: Player){
-        if(LeaderboardRegistry.getId(parkour.name, player) != null)
-            (player as CraftPlayer).handle.connection.send(ClientboundRemoveEntitiesPacket(LeaderboardRegistry.getId(parkour.name, player)))
+    private fun despawnParkourSign(player: Player){
+        if(LeaderboardRegistry.getId(ParkourUtils.getParkourID(parkour), player) != null)
+            (player as CraftPlayer).handle.connection.send(ClientboundRemoveEntitiesPacket(LeaderboardRegistry.getId(ParkourUtils.getParkourID(parkour), player)))
     }
 
     /**
@@ -156,7 +149,7 @@ class ParkourLeaderboard(private val parkour: Parkour) {
         if(parkour.getConfig().getString("Leaderboard.Colors.Background") == null
             || Colors.getJavaColorFromString(parkour.getConfig().getString("Leaderboard.Colors.Background")!!) == null){
             parkour.getConfig().set("Leaderboard.Colors.Background", "49, 49, 49")
-            parkour.reloadConfig()
+            parkour.save()
         }
         return Colors.getJavaColorFromString(parkour.getConfig().getString("Leaderboard.Colors.Background")!!)!!
     }
@@ -168,7 +161,7 @@ class ParkourLeaderboard(private val parkour: Parkour) {
         if(parkour.getConfig().getString("Leaderboard.Colors.Outline") == null
             || Colors.getJavaColorFromString(parkour.getConfig().getString("Leaderboard.Colors.Outline")!!) == null){
             parkour.getConfig().set("Leaderboard.Colors.Outline", "60, 60, 60")
-            parkour.reloadConfig()
+            parkour.save()
         }
         return Colors.getJavaColorFromString(parkour.getConfig().getString("Leaderboard.Colors.Outline")!!)!!
     }
@@ -180,7 +173,7 @@ class ParkourLeaderboard(private val parkour: Parkour) {
         if(parkour.getConfig().getString("Leaderboard.Colors.Title") == null
             || Colors.getJavaColorFromString(parkour.getConfig().getString("Leaderboard.Colors.Title")!!) == null){
             parkour.getConfig().set("Leaderboard.Colors.Title", "153, 153, 153")
-            parkour.reloadConfig()
+            parkour.save()
         }
         return Colors.getJavaColorFromString(parkour.getConfig().getString("Leaderboard.Colors.Title")!!)!!
     }
@@ -192,7 +185,7 @@ class ParkourLeaderboard(private val parkour: Parkour) {
         if(parkour.getConfig().getString("Leaderboard.Colors.PositionRidecount") == null
             || Colors.getJavaColorFromString(parkour.getConfig().getString("Leaderboard.Colors.PositionRidecount")!!) == null){
             parkour.getConfig().set("Leaderboard.Colors.PositionRidecount", "180, 180, 180")
-            parkour.reloadConfig()
+            parkour.save()
         }
         return Colors.getJavaColorFromString(parkour.getConfig().getString("Leaderboard.Colors.PositionRidecount")!!)!!
     }
@@ -204,7 +197,7 @@ class ParkourLeaderboard(private val parkour: Parkour) {
         if(parkour.getConfig().getString("Leaderboard.Colors.Name") == null
             || Colors.getJavaColorFromString(parkour.getConfig().getString("Leaderboard.Colors.Name")!!) == null){
             parkour.getConfig().set("Leaderboard.Colors.Name", "250, 250, 250")
-            parkour.reloadConfig()
+            parkour.save()
         }
         return Colors.getJavaColorFromString(parkour.getConfig().getString("Leaderboard.Colors.Name")!!)!!
     }
@@ -216,7 +209,7 @@ class ParkourLeaderboard(private val parkour: Parkour) {
         if(parkour.getConfig().getString("Leaderboard.Colors.Line") == null
             || Colors.getJavaColorFromString(parkour.getConfig().getString("Leaderboard.Colors.Line")!!) == null){
             parkour.getConfig().set("Leaderboard.Colors.Line", "210, 210, 210")
-            parkour.reloadConfig()
+            parkour.save()
         }
         return Colors.getJavaColorFromString(parkour.getConfig().getString("Leaderboard.Colors.Line")!!)!!
     }

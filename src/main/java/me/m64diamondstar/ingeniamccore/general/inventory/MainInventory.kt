@@ -119,8 +119,8 @@ class MainInventory(player: IngeniaPlayer): Gui(player) {
     private fun getProfileLore(): List<String>{
         val lore = ArrayList<String>()
 
-        var expToNext = "${getPlayer().exp - LevelUtils.getExpFromLevel(getPlayer().getLevel())}/" +
-                "${LevelUtils.getExpFromLevel(getPlayer().getLevel() + 1) - LevelUtils.getExpFromLevel(getPlayer().getLevel())}"
+        var expToNext = "${getPlayer().exp - LevelUtils.getExpRequirement(getPlayer().getLevel())}/" +
+                "${LevelUtils.getExpRequirement(getPlayer().getLevel() + 1) - LevelUtils.getExpRequirement(getPlayer().getLevel())}"
         if(getPlayer().getLevel() == LevelUtils.getHighestLevel())
             expToNext = "At max level!"
 

@@ -1,13 +1,12 @@
 package me.m64diamondstar.ingeniamccore.games.parkour
 
-import me.m64diamondstar.ingeniamccore.data.LoadedConfiguration
-import me.m64diamondstar.ingeniamccore.games.parkour.listeners.ParkourLeaderboard
+import me.m64diamondstar.ingeniamccore.data.DataConfiguration
 import me.m64diamondstar.ingeniamccore.utils.LocationUtils
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.World
 
-class Parkour(category: String, val name: String): LoadedConfiguration("games/parkour/$category", name, false, true) {
+class Parkour(val category: String, val name: String): DataConfiguration("games/parkour/$category", name) {
 
     fun create(world: World){
         this.getConfig().set("Display-Name", name)
@@ -18,7 +17,7 @@ class Parkour(category: String, val name: String): LoadedConfiguration("games/pa
         list.add("Parkour Configuration of $name")
 
         this.getConfig().options().setHeader(list)
-        this.reloadConfig()
+        this.save()
     }
 
     val world: World
@@ -33,7 +32,7 @@ class Parkour(category: String, val name: String): LoadedConfiguration("games/pa
 
         set(value) {
             this.getConfig().set("Display-Name", value)
-            this.reloadConfig()
+            this.save()
         }
 
     var startLocation: Location?
@@ -44,7 +43,7 @@ class Parkour(category: String, val name: String): LoadedConfiguration("games/pa
         set(value) {
             if (value != null) {
                 this.getConfig().set("Start-Location", "${value.x}, ${value.y}, ${value.z}")
-                this.reloadConfig()
+                this.save()
             }
         }
 
@@ -56,7 +55,7 @@ class Parkour(category: String, val name: String): LoadedConfiguration("games/pa
         set(value) {
             if (value != null) {
                 this.getConfig().set("End-Location", "${value.x}, ${value.y}, ${value.z}")
-                this.reloadConfig()
+                this.save()
             }
         }
 
@@ -64,14 +63,14 @@ class Parkour(category: String, val name: String): LoadedConfiguration("games/pa
         get() = this.getConfig().getDouble("Start-Distance")
         set(value) {
             this.getConfig().set("Start-Distance", value)
-            this.reloadConfig()
+            this.save()
         }
 
     var endRadius: Double
         get() = this.getConfig().getDouble("End-Distance")
         set(value) {
             this.getConfig().set("End-Distance", value)
-            this.reloadConfig()
+            this.save()
         }
 
     fun isInstalled(): Boolean{

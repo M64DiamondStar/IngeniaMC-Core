@@ -23,6 +23,17 @@ object BotUtils {
             .orElse(null) // else return null
     }
 
+    object EmojiUtils {
+
+        fun getJoinEmoji(): String {
+            return IngeniaMC.plugin.config.getString("Discord.Bot.Join-Emoji") ?: "+"
+        }
+
+        fun getLeaveEmoji(): String {
+            return IngeniaMC.plugin.config.getString("Discord.Bot.Leave-Emoji") ?: "-"
+        }
+    }
+
     object LinkingUtils {
         private val linking = HashMap<Long, UUID>()
 
@@ -153,6 +164,26 @@ object BotUtils {
                 }
             }
             get() = DiscordBot.jda.getTextChannelById(IngeniaMC.plugin.config.getLong("Discord.Bot.Logs.LogChannelID"))
+
+        var minecraftLogChannel: TextChannel?
+            set(value) {
+                if(value != null) {
+                    IngeniaMC.plugin.config.set("Discord.Bot.Logs.MinecraftLogChannelID", value.idLong)
+                    IngeniaMC.plugin.saveConfig()
+                }
+            }
+            get() = DiscordBot.jda.getTextChannelById(IngeniaMC.plugin.config.getLong("Discord.Bot.Logs.MinecraftLogChannelID"))
+    }
+
+    object ChatUtils {
+        var chatChannel: TextChannel?
+            set(value) {
+                if(value != null) {
+                    IngeniaMC.plugin.config.set("Discord.Bot.Chat.ChatChannelID", value.idLong)
+                    IngeniaMC.plugin.saveConfig()
+                }
+            }
+            get() = DiscordBot.jda.getTextChannelById(IngeniaMC.plugin.config.getLong("Discord.Bot.Chat.ChatChannelID"))
     }
 
 }

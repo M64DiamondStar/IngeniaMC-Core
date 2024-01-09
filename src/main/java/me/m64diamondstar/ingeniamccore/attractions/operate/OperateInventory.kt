@@ -3,7 +3,7 @@ package me.m64diamondstar.ingeniamccore.attractions.operate
 import me.m64diamondstar.ingeniamccore.attractions.custom.Coaster
 import me.m64diamondstar.ingeniamccore.attractions.custom.FreeFall
 import me.m64diamondstar.ingeniamccore.attractions.custom.Slide
-import me.m64diamondstar.ingeniamccore.attractions.utils.Attraction
+import me.m64diamondstar.ingeniamccore.attractions.Attraction
 import me.m64diamondstar.ingeniamccore.attractions.utils.AttractionType
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.utils.gui.Gui

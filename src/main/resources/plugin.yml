@@ -95,5 +95,11 @@ commands:
     description: Attempt to fix audio issues.
   audiocredits:
     description: Open the credits of audio.
+  rules:
+    description: Open the rules of the server.
+    aliases:
+      - tos
+      - termsofservice
+      - terms
 
 

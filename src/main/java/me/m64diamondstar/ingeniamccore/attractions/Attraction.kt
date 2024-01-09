@@ -1,6 +1,9 @@
-package me.m64diamondstar.ingeniamccore.attractions.utils
+package me.m64diamondstar.ingeniamccore.attractions
 
 import me.m64diamondstar.effectmasterplus.shows.EffectShow
+import me.m64diamondstar.ingeniamccore.attractions.utils.AttractionType
+import me.m64diamondstar.ingeniamccore.attractions.utils.AttractionUtils
+import me.m64diamondstar.ingeniamccore.attractions.utils.CountdownType
 import me.m64diamondstar.ingeniamccore.data.LoadedConfiguration
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.utils.entities.LeaderboardPacketEntity
@@ -12,6 +15,7 @@ import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
 import me.m64diamondstar.ingeniamccore.general.rewards.Reward
 import me.m64diamondstar.ingeniamccore.general.rewards.RewardUtils
+import me.m64diamondstar.ingeniamccore.utils.event.player.ReceiveRidecountEvent
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket
@@ -208,15 +212,6 @@ open class Attraction(category: String, name: String): LoadedConfiguration("ride
     }
 
     /**
-     * @return whether the warp is enabled or not
-     */
-    fun isWarpEnabled(): Boolean{
-        if(this.getConfig().get("Warp.Enabled") == null)
-            return false
-        return this.getConfig().getBoolean("Warp.Enabled")
-    }
-
-    /**
      * Set the warp location
      * @return is last setting to enable warp?
      */
@@ -246,34 +241,6 @@ open class Attraction(category: String, name: String): LoadedConfiguration("ride
 
         this.reloadConfig()
         return false
-    }
-
-    /**
-     * Get the warp location
-     */
-    fun getWarpLocation(): Location?{
-        if(this.getConfig().get("Warp.Location") == null)
-            return null
-
-        val args = this.getConfig().getString("Warp.Location")?.split(", ")
-        val x = args?.get(0)?.toDouble()!!
-        val y = args[1].toDouble()
-        val z = args[2].toDouble()
-
-        val yaw = args[3].toFloat()
-        val pitch = args[4].toFloat()
-
-        return Location(getWorld(), x, y, z, yaw, pitch)
-    }
-
-    /**
-     * Get the warp item that displays in the warp menu
-     */
-    fun getWarpItem(): ItemStack?{
-        if(this.getConfig().get("Warp.Item") == null)
-            return null
-
-        return ItemDecoder(this.getConfig().getString("Warp.Item")!!).decodedItem()
     }
 
     /**
@@ -441,7 +408,7 @@ open class Attraction(category: String, name: String): LoadedConfiguration("ride
             return
         }
 
-        if(!isEnabled(this.getConfig().getConfigurationSection("Leaderboard")!!))
+        if(this.getConfig().getConfigurationSection("Leaderboard") == null || !isEnabled(this.getConfig().getConfigurationSection("Leaderboard")!!))
             return
 
         val leaderboard = Leaderboard(getRidecountInMap(), getLeaderboardBackgroundColor(), getLeaderboardOutlineColor(),
@@ -452,7 +419,7 @@ open class Attraction(category: String, name: String): LoadedConfiguration("ride
         val leaderboardPacketEntity = LeaderboardPacketEntity(leaderboard, getNMSWorld(),
             getLeaderboardLocation(), getLeaderboardDirection())
         leaderboardPacketEntity.spawn(player, "Top Ridecount")
-        LeaderboardRegistry.setBoard(getName(), player, leaderboardPacketEntity.id)
+        LeaderboardRegistry.setBoard(AttractionUtils.getAttractionID(this), player, leaderboardPacketEntity.id)
     }
 
     /**
@@ -466,6 +433,9 @@ open class Attraction(category: String, name: String): LoadedConfiguration("ride
      * Set the ridecount of a specific player.
      */
     private fun setRidecount(player: OfflinePlayer, count: Int){
+        val receiveRidecountEvent = ReceiveRidecountEvent(player, count - getRidecount(player), category, name)
+        Bukkit.getPluginManager().callEvent(receiveRidecountEvent)
+
         if(count <= 0)
             this.getConfig().set("Data.Ridecount.${player.uniqueId}.Count", null)
         else
@@ -480,10 +450,16 @@ open class Attraction(category: String, name: String): LoadedConfiguration("ride
         this.reloadConfig()
     }
 
+    /**
+     * Add to the ridecount of a specific player.
+     */
     fun addRidecount(player: OfflinePlayer, count: Int){
         setRidecount(player, getRidecount(player) + count)
     }
 
+    /**
+     * Returns the ridecount of a specific player.
+     */
     fun getRidecount(player: OfflinePlayer): Int{
         return this.getConfig().getInt("Data.Ridecount.${player.uniqueId}.Count")
     }
@@ -492,8 +468,9 @@ open class Attraction(category: String, name: String): LoadedConfiguration("ride
      * Despawn the leaderboard for everyone on the server.
      */
     private fun despawnRidecountSign(player: Player){
-        if(LeaderboardRegistry.getId(getName(), player) != null)
-            (player as CraftPlayer).handle.connection.send(ClientboundRemoveEntitiesPacket(LeaderboardRegistry.getId(getName(), player)))
+        if(LeaderboardRegistry.getId(AttractionUtils.getAttractionID(this), player) != null)
+            (player as CraftPlayer).handle.connection.send(ClientboundRemoveEntitiesPacket(LeaderboardRegistry.getId(
+                AttractionUtils.getAttractionID(this), player)))
     }
 
     /**

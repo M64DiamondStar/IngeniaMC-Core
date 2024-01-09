@@ -6,6 +6,7 @@ import me.m64diamondstar.ingeniamccore.games.PhysicalGameType
 import me.m64diamondstar.ingeniamccore.games.parkour.Parkour
 import me.m64diamondstar.ingeniamccore.games.parkour.ParkourUtils
 import me.m64diamondstar.ingeniamccore.games.splashbattle.SplashBattleUtils
+import me.m64diamondstar.ingeniamccore.general.levels.LevelUtils
 import me.m64diamondstar.ingeniamccore.general.levels.LevelUtils.getLevel
 import me.m64diamondstar.ingeniamccore.general.levels.LevelUtils.getLevelUpLevels
 import me.m64diamondstar.ingeniamccore.general.levels.LevelUtils.getRewards
@@ -14,6 +15,8 @@ import me.m64diamondstar.ingeniamccore.general.player.data.PlayerConfig
 import me.m64diamondstar.ingeniamccore.warps.WarpUtils
 import me.m64diamondstar.ingeniamccore.utils.LocationUtils.getLocationFromString
 import me.m64diamondstar.ingeniamccore.utils.Times
+import me.m64diamondstar.ingeniamccore.utils.event.player.ReceiveExpEvent
+import me.m64diamondstar.ingeniamccore.utils.event.player.ReceiveGoldenStarsEvent
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageLocation
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
@@ -74,6 +77,8 @@ class IngeniaPlayer(val player: Player) {
         SplashBattleUtils.getAllSplashBattles().forEach { it.getLeaderboard().spawnSoaksSign(player) }
         ParkourUtils.getAllParkours().forEach { it.getLeaderboard().spawnSign(player) }
 
+        if (isLevelUp(playerConfig.getLevel(), playerConfig.getExp())) levelUp(playerConfig.getLevel(), playerConfig.getExp())
+
         if(!(player.hasPermission("ingenia.team") || player.hasPermission("ingenia.team-trial")) && !player.isOp)
             player.gameMode = GameMode.ADVENTURE
     }
@@ -93,6 +98,20 @@ class IngeniaPlayer(val player: Player) {
                     Colors.format("#54b0b0VIP")
                 else
                     Colors.format("#a1a1a1Visitor")
+
+    val rawPrefix: String
+        get() = if (player.isOp)
+                    "Lead"
+                else if (player.hasPermission("ingenia.team"))
+                    "Team"
+                else if (player.hasPermission("ingenia.teamtrial"))
+                    "Team Trial"
+                else if (player.hasPermission("ingenia.vip+"))
+                    "VIP+"
+                else if (player.hasPermission("ingenia.vip"))
+                    "VIP"
+                else
+                    "Visitor"
 
     var currentAreaName: String?
         get() {
@@ -217,14 +236,32 @@ class IngeniaPlayer(val player: Player) {
     var exp: Long
         get() = playerConfig.getExp()
         set(l) {
+            val receiveExpEvent = ReceiveExpEvent(player, l - exp)
+            Bukkit.getPluginManager().callEvent(receiveExpEvent)
             if (isLevelUp(exp, l)) levelUp(exp, l)
             playerConfig.setExp(l)
         }
 
     fun addExp(l: Long) {
+        val receiveExpEvent = ReceiveExpEvent(player, l)
+        Bukkit.getPluginManager().callEvent(receiveExpEvent)
         if (isLevelUp(exp, exp + l)) levelUp(exp, exp + l)
         val newExp = l + exp
         playerConfig.setExp(newExp)
+    }
+
+    var bal: Long
+        get() = playerConfig.getBal()
+        set(l) {
+            val receiveGoldenStarsEvent = ReceiveGoldenStarsEvent(player, l - bal)
+            Bukkit.getPluginManager().callEvent(receiveGoldenStarsEvent)
+            playerConfig.setBal(l)
+        }
+
+    fun addBal(l: Long) {
+        val receiveGoldenStarsEvent = ReceiveGoldenStarsEvent(player, l)
+        Bukkit.getPluginManager().callEvent(receiveGoldenStarsEvent)
+        playerConfig.setBal(l + bal)
     }
 
     fun getLevel(): Int{
@@ -247,6 +284,8 @@ class IngeniaPlayer(val player: Player) {
             }
         }
 
+        playerConfig.setLevel(getLevel(newExp))
+
         player.sendMessage(Colors.format("\uFE01"))
         player.sendMessage(Colors.format("               ${MessageType.SUCCESS}&lLevel Up"))
         player.sendMessage(Colors.format("               ${MessageType.BACKGROUND}Level ${getLevel(previousExp)} ➡ ${getLevel(newExp)}"))
@@ -256,14 +295,8 @@ class IngeniaPlayer(val player: Player) {
 
     }
 
-    var bal: Long
-        get() = playerConfig.getBal()
-        set(l) {
-            playerConfig.setBal(l)
-        }
-
-    fun addBal(l: Long) {
-        playerConfig.setBal(l + bal)
+    private fun levelUp(previousLevel: Int, newExp: Long) {
+        levelUp(LevelUtils.getExpRequirement(previousLevel), newExp)
     }
 
     var allowDamage: Boolean
@@ -412,10 +445,14 @@ class IngeniaPlayer(val player: Player) {
                 //If player is at end
                 if(player.location.distanceSquared(parkour.endLocation!!) <= parkour.endRadius){
 
+                    // Reload the config before saving it, so that changes made beforehand will be fixed
+                    parkour.reload()
+
+                    // Update leaderboard
                     if(parkour.getLeaderboard().getRecord(player) == 0L || parkour.getLeaderboard().getRecord(player) > (currentTime - startTime)) {
                         sendMessage(MessageType.PLAYER_UPDATE + "&lNEW RECORD!")
                         parkour.getLeaderboard().setRecord(player, currentTime - startTime)
-                        ParkourUtils.getAllParkours().forEach { it.getLeaderboard().spawnSign(player) }
+                        parkour.getLeaderboard().spawnSign()
                     }
 
                     (player as Audience).sendActionBar(Component.text("${parkour.displayName} finished in: $timeDisplay").color(TextColor

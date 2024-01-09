@@ -5,6 +5,7 @@ import net.kyori.adventure.audience.Audience
 import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.entity.Player
 import kotlin.time.Duration.Companion.seconds
+import kotlin.time.DurationUnit
 
 object Cooldowns {
 
@@ -27,7 +28,7 @@ object Cooldowns {
         if (cooldowns.containsKey(player.name)) {
             if (cooldowns[player.name]!! > System.currentTimeMillis()) {
                 val timeLeft = (cooldowns[player.name]!! - System.currentTimeMillis()) / 1000
-                (player as Audience).sendActionBar(MiniMessage.miniMessage().deserialize("<${MessageType.ERROR}>Wand on cooldown for ${timeLeft.seconds}"))
+                (player as Audience).sendActionBar(MiniMessage.miniMessage().deserialize("<${MessageType.ERROR}>Wand on cooldown for ${timeLeft.seconds.toLong(DurationUnit.SECONDS) + 1}s"))
                 return true
             }
         }

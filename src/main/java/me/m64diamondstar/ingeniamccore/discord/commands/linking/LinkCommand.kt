@@ -4,6 +4,7 @@ import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.discord.bot.DiscordBot
 import me.m64diamondstar.ingeniamccore.discord.commands.BotUtils
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
+import me.m64diamondstar.ingeniamccore.general.player.data.DiscordUserConfig
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
 import net.dv8tion.jda.api.EmbedBuilder
@@ -39,9 +40,11 @@ class LinkCommand: ListenerAdapter() {
 
             val player = Bukkit.getPlayer(BotUtils.LinkingUtils.getLinking(id)!!)!!
             val ingeniaPlayer = IngeniaPlayer(player)
+            val discordUser = DiscordUserConfig(event.user.idLong)
 
             player.sendMessage(Colors.format(MessageType.INFO + "You're now successfully linked with your Minecraft account!"))
             ingeniaPlayer.playerConfig.setDiscord(event.user.idLong)
+            discordUser.setMinecraft(player.uniqueId)
             ingeniaPlayer.setNewLinkAttempt()
 
             val embedBuilder = EmbedBuilder()

@@ -2,7 +2,6 @@ package me.m64diamondstar.ingeniamccore.discord.commands.logs
 
 import me.m64diamondstar.ingeniamccore.discord.commands.BotUtils
 import net.dv8tion.jda.api.EmbedBuilder
-import net.dv8tion.jda.api.entities.channel.ChannelType
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent
@@ -25,16 +24,22 @@ class LogsCommand: ListenerAdapter() {
             embedBuilder.setColor(Color.decode("#ffb833"))
 
             val setLogChannel = Button.primary("logs-setLogChannel", "Set Log Channel")
+            val setMinecraftLogChannel = Button.primary("logs-setMinecraftLogChannel", "Set Minecraft Log Channel")
 
-            event.hook.sendMessageEmbeds(embedBuilder.build()).addActionRow(setLogChannel).queue()
+            event.hook.sendMessageEmbeds(embedBuilder.build()).addActionRow(setLogChannel, setMinecraftLogChannel).queue()
         }
     }
 
 
     override fun onButtonInteraction(event: ButtonInteractionEvent) {
-        if(event.button.id != "logs-setLogChannel") return
-        event.deferReply(true).queue()
-        BotUtils.LogsUtils.logChannel = event.channel as TextChannel
-        event.hook.sendMessage("Successfully updated the log channel").queue()
+        if(event.button.id == "logs-setLogChannel") {
+            event.deferReply(true).queue()
+            BotUtils.LogsUtils.logChannel = event.channel as TextChannel
+            event.hook.sendMessage("Successfully updated the log channel").queue()
+        }else if(event.button.id == "logs-setMinecraftLogChannel") {
+            event.deferReply(true).queue()
+            BotUtils.LogsUtils.minecraftLogChannel = event.channel as TextChannel
+            event.hook.sendMessage("Successfully updated the minecraft log channel").queue()
+        }
     }
 }

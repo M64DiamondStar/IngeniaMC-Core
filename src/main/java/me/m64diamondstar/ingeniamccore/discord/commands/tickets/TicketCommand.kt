@@ -115,7 +115,9 @@ class TicketCommand: ListenerAdapter() {
                     event.guild?.getCategoriesByName(
                         "tickets",
                         true
-                    )!![0]?.createTextChannel("ticket-${BotUtils.TicketUtils.ticketCount}")?.addPermissionOverride(event.member!!, getTicketHolderPermissions(), null)?.queue {
+                    )!![0]?.createTextChannel("ticket-${BotUtils.TicketUtils.ticketCount}")
+                        ?.addPermissionOverride(event.member!!, getTicketHolderPreAllowedPermissions(), getTicketHolderPreDisallowedPermissions())
+                        ?.queue {
                         event.hook.sendMessage("Successfully created ${it.asMention}").queue()
                         it.manager.setTopic("ID: ${event.user.id}").queue()
 
@@ -148,7 +150,7 @@ class TicketCommand: ListenerAdapter() {
 
             // Ticket Types
             "ticketTeamApply" -> {
-                event.channel.asTextChannel().manager.putPermissionOverride(event.member!!, 3072, 8192).queue()
+                event.channel.asTextChannel().manager.putPermissionOverride(event.member!!, getTicketHolderAllowedPermissions(), getTicketHolderDisallowedPermissions()).queue()
                 event.message.delete().queue()
 
                 val embedBuilder = EmbedBuilder()
@@ -176,7 +178,7 @@ class TicketCommand: ListenerAdapter() {
             }
 
             "ticketPurchaseError" -> {
-                event.channel.asTextChannel().manager.putPermissionOverride(event.member!!, 3072, 8192).queue()
+                event.channel.asTextChannel().manager.putPermissionOverride(event.member!!, getTicketHolderAllowedPermissions(), getTicketHolderDisallowedPermissions()).queue()
                 event.message.delete().queue()
 
                 val embedBuilder = EmbedBuilder()
@@ -199,7 +201,7 @@ class TicketCommand: ListenerAdapter() {
             }
 
             "ticketPlayerReport" -> {
-                event.channel.asTextChannel().manager.putPermissionOverride(event.member!!, 3072, 8192).queue()
+                event.channel.asTextChannel().manager.putPermissionOverride(event.member!!, getTicketHolderAllowedPermissions(), getTicketHolderDisallowedPermissions()).queue()
                 event.message.delete().queue()
 
                 val embedBuilder = EmbedBuilder()
@@ -229,7 +231,7 @@ class TicketCommand: ListenerAdapter() {
             }
 
             "ticketBugReport" -> {
-                event.channel.asTextChannel().manager.putPermissionOverride(event.member!!, 3072, 8192).queue()
+                event.channel.asTextChannel().manager.putPermissionOverride(event.member!!, getTicketHolderAllowedPermissions(), getTicketHolderDisallowedPermissions()).queue()
                 event.message.delete().queue()
 
                 val embedBuilder = EmbedBuilder()
@@ -253,7 +255,7 @@ class TicketCommand: ListenerAdapter() {
             }
 
             "ticketOther" -> {
-                event.channel.asTextChannel().manager.putPermissionOverride(event.member!!, 3072, 8192).queue()
+                event.channel.asTextChannel().manager.putPermissionOverride(event.member!!, getTicketHolderAllowedPermissions(), getTicketHolderDisallowedPermissions()).queue()
                 event.message.delete().queue()
 
                 val embedBuilder = EmbedBuilder()
@@ -275,7 +277,20 @@ class TicketCommand: ListenerAdapter() {
         }
     }
 
-    private fun getTicketHolderPermissions(): EnumSet<Permission>? {
+    private fun getTicketHolderPreAllowedPermissions(): EnumSet<Permission>? {
+        return EnumSet.of(
+            Permission.VIEW_CHANNEL
+        )
+    }
+
+    private fun getTicketHolderPreDisallowedPermissions(): EnumSet<Permission>? {
+        return EnumSet.of(
+            Permission.MESSAGE_MANAGE,
+            Permission.MESSAGE_SEND
+        )
+    }
+
+    private fun getTicketHolderAllowedPermissions(): EnumSet<Permission>? {
         return EnumSet.of(
             Permission.VIEW_CHANNEL,
             Permission.MESSAGE_SEND,
@@ -286,6 +301,12 @@ class TicketCommand: ListenerAdapter() {
             Permission.MESSAGE_ADD_REACTION,
             Permission.MESSAGE_TTS,
             Permission.MESSAGE_EXT_STICKER
+        )
+    }
+
+    private fun getTicketHolderDisallowedPermissions(): EnumSet<Permission>? {
+        return EnumSet.of(
+            Permission.MESSAGE_MANAGE
         )
     }
 }

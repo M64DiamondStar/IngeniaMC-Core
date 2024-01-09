@@ -5,7 +5,7 @@ import com.bergerkiller.bukkit.tc.events.SignChangeActionEvent
 import com.bergerkiller.bukkit.tc.signactions.SignAction
 import com.bergerkiller.bukkit.tc.signactions.SignActionType
 import com.bergerkiller.bukkit.tc.utils.SignBuildOptions
-import me.m64diamondstar.ingeniamccore.attractions.utils.Attraction
+import me.m64diamondstar.ingeniamccore.attractions.Attraction
 import me.m64diamondstar.ingeniamccore.attractions.utils.AttractionUtils
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType

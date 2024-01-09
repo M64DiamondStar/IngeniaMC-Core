@@ -23,6 +23,11 @@ class EditJoinLeaveCommand: CommandExecutor {
             return false
         }
 
+        if(!sender.hasPermission("ingenia.vip")){
+            sender.sendMessage(Messages.requiresVIP())
+            return false
+        }
+
         if(string.equals("editjoinmessage", ignoreCase = true)){
             val joinLeaveInventory = JoinLeaveInventory(sender, JoinLeaveInventory.Selected.JOIN)
             joinLeaveInventory.open()

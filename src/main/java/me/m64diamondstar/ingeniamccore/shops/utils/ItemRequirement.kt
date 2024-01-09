@@ -1,12 +1,11 @@
 package me.m64diamondstar.ingeniamccore.shops.utils
 
-import me.m64diamondstar.ingeniamccore.attractions.utils.Attraction
+import me.m64diamondstar.ingeniamccore.attractions.Attraction
 import me.m64diamondstar.ingeniamccore.games.parkour.Parkour
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.utils.EnumUtilities
 import me.m64diamondstar.ingeniamccore.utils.Rank
 import org.bukkit.entity.Player
-import java.time.format.DateTimeFormatter
 
 enum class ItemRequirement {
 

@@ -14,24 +14,24 @@ public class LeaderboardRegistry {
         return boards;
     }
 
-    public static void setBoard(String attractionName, OfflinePlayer player, int id){
-        setBoard(attractionName, player.getUniqueId(), id);
+    public static void setBoard(String attractionID, OfflinePlayer player, int id){
+        setBoard(attractionID, player.getUniqueId(), id);
     }
 
-    public static void setBoard(String attractionName, UUID uuid, int id){
+    public static void setBoard(String attractionID, UUID uuid, int id){
         Map<UUID, Integer> playerMaps;
-        if(getBoards().containsKey(attractionName)){
-            playerMaps = getBoards().get(attractionName);
+        if(getBoards().containsKey(attractionID)){
+            playerMaps = getBoards().get(attractionID);
         }else{
             playerMaps = new HashMap<>();
         }
         playerMaps.put(uuid, id);
-        boards.put(attractionName, playerMaps);
+        boards.put(attractionID, playerMaps);
     }
 
-    public static Integer getId(String attractionName, OfflinePlayer player){
-        if(boards.containsKey(attractionName)){
-            Map<UUID, Integer> playerMaps = getBoards().get(attractionName);
+    public static Integer getId(String attractionID, OfflinePlayer player){
+        if(boards.containsKey(attractionID)){
+            Map<UUID, Integer> playerMaps = getBoards().get(attractionID);
             return playerMaps.get(player.getUniqueId());
         }
         return null;

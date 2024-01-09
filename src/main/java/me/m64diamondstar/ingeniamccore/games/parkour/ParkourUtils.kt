@@ -59,4 +59,8 @@ object ParkourUtils {
         return list
     }
 
+    fun getParkourID(parkour: Parkour): String{
+        return "${parkour.category}_${parkour.name}"
+    }
+
 }

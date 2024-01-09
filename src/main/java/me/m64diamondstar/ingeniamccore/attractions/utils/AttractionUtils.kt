@@ -1,6 +1,7 @@
 package me.m64diamondstar.ingeniamccore.attractions.utils
 
 import me.m64diamondstar.ingeniamccore.IngeniaMC
+import me.m64diamondstar.ingeniamccore.attractions.Attraction
 import me.m64diamondstar.ingeniamccore.attractions.custom.FreeFall
 import org.bukkit.entity.Player
 import java.io.File
@@ -50,7 +51,8 @@ object AttractionUtils {
     fun getAllAttractions(): List<Attraction>{
         val list = ArrayList<Attraction>()
         for(category in getCategories()){
-            category.listFiles()?.forEach { if(!it.name.contains(".DS_Store"))
+            category.listFiles()?.forEach {
+                if(!it.name.contains(".DS_Store"))
                 list.add(Attraction(category.name, it.name))}
         }
         return list
@@ -78,6 +80,10 @@ object AttractionUtils {
                 freeFall.despawn()
             }
         }
+    }
+
+    fun getAttractionID(attraction: Attraction): String{
+        return "${attraction.getCategory()}_${attraction.getName()}"
     }
 
 }

@@ -7,7 +7,10 @@ import me.m64diamondstar.ingeniamccore.attractions.utils.AttractionUtils
 import me.m64diamondstar.ingeniamccore.cosmetics.data.JoinLeaveColor
 import me.m64diamondstar.ingeniamccore.cosmetics.data.JoinLeaveMessage
 import me.m64diamondstar.ingeniamccore.discord.bot.DiscordBot
-import me.m64diamondstar.ingeniamccore.discord.webhook.DiscordWebhook
+import me.m64diamondstar.ingeniamccore.discord.commands.BotUtils
+import me.m64diamondstar.ingeniamccore.discord.listeners.minecraft.ReceiveExpListener
+import me.m64diamondstar.ingeniamccore.discord.listeners.minecraft.ReceiveGoldenStarsListener
+import me.m64diamondstar.ingeniamccore.discord.listeners.minecraft.ReceiveRidecountListener
 import me.m64diamondstar.ingeniamccore.games.guesstheword.GuessTheWord
 import me.m64diamondstar.ingeniamccore.games.guesstheword.GuessTheWordListener
 import me.m64diamondstar.ingeniamccore.games.presenthunt.PresentHuntUtils
@@ -21,11 +24,13 @@ import me.m64diamondstar.ingeniamccore.general.commands.*
 import me.m64diamondstar.ingeniamccore.general.commands.ingenia.IngeniaCommand
 import me.m64diamondstar.ingeniamccore.general.commands.tabcompleters.*
 import me.m64diamondstar.ingeniamccore.general.listeners.*
+import me.m64diamondstar.ingeniamccore.general.listeners.ChatListener
 import me.m64diamondstar.ingeniamccore.general.listeners.InteractListener
 import me.m64diamondstar.ingeniamccore.general.listeners.LeaveListener
 import me.m64diamondstar.ingeniamccore.general.listeners.helpers.BonemealListener
 import me.m64diamondstar.ingeniamccore.protect.listeners.*
 import me.m64diamondstar.ingeniamccore.protect.listeners.DamageListener
+import me.m64diamondstar.ingeniamccore.protect.moderation.ModerationRegistry
 import me.m64diamondstar.ingeniamccore.shops.listeners.ShopListener
 import me.m64diamondstar.ingeniamccore.utils.LocationUtils
 import me.m64diamondstar.ingeniamccore.utils.TeamHandler
@@ -33,6 +38,7 @@ import me.m64diamondstar.ingeniamccore.utils.gui.GuiListener
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
 import me.m64diamondstar.ingeniamccore.wands.utils.WandRegistry
 import me.m64diamondstar.ingeniamccore.wands.wandlistener.WandListener
+import net.dv8tion.jda.api.EmbedBuilder
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.plugin.java.JavaPlugin
@@ -100,6 +106,9 @@ class IngeniaMC : JavaPlugin() {
         WandRegistry.registerWands()
         Bukkit.getLogger().info("Wands loaded ✓")
 
+        ModerationRegistry.registerBlockedWords()
+        Bukkit.getLogger().info("Blocked Words loaded ✓")
+
         PresentHuntUtils.loadActivePresents()
         TeamHandler.load()
         Bukkit.getLogger().info("" +
@@ -109,28 +118,21 @@ class IngeniaMC : JavaPlugin() {
         Bukkit.getLogger().info("Finished loading, IngeniaMC-Core is enabled!")
         Bukkit.getLogger().info("---------------------------")
 
-        // Send Discord Webhook
-        if(plugin.config.getBoolean("Discord.Webhook.Enable")){
-            val discordWebhook = DiscordWebhook(plugin.config.getString("Discord.Webhook.Chat"))
-
+        if(BotUtils.ChatUtils.chatChannel != null) {
+            val embedBuilder = EmbedBuilder()
             val dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")
             val timeNow = LocalDateTime.now()
 
-            discordWebhook.addEmbed(
-                DiscordWebhook.EmbedObject()
-                    .setAuthor("Server Starting...", null, "https://ingeniamc.net/images/startup.gif")
-                    .setFooter(
-                        "Online: ${Bukkit.getServer().onlinePlayers.size}/${Bukkit.getServer().maxPlayers}" +
-                                "  ${dateTimeFormatter.format(timeNow)}", null
-                    )
-                    .setColor(Color.decode("#f4b734"))
+            embedBuilder.setAuthor("Server Starting Up...", null, "https://ingeniamc.net/images/startup.gif")
+            embedBuilder.setFooter(
+                dateTimeFormatter.format(timeNow) + " UTC", null
             )
-
-            discordWebhook.execute()
+            embedBuilder.setColor(Color.decode("#f4b734"))
+            DiscordBot.jda.getTextChannelById(BotUtils.ChatUtils.chatChannel!!.id)
+                ?.sendMessageEmbeds(embedBuilder.build())?.queue()
         }
 
         spawn = LocationUtils.getLocationFromString(plugin.config.getString("Spawn")) ?: Location(Bukkit.getWorlds().first(), 0.5, 52.0, 0.5)
-
     }
 
     override fun onDisable() {
@@ -145,23 +147,20 @@ class IngeniaMC : JavaPlugin() {
         saveConfig()
         SplashBattleUtils.players.forEach { SplashBattleUtils.leave(it) }
 
-        if(plugin.config.getBoolean("Discord.Webhook.Enable")){// Send Discord Webhook
-            val discordWebhook = DiscordWebhook(plugin.config.getString("Discord.Webhook.Chat"))
-
+        if(BotUtils.ChatUtils.chatChannel != null) {
+            val embedBuilder = EmbedBuilder()
             val dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")
             val timeNow = LocalDateTime.now()
 
-            discordWebhook.addEmbed(
-                DiscordWebhook.EmbedObject()
-                    .setAuthor("Server Shutting Down...", null, "https://ingeniamc.net/images/shutdown.gif")
-                    .setFooter(
-                        "Online: ${Bukkit.getServer().onlinePlayers.size}/${Bukkit.getServer().maxPlayers}" +
-                                "  ${dateTimeFormatter.format(timeNow)}", null
-                    )
-                    .setColor(Color.decode("#f4b734"))
+            embedBuilder.setAuthor("Server Shutting Down...", null, "https://ingeniamc.net/images/shutdown.gif")
+            embedBuilder.setFooter(
+                dateTimeFormatter.format(timeNow) + " UTC", null
             )
-
-            discordWebhook.execute()
+            embedBuilder.setColor(Color.decode("#f4b734"))
+            DiscordBot.jda.getTextChannelById(BotUtils.ChatUtils.chatChannel!!.id)
+                ?.sendMessageEmbeds(embedBuilder.build())?.complete()
+            // Needs to block the main thread so this message sends before the bot shuts down
+            // Shouldn't be an issue because the server is already shutting down
         }
 
         // Shut the discord but down
@@ -226,6 +225,7 @@ class IngeniaMC : JavaPlugin() {
 
         Objects.requireNonNull(getCommand("fixaudio"))?.setExecutor(FixAudioCommand())
         Objects.requireNonNull(getCommand("audiocredits"))?.setExecutor(AudioCreditsCommand())
+        Objects.requireNonNull(getCommand("rules"))?.setExecutor(RulesCommand())
     }
 
     private fun loadTabCompleters() {
@@ -306,6 +306,7 @@ class IngeniaMC : JavaPlugin() {
         Bukkit.getServer().pluginManager.registerEvents(BoatListener(), this)
         Bukkit.getServer().pluginManager.registerEvents(EntityListener(), this)
         Bukkit.getServer().pluginManager.registerEvents(PlayerListeners(), this)
+        Bukkit.getServer().pluginManager.registerEvents(me.m64diamondstar.ingeniamccore.protect.listeners.ChatListener(), this)
 
         /*
             Splash Battle Events
@@ -328,6 +329,13 @@ class IngeniaMC : JavaPlugin() {
             Audio Events
          */
         AudioConnectListener.startListeners()
+
+        /*
+            Discord Events
+         */
+        Bukkit.getServer().pluginManager.registerEvents(ReceiveExpListener(), this)
+        Bukkit.getServer().pluginManager.registerEvents(ReceiveGoldenStarsListener(), this)
+        Bukkit.getServer().pluginManager.registerEvents(ReceiveRidecountListener(), this)
     }
 
     private fun loadPacketListeners(){

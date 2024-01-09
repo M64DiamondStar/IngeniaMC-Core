@@ -1,10 +1,11 @@
 package me.m64diamondstar.ingeniamccore.attractions.custom
 
 import me.m64diamondstar.ingeniamccore.IngeniaMC
-import me.m64diamondstar.ingeniamccore.attractions.utils.Attraction
+import me.m64diamondstar.ingeniamccore.attractions.Attraction
 import me.m64diamondstar.ingeniamccore.attractions.utils.AttractionManager
 import me.m64diamondstar.ingeniamccore.attractions.utils.AttractionType
 import me.m64diamondstar.ingeniamccore.attractions.utils.CustomAttraction
+import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.utils.messages.Messages
 import net.minecraft.world.entity.MoverType
 import net.minecraft.world.phys.Vec3
@@ -242,6 +243,8 @@ class FreeFall(private val category: String, private val name: String): Attracti
                             val passenger = stand.getPassengers()[0] as Player
                             if (passenger.isInsideVehicle) {
                                 addRidecount(passenger, 1)
+                                IngeniaPlayer(passenger).addBal(6)
+                                IngeniaPlayer(passenger).addExp(8)
                                 passenger.sendMessage(Messages.currentRidecount(getRidecount(passenger)))
                             }
                         }

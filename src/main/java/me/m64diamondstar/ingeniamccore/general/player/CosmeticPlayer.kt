@@ -219,6 +219,10 @@ class CosmeticPlayer(private val player: Player) {
                 CosmeticType.BALLOON -> {
 
                 }
+
+                CosmeticType.BACKPACK -> {
+
+                }
             }
         }
 
@@ -245,7 +249,11 @@ class CosmeticPlayer(private val player: Player) {
                 }
 
                 CosmeticType.BALLOON -> {
-                    cosmeticPlayer.player.equipment!!.helmet = null
+
+                }
+
+                CosmeticType.BACKPACK -> {
+
                 }
             }
         }
@@ -283,6 +291,9 @@ class CosmeticPlayer(private val player: Player) {
                     CosmeticItems(cosmeticType).getID(boots)
                 }
                 CosmeticType.BALLOON -> {
+                    null
+                }
+                CosmeticType.BACKPACK -> {
                     null
                 }
             }

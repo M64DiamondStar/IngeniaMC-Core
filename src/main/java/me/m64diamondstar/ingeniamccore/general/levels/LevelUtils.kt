@@ -14,12 +14,25 @@ object LevelUtils {
         return maxLevel
     }
 
-    fun getExpFromLevel(level: Int): Long{
+    fun getExpRequirement(level: Int): Long{
         return IngeniaMC.plugin.config.getLong("Levels.$level.Requirement")
     }
 
+    /**
+     * Checks if a player has levelled up based on EXP
+     */
     fun isLevelUp(previousExp: Long, newExp: Long): Boolean{
         if(getLevel(previousExp) < getLevel(newExp)) {
+            return true
+        }
+        return false
+    }
+
+    /**
+     * Checks if a player has levelled up based on previous level
+     */
+    fun isLevelUp(previousLevel: Int, newExp: Long): Boolean{
+        if(previousLevel < getLevel(newExp)) {
             return true
         }
         return false

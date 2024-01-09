@@ -126,7 +126,6 @@ class GameSubcommand(private val sender: CommandSender, private val args: Array<
                  */
                 if(args[5].equals("leaderboard", ignoreCase = true)){
                     if(args.size == 7 && args[6].equals("setlocation", true)){
-                        var found = false
 
                         player.getNearbyEntities(5.0, 5.0, 5.0).forEach {
                             if(it.type != EntityType.ITEM_FRAME)
@@ -140,7 +139,6 @@ class GameSubcommand(private val sender: CommandSender, private val args: Array<
                             if(dot > 0.95){
                                 it.remove()
 
-                                found = true
                                 player.sendMessage(Colors.format(MessageType.SUCCESS + "Leaderboard location has been set."))
                                 player.spawnParticle(Particle.SMOKE_NORMAL, it.location, 100, 0.23, 0.23, 0.23, 0.0)
 
@@ -153,10 +151,9 @@ class GameSubcommand(private val sender: CommandSender, private val args: Array<
                             }
                         }
 
-                        if(!found){
-                            player.sendMessage(Colors.format(MessageType.ERROR + "Didn't find an ItemFrame, please place an ItemFrame" +
-                                    " and look at it while executing this command."))
-                        }
+                        player.sendMessage(Colors.format(MessageType.ERROR + "Didn't find an ItemFrame, please place an ItemFrame" +
+                                " and look at it while executing this command."))
+
 
                     }else if(args.size == 7 && args[6].equals("reload", true)){
                         parkour.getLeaderboard().spawnSign()
@@ -165,6 +162,16 @@ class GameSubcommand(private val sender: CommandSender, private val args: Array<
                     }
                 }
 
+            }
+
+            else if(args[2].equals("reload", ignoreCase = true) && args.size == 5) {
+                if (!ParkourUtils.existsParkour(args[3], args[4])) {
+                    player.sendMessage(Colors.format(MessageType.ERROR + "The parkour ${args[4]} doesn't exist!"))
+                    return
+                }
+
+                val parkour = Parkour(args[3], args[4])
+                parkour.reload()
             }
 
             else{
@@ -321,7 +328,6 @@ class GameSubcommand(private val sender: CommandSender, private val args: Array<
                  */
                 if(args[4].equals("leaderboard", ignoreCase = true)){
                     if(args.size == 6 && args[5].equals("setlocation", true)){
-                        var found = false
 
                         player.getNearbyEntities(5.0, 5.0, 5.0).forEach {
                             if(it.type != EntityType.ITEM_FRAME)
@@ -335,7 +341,6 @@ class GameSubcommand(private val sender: CommandSender, private val args: Array<
                             if(dot > 0.95){
                                 it.remove()
 
-                                found = true
                                 player.sendMessage(Colors.format(MessageType.SUCCESS + "Leaderboard location has been set."))
                                 player.spawnParticle(Particle.SMOKE_NORMAL, it.location, 100, 0.23, 0.23, 0.23, 0.0)
 
@@ -348,10 +353,8 @@ class GameSubcommand(private val sender: CommandSender, private val args: Array<
                             }
                         }
 
-                        if(!found){
-                            player.sendMessage(Colors.format(MessageType.ERROR + "Didn't find an ItemFrame, please place an ItemFrame" +
-                                    " and look at it while executing this command."))
-                        }
+                        player.sendMessage(Colors.format(MessageType.ERROR + "Didn't find an ItemFrame, please place an ItemFrame" +
+                                " and look at it while executing this command."))
 
                     }else if(args.size == 6 && args[5].equals("reload", true)){
                         splashBattle.getLeaderboard().spawnSoaksSign()

@@ -38,6 +38,21 @@ class PlayerConfig(uuid: UUID) : DataConfiguration("data/player", uuid.toString(
         save()
     }
 
+    fun getLevel(): Int{
+        reload()
+        return if (getConfig().get("Levels.Level") != null)
+            getConfig().getInt("Levels.Level")
+        else
+            0
+
+    }
+
+    fun setLevel(level: Int){
+        getConfig().set("Levels.Level", level)
+        save()
+    }
+
+
 
     /**
      * Gets the message when a player joins.

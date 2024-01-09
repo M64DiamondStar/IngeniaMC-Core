@@ -1,7 +1,7 @@
 package me.m64diamondstar.ingeniamccore.general.commands.ingenia.attraction
 
 import me.m64diamondstar.ingeniamccore.attractions.custom.Slide
-import me.m64diamondstar.ingeniamccore.attractions.utils.Attraction
+import me.m64diamondstar.ingeniamccore.attractions.Attraction
 import me.m64diamondstar.ingeniamccore.attractions.utils.AttractionType
 import me.m64diamondstar.ingeniamccore.attractions.utils.AttractionUtils
 import me.m64diamondstar.ingeniamccore.utils.Subcommand

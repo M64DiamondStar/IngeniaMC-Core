@@ -38,6 +38,9 @@ class GuildReadyListener: ListenerAdapter() {
             .addCommands(Commands.slash("logs", "Edit logs configuration.")
                 .setDefaultPermissions(DefaultMemberPermissions.enabledFor(Permission.ADMINISTRATOR)))
 
+            .addCommands(Commands.slash("minecraft-chat", "Set the minecraft chat channel.")
+                .setDefaultPermissions(DefaultMemberPermissions.enabledFor(Permission.ADMINISTRATOR)))
+
             .queue()
     }
 

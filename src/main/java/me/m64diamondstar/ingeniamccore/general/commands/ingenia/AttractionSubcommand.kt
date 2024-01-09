@@ -5,7 +5,7 @@ import me.m64diamondstar.effectmasterplus.shows.utils.ShowUtils
 import me.m64diamondstar.ingeniamccore.attractions.custom.Coaster
 import me.m64diamondstar.ingeniamccore.attractions.operate.OperateInventory
 import me.m64diamondstar.ingeniamccore.attractions.utils.AttractionType
-import me.m64diamondstar.ingeniamccore.attractions.utils.Attraction
+import me.m64diamondstar.ingeniamccore.attractions.Attraction
 import me.m64diamondstar.ingeniamccore.attractions.utils.AttractionUtils
 import me.m64diamondstar.ingeniamccore.attractions.utils.CountdownType
 import me.m64diamondstar.ingeniamccore.general.commands.ingenia.attraction.CoasterSubcommand
@@ -107,10 +107,9 @@ class AttractionSubcommand(private val sender: CommandSender, private val args: 
                     }
                 }
 
-                if(!found){
-                    player.sendMessage(Colors.format(MessageType.ERROR + "Didn't find an ItemFrame, please place an ItemFrame" +
-                            " and look at it while executing this command."))
-                }
+                player.sendMessage(Colors.format(MessageType.ERROR + "Didn't find an ItemFrame, please place an ItemFrame" +
+                        " and look at it while executing this command."))
+
 
             }else if(args.size == 5 && args[4].equals("reload", true)){
                 if(!AttractionUtils.existsCategory(args[2])){

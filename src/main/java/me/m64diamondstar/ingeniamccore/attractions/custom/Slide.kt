@@ -2,7 +2,7 @@ package me.m64diamondstar.ingeniamccore.attractions.custom
 
 import com.bergerkiller.bukkit.tc.controller.MinecartMemberStore
 import me.m64diamondstar.ingeniamccore.IngeniaMC
-import me.m64diamondstar.ingeniamccore.attractions.utils.Attraction
+import me.m64diamondstar.ingeniamccore.attractions.Attraction
 import me.m64diamondstar.ingeniamccore.attractions.utils.AttractionType
 import org.bukkit.Bukkit
 import org.bukkit.Location

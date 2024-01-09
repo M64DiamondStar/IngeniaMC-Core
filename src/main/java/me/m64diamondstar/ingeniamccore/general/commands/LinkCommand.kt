@@ -4,6 +4,7 @@ import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.discord.bot.DiscordBot
 import me.m64diamondstar.ingeniamccore.discord.commands.BotUtils
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
+import me.m64diamondstar.ingeniamccore.general.player.data.DiscordUserConfig
 import me.m64diamondstar.ingeniamccore.protect.FeatureManager
 import me.m64diamondstar.ingeniamccore.protect.FeatureType
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
@@ -38,7 +39,7 @@ class LinkCommand: CommandExecutor {
         val player: Player = sender
         val ingeniaPlayer = IngeniaPlayer(player)
 
-        if(string.equals("link", ignoreCase = true)){ // When player uses /link\
+        if(string.equals("link", ignoreCase = true)){ // When player uses /link
             if(!ingeniaPlayer.isNewLinkingAttemptAvailable()){
                 player.sendMessage(Colors.format(MessageType.ERROR + "You're on cooldown at the moment. Please wait ${ingeniaPlayer.getLinkingCooldown()}."))
                 return false
@@ -130,6 +131,8 @@ class LinkCommand: CommandExecutor {
                 return false
             }
 
+            val discordUser = DiscordUserConfig(ingeniaPlayer.playerConfig.getDiscordID())
+
             // Remove role from member
             try {
                 guild?.retrieveMemberById(ingeniaPlayer.playerConfig.getDiscordID())?.queue {
@@ -141,6 +144,7 @@ class LinkCommand: CommandExecutor {
 
             // Set discord to null in player config
             ingeniaPlayer.playerConfig.setDiscord(null)
+            discordUser.setMinecraft(null)
 
             player.sendMessage(Colors.format(MessageType.SUCCESS + "Successfully unlinked your account."))
         }

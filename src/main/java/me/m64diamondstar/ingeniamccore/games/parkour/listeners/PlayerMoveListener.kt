@@ -1,5 +1,6 @@
 package me.m64diamondstar.ingeniamccore.games.parkour.listeners
 
+import me.m64diamondstar.ingeniamccore.games.PhysicalGameType
 import me.m64diamondstar.ingeniamccore.games.parkour.ParkourUtils
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.protect.FeatureManager
@@ -9,6 +10,7 @@ import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerMoveEvent
+import org.bukkit.event.player.PlayerTeleportEvent
 
 class PlayerMoveListener: Listener {
 
@@ -36,6 +38,16 @@ class PlayerMoveListener: Listener {
                     ingeniaPlayer.startParkour(parkour)
                 }
             }
+        }
+    }
+
+    @EventHandler
+    fun onPlayerTeleport(event: PlayerTeleportEvent){
+        val player = event.player
+        val ingeniaPlayer = IngeniaPlayer(player)
+
+        if(!event.isCancelled && ingeniaPlayer.isInGame && ingeniaPlayer.game == PhysicalGameType.PARKOUR){
+            ingeniaPlayer.isInGameLeavingState = true
         }
     }
 

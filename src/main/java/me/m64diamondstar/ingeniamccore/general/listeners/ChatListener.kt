@@ -1,19 +1,15 @@
 package me.m64diamondstar.ingeniamccore.general.listeners
 
 import me.m64diamondstar.ingeniamccore.IngeniaMC
-import me.m64diamondstar.ingeniamccore.discord.webhook.DiscordWebhook
+import me.m64diamondstar.ingeniamccore.discord.bot.DiscordBot
+import me.m64diamondstar.ingeniamccore.discord.commands.BotUtils
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
-import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.AsyncPlayerChatEvent
 import org.bukkit.event.player.PlayerCommandSendEvent
-import java.awt.Color
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import kotlin.concurrent.thread
 
 class ChatListener: Listener {
 
@@ -21,6 +17,15 @@ class ChatListener: Listener {
     fun onChat(event: AsyncPlayerChatEvent){
         val player = event.player
         val ingeniaPlayer = IngeniaPlayer(player)
+
+        if(BotUtils.ChatUtils.chatChannel != null && !event.isCancelled && event.message.replace("\\", "").isNotBlank()){
+            DiscordBot.jda.getTextChannelById(BotUtils.ChatUtils.chatChannel!!.id)?.sendMessage(
+                "**${ingeniaPlayer.rawPrefix}** ${player.name} » ${addBracketsToUrls(event.message
+                    .replace("@", "`@`")
+                    .replace("\\", "")
+                    .replace("```", "`"))}"
+            )?.queue()
+        }
 
         if(player.hasPermission("ingenia.vip+") || player.isOp)
             event.format = Colors.format("${ingeniaPlayer.prefix}&r ${ingeniaPlayer.name} » ${event.message.replace("%", "%%")}")
@@ -33,28 +38,6 @@ class ChatListener: Listener {
         else
             event.format = ingeniaPlayer.prefix + Colors.format("&r ") + "${ingeniaPlayer.name} » ${event.message.replace("%", "%%")}"
 
-        if(IngeniaMC.plugin.config.getBoolean("Discord.Webhook.Enable"))
-            thread {
-                // Send Discord Webhook
-                val discordWebhook = DiscordWebhook(IngeniaMC.plugin.config.getString("Discord.Webhook.Chat"))
-
-                val dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")
-                val timeNow = LocalDateTime.now()
-
-                discordWebhook.addEmbed(
-                    DiscordWebhook.EmbedObject()
-                        .setAuthor(player.name, null, "https://visage.surgeplay.com/face/${player.uniqueId}.png")
-                        .setDescription(" » ${event.message}")
-                        .setFooter(
-                            "Online: ${Bukkit.getServer().onlinePlayers.size}/${Bukkit.getServer().maxPlayers}" +
-                                    "  ${dateTimeFormatter.format(timeNow)}", null
-                        )
-                        .setColor(Color.decode("#87B9E8"))
-                )
-
-                discordWebhook.execute()
-            }
-
     }
 
     @EventHandler
@@ -65,6 +48,14 @@ class ChatListener: Listener {
 
         event.commands.clear()
         event.commands.addAll( IngeniaMC.plugin.config.getStringList("Player-Commands"))
+    }
+
+    private fun addBracketsToUrls(input: String): String {
+        val urlPattern = Regex("(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]")
+
+        return urlPattern.replace(input) {
+            "<${it.value}>"
+        }
     }
 
 }

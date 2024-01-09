@@ -36,4 +36,8 @@ object Messages {
         return Colors.format(MessageType.ERROR + "This feature is currently disabled. Please notify a team member if you think this is an error.")
     }
 
+    fun requiresVIP(): String {
+        return Colors.format(MessageType.ERROR + "This feature requires VIP.")
+    }
+
 }

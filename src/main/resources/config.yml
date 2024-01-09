@@ -12,10 +12,14 @@ Discord:
     Token: 'token here'
     Guild-ID: 809319930754498580
     Linked-Role-ID: 1107022838109573160
+    Join-Emoji: '<:join:1194313308614955098>'
+    Leave-Emoji: '<:leave:1194313325438304357>'
   Webhook:
     Enable: true
     # Webhook URL for the chat messages
     Chat: 'webhook here'
+    # Webhook URL for the danger messages
+    Potential-Danger-ID: '1193322220450222141'
 
 # The database URL can be found on the panel. It's called JDBC Connection String.
 Database:
