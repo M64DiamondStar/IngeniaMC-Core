@@ -1,6 +1,9 @@
 package me.m64diamondstar.ingeniamccore
 
+import com.comphenix.protocol.ProtocolLibrary
+import com.comphenix.protocol.ProtocolManager
 import com.craftmend.openaudiomc.api.interfaces.AudioApi
+import me.m56738.smoothcoasters.api.SmoothCoastersAPI
 import me.m64diamondstar.ingeniamccore.attractions.listeners.PlayerInteractEntityListener
 import me.m64diamondstar.ingeniamccore.attractions.traincarts.SignRegistry
 import me.m64diamondstar.ingeniamccore.attractions.utils.AttractionUtils
@@ -26,6 +29,7 @@ import me.m64diamondstar.ingeniamccore.general.commands.tabcompleters.*
 import me.m64diamondstar.ingeniamccore.general.listeners.*
 import me.m64diamondstar.ingeniamccore.general.listeners.ChatListener
 import me.m64diamondstar.ingeniamccore.general.listeners.InteractListener
+import me.m64diamondstar.ingeniamccore.general.listeners.InventoryListener
 import me.m64diamondstar.ingeniamccore.general.listeners.LeaveListener
 import me.m64diamondstar.ingeniamccore.general.listeners.helpers.BonemealListener
 import me.m64diamondstar.ingeniamccore.protect.listeners.*
@@ -53,6 +57,8 @@ class IngeniaMC : JavaPlugin() {
     companion object {
         lateinit var plugin: IngeniaMC
         lateinit var audioApi: AudioApi
+        lateinit var protocolManager: ProtocolManager
+        lateinit var smoothCoastersAPI: SmoothCoastersAPI
         var isDisabling: Boolean = false
         lateinit var spawn: Location
     }
@@ -61,6 +67,8 @@ class IngeniaMC : JavaPlugin() {
 
         plugin = this
         audioApi = AudioApi.getInstance()
+        protocolManager = ProtocolLibrary.getProtocolManager()
+        smoothCoastersAPI = SmoothCoastersAPI(this)
 
         Bukkit.getLogger().info("---------------------------")
         Bukkit.getLogger().info("Started loading IngeniaMC-Core!")
@@ -145,6 +153,7 @@ class IngeniaMC : JavaPlugin() {
         TeamHandler.unload()
         reloadConfig()
         saveConfig()
+        smoothCoastersAPI.unregister()
         SplashBattleUtils.players.forEach { SplashBattleUtils.leave(it) }
 
         if(BotUtils.ChatUtils.chatChannel != null) {
@@ -307,6 +316,8 @@ class IngeniaMC : JavaPlugin() {
         Bukkit.getServer().pluginManager.registerEvents(EntityListener(), this)
         Bukkit.getServer().pluginManager.registerEvents(PlayerListeners(), this)
         Bukkit.getServer().pluginManager.registerEvents(me.m64diamondstar.ingeniamccore.protect.listeners.ChatListener(), this)
+        Bukkit.getServer().pluginManager.registerEvents(EquipmentListener(), this)
+        Bukkit.getServer().pluginManager.registerEvents(me.m64diamondstar.ingeniamccore.protect.listeners.InventoryListener(), this)
 
         /*
             Splash Battle Events

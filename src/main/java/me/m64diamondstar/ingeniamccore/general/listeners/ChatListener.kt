@@ -7,13 +7,14 @@ import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import org.bukkit.ChatColor
 import org.bukkit.event.EventHandler
+import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.player.AsyncPlayerChatEvent
 import org.bukkit.event.player.PlayerCommandSendEvent
 
 class ChatListener: Listener {
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     fun onChat(event: AsyncPlayerChatEvent){
         val player = event.player
         val ingeniaPlayer = IngeniaPlayer(player)

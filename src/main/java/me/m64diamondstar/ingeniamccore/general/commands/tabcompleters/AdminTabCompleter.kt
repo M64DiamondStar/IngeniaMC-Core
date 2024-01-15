@@ -29,9 +29,15 @@ class AdminTabCompleter: TabCompleter {
             tc.add("location")
             tc.add("invsee")
         }else if(args.size == 2){
-            if(args[0].equals("invsee", ignoreCase = true)){
+            if(args[0].equals("invsee", ignoreCase = true) || args[0].equals("gravity", ignoreCase = true)){
                 tc.clear()
                 tc.addAll(Bukkit.getOnlinePlayers().map { it.name })
+            }
+        }else if(args.size == 3){
+            if(args[0].equals("gravity", ignoreCase = true)){
+                tc.clear()
+                tc.add("true")
+                tc.add("false")
             }
         }else
             tc.clear()

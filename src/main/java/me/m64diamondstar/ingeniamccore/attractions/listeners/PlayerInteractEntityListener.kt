@@ -2,6 +2,7 @@ package me.m64diamondstar.ingeniamccore.attractions.listeners
 
 import me.m64diamondstar.ingeniamccore.attractions.custom.Coaster
 import me.m64diamondstar.ingeniamccore.attractions.custom.FreeFall
+import me.m64diamondstar.ingeniamccore.attractions.custom.Frisbee
 import me.m64diamondstar.ingeniamccore.attractions.custom.Slide
 import me.m64diamondstar.ingeniamccore.utils.entities.EntityUtils
 import org.bukkit.event.EventHandler
@@ -28,5 +29,6 @@ class PlayerInteractEntityListener: Listener {
         if(EntityUtils.isLocked(entity)) return
 
         FreeFall.clickEvent(event)
+        Frisbee.clickEvent(event)
     }
 }

@@ -3,6 +3,7 @@ package me.m64diamondstar.ingeniamccore.attractions.utils
 import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.attractions.Attraction
 import me.m64diamondstar.ingeniamccore.attractions.custom.FreeFall
+import me.m64diamondstar.ingeniamccore.attractions.custom.Frisbee
 import org.bukkit.entity.Player
 import java.io.File
 
@@ -66,18 +67,32 @@ object AttractionUtils {
 
     fun spawnAllAttractions(){
         for(attraction in getAllAttractions()){
-            if(attraction.getType() == AttractionType.FREEFALL){
-                val freeFall = FreeFall(attraction.getCategory(), attraction.getName())
-                freeFall.spawn()
+            when(attraction.getType()){
+                AttractionType.FREEFALL -> {
+                    val freeFall = FreeFall(attraction.getCategory(), attraction.getName())
+                    freeFall.spawn()
+                }
+                AttractionType.FRISBEE -> {
+                    val frisbee = Frisbee(attraction.getCategory(), attraction.getName())
+                    frisbee.spawn()
+                }
+                else -> {}
             }
         }
     }
 
     fun despawnAllAttractions(){
         for(attraction in getAllAttractions()){
-            if(attraction.getType() == AttractionType.FREEFALL){
-                val freeFall = FreeFall(attraction.getCategory(), attraction.getName())
-                freeFall.despawn()
+            when(attraction.getType()){
+                AttractionType.FREEFALL -> {
+                    val freeFall = FreeFall(attraction.getCategory(), attraction.getName())
+                    freeFall.despawn()
+                }
+                AttractionType.FRISBEE -> {
+                    val frisbee = Frisbee(attraction.getCategory(), attraction.getName())
+                    frisbee.despawn()
+                }
+                else -> {}
             }
         }
     }

@@ -10,6 +10,7 @@ import me.m64diamondstar.ingeniamccore.attractions.utils.AttractionUtils
 import me.m64diamondstar.ingeniamccore.attractions.utils.CountdownType
 import me.m64diamondstar.ingeniamccore.general.commands.ingenia.attraction.CoasterSubcommand
 import me.m64diamondstar.ingeniamccore.general.commands.ingenia.attraction.FreefallSubcommand
+import me.m64diamondstar.ingeniamccore.general.commands.ingenia.attraction.FrisbeeSubcommand
 import me.m64diamondstar.ingeniamccore.general.commands.ingenia.attraction.SlideSubcommand
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.utils.IngeniaSubcommand
@@ -80,7 +81,6 @@ class AttractionSubcommand(private val sender: CommandSender, private val args: 
                 }
 
                 val attraction = Attraction(args[2], args[3])
-                var found = false
 
                 player.getNearbyEntities(5.0, 5.0, 5.0).forEach {
                     if(it.type != EntityType.ITEM_FRAME)
@@ -94,7 +94,6 @@ class AttractionSubcommand(private val sender: CommandSender, private val args: 
                     if(dot > 0.95){
                         it.remove()
 
-                        found = true
                         player.sendMessage(Colors.format(MessageType.SUCCESS + "Leaderboard location has been set."))
                         player.spawnParticle(Particle.SMOKE_NORMAL, it.location, 100, 0.23, 0.23, 0.23, 0.0)
 
@@ -400,6 +399,11 @@ class AttractionSubcommand(private val sender: CommandSender, private val args: 
             freefallSubcommand.execute()
         }
 
+        if(args[1].equals("frisbee", ignoreCase = true)){
+            val frisbeeSubcommand = FrisbeeSubcommand(args, player)
+            frisbeeSubcommand.execute()
+        }
+
         if(args[1].equals("coaster", ignoreCase = true)){
             val coasterSubcommand = CoasterSubcommand(args, player)
             coasterSubcommand.execute()
@@ -421,6 +425,7 @@ class AttractionSubcommand(private val sender: CommandSender, private val args: 
             tabs.add("ridecount")
             tabs.add("warp")
             tabs.add("freefall")
+            tabs.add("frisbee")
             tabs.add("coaster")
             tabs.add("gates")
             tabs.add("operate")
@@ -433,15 +438,18 @@ class AttractionSubcommand(private val sender: CommandSender, private val args: 
         if(args.size == 3 && !(args[1].equals("create", true) || args[1].equals("delete", true)))
             AttractionUtils.getCategories().forEach { tabs.add(it.name) }
 
-        if(args.size == 4 && !(args[1].equals("create", true) || args[1].equals("delete", true) || args[1].equals("freefall", true)))
+        if(args.size == 4 && !(args[1].equals("create", true) || args[1].equals("delete", true) || args[1].equals("freefall", true)|| args[1].equals("frisbee", true)))
             AttractionUtils.getAttractions(args[2]).forEach { tabs.add(it.name) }
 
         //FreeFall tab completer to make sure only freefall attractions get added
-        if(args.size == 4 && args[1].equals("freefall", ignoreCase = true)) {
+        if(args.size == 4 && (args[1].equals("freefall", ignoreCase = true) || args[1].equals("frisbee", ignoreCase = true))) {
             var exists = false
             AttractionUtils.getAttractions(args[2]).forEach {
                 val attraction = Attraction(args[2], it.name)
-                if (attraction.getType() == AttractionType.FREEFALL) {
+                if (attraction.getType() == AttractionType.FREEFALL && args[1].equals("freefall", ignoreCase = true)) {
+                    tabs.add(it.name)
+                    exists = true
+                }else if(attraction.getType() == AttractionType.FRISBEE && args[1].equals("frisbee", ignoreCase = true)){
                     tabs.add(it.name)
                     exists = true
                 }
@@ -478,6 +486,13 @@ class AttractionSubcommand(private val sender: CommandSender, private val args: 
                 tabs.add("setspawn")
                 tabs.add("spawn")
                 tabs.add("despawn")
+            }
+
+            if(args[1].equals("frisbee", ignoreCase = true)){
+                tabs.add("setspawn")
+                tabs.add("spawn")
+                tabs.add("despawn")
+                tabs.add("setaxis")
             }
 
             if(args[1].equals("coaster", ignoreCase = true)){

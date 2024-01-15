@@ -67,4 +67,15 @@ class InteractListener: Listener {
         event.isCancelled = true
     }
 
+    @EventHandler
+    fun onArmorChange(event: PlayerInteractEvent){
+        if(event.item == null) return
+        if(event.player.hasPermission("ingenia.admin") || event.player.isOp) return
+        if(!event.item!!.type.toString().contains("HELMET")
+            && !event.item!!.type.toString().contains("CHESTPLATE")
+            && !event.item!!.type.toString().contains("LEGGINGS")
+            && !event.item!!.type.toString().contains("BOOTS")) return
+        event.isCancelled = true
+    }
+
 }

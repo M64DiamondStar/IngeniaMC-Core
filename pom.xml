@@ -36,6 +36,10 @@
                                     <pattern>com.jeff_media.customblockdata</pattern>
                                     <shadedPattern>me.m64diamondstar.customblockdata</shadedPattern>
                                 </relocation>
+                                <relocation>
+                                    <pattern>me.m56738.SmoothCoastersAPI</pattern>
+                                    <shadedPattern>me.m64diamondstar.smoothcoasterapi</shadedPattern>
+                                </relocation>
                             </relocations>
                         </configuration>
                     </execution>
@@ -154,13 +158,17 @@
             <url>https://ci.mg-dev.eu/plugin/repository/everything</url>
         </repository>
         <repository>
-            <id>dmulloy2-repo</id>
-            <url>https://repo.dmulloy2.net/repository/public/</url>
+            <id>mgdev-repo</id>
+            <url>https://ci.mg-dev.eu/plugin/repository/everything/</url>
         </repository>
         <repository>
             <id>dv8tion</id>
             <name>m2-dv8tion</name>
             <url>https://m2.dv8tion.net/releases</url>
+        </repository>
+        <repository>
+            <id>dmulloy2-repo</id>
+            <url>https://repo.dmulloy2.net/repository/public/</url>
         </repository>
     </repositories>
 
@@ -177,7 +185,11 @@
     </dependencyManagement>
 
     <dependencies>
-
+        <dependency>
+            <groupId>me.m56738</groupId>
+            <artifactId>SmoothCoastersAPI</artifactId>
+            <version>1.10</version>
+        </dependency>
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot</artifactId>
@@ -253,19 +265,17 @@
         </dependency>
 
         <dependency>
-            <groupId>com.comphenix.protocol</groupId>
-            <artifactId>ProtocolLib</artifactId>
-            <version>4.7.0</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
             <groupId>com.github.Mindgamesnl</groupId>
             <artifactId>OpenAudioMc</artifactId>
             <version>6.8.8</version>
             <scope>provided</scope>
         </dependency>
-
+        <dependency>
+            <groupId>com.comphenix.protocol</groupId>
+            <artifactId>ProtocolLib</artifactId>
+            <version>5.1.0</version>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>com.jeff-media</groupId>
             <artifactId>custom-block-data</artifactId>
@@ -286,6 +296,16 @@
             <version>1.0</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/src/main/resources/EffectMaster+.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>org.joml</groupId>
+            <artifactId>joml</artifactId>
+            <version>1.10.5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-math3</artifactId>
+            <version>3.6.1</version>
         </dependency>
     </dependencies>
 </project>

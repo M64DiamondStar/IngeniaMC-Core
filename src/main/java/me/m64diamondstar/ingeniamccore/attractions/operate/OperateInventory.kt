@@ -4,6 +4,7 @@ import me.m64diamondstar.ingeniamccore.attractions.custom.Coaster
 import me.m64diamondstar.ingeniamccore.attractions.custom.FreeFall
 import me.m64diamondstar.ingeniamccore.attractions.custom.Slide
 import me.m64diamondstar.ingeniamccore.attractions.Attraction
+import me.m64diamondstar.ingeniamccore.attractions.custom.Frisbee
 import me.m64diamondstar.ingeniamccore.attractions.utils.AttractionType
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.utils.gui.Gui
@@ -55,6 +56,10 @@ class OperateInventory(player: IngeniaPlayer, private val attraction: Attraction
                 val slide = Slide(attraction.getCategory(), attraction.getName())
                 slide.despawn()
                 getPlayer().player.playSound(getPlayer().player.location, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 2f, 1.5f)
+            }else if(attraction.getType() == AttractionType.FRISBEE){
+                val frisbee = Frisbee(attraction.getCategory(), attraction.getName())
+                frisbee.despawn()
+                getPlayer().player.playSound(getPlayer().player.location, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 2f, 1.5f)
             }
         }
 
@@ -74,6 +79,10 @@ class OperateInventory(player: IngeniaPlayer, private val attraction: Attraction
                 val slide = Slide(attraction.getCategory(), attraction.getName())
                 slide.spawn()
                 getPlayer().player.playSound(getPlayer().player.location, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 2f, 1.5f)
+            }else if(attraction.getType() == AttractionType.FRISBEE){
+                val frisbee = Frisbee(attraction.getCategory(), attraction.getName())
+                frisbee.spawn()
+                getPlayer().player.playSound(getPlayer().player.location, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 2f, 1.5f)
             }
         }
 
@@ -91,6 +100,10 @@ class OperateInventory(player: IngeniaPlayer, private val attraction: Attraction
                 getPlayer().player.playSound(getPlayer().player.location, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 2f, 1.5f)
             }else if(attraction.getType() == AttractionType.SLIDE){
                 getPlayer().sendMessage(Messages.invalidAttractionFunction())
+            }else if(attraction.getType() == AttractionType.FRISBEE){
+                val frisbee = Frisbee(attraction.getCategory(), attraction.getName())
+                frisbee.dispatch()
+                getPlayer().player.playSound(getPlayer().player.location, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 2f, 1.5f)
             }
         }
     }

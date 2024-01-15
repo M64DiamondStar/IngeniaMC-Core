@@ -10,8 +10,16 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
+import org.bukkit.event.player.PlayerMoveEvent
+import java.util.*
 
 class JoinListener : Listener {
+
+    companion object {
+        // Used to send packets when player moves (only after joining)
+        // This is necessary to send certain packets
+        val logged = ArrayList<UUID>()
+    }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     fun onPlayerJoin(e: PlayerJoinEvent) {
@@ -28,6 +36,17 @@ class JoinListener : Listener {
                         "${joinLeaveMessage.getMessage(player.joinMessage ?: "default")?.replace("%player%", player.name)}"
             )?.queue()
         }
+    }
+
+    @EventHandler
+    fun onPlayerMove(event: PlayerMoveEvent){
+        if(logged.contains(event.player.uniqueId)) return
+
+        // Enable the tab list for the joined player
+        val ingeniaPlayer = IngeniaPlayer(event.player)
+        ingeniaPlayer.setTablist()
+
+        logged.add(event.player.uniqueId)
     }
 
 }

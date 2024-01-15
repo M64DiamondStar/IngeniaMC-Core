@@ -6,13 +6,14 @@ import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
 import org.bukkit.Bukkit
 import org.bukkit.event.EventHandler
+import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.player.AsyncPlayerChatEvent
 import kotlin.random.Random
 
 class GuessTheWordListener: Listener {
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.NORMAL)
     fun onChatEvent(event: AsyncPlayerChatEvent){
         if(!GuessTheWordRegistry.isRunning()) return
         if(GuessTheWordRegistry.containsPlayer(event.player)) {

@@ -47,9 +47,16 @@ class IngeniaPlayer(val player: Player) {
     fun startUp() {
         game = null
         allowDamage = false
+        player.setGravity(true)
         player.teleport(WarpUtils.getNearestLocation(player))
-        setTablist()
         giveMenuItem()
+
+        val currentLevel = getLevel()
+        val necessaryExp = LevelUtils.getExpRequirement(currentLevel + 1) - LevelUtils.getExpRequirement(currentLevel)
+        val currentExp = exp - LevelUtils.getExpRequirement(currentLevel)
+        player.level = getLevel()
+        val visualExp = currentExp.toFloat() / necessaryExp
+        player.exp = if(0 < visualExp && visualExp < 1) currentExp.toFloat() / necessaryExp else 0.01f
 
         if(joinColor == null)
             joinColor = "default"
@@ -236,18 +243,18 @@ class IngeniaPlayer(val player: Player) {
     var exp: Long
         get() = playerConfig.getExp()
         set(l) {
-            val receiveExpEvent = ReceiveExpEvent(player, l - exp)
-            Bukkit.getPluginManager().callEvent(receiveExpEvent)
             if (isLevelUp(exp, l)) levelUp(exp, l)
             playerConfig.setExp(l)
+            val receiveExpEvent = ReceiveExpEvent(player, l - exp)
+            Bukkit.getPluginManager().callEvent(receiveExpEvent)
         }
 
     fun addExp(l: Long) {
-        val receiveExpEvent = ReceiveExpEvent(player, l)
-        Bukkit.getPluginManager().callEvent(receiveExpEvent)
         if (isLevelUp(exp, exp + l)) levelUp(exp, exp + l)
         val newExp = l + exp
         playerConfig.setExp(newExp)
+        val receiveExpEvent = ReceiveExpEvent(player, l)
+        Bukkit.getPluginManager().callEvent(receiveExpEvent)
     }
 
     var bal: Long
@@ -310,7 +317,7 @@ class IngeniaPlayer(val player: Player) {
                 NamespacedKey(IngeniaMC.plugin, "allow-damage"), PersistentDataType.STRING, "$value")
         }
 
-    private fun setTablist() {
+    fun setTablist() {
 
         val numberFormat = NumberFormat.getNumberInstance(Locale.US)
 

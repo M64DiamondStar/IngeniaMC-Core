@@ -43,7 +43,9 @@ class Sled: Wand {
     }
 
     private fun south(sled: ArmorStand, seat: ArmorStand, player: Player) {
+
         object : BukkitRunnable() {
+
             var c = 0
             override fun run() {
                 if (player.location.add(0.0, 1.0, 1.0).block.type != Material.AIR || player.location.add(
@@ -129,9 +131,12 @@ class Sled: Wand {
                     )
                     return
                 }
+
+
                 val vec3D = Vec3(0.0, 0.0, c.toDouble() / 90)
-                (player as CraftPlayer).handle.move(MoverType.SELF, vec3D)
+                (seat as CraftEntity).handle.move(MoverType.SELF, vec3D)
                 (sled as CraftEntity).handle.move(MoverType.SELF, vec3D)
+
                 player.world.spawnParticle(
                     Particle.BLOCK_CRACK,
                     player.location.add(0.0, 0.3, 0.0),
@@ -252,7 +257,7 @@ class Sled: Wand {
                     return
                 }
                 val vec3D = Vec3(-(c.toDouble() / 90), 0.0, 0.0)
-                (player as CraftPlayer).handle.move(MoverType.SELF, vec3D)
+                (seat as CraftEntity).handle.move(MoverType.SELF, vec3D)
                 (sled as CraftEntity).handle.move(MoverType.SELF, vec3D)
                 player.world.spawnParticle(
                     Particle.BLOCK_CRACK,
@@ -374,7 +379,7 @@ class Sled: Wand {
                     return
                 }
                 val vec3D = Vec3(0.0, 0.0, -(c.toDouble() / 90))
-                (player as CraftPlayer).handle.move(MoverType.SELF, vec3D)
+                (seat as CraftEntity).handle.move(MoverType.SELF, vec3D)
                 (sled as CraftEntity).handle.move(MoverType.SELF, vec3D)
                 player.world.spawnParticle(
                     Particle.BLOCK_CRACK,
@@ -440,7 +445,7 @@ class Sled: Wand {
                     return
                 }
 
-                //After 15 seconds
+                //After 1.75 seconds
                 if (c == 35) {
                     pillar(player)
                     cancel()
@@ -448,9 +453,9 @@ class Sled: Wand {
                     sled.removePassenger(player)
                     sled.setGravity(true)
                     val vec3D = Vec3(0.0, 2.0, 0.0)
-                    (player as CraftPlayer).handle.move(MoverType.SELF, vec3D)
                     (sled as CraftEntity).handle.move(MoverType.SELF, vec3D)
-                    player.setVelocity(Vector(2F, 0.8F, 0F))
+                    (sled as CraftEntity).handle.move(MoverType.SELF, vec3D)
+                    player.velocity = Vector(2F, 0.8F, 0F)
                     sled.setVelocity(Vector(2F, 0.8F, 0F))
                     object : BukkitRunnable() {
                         var c2 = 0
@@ -494,7 +499,7 @@ class Sled: Wand {
                     return
                 }
                 val vec3D = Vec3(c.toDouble() / 90, 0.0, 0.0)
-                (player as CraftPlayer).handle.move(MoverType.SELF, vec3D)
+                (seat as CraftEntity).handle.move(MoverType.SELF, vec3D)
                 (sled as CraftEntity).handle.move(MoverType.SELF, vec3D)
                 player.world.spawnParticle(
                     Particle.BLOCK_CRACK,

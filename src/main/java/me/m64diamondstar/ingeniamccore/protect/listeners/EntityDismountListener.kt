@@ -14,6 +14,10 @@ class EntityDismountListener: Listener {
         if(event.entity !is Player) return
         val entity = event.dismounted
 
+        if(!(event.entity as Player).isOnline) {
+            event.isCancelled = false
+            return
+        }
         if(EntityUtils.isLocked(entity))
             event.isCancelled = true
     }

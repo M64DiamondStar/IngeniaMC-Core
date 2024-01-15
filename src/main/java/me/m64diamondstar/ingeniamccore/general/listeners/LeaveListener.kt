@@ -16,6 +16,10 @@ class LeaveListener : Listener {
     @EventHandler
     fun onPlayerLeave(e: PlayerQuitEvent) {
         val bukkitPlayer = e.player
+        if(bukkitPlayer.isInsideVehicle){
+            bukkitPlayer.vehicle!!.eject()
+            bukkitPlayer.vehicle!!.removePassenger(bukkitPlayer)
+        }
         val player = IngeniaPlayer(bukkitPlayer)
         e.quitMessage = MessageBuilder.LeaveMessageBuilder(player.name, player.leaveColor, player.leaveMessage).build()
 
@@ -29,6 +33,7 @@ class LeaveListener : Listener {
                         "${joinLeaveMessage.getMessage(player.leaveMessage ?: "default")?.replace("%player%", player.name)}"
             )?.queue()
         }
+        JoinListener.logged.remove(bukkitPlayer.uniqueId)
     }
 
 }

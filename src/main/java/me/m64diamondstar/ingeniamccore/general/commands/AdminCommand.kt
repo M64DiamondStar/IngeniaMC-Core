@@ -232,6 +232,20 @@ class AdminCommand: CommandExecutor {
             }
         }
 
+        if(args[0].equals("invsee", ignoreCase = true)){
+            if(args.size == 2){
+                val player = Bukkit.getPlayerExact(args[1]) ?: return false
+                sender.sendMessage(Colors.format(MessageType.SUCCESS + "Gravity of " + player.name + ": " + player.hasGravity()))
+            }else if(args.size == 3){
+                val value = args[2].lowercase().toBooleanStrictOrNull() ?: return false
+                val player = Bukkit.getPlayerExact(args[1]) ?: return false
+                player.setGravity(value)
+                sender.sendMessage(Colors.format(MessageType.SUCCESS + "Set gravity of " + player.name + " to " + value))
+            }else{
+                sender.sendMessage(Messages.commandUsage("adm gravity <player> <true/false>"))
+            }
+        }
+
         return false
     }
 }

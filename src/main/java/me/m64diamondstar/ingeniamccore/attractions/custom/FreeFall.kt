@@ -2,10 +2,12 @@ package me.m64diamondstar.ingeniamccore.attractions.custom
 
 import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.attractions.Attraction
+import me.m64diamondstar.ingeniamccore.attractions.custom.utils.CountdownRegistry
 import me.m64diamondstar.ingeniamccore.attractions.utils.AttractionManager
 import me.m64diamondstar.ingeniamccore.attractions.utils.AttractionType
 import me.m64diamondstar.ingeniamccore.attractions.utils.CustomAttraction
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
+import me.m64diamondstar.ingeniamccore.utils.MathUtilities
 import me.m64diamondstar.ingeniamccore.utils.messages.Messages
 import net.minecraft.world.entity.MoverType
 import net.minecraft.world.phys.Vec3
@@ -53,10 +55,12 @@ class FreeFall(private val category: String, private val name: String): Attracti
 
                 if(entity.passengers.size != 0)
                     return
+                if(!CountdownRegistry.isCountingDown(freefall.category, freefall.name)) {
+                    freefall.countdown()
+                    CountdownRegistry.setCountingDown(freefall.category, freefall.name, true)
+                }
 
-                AttractionManager.countdown(freefall)
                 entity.addPassenger(player)
-
             }
         }
     }
@@ -76,7 +80,7 @@ class FreeFall(private val category: String, private val name: String): Attracti
             stand.isInvisible = true
             stand.isInvulnerable = true
             stand.setGravity(false)
-            stand.isPersistent = false
+            stand.isPersistent = true
             stand.addEquipmentLock(EquipmentSlot.HEAD, ArmorStand.LockType.REMOVING_OR_CHANGING)
             stand.customName = "FREEFALL-" + i * 45 + "-" + getName() + "-" + getCategory()
 
@@ -134,6 +138,7 @@ class FreeFall(private val category: String, private val name: String): Attracti
     }
 
     override fun dispatch() {
+        CountdownRegistry.setCountingDown(category, name, false)
         AttractionManager.setLocked(this@FreeFall, locked = true)
         if(getShow() != null) getShow()!!.play()
         object : BukkitRunnable() {
@@ -235,7 +240,12 @@ class FreeFall(private val category: String, private val name: String): Attracti
                     if (c >= 864) {
                         deltaX = 0.0
                         deltaZ = 0.0
-                    } else stand.setRotation(standYaw - 1.25f, 0f)
+                    } else {
+                        stand.setRotation(standYaw - 1.25f, 0f)
+                        val quaternion = MathUtilities.eulerToQuaternion(0f, -stand.location.yaw, 0f)
+                        if(stand.passengers.isNotEmpty() && stand.passengers[0] != null && stand.passengers[0] is Player)
+                            IngeniaMC.smoothCoastersAPI.setRotation(null, stand.passengers[0] as Player, quaternion.x, quaternion.y, quaternion.z, quaternion.w, 3)
+                    }
                     (stand as CraftArmorStand).handle.move(MoverType.SELF, Vec3(deltaX, y, deltaZ))
                     if (c == 1160.0) {
 
@@ -257,6 +267,8 @@ class FreeFall(private val category: String, private val name: String): Attracti
                         )
                         loc.yaw = -(22.5f * i.toFloat())
                         stand.teleport(loc)
+                        despawn()
+                        spawn()
                         openGates()
                     }
                 }
@@ -276,6 +288,44 @@ class FreeFall(private val category: String, private val name: String): Attracti
 
     override fun getAttraction(): Attraction {
         return Attraction(category, name)
+    }
+
+    override fun countdown() {
+
+        if(this.hasPassengers())
+            return
+
+        val customAttraction: CustomAttraction = this
+
+        object: BukkitRunnable(){
+            var c = customAttraction.getAttraction().getCountdownTime()
+            override fun run() {
+
+                if(c == 0){
+                    customAttraction.dispatch()
+                    this.cancel()
+                    return
+                }
+
+                var hasPassenger = false
+                customAttraction.getSeats().forEach {
+                    if(it.passengers.size == 1){
+                        customAttraction.getAttraction().getCountdownType().sendActionBarMessage(player = it.passengers[0] as Player, c)
+                        hasPassenger = true
+                    }
+                }
+
+                if(!hasPassenger){
+                    CountdownRegistry.setCountingDown(customAttraction.getAttraction().getCategory(), customAttraction.getAttraction().getName(), false)
+                    this.cancel()
+                    return
+                }
+
+
+                c -= 1
+            }
+        }.runTaskTimer(IngeniaMC.plugin, 5L, 20L)
+
     }
 
 }

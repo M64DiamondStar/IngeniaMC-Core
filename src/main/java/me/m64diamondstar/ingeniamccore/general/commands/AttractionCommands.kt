@@ -4,6 +4,7 @@ import me.m64diamondstar.ingeniamccore.attractions.custom.Coaster
 import me.m64diamondstar.ingeniamccore.attractions.custom.FreeFall
 import me.m64diamondstar.ingeniamccore.attractions.operate.OperateInventory
 import me.m64diamondstar.ingeniamccore.attractions.Attraction
+import me.m64diamondstar.ingeniamccore.attractions.custom.Frisbee
 import me.m64diamondstar.ingeniamccore.attractions.utils.AttractionType
 import me.m64diamondstar.ingeniamccore.attractions.utils.AttractionUtils
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
@@ -76,6 +77,11 @@ class AttractionCommands: CommandExecutor {
                     sender.sendMessage(Colors.format(MessageType.SUCCESS + "Dispatched ${args[1]} successfully."))
                 }else if(attraction.getType() == AttractionType.SLIDE){
                     sender.sendMessage(Messages.invalidAttractionFunction())
+                }else if(attraction.getType() == AttractionType.FRISBEE){
+                    val frisbee = Frisbee(attraction.getCategory(), attraction.getName())
+                    frisbee.dispatch()
+                    sender.sendMessage(Colors.format(MessageType.SUCCESS + "Dispatched ${args[1]} successfully."))
+
                 }
             }
         }

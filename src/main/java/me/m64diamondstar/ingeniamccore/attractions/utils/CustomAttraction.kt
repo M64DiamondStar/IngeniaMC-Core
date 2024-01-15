@@ -22,4 +22,6 @@ interface CustomAttraction {
 
     fun getAttraction(): Attraction
 
+    fun countdown()
+
 }

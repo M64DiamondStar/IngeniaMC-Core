@@ -2,6 +2,7 @@ package me.m64diamondstar.ingeniamccore.discord.listeners
 
 import me.m64diamondstar.ingeniamccore.discord.commands.BotUtils
 import me.m64diamondstar.ingeniamccore.general.player.data.DiscordUserConfig
+import net.dv8tion.jda.api.entities.channel.ChannelType
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import net.kyori.adventure.audience.Audience
@@ -12,6 +13,7 @@ class DiscordChatListener: ListenerAdapter() {
 
     override fun onMessageReceived(event: MessageReceivedEvent) {
         if (event.author.isBot || event.isWebhookMessage) return
+        if (event.channelType != ChannelType.TEXT) return
         if(event.channel.asTextChannel().id != BotUtils.ChatUtils.chatChannel!!.id) return
         if(event.message.contentRaw.isEmpty()) return
         val resultMessage = if(event.message.contentRaw.length > 200)
