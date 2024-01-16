@@ -21,7 +21,7 @@ import org.bukkit.block.data.Rotatable
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
-import org.bukkit.craftbukkit.v1_20_R1.CraftWorld
+import org.bukkit.craftbukkit.v1_20_R3.CraftWorld
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffect
@@ -77,13 +77,13 @@ class AdminCommand: CommandExecutor {
 
         if (args[0].equals("undress", ignoreCase = true)) {
             if (sender.inventory.helmet != null) sender.inventory
-                .addItem(sender.inventory.helmet)
+                .addItem(sender.inventory.helmet!!)
             if (sender.inventory.chestplate != null) sender.inventory
-                .addItem(sender.inventory.chestplate)
+                .addItem(sender.inventory.chestplate!!)
             if (sender.inventory.leggings != null) sender.inventory
-                .addItem(sender.inventory.leggings)
+                .addItem(sender.inventory.leggings!!)
             if (sender.inventory.boots != null) sender.inventory
-                .addItem(sender.inventory.boots)
+                .addItem(sender.inventory.boots!!)
             sender.equipment?.helmet = ItemStack(Material.AIR)
             sender.equipment?.chestplate = ItemStack(Material.AIR)
             sender.equipment?.leggings = ItemStack(Material.AIR)

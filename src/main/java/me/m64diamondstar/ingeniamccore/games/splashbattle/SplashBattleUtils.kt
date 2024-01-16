@@ -25,7 +25,7 @@ object SplashBattleUtils {
     var dead: ArrayList<Player> = ArrayList()
     var games: HashMap<Player, String> = HashMap()
 
-    private var playerInventory: HashMap<Player, Array<ItemStack>> = HashMap()
+    private var playerInventory: HashMap<Player, Array<ItemStack?>> = HashMap()
     private var playerGamemode: HashMap<Player, GameMode> = HashMap()
     private var playerLocation: HashMap<Player, Location> = HashMap()
     private var playerRunnables: HashMap<Player, Int> = HashMap()

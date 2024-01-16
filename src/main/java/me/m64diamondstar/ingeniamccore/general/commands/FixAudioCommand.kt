@@ -15,7 +15,7 @@ import org.bukkit.entity.Player
 
 class FixAudioCommand: CommandExecutor {
 
-    override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>?): Boolean {
+    override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
 
         if(sender !is Player){
             sender.sendMessage(Messages.noPlayer())

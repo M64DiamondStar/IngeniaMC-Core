@@ -11,7 +11,7 @@ import org.bukkit.Material
 import org.bukkit.World
 import org.bukkit.block.BlockFace
 import org.bukkit.block.data.Rotatable
-import org.bukkit.craftbukkit.v1_20_R1.CraftWorld
+import org.bukkit.craftbukkit.v1_20_R3.CraftWorld
 import kotlin.random.Random
 
 class PresentHunt(val category: String, val name: String): LoadedConfiguration("games/presenthunt/$category", name, false, true)  {

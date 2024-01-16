@@ -1,7 +1,5 @@
 package me.m64diamondstar.ingeniamccore
 
-import com.comphenix.protocol.ProtocolLibrary
-import com.comphenix.protocol.ProtocolManager
 import com.craftmend.openaudiomc.api.interfaces.AudioApi
 import me.m56738.smoothcoasters.api.SmoothCoastersAPI
 import me.m64diamondstar.ingeniamccore.attractions.listeners.PlayerInteractEntityListener
@@ -57,7 +55,6 @@ class IngeniaMC : JavaPlugin() {
     companion object {
         lateinit var plugin: IngeniaMC
         lateinit var audioApi: AudioApi
-        lateinit var protocolManager: ProtocolManager
         lateinit var smoothCoastersAPI: SmoothCoastersAPI
         var isDisabling: Boolean = false
         lateinit var spawn: Location
@@ -67,7 +64,6 @@ class IngeniaMC : JavaPlugin() {
 
         plugin = this
         audioApi = AudioApi.getInstance()
-        protocolManager = ProtocolLibrary.getProtocolManager()
         smoothCoastersAPI = SmoothCoastersAPI(this)
 
         Bukkit.getLogger().info("---------------------------")

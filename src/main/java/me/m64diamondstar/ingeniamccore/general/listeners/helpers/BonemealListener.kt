@@ -25,7 +25,7 @@ class BonemealListener: Listener {
                 blocks.forEach {
 
                     if (MaterialChecker(it.type).isFlower()) {
-                        it.block.type = Material.GRASS
+                        it.block.type = Material.SHORT_GRASS
                         val loc = it.location.add(0.5, 0.5, 0.5)
 
                         val dustOptions = DustOptions(Color.fromRGB(92, 161, 92), 0.8f)

@@ -18,7 +18,7 @@ import kotlin.math.sin
 
 class Cloak: Wand {
     private var c = 0
-    private val armorInv: MutableMap<Player, Array<ItemStack>> = HashMap()
+    private val armorInv: MutableMap<Player, Array<ItemStack?>> = HashMap()
 
     override fun getDisplayName(): String{
         return Colors.format("#d400ff&lC#ba05f9&ll#9f0af4&lo#850fee&la#6a14e8&lk #5019e2&lW#351edd&la#1b23d7&ln#0028d1&ld")
