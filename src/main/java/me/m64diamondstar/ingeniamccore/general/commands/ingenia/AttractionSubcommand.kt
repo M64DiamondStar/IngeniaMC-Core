@@ -1,7 +1,7 @@
 package me.m64diamondstar.ingeniamccore.general.commands.ingenia
 
-import me.m64diamondstar.effectmasterplus.shows.EffectShow
-import me.m64diamondstar.effectmasterplus.shows.utils.ShowUtils
+import me.m64diamondstar.effectmaster.shows.EffectShow
+import me.m64diamondstar.effectmaster.shows.utils.ShowUtils
 import me.m64diamondstar.ingeniamccore.attractions.custom.Coaster
 import me.m64diamondstar.ingeniamccore.attractions.operate.OperateInventory
 import me.m64diamondstar.ingeniamccore.attractions.utils.AttractionType

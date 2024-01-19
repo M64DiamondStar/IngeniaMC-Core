@@ -1,6 +1,6 @@
 package me.m64diamondstar.ingeniamccore.attractions
 
-import me.m64diamondstar.effectmasterplus.shows.EffectShow
+import me.m64diamondstar.effectmaster.shows.EffectShow
 import me.m64diamondstar.ingeniamccore.attractions.utils.AttractionType
 import me.m64diamondstar.ingeniamccore.attractions.utils.AttractionUtils
 import me.m64diamondstar.ingeniamccore.attractions.utils.CountdownType

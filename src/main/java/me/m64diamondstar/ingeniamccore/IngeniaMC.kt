@@ -8,7 +8,6 @@ import me.m64diamondstar.ingeniamccore.attractions.utils.AttractionUtils
 import me.m64diamondstar.ingeniamccore.cosmetics.data.JoinLeaveColor
 import me.m64diamondstar.ingeniamccore.cosmetics.data.JoinLeaveMessage
 import me.m64diamondstar.ingeniamccore.discord.bot.DiscordBot
-import me.m64diamondstar.ingeniamccore.discord.commands.BotUtils
 import me.m64diamondstar.ingeniamccore.discord.listeners.minecraft.ReceiveExpListener
 import me.m64diamondstar.ingeniamccore.discord.listeners.minecraft.ReceiveGoldenStarsListener
 import me.m64diamondstar.ingeniamccore.discord.listeners.minecraft.ReceiveRidecountListener
@@ -24,6 +23,7 @@ import me.m64diamondstar.ingeniamccore.general.areas.listeners.PlayerMoveListene
 import me.m64diamondstar.ingeniamccore.general.commands.*
 import me.m64diamondstar.ingeniamccore.general.commands.ingenia.IngeniaCommand
 import me.m64diamondstar.ingeniamccore.general.commands.tabcompleters.*
+import me.m64diamondstar.ingeniamccore.general.levels.listeners.ExpListener
 import me.m64diamondstar.ingeniamccore.general.listeners.*
 import me.m64diamondstar.ingeniamccore.general.listeners.ChatListener
 import me.m64diamondstar.ingeniamccore.general.listeners.InteractListener
@@ -40,14 +40,10 @@ import me.m64diamondstar.ingeniamccore.utils.gui.GuiListener
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
 import me.m64diamondstar.ingeniamccore.wands.utils.WandRegistry
 import me.m64diamondstar.ingeniamccore.wands.wandlistener.WandListener
-import net.dv8tion.jda.api.EmbedBuilder
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.scheduler.BukkitRunnable
-import java.awt.Color
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import java.util.*
 
 class IngeniaMC : JavaPlugin() {
@@ -122,7 +118,7 @@ class IngeniaMC : JavaPlugin() {
         Bukkit.getLogger().info("Finished loading, IngeniaMC-Core is enabled!")
         Bukkit.getLogger().info("---------------------------")
 
-        if(BotUtils.ChatUtils.chatChannel != null) {
+        /*if(BotUtils.ChatUtils.chatChannel != null) {
             val embedBuilder = EmbedBuilder()
             val dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")
             val timeNow = LocalDateTime.now()
@@ -134,7 +130,7 @@ class IngeniaMC : JavaPlugin() {
             embedBuilder.setColor(Color.decode("#f4b734"))
             DiscordBot.jda.getTextChannelById(BotUtils.ChatUtils.chatChannel!!.id)
                 ?.sendMessageEmbeds(embedBuilder.build())?.queue()
-        }
+        }*/
 
         spawn = LocationUtils.getLocationFromString(plugin.config.getString("Spawn")) ?: Location(Bukkit.getWorlds().first(), 0.5, 52.0, 0.5)
     }
@@ -152,7 +148,7 @@ class IngeniaMC : JavaPlugin() {
         smoothCoastersAPI.unregister()
         SplashBattleUtils.players.forEach { SplashBattleUtils.leave(it) }
 
-        if(BotUtils.ChatUtils.chatChannel != null) {
+        /*if(BotUtils.ChatUtils.chatChannel != null) {
             val embedBuilder = EmbedBuilder()
             val dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")
             val timeNow = LocalDateTime.now()
@@ -166,7 +162,7 @@ class IngeniaMC : JavaPlugin() {
                 ?.sendMessageEmbeds(embedBuilder.build())?.complete()
             // Needs to block the main thread so this message sends before the bot shuts down
             // Shouldn't be an issue because the server is already shutting down
-        }
+        }*/
 
         // Shut the discord but down
         DiscordBot.shutdown()
@@ -343,6 +339,11 @@ class IngeniaMC : JavaPlugin() {
         Bukkit.getServer().pluginManager.registerEvents(ReceiveExpListener(), this)
         Bukkit.getServer().pluginManager.registerEvents(ReceiveGoldenStarsListener(), this)
         Bukkit.getServer().pluginManager.registerEvents(ReceiveRidecountListener(), this)
+
+        /*
+            Player Stat Events
+         */
+        Bukkit.getServer().pluginManager.registerEvents(ExpListener(), this)
     }
 
     private fun loadPacketListeners(){

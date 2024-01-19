@@ -8,7 +8,7 @@ depend:
   - Train_Carts
   - FastAsyncWorldEdit
   - Animatronics
-  - EffectMasterPlus
+  - EffectMaster
   - OpenAudioMc
 commands:
   wand:

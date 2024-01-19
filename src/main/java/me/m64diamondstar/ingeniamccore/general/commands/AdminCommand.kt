@@ -232,7 +232,7 @@ class AdminCommand: CommandExecutor {
             }
         }
 
-        if(args[0].equals("invsee", ignoreCase = true)){
+        if(args[0].equals("gravity", ignoreCase = true)){
             if(args.size == 2){
                 val player = Bukkit.getPlayerExact(args[1]) ?: return false
                 sender.sendMessage(Colors.format(MessageType.SUCCESS + "Gravity of " + player.name + ": " + player.hasGravity()))

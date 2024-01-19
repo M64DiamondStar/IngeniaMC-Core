@@ -19,9 +19,6 @@ repositories {
     mavenLocal()
     maven {
         url = uri('https://jitpack.io')
-    }
-
-    maven {
         url = uri('https://repo.papermc.io/repository/maven-public/')
         url = uri('https://oss.sonatype.org/content/groups/public/')
         url = uri('https://ci.mg-dev.eu/plugin/repository/everything')
@@ -33,25 +30,23 @@ repositories {
 }
 
 dependencies {
-    api libs.org.jetbrains.kotlinx.kotlinx.coroutines.core
-    api libs.com.github.minndevelopment.jda.ktx
-    api libs.net.kyori.adventure.text.minimessage
-    api libs.com.opencsv.opencsv
-    api libs.com.jeff.media.custom.block.data
-    api libs.com.github.stefvanschie.inventoryframework.if
-    api libs.org.joml.joml
-    api libs.org.apache.commons.commons.math3
+    api 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1'
+    api 'com.github.minndevelopment:jda-ktx:9fc90f616b'
+    api 'net.kyori:adventure-text-minimessage:4.14.0'
+    api 'org.joml:joml:1.10.5'
+    api 'org.apache.commons:commons-math3:3.6.1'
 
-    compileOnly libs.com.bergerkiller.bukkit.traincarts
-    compileOnly libs.com.fastasyncworldedit.fastasyncworldedit.core
-    compileOnly libs.com.fastasyncworldedit.fastasyncworldedit.bukkit
-    compileOnly libs.com.github.mindgamesnl.openaudiomc
+    compileOnly 'com.bergerkiller.bukkit:TrainCarts:1.19.2-v1-SNAPSHOT'
+    compileOnly 'com.fastasyncworldedit:FastAsyncWorldEdit-Core:2.8.2'
+    compileOnly 'com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit:2.8.2'
+    compileOnly 'com.github.Mindgamesnl:OpenAudioMc:6.8.8'
 
-    shadow libs.com.github.dv8fromtheworld.jda
-    shadow libs.me.m56738.smoothcoastersapi
-    shadow libs.com.opencsv.opencsv
+    shadow 'net.dv8tion:JDA:5.0.0-beta.19'
+    shadow 'me.m56738:SmoothCoastersAPI:1.10'
+    shadow 'com.opencsv:opencsv:5.9'
+    shadow 'com.jeff-media:custom-block-data:2.2.2'
 
-    implementation libs.me.m64diamondstar.effectmasterplus
+    implementation 'com.github.M64DiamondStar:EffectMaster:f47e6278df'
     paperweight.paperDevBundle '1.20.4-R0.1-SNAPSHOT'
     // paperweight.devBundle("com.example.paperfork", "1.20.4-R0.1-SNAPSHOT")
 }
@@ -72,7 +67,11 @@ tasks {
 
         // Set the release flag. This configures what version bytecode the compiler will emit, as well as what JDK APIs are usable.
         // See https://openjdk.java.net/jeps/247 for more information.
-        options.release.set(19)
+        options.release.set(17)
+    }
+
+    compileKotlin {
+        kotlinOptions.jvmTarget = "17"
     }
 
     javadoc {
@@ -106,15 +105,10 @@ shadowJar {
 
     // Include dependencies in the fat JAR
     configurations = [project.configurations.shadow]
-}
 
-/*publishing {
-    publications {
-        maven(MavenPublication) {
-            from(components.java)
-        }
-    }
-}*/
+    // Relocate packages
+    relocate 'com.jeff_media', 'me.m64diamondstar.ingeniamccore.libs.jeff_media'
+}
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'

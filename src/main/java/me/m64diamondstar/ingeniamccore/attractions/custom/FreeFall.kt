@@ -247,8 +247,7 @@ class FreeFall(private val category: String, private val name: String): Attracti
                             IngeniaMC.smoothCoastersAPI.setRotation(null, stand.passengers[0] as Player, quaternion.x, quaternion.y, quaternion.z, quaternion.w, 3)
                     }
                     (stand as CraftArmorStand).handle.move(MoverType.SELF, Vec3(deltaX, y, deltaZ))
-                    if (c == 1160.0) {
-
+                    if(c == 1159.0){
                         if (stand.getPassengers().isNotEmpty()) {
                             val passenger = stand.getPassengers()[0] as Player
                             if (passenger.isInsideVehicle) {
@@ -258,7 +257,8 @@ class FreeFall(private val category: String, private val name: String): Attracti
                                 passenger.sendMessage(Messages.currentRidecount(getRidecount(passenger)))
                             }
                         }
-
+                    }
+                    if (c == 1160.0) {
                         stand.eject()
                         val i = stand.getCustomName()!!.split("-").toTypedArray()[1].toDouble() / 45
                         val xFix = 3.75f * sin(i * 45 / 360 * Math.PI)

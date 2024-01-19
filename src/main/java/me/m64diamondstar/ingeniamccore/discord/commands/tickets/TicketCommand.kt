@@ -150,6 +150,7 @@ class TicketCommand: ListenerAdapter() {
 
             // Ticket Types
             "ticketTeamApply" -> {
+                event.deferEdit().queue()
                 event.channel.asTextChannel().manager.putPermissionOverride(event.member!!, getTicketHolderAllowedPermissions(), getTicketHolderDisallowedPermissions()).queue()
                 event.message.delete().queue()
 
@@ -173,11 +174,11 @@ class TicketCommand: ListenerAdapter() {
                 val closeButton = Button.danger("closeTicket", "Close") // This one gets handled in CloseCommand.kt
 
                 event.channel.sendMessageEmbeds(embedBuilder.build()).addActionRow(closeButton).queue()
-
                 event.channel.asTextChannel().manager.setName(event.channel.name + "-a").queue()
             }
 
             "ticketPurchaseError" -> {
+                event.deferEdit().queue()
                 event.channel.asTextChannel().manager.putPermissionOverride(event.member!!, getTicketHolderAllowedPermissions(), getTicketHolderDisallowedPermissions()).queue()
                 event.message.delete().queue()
 
@@ -196,11 +197,11 @@ class TicketCommand: ListenerAdapter() {
                 val closeButton = Button.danger("closeTicket", "Close") // This one gets handled in CloseCommand.kt
 
                 event.channel.sendMessageEmbeds(embedBuilder.build()).addActionRow(closeButton).queue()
-
                 event.channel.asTextChannel().manager.setName(event.channel.name + "-e").queue()
             }
 
             "ticketPlayerReport" -> {
+                event.deferEdit().queue()
                 event.channel.asTextChannel().manager.putPermissionOverride(event.member!!, getTicketHolderAllowedPermissions(), getTicketHolderDisallowedPermissions()).queue()
                 event.message.delete().queue()
 
@@ -226,11 +227,11 @@ class TicketCommand: ListenerAdapter() {
                 val closeButton = Button.danger("closeTicket", "Close") // This one gets handled in CloseCommand.kt
 
                 event.channel.sendMessageEmbeds(embedBuilder.build()).addActionRow(closeButton).queue()
-
                 event.channel.asTextChannel().manager.setName(event.channel.name + "-p").queue()
             }
 
             "ticketBugReport" -> {
+                event.deferEdit().queue()
                 event.channel.asTextChannel().manager.putPermissionOverride(event.member!!, getTicketHolderAllowedPermissions(), getTicketHolderDisallowedPermissions()).queue()
                 event.message.delete().queue()
 
@@ -255,6 +256,7 @@ class TicketCommand: ListenerAdapter() {
             }
 
             "ticketOther" -> {
+                event.deferEdit().queue()
                 event.channel.asTextChannel().manager.putPermissionOverride(event.member!!, getTicketHolderAllowedPermissions(), getTicketHolderDisallowedPermissions()).queue()
                 event.message.delete().queue()
 

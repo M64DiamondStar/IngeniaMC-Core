@@ -138,6 +138,24 @@ class IngeniaPlayer(val player: Player) {
                     NamespacedKey(IngeniaMC.plugin, "current-area"), PersistentDataType.STRING, "$value")
         }
 
+    var rideSeat: UUID?
+        get() {
+            val container = player.persistentDataContainer
+            val uuid = container.get(NamespacedKey(IngeniaMC.plugin, "ride-seat"), PersistentDataType.STRING)
+            if(uuid.equals("null", ignoreCase = true))
+                return null
+            return UUID.fromString(uuid)
+        }
+        set(uuid) {
+            val container = player.persistentDataContainer
+            if(uuid == null)
+                container.remove(
+                    NamespacedKey(IngeniaMC.plugin, "current-area"))
+            else
+                container.set(
+                    NamespacedKey(IngeniaMC.plugin, "current-area"), PersistentDataType.STRING, "$uuid")
+        }
+
     fun sendMessage(string: String) {
         player.sendMessage(Colors.format(string))
     }

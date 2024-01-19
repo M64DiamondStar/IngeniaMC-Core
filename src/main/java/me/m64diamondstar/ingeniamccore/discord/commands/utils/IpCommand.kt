@@ -16,7 +16,7 @@ class IpCommand: ListenerAdapter() {
         val embedBuilder = EmbedBuilder()
 
         embedBuilder.setDescription("IP: `play.IngeniaMC.net`\n" +
-                "Version: `1.20.1`")
+                "Version: `1.20.4`")
         embedBuilder.setColor(Color.decode("#ffb833"))
 
         event.hook.sendMessageEmbeds(embedBuilder.build()).queue()

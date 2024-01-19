@@ -17,8 +17,9 @@ class ExpListener: Listener {
         val currentLevel = ingeniaPlayer.getLevel()
         val necessaryExp = LevelUtils.getExpRequirement(currentLevel + 1) - LevelUtils.getExpRequirement(currentLevel)
         val currentExp = ingeniaPlayer.exp - LevelUtils.getExpRequirement(currentLevel)
+        val visualExp = currentExp.toFloat() / necessaryExp
         event.player.level = ingeniaPlayer.getLevel()
-        event.player.exp = currentExp.toFloat() / necessaryExp
+        event.player.exp = if(0 < visualExp && visualExp < 1) currentExp.toFloat() / necessaryExp else 0.01f
     }
 
 }
