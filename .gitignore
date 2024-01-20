@@ -113,3 +113,5 @@ buildNumber.properties
 run/
 
 .paper-nms
+build
+.gradle
