@@ -28,15 +28,15 @@ class PlayerMoveListener: Listener {
     }
 
     private fun runCheck(event: PlayerMoveEvent){
-        if(event.from.blockX == event.to?.blockX && event.from.blockY == event.to?.blockY && event.from.blockZ == event.to?.blockZ )
+        if(event.from.blockX == event.to.blockX && event.from.blockY == event.to.blockY && event.from.blockZ == event.to.blockZ)
             return
 
         val player = event.player
         val ingeniaPlayer = IngeniaPlayer(player)
 
-        if(!(player.hasPermission("ingenia.admin") || player.isOp) && (event.to!!.blockX >= 500 || event.to!!.blockX <= -500 ||
-                    event.to!!.blockY >= 319 || event.to!!.blockY <= -64 ||
-                    event.to!!.blockZ >= 500 || event.to!!.blockZ <= -500)){
+        if(!(player.hasPermission("ingenia.admin") || player.isOp) && (event.to.blockX >= 500 || event.to.blockX <= -500 ||
+                    event.to.blockY >= 319 || event.to.blockY <= -64 ||
+                    event.to.blockZ >= 500 || event.to.blockZ <= -500)){
 
             player.spawnParticle(Particle.BLOCK_MARKER, player.eyeLocation, 1, 0.5, 0.5, 0.5, 0.0, Material.BARRIER.createBlockData())
             event.isCancelled = true
@@ -46,8 +46,8 @@ class PlayerMoveListener: Listener {
 
         for(area in AreaUtils.getAllAreas()){
             if(area.area != null) {
-                if (area.area!!.contains(event.to?.blockX!!, event.to?.blockZ!!) &&
-                    event.to?.blockY!! in area.minY..area.maxY
+                if (area.area!!.contains(event.to.blockX, event.to.blockZ) &&
+                    event.to.blockY in area.minY..area.maxY
                 ) {
                     if (currentArea == null)
                         currentArea = area
