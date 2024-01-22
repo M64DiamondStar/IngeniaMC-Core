@@ -21,7 +21,8 @@ class LinkCommand: ListenerAdapter() {
     override fun onSlashCommandInteraction(event: SlashCommandInteractionEvent) {
         if (event.name != "link") return
         event.deferReply(true).queue()
-        event.hook.sendMessage("Please use `/link <Discord ID>` in-game.").queue()
+        event.hook.sendMessage("Please use ```/link ${event.user.id}``` in the IngeniaMC Minecraft Server. " +
+                "Use /ip to get our IP adress and server version!").queue()
     }
 
     override fun onButtonInteraction(event: ButtonInteractionEvent) {
