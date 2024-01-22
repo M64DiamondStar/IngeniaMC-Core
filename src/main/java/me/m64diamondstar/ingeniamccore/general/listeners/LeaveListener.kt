@@ -17,8 +17,7 @@ class LeaveListener : Listener {
     fun onPlayerLeave(e: PlayerQuitEvent) {
         val bukkitPlayer = e.player
         if(bukkitPlayer.isInsideVehicle){
-            bukkitPlayer.vehicle!!.eject()
-            bukkitPlayer.vehicle!!.removePassenger(bukkitPlayer)
+            bukkitPlayer.vehicle?.eject()
         }
         val player = IngeniaPlayer(bukkitPlayer)
         e.quitMessage = MessageBuilder.LeaveMessageBuilder(player.name, player.leaveColor, player.leaveMessage).build()
