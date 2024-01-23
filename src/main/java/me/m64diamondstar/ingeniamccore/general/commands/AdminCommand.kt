@@ -16,6 +16,7 @@ import net.minecraft.core.BlockPos
 import net.minecraft.world.level.block.entity.SkullBlockEntity
 import org.bukkit.Bukkit
 import org.bukkit.Material
+import org.bukkit.Statistic
 import org.bukkit.block.BlockFace
 import org.bukkit.block.data.Rotatable
 import org.bukkit.command.Command
@@ -243,6 +244,25 @@ class AdminCommand: CommandExecutor {
                 sender.sendMessage(Colors.format(MessageType.SUCCESS + "Set gravity of " + player.name + " to " + value))
             }else{
                 sender.sendMessage(Messages.commandUsage("adm gravity <player> <true/false>"))
+            }
+        }
+
+        if(args[0].equals("playtime", ignoreCase = true)){
+            if(args.size == 2){
+                val player = Bukkit.getPlayerExact(args[1]) ?: return false
+                sender.sendMessage(Colors.format(MessageType.SUCCESS + "Playtime of " + player.name + " in ticks: " + player.getStatistic(
+                    Statistic.PLAY_ONE_MINUTE)))
+
+                val ticks = player.getStatistic(Statistic.PLAY_ONE_MINUTE) // Name is misleading, it's actually playtime in ticks
+                val totalSeconds: Int = ticks / 20
+                val hours = totalSeconds / 3600
+                val minutes = (totalSeconds % 3600) / 60
+                val seconds = totalSeconds % 60
+                val playTimeFormatted = String.format("%02dh %02dm %02ds", hours, minutes, seconds)
+
+                sender.sendMessage(Colors.format(MessageType.SUCCESS + "Playtime of " + player.name + ": " + playTimeFormatted))
+            }else{
+                sender.sendMessage(Messages.commandUsage("adm playtime <player>"))
             }
         }
 

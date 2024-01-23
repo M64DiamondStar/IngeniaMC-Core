@@ -20,6 +20,8 @@ class LeaveListener : Listener {
             bukkitPlayer.vehicle?.eject()
         }
         val player = IngeniaPlayer(bukkitPlayer)
+        player.updatePlaytime()
+        player.updateYearPlaytime()
         e.quitMessage = MessageBuilder.LeaveMessageBuilder(player.name, player.leaveColor, player.leaveMessage).build()
 
         if(TeamHandler.containsPlayer(bukkitPlayer))

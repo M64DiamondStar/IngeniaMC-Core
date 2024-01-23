@@ -28,8 +28,10 @@ class AdminTabCompleter: TabCompleter {
             tc.add("spawnRandomPresent")
             tc.add("location")
             tc.add("invsee")
+            tc.add("playtime")
         }else if(args.size == 2){
-            if(args[0].equals("invsee", ignoreCase = true) || args[0].equals("gravity", ignoreCase = true)){
+            if(args[0].equals("invsee", ignoreCase = true) || args[0].equals("gravity", ignoreCase = true)
+                || args[0].equals("playtime", ignoreCase = true)) {
                 tc.clear()
                 tc.addAll(Bukkit.getOnlinePlayers().map { it.name })
             }

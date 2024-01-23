@@ -146,4 +146,40 @@ class PlayerConfig(uuid: UUID) : DataConfiguration("data/player", uuid.toString(
         return getConfig().getLong("Discord.ID")
     }
 
+    /**
+     * Set year playtime
+     * @param year the year
+     * @param playtime the playtime in ticks
+     */
+    fun setYearPlaytime(year: Int, playtime: Int){
+        getConfig().set("Playtime.$year", playtime)
+        save()
+    }
+
+    /**
+     * Get year playtime
+     * @param year the year
+     * @return the playtime in ticks
+     */
+    fun getYearPlaytime(year: Int): Int{
+        return getConfig().getInt("Playtime.$year")
+    }
+
+    /**
+     * Set total playtime
+     * @param playtime the playtime in ticks
+     */
+    fun setPlaytime(playtime: Int){
+        getConfig().set("Playtime.Total", playtime)
+        save()
+    }
+
+    /**
+     * Get total playtime
+     * @return the playtime in ticks
+     */
+    fun getPlaytime(): Int{
+        return getConfig().getInt("Playtime.Total")
+    }
+
 }

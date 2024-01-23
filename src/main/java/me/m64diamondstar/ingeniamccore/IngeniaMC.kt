@@ -227,6 +227,7 @@ class IngeniaMC : JavaPlugin() {
         Objects.requireNonNull(getCommand("fixaudio"))?.setExecutor(FixAudioCommand())
         Objects.requireNonNull(getCommand("audiocredits"))?.setExecutor(AudioCreditsCommand())
         Objects.requireNonNull(getCommand("rules"))?.setExecutor(RulesCommand())
+        Objects.requireNonNull(getCommand("playtime"))?.setExecutor(PlaytimeCommand())
     }
 
     private fun loadTabCompleters() {

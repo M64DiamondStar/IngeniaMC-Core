@@ -293,6 +293,22 @@ class IngeniaPlayer(val player: Player) {
         return getLevel(exp)
     }
 
+    fun updateYearPlaytime(){
+        val year = Calendar.getInstance().get(Calendar.YEAR)
+        var reducer = 0
+        var i = 1
+        while(playerConfig.getYearPlaytime(year - i) != 0){
+            reducer += playerConfig.getYearPlaytime(year - i)
+            i++
+        }
+
+        playerConfig.setYearPlaytime(year, player.getStatistic(Statistic.PLAY_ONE_MINUTE) - reducer)
+    }
+
+    fun updatePlaytime(){
+        playerConfig.setPlaytime(player.getStatistic(Statistic.PLAY_ONE_MINUTE))
+    }
+
     private fun levelUp(previousExp: Long, newExp: Long) {
         for (level in getLevelUpLevels(previousExp, newExp)) {
             for (reward in getRewards(level)) {

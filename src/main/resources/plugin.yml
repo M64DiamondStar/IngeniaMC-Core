@@ -101,5 +101,9 @@ commands:
       - tos
       - termsofservice
       - terms
+  playtime:
+    description: Display your playtime.
+    aliases:
+      - pt
 
 
