@@ -2,12 +2,14 @@ package me.m64diamondstar.ingeniamccore.discord.commands
 
 import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.discord.bot.DiscordBot
+import me.m64diamondstar.ingeniamccore.general.player.data.DiscordUserConfig
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.Member
 import net.dv8tion.jda.api.entities.Role
 import net.dv8tion.jda.api.entities.User
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel
 import java.awt.Color
+import java.io.File
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -32,6 +34,22 @@ object BotUtils {
         fun getLeaveEmoji(): String {
             return IngeniaMC.plugin.config.getString("Discord.Bot.Leave-Emoji") ?: "-"
         }
+    }
+
+    object LinkedUtils {
+
+        fun isLinked(discordID: Long): Boolean{
+            if(!File(IngeniaMC.plugin.dataFolder, "data/discord-user/$discordID.yml").exists()) return false
+            val discordUserConfig = DiscordUserConfig(discordID)
+            return discordUserConfig.hasMinecraft()
+        }
+
+        fun getLinked(discordID: Long): UUID?{
+            if(!File(IngeniaMC.plugin.dataFolder, "data/discord-user/$discordID.yml").exists()) return null
+            val discordUserConfig = DiscordUserConfig(discordID)
+            return discordUserConfig.getMinecraft()
+        }
+
     }
 
     object LinkingUtils {

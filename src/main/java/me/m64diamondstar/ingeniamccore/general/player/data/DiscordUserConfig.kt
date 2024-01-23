@@ -16,7 +16,10 @@ class DiscordUserConfig(id: Long) : DataConfiguration("data/discord-user", id.to
     }
 
     fun setMinecraft(uuid: UUID?){
-        getConfig().set("Minecraft", uuid.toString())
+        if(uuid == null){
+            getConfig().set("Minecraft", null)
+        }else
+            getConfig().set("Minecraft", uuid.toString())
         save()
     }
 

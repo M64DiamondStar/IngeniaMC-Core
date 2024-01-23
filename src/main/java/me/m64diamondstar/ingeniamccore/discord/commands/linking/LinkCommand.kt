@@ -39,6 +39,9 @@ class LinkCommand: ListenerAdapter() {
         if(Bukkit.getPlayer(BotUtils.LinkingUtils.getLinking(id)!!) != null ||
             Bukkit.getPlayer(BotUtils.LinkingUtils.getLinking(id)!!)!!.isOnline) {
 
+            event.deferEdit().queue()
+            event.message.delete().queue()
+
             val player = Bukkit.getPlayer(BotUtils.LinkingUtils.getLinking(id)!!)!!
             val ingeniaPlayer = IngeniaPlayer(player)
             val discordUser = DiscordUserConfig(event.user.idLong)
@@ -58,7 +61,6 @@ class LinkCommand: ListenerAdapter() {
             embedBuilder.setThumbnail("https://visage.surgeplay.com/full/${player.uniqueId}.png")
             embedBuilder.setColor(Color.decode("#73db70"))
 
-            event.message.delete().queue()
             event.channel.sendMessageEmbeds(embedBuilder.build()).queue()
 
             val guild = DiscordBot.jda.getGuildById(IngeniaMC.plugin.config.getLong("Discord.Bot.Guild-ID"))

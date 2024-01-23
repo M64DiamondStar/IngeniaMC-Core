@@ -5,6 +5,7 @@ import me.m64diamondstar.ingeniamccore.discord.commands.admin.EmbedCommand
 import me.m64diamondstar.ingeniamccore.discord.commands.linking.LinkCommand
 import me.m64diamondstar.ingeniamccore.discord.commands.logs.LogsCommand
 import me.m64diamondstar.ingeniamccore.discord.commands.minecraft.ChatCommand
+import me.m64diamondstar.ingeniamccore.discord.commands.minecraft.PlaytimeCommand
 import me.m64diamondstar.ingeniamccore.discord.commands.profile.ProfileCommand
 import me.m64diamondstar.ingeniamccore.discord.commands.tickets.CloseCommand
 import me.m64diamondstar.ingeniamccore.discord.commands.tickets.TicketCommand
@@ -33,7 +34,7 @@ object DiscordBot {
             .enableIntents(GatewayIntent.GUILD_MEMBERS, GatewayIntent.DIRECT_MESSAGES,GatewayIntent.MESSAGE_CONTENT)
             .addEventListeners(GuildReadyListener(), EmbedCommand(), TicketCommand(), LogsCommand(),
                 CloseCommand(), WhatismyidCommand(), LinkCommand(), ProfileCommand(), IpCommand(),
-                LogsListener(), ChatCommand(), DiscordChatListener()
+                LogsListener(), ChatCommand(), DiscordChatListener(), PlaytimeCommand()
             )
             .enableCache(CacheFlag.EMOJI)
             .setActivity(Activity.playing("play.IngeniaMC.net on 1.20.1"))

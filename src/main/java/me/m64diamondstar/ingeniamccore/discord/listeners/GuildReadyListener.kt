@@ -24,6 +24,9 @@ class GuildReadyListener: ListenerAdapter() {
 
             .addCommands(Commands.slash("link", "Link your Minecraft account with your Discord account."))
 
+            // MINECRAFT LINKED COMMANDS
+            .addCommands(Commands.slash("playtime", "Check out your in-game playtime!"))
+
             // ADMIN-ONLY COMMANDS
             .addCommands(Commands.slash("ticket", "Edit ticket configuration.")
                 .setDefaultPermissions(DefaultMemberPermissions.enabledFor(Permission.ADMINISTRATOR)))

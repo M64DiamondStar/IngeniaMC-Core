@@ -48,7 +48,6 @@ class PlaytimeCommand: CommandExecutor {
             else -> {
                 sender.sendMessage(Colors.format(MessageType.SUCCESS + "Go touch grass, you have $playTimeFormatted of playtime..."))
             }
-
         }
 
         return false
