@@ -7,6 +7,8 @@ import me.m64diamondstar.ingeniamccore.utils.items.Items
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
 import me.m64diamondstar.ingeniamccore.utils.messages.Messages
+import net.kyori.adventure.audience.Audience
+import net.kyori.adventure.text.minimessage.MiniMessage
 import net.md_5.bungee.api.ChatColor
 import net.md_5.bungee.api.chat.ClickEvent
 import net.md_5.bungee.api.chat.ComponentBuilder
@@ -264,6 +266,14 @@ class AdminCommand: CommandExecutor {
             }else{
                 sender.sendMessage(Messages.commandUsage("adm playtime <player>"))
             }
+        }
+
+        if(args[0].equals("testmessage", ignoreCase = true)){
+            val stringBuilder = StringBuilder()
+            for(element in args){
+                stringBuilder.append(element).append(" ")
+            }
+            (sender as Audience).sendMessage(MiniMessage.miniMessage().deserialize(stringBuilder.toString()))
         }
 
         return false

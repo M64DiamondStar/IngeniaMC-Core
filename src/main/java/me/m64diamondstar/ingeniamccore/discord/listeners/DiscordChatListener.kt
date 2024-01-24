@@ -2,6 +2,7 @@ package me.m64diamondstar.ingeniamccore.discord.listeners
 
 import me.m64diamondstar.ingeniamccore.discord.commands.BotUtils
 import me.m64diamondstar.ingeniamccore.general.player.data.DiscordUserConfig
+import me.m64diamondstar.ingeniamccore.utils.EmojiUtils
 import net.dv8tion.jda.api.entities.channel.ChannelType
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
@@ -34,7 +35,7 @@ class DiscordChatListener: ListenerAdapter() {
                         (if(hover.isEmpty()) "" else "<hover:show_text:${hover}>") +
                         event.author.name +
                         (if(hover.isEmpty()) "" else "</hover>") +
-                        " » $resultMessage"
+                        " » ${EmojiUtils.addEmoji(resultMessage)}"
             ))
         }
     }

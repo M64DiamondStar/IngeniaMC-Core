@@ -34,6 +34,7 @@ import me.m64diamondstar.ingeniamccore.protect.listeners.*
 import me.m64diamondstar.ingeniamccore.protect.listeners.DamageListener
 import me.m64diamondstar.ingeniamccore.protect.moderation.ModerationRegistry
 import me.m64diamondstar.ingeniamccore.shops.listeners.ShopListener
+import me.m64diamondstar.ingeniamccore.utils.EmojiUtils
 import me.m64diamondstar.ingeniamccore.utils.LocationUtils
 import me.m64diamondstar.ingeniamccore.utils.TeamHandler
 import me.m64diamondstar.ingeniamccore.utils.gui.GuiListener
@@ -99,6 +100,8 @@ class IngeniaMC : JavaPlugin() {
 
         DiscordBot.start()
         Bukkit.getLogger().info("Discord Bot loaded ✓")
+
+        EmojiUtils.loadEmojis()
 
         loadTasks()
         Bukkit.getLogger().info("Tasks loaded ✓")

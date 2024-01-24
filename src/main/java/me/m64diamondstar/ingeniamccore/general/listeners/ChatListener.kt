@@ -4,6 +4,7 @@ import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.discord.bot.DiscordBot
 import me.m64diamondstar.ingeniamccore.discord.commands.BotUtils
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
+import me.m64diamondstar.ingeniamccore.utils.EmojiUtils
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import org.bukkit.ChatColor
 import org.bukkit.event.EventHandler
@@ -29,15 +30,21 @@ class ChatListener: Listener {
         }
 
         if(player.hasPermission("ingenia.vip+") || player.isOp)
-            event.format = Colors.format("${ingeniaPlayer.prefix}&r ${ingeniaPlayer.name} » ${event.message.replace("%", "%%")}")
+            event.format = Colors.format("${ingeniaPlayer.prefix}&r " +
+                    "${ingeniaPlayer.name} » " +
+                    EmojiUtils.addEmoji(event.message.replace("%", "%%"))
+            )
+
         else if(player.hasPermission("ingenia.vip"))
             event.format = ingeniaPlayer.prefix + Colors.format("&r ") +
                     "${ingeniaPlayer.name} » " +
                     ChatColor.translateAlternateColorCodes('&',
-                        event.message.replace("%", "%%")
+                        EmojiUtils.addEmoji(event.message.replace("%", "%%"))
             )
         else
-            event.format = ingeniaPlayer.prefix + Colors.format("&r ") + "${ingeniaPlayer.name} » ${event.message.replace("%", "%%")}"
+            event.format = ingeniaPlayer.prefix + Colors.format("&r ") +
+                    "${ingeniaPlayer.name} » " +
+                    EmojiUtils.addEmoji(event.message.replace("%", "%%"))
 
     }
 
