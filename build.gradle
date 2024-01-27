@@ -56,6 +56,7 @@ dependencies {
     shadow "me.m56738:SmoothCoastersAPI:1.10"
     shadow "com.opencsv:opencsv:5.9"
     shadow "com.jeff-media:custom-block-data:2.2.2"
+    shadow 'org.jsoup:jsoup:1.17.2'
 
     implementation 'club.minnced:jda-ktx:0.11.0-beta.19'
     implementation "com.github.M64DiamondStar:EffectMaster:f47e6278df"

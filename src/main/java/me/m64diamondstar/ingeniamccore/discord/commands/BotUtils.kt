@@ -2,6 +2,7 @@ package me.m64diamondstar.ingeniamccore.discord.commands
 
 import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.discord.bot.DiscordBot
+import me.m64diamondstar.ingeniamccore.discord.commands.utils.transcripts.HtmlTranscript
 import me.m64diamondstar.ingeniamccore.general.player.data.DiscordUserConfig
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.Member
@@ -164,6 +165,9 @@ object BotUtils {
                 )
                 embedBuilder.setFooter(dateTimeFormatter.format(timeNow))
                 embedBuilder.setColor(Color.decode("#ffb833"))
+
+                val transcript = HtmlTranscript()
+                transcript.createTranscript(channel, "transcript.html", channel.guild.retrieveMemberById(channel.topic!!.replace("ID: ", "")).complete().user)
 
                 logChannel?.sendMessageEmbeds(embedBuilder.build())?.queue()
 
