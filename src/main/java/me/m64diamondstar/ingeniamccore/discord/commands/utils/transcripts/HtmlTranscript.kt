@@ -1,6 +1,7 @@
 package me.m64diamondstar.ingeniamccore.discord.commands.utils.transcripts
 
 import me.m64diamondstar.ingeniamccore.IngeniaMC
+import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.ISnowflake
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.entities.User
@@ -10,7 +11,9 @@ import org.apache.commons.io.IOUtils
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
+import java.awt.Color
 import java.io.*
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.stream.Collectors
 
@@ -23,9 +26,38 @@ class HtmlTranscript {
     private val audioFormats: List<String> = listOf("mp3", "wav", "ogg", "flac")
 
     @Throws(IOException::class)
-    fun createTranscript(channel: TextChannel, fileName: String, user: User) {
+    fun createTranscript(channel: TextChannel, fileName: String, user: User, closeUser: User, ticketType: String) {
+
+        val embedBuilder = EmbedBuilder()
+
+        embedBuilder.setTitle(
+            channel.name + ": " +
+                    channel.guild.retrieveMemberById(
+                        channel.topic!!.replace("ID: ", "")
+                    ).complete().user.name +
+                    "'s $ticketType"
+        )
+
+        embedBuilder.setDescription(
+            "\n" +
+                    "Marked as ***closed***.\n" +
+                    "\n" +
+                    "Ticket Owner: ${
+                        channel.guild.retrieveMemberById(channel.topic!!.replace("ID: ", "")).complete().asMention
+                    }\n" +
+                    "Ticket Owner ID: ${channel.topic!!.replace("ID: ", "")}\n" +
+                    "\n" +
+                    "Closed by: ${closeUser.asMention}"
+        )
+
+        val dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")
+        val timeNow = LocalDateTime.now()
+        embedBuilder.setFooter(dateTimeFormatter.format(timeNow))
+        embedBuilder.setColor(Color.decode("#ffb833"))
+
         user.openPrivateChannel().complete()
-            .sendFiles(
+            .sendMessageEmbeds(embedBuilder.build())
+            .addFiles(
                 FileUpload.fromData(generateFromMessages(channel.iterableHistory.stream().collect(Collectors.toList())),
                     fileName)
             ).complete()
@@ -39,13 +71,7 @@ class HtmlTranscript {
         val channel: TextChannel = messages.iterator().next().channel.asTextChannel()
         val document: Document = Jsoup.parse(htmlTemplate, "UTF-8")
         //document.outputSettings().indentAmount(0).prettyPrint(true)
-        channel.guild.iconUrl?.let {
-            document.getElementsByClass("preamble__guild-icon")
-                .first()?.attr("src", it)
-        } // set guild icon
 
-        document.getElementById("transcriptTitle")?.text(channel.name) // set title
-        document.getElementById("guildname")?.text(channel.guild.name) // set guild name
         document.getElementById("ticketname")?.text(channel.name) // set channel name
 
         for (message in messages.stream()

@@ -33,7 +33,6 @@ class TranscriptFormatter {
     }
 
     fun format(originalText: String): String {
-        println(originalText)
         var matcher: Matcher = STRONG.matcher(originalText)
         var newText = originalText
         while (matcher.find()) {

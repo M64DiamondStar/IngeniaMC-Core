@@ -155,24 +155,20 @@
         }
 
         .preamble {
-            display: grid;
-            margin: 0 0.3em 0.6em 0.3em;
+            display: block;
+            margin: 0;
+            padding: 0;
             max-width: 100%;
-            grid-template-columns: auto 1fr;
-        }
-
-        .preamble__guild-icon-container {
-            grid-column: 1;
+            text-align: center;
+            /*background-image: url("https://imgur.com/2XVPabk.png");*/
         }
 
         .preamble__guild-icon {
-            max-width: 88px;
+            margin-top: 40px;
+            margin-left: auto;
+            margin-right: auto;
+            max-width: 70%;
             max-height: 88px;
-        }
-
-        .preamble__entries-container {
-            grid-column: 2;
-            margin-left: 0.6em;
         }
 
         .preamble__entry {
@@ -180,11 +176,16 @@
             color: #ffffff;
         }
 
+        .preamble__entry #ticketname {
+            margin-bottom: 40px;
+        }
+
         .preamble__entry--small {
             font-size: 1em;
         }
 
         .chatlog {
+            margin-top: 40px;
             max-width: 100%;
         }
 
@@ -667,14 +668,13 @@
 
 <div class="preamble">
     <div class="preamble__guild-icon-container">
-        <img class="preamble__guild-icon" src="https://discord.com/assets/f9bb9c4af2b9c32a2c5ee0014661546d.png"
-             alt="Guild icon" loading="lazy">
+        <img class="preamble__guild-icon" src="https://imgur.com/CSM4CAc.png"
+             alt="IngeniaMC Logo" loading="lazy">
     </div>
     <div class="preamble__entries-container">
-        <div class="preamble__entry" id="guildname">Guild Name Here</div>
         <div class="preamble__entry" id="ticketname">Channel Name Here</div>
     </div>
-</div>l
+</div>
 
 <div class="chatlog" id="chatlog">
 

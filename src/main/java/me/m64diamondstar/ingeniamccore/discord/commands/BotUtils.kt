@@ -167,7 +167,11 @@ object BotUtils {
                 embedBuilder.setColor(Color.decode("#ffb833"))
 
                 val transcript = HtmlTranscript()
-                transcript.createTranscript(channel, "transcript.html", channel.guild.retrieveMemberById(channel.topic!!.replace("ID: ", "")).complete().user)
+                transcript.createTranscript(channel,
+                    "transcript.html",
+                    channel.guild.retrieveMemberById(channel.topic!!.replace("ID: ", "")).complete().user,
+                    closeUser,
+                    ticketType)
 
                 logChannel?.sendMessageEmbeds(embedBuilder.build())?.queue()
 
