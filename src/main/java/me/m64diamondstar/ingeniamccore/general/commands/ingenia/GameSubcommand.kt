@@ -1,5 +1,6 @@
 package me.m64diamondstar.ingeniamccore.general.commands.ingenia
 
+import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.games.guesstheword.GuessTheWord
 import me.m64diamondstar.ingeniamccore.games.guesstheword.GuessTheWordUtils
 import me.m64diamondstar.ingeniamccore.games.parkour.Parkour
@@ -12,13 +13,17 @@ import me.m64diamondstar.ingeniamccore.utils.IngeniaSubcommand
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
 import me.m64diamondstar.ingeniamccore.utils.messages.Messages
+import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.FluidCollisionMode
 import org.bukkit.Material
+import org.bukkit.NamespacedKey
 import org.bukkit.Particle
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.ItemFrame
 import org.bukkit.entity.Player
+import org.bukkit.inventory.ItemStack
+import org.bukkit.persistence.PersistentDataType
 
 class GameSubcommand(private val sender: CommandSender, private val args: Array<String>): IngeniaSubcommand {
 
@@ -367,6 +372,18 @@ class GameSubcommand(private val sender: CommandSender, private val args: Array<
 
         }
 
+        else if(args[1].equals("wandclash", ignoreCase = true)) {
+            val item = ItemStack(Material.AMETHYST_SHARD)
+            val meta = item.itemMeta!!
+
+            meta.persistentDataContainer.set(NamespacedKey(IngeniaMC.plugin, "clash-wand"), PersistentDataType.STRING, "fenrir")
+            meta.displayName(MiniMessage.miniMessage().deserialize("<#c47443>Fenrir"))
+            meta.lore(listOf(MiniMessage.miniMessage().deserialize("<#878787>Work In Progress...")))
+            item.itemMeta = meta
+
+            sender.inventory.addItem(item)
+        }
+
         else{
             sender.sendMessage(Colors.format(MessageType.ERROR + "Please use a valid sub-command! Check the auto tab-completion!"))
         }
@@ -381,6 +398,7 @@ class GameSubcommand(private val sender: CommandSender, private val args: Array<
             tabs.add("presenthunt")
             tabs.add("splashbattle")
             tabs.add("leaderboard")
+            tabs.add("wandclash")
         }
 
         if(args.size == 3){

@@ -2,12 +2,16 @@ package me.m64diamondstar.ingeniamccore.utils
 
 import org.bukkit.Bukkit
 import org.bukkit.Location
+import org.bukkit.entity.Entity
+import org.bukkit.entity.LivingEntity
 import org.bukkit.util.Vector
-import java.lang.NumberFormatException
 import java.math.BigDecimal
 import java.math.RoundingMode
+import kotlin.math.*
 
 object LocationUtils {
+
+    private val EPSILON = Math.ulp(1.0) * 2.0
 
     /**
      * Get location from format (world, x, y, z[, yaw, pitch])
@@ -76,5 +80,59 @@ object LocationUtils {
                 " ${location.yaw}," +
                 " ${location.pitch}"
     }
+
+    /**
+     * Credits to Wasabi_Thumbs on SpigotMC
+     * https://www.spigotmc.org/threads/getting-location-to-the-relative-left-or-right-of-player.580325/#post-4509362
+     */
+    private fun isSignificant(value: Double): Boolean {
+        return abs(value) >= EPSILON
+    }
+
+    /**
+     * Gets the location relative to the entity's yaw and pitch
+     *
+     * Credits to Wasabi_Thumbs on SpigotMC
+     * https://www.spigotmc.org/threads/getting-location-to-the-relative-left-or-right-of-player.580325/#post-4509362
+     */
+    fun getRelativeLocation(entity: Entity, forward: Double, right: Double, up: Double): Location {
+        val ret: Location = if (entity is LivingEntity) {
+            entity.eyeLocation
+        } else {
+            entity.location
+        }
+        var direction: Vector? = null
+        if (isSignificant(forward)) {
+            direction = ret.direction
+            ret.add(direction.clone().multiply(forward))
+        }
+        val hasUp: Boolean = isSignificant(up)
+        if (hasUp && direction == null) direction = ret.direction
+        if (isSignificant(right) || hasUp) {
+            val rightDirection: Vector
+            if (direction != null && isSignificant(abs(direction.y) - 1)) {
+                rightDirection = direction.clone()
+                val factor = sqrt(1 - rightDirection.y.pow(2.0)) // a shortcut that lets us not normalize which is slow
+                val nx = -rightDirection.z / factor
+                val nz = rightDirection.x / factor
+                rightDirection.setX(nx)
+                rightDirection.setY(0.0)
+                rightDirection.setZ(nz)
+            } else {
+                val yaw = ret.yaw + 90f
+                val yawRad = yaw * (Math.PI / 180.0)
+                val z = cos(yawRad)
+                val x = -sin(yawRad)
+                rightDirection = Vector(x, 0.0, z)
+            }
+            ret.add(rightDirection.clone().multiply(right))
+            if (hasUp) {
+                val upDirection = rightDirection.crossProduct(direction!!)
+                ret.add(upDirection.clone().multiply(up))
+            }
+        }
+        return ret
+    }
+
 
 }

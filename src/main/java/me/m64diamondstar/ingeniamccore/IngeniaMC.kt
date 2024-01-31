@@ -17,6 +17,8 @@ import me.m64diamondstar.ingeniamccore.games.presenthunt.PresentHuntUtils
 import me.m64diamondstar.ingeniamccore.games.presenthunt.listeners.PlayerInteractListener
 import me.m64diamondstar.ingeniamccore.games.splashbattle.SplashBattleUtils
 import me.m64diamondstar.ingeniamccore.games.splashbattle.listeners.*
+import me.m64diamondstar.ingeniamccore.games.wandclash.listeners.ClashWandListener
+import me.m64diamondstar.ingeniamccore.games.wandclash.util.ClashWandRegistry
 import me.m64diamondstar.ingeniamccore.general.areas.AreaUtils
 import me.m64diamondstar.ingeniamccore.general.areas.listeners.AudioConnectListener
 import me.m64diamondstar.ingeniamccore.general.areas.listeners.PlayerMoveListener
@@ -107,6 +109,7 @@ class IngeniaMC : JavaPlugin() {
         Bukkit.getLogger().info("Tasks loaded ✓")
 
         WandRegistry.registerWands()
+        ClashWandRegistry.registerClashWands()
         Bukkit.getLogger().info("Wands loaded ✓")
 
         ModerationRegistry.registerBlockedWords()
@@ -326,6 +329,11 @@ class IngeniaMC : JavaPlugin() {
         Bukkit.getServer().pluginManager.registerEvents(SnowballListener(), this)
         Bukkit.getServer().pluginManager.registerEvents(GunListener(), this)
         Bukkit.getServer().pluginManager.registerEvents(SneakListener(), this)
+
+        /*
+            Clash Wand Events
+         */
+        Bukkit.getServer().pluginManager.registerEvents(ClashWandListener(), this)
 
         /*
             Shop Events
