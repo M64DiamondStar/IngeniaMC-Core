@@ -144,6 +144,8 @@ object BotUtils {
 
                 val embedBuilder = EmbedBuilder()
 
+                val ticketMember = channel.guild.retrieveMemberById(channel.topic!!.replace("ID: ", "")).complete()
+
                 embedBuilder.setTitle(
                     channel.name + ": " +
                             channel.guild.retrieveMemberById(
@@ -157,7 +159,7 @@ object BotUtils {
                             "Marked as ***closed***.\n" +
                             "\n" +
                             "Ticket Owner: ${
-                                channel.guild.retrieveMemberById(channel.topic!!.replace("ID: ", "")).complete().asMention
+                                ticketMember.asMention
                             }\n" +
                             "Ticket Owner ID: ${channel.topic!!.replace("ID: ", "")}\n" +
                             "\n" +
@@ -167,13 +169,24 @@ object BotUtils {
                 embedBuilder.setColor(Color.decode("#ffb833"))
 
                 val transcript = HtmlTranscript()
-                transcript.createTranscript(channel,
-                    "transcript.html",
-                    channel.guild.retrieveMemberById(channel.topic!!.replace("ID: ", "")).complete().user,
-                    closeUser,
-                    ticketType)
+                /*
+                Send the transcript to the user who opened the ticket
+                in their direct messages.
+                 */
+                ticketMember.user.openPrivateChannel().complete()
+                    .sendMessageEmbeds(embedBuilder.build())
+                    .addFiles(
+                        transcript.getFileUpload(channel, "transcript.html")
+                    ).complete()
 
-                logChannel?.sendMessageEmbeds(embedBuilder.build())?.queue()
+                /*
+                Send the transcript to the log channel
+                 */
+                logChannel?.sendMessageEmbeds(embedBuilder.build())
+                    ?.addFiles(
+                        transcript.getFileUpload(channel, "transcript-${ticketMember.user.name}.html")
+                    )
+                    ?.queue()
 
                 channel.delete().queue()
             }
