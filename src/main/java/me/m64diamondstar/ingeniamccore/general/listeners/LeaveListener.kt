@@ -31,7 +31,7 @@ class LeaveListener : Listener {
             val joinLeaveMessage = JoinLeaveMessage(MessageType.LEAVE)
             DiscordBot.jda.getTextChannelById(BotUtils.ChatUtils.chatChannel!!.id)?.sendMessage(
                 "${BotUtils.EmojiUtils.getLeaveEmoji()} " +
-                        "${joinLeaveMessage.getMessage(player.leaveMessage ?: "default")?.replace("%player%", player.name)}"
+                        "${joinLeaveMessage.getMessage(player.leaveMessage ?: "default")?.replace("%player%", player.name)?.replace("_", "\\_")}"
             )?.queue()
         }
         JoinListener.logged.remove(bukkitPlayer.uniqueId)

@@ -22,7 +22,7 @@ class ChatListener: Listener {
 
         if(BotUtils.ChatUtils.chatChannel != null && !event.isCancelled && event.message.replace("\\", "").isNotBlank()){
             DiscordBot.jda.getTextChannelById(BotUtils.ChatUtils.chatChannel!!.id)?.sendMessage(
-                "**${ingeniaPlayer.rawPrefix}** ${player.name} » ${addBracketsToUrls(event.message
+                "**${ingeniaPlayer.rawPrefix}** ${player.name.replace("_", "\\_")} » ${addBracketsToUrls(event.message
                     .replace("@", "`@`")
                     .replace("\\", "")
                     .replace("```", "`"))}"

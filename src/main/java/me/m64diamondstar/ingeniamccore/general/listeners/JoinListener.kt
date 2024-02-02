@@ -33,7 +33,7 @@ class JoinListener : Listener {
             val joinLeaveMessage = JoinLeaveMessage(MessageType.JOIN)
             DiscordBot.jda.getTextChannelById(BotUtils.ChatUtils.chatChannel!!.id)?.sendMessage(
                 "${BotUtils.EmojiUtils.getJoinEmoji()} " +
-                        "${joinLeaveMessage.getMessage(player.joinMessage ?: "default")?.replace("%player%", player.name)}"
+                        "${joinLeaveMessage.getMessage(player.joinMessage ?: "default")?.replace("%player%", player.name)?.replace("_", "\\_")}"
             )?.queue()
         }
     }
