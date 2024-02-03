@@ -336,7 +336,7 @@ class IngeniaPlayer(val player: Player) {
 
         player.sendMessage(Colors.format("\uFE01"))
         player.sendMessage(Colors.format("               ${MessageType.SUCCESS}&lLevel Up"))
-        player.sendMessage(Colors.format("               ${MessageType.BACKGROUND}Level ${getLevel(previousExp)} ➡ ${getLevel(newExp)}"))
+        player.sendMessage(Colors.format("               ${MessageType.BACKGROUND}Level ${getLevel(previousExp)} ➜ ${getLevel(newExp)}"))
         player.sendMessage(Colors.format("               ${MessageType.BACKGROUND}Rewards: "))
         player.sendMessage(Colors.format("               $rewardDisplay"))
         player.sendMessage(" ")
