@@ -9,6 +9,7 @@ import me.m64diamondstar.ingeniamccore.games.presenthunt.PresentHunt
 import me.m64diamondstar.ingeniamccore.games.presenthunt.PresentHuntUtils
 import me.m64diamondstar.ingeniamccore.games.splashbattle.SplashBattle
 import me.m64diamondstar.ingeniamccore.games.splashbattle.SplashBattleUtils
+import me.m64diamondstar.ingeniamccore.games.wandclash.util.ClashWandRegistry
 import me.m64diamondstar.ingeniamccore.utils.IngeniaSubcommand
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
@@ -373,15 +374,23 @@ class GameSubcommand(private val sender: CommandSender, private val args: Array<
         }
 
         else if(args[1].equals("wandclash", ignoreCase = true)) {
-            val item = ItemStack(Material.AMETHYST_SHARD)
-            val meta = item.itemMeta!!
+            if(args.size == 3){
+                val clashWand = ClashWandRegistry.getClashWand(args[2])
+                if(clashWand == null){
+                    sender.sendMessage(Colors.format(MessageType.ERROR + "This is not a valid clash wand"))
+                    return
+                }
 
-            meta.persistentDataContainer.set(NamespacedKey(IngeniaMC.plugin, "clash-wand"), PersistentDataType.STRING, "fenrir")
-            meta.displayName(MiniMessage.miniMessage().deserialize("<#c47443>Fenrir"))
-            meta.lore(listOf(MiniMessage.miniMessage().deserialize("<#878787>Work In Progress...")))
-            item.itemMeta = meta
+                val item = ItemStack(Material.AMETHYST_SHARD)
+                val meta = item.itemMeta!!
 
-            sender.inventory.addItem(item)
+                meta.persistentDataContainer.set(NamespacedKey(IngeniaMC.plugin, "clash-wand"), PersistentDataType.STRING, clashWand.getID())
+                meta.displayName(MiniMessage.miniMessage().deserialize("<#c47443>${clashWand.getDisplayName()}"))
+                meta.lore(listOf(MiniMessage.miniMessage().deserialize("<#878787>Work In Progress...")))
+                item.itemMeta = meta
+
+                sender.inventory.addItem(item)
+            }
         }
 
         else{
