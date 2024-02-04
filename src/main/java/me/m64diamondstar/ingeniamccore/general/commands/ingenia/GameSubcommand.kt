@@ -374,8 +374,8 @@ class GameSubcommand(private val sender: CommandSender, private val args: Array<
         }
 
         else if(args[1].equals("wandclash", ignoreCase = true)) {
-            if(args.size == 3){
-                val clashWand = ClashWandRegistry.getClashWand(args[2])
+            if(args.size == 4 && args[2].equals("get", ignoreCase = true)){
+                val clashWand = ClashWandRegistry.getClashWand(args[3])
                 if(clashWand == null){
                     sender.sendMessage(Colors.format(MessageType.ERROR + "This is not a valid clash wand"))
                     return
@@ -422,6 +422,10 @@ class GameSubcommand(private val sender: CommandSender, private val args: Array<
                 tabs.add("create")
                 tabs.add("modify")
             }
+
+            if(args[1].equals("wandclash", ignoreCase = true)){
+                tabs.add("get")
+            }
         }
 
         if(args.size == 4){
@@ -440,6 +444,12 @@ class GameSubcommand(private val sender: CommandSender, private val args: Array<
             if(args[1].equals("splashbattle", ignoreCase = true)){
                 if(args[2].equals("modify", ignoreCase = true)){
                     SplashBattleUtils.getSplashBattles().forEach { tabs.add(it.name) }
+                }
+            }
+
+            if(args[1].equals("wandclash", ignoreCase = true)){
+                if(args[2].equals("get", ignoreCase = true)){
+                    ClashWandRegistry.getClashWands().forEach { tabs.add(it.key) }
                 }
             }
         }
