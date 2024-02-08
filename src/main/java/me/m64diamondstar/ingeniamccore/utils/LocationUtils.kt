@@ -96,18 +96,28 @@ object LocationUtils {
      * https://www.spigotmc.org/threads/getting-location-to-the-relative-left-or-right-of-player.580325/#post-4509362
      */
     fun getRelativeLocation(entity: Entity, forward: Double, right: Double, up: Double): Location {
-        val ret: Location = if (entity is LivingEntity) {
-            entity.eyeLocation
+        return if (entity is LivingEntity) {
+            getRelativeLocation(entity.eyeLocation, forward, right, up)
         } else {
-            entity.location
+            getRelativeLocation(entity.location, forward, right, up)
         }
+    }
+
+    /**
+     * Gets the location relative to the entity's yaw and pitch
+     *
+     * Credits to Wasabi_Thumbs on SpigotMC
+     * https://www.spigotmc.org/threads/getting-location-to-the-relative-left-or-right-of-player.580325/#post-4509362
+     */
+    fun getRelativeLocation(location: Location, forward: Double, right: Double, up: Double): Location {
+        val loc = location.clone()
         var direction: Vector? = null
         if (isSignificant(forward)) {
-            direction = ret.direction
-            ret.add(direction.clone().multiply(forward))
+            direction = loc.direction
+            loc.add(direction.clone().multiply(forward))
         }
         val hasUp: Boolean = isSignificant(up)
-        if (hasUp && direction == null) direction = ret.direction
+        if (hasUp && direction == null) direction = loc.direction
         if (isSignificant(right) || hasUp) {
             val rightDirection: Vector
             if (direction != null && isSignificant(abs(direction.y) - 1)) {
@@ -119,19 +129,19 @@ object LocationUtils {
                 rightDirection.setY(0.0)
                 rightDirection.setZ(nz)
             } else {
-                val yaw = ret.yaw + 90f
+                val yaw = loc.yaw + 90f
                 val yawRad = yaw * (Math.PI / 180.0)
                 val z = cos(yawRad)
                 val x = -sin(yawRad)
                 rightDirection = Vector(x, 0.0, z)
             }
-            ret.add(rightDirection.clone().multiply(right))
+            loc.add(rightDirection.clone().multiply(right))
             if (hasUp) {
                 val upDirection = rightDirection.crossProduct(direction!!)
-                ret.add(upDirection.clone().multiply(up))
+                loc.add(upDirection.clone().multiply(up))
             }
         }
-        return ret
+        return loc
     }
 
 
