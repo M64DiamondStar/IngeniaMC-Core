@@ -1,6 +1,8 @@
 package me.m64diamondstar.ingeniamccore.games.wandclash.util
 
 import me.m64diamondstar.ingeniamccore.games.wandclash.clashwands.agility.BackStep
+import me.m64diamondstar.ingeniamccore.games.wandclash.clashwands.agility.Launch
+import me.m64diamondstar.ingeniamccore.games.wandclash.clashwands.agility.Spring
 import me.m64diamondstar.ingeniamccore.games.wandclash.clashwands.attack.Fenrir
 
 object ClashWandRegistry {
@@ -8,6 +10,8 @@ object ClashWandRegistry {
     fun registerClashWands() {
         registerClashWand(Fenrir())
         registerClashWand(BackStep())
+        registerClashWand(Launch())
+        registerClashWand(Spring())
     }
 
 
@@ -16,6 +20,10 @@ object ClashWandRegistry {
 
     fun getClashWand(clashWandID: String): ClashWand? {
         return clashWands[clashWandID]
+    }
+
+    fun getClashWands(): HashMap<String, ClashWand> {
+        return clashWands
     }
 
     private fun registerClashWand(clashWand: ClashWand) {

@@ -32,7 +32,7 @@ class Fenrir: ClashWand {
         return 500
     }
 
-    override fun execute(player: Player) {
+    override fun execute(player: Player): Boolean {
 
         val playerLocation = player.eyeLocation.clone().add(0.0, -0.15, 0.0)
 
@@ -46,20 +46,12 @@ class Fenrir: ClashWand {
 
                 for (j in 0..10) {
                     val options = Particle.DustOptions(Color.fromRGB(255, 255, 255), 0.35f)
-                    player.world.spawnParticle<Particle.DustOptions>(
-                        Particle.REDSTONE,
-                        location.add(add),
-                        1,
-                        0.0,
-                        0.0,
-                        0.0,
-                        1.0,
-                        options,
-                        true
+                    player.world.spawnParticle<Particle.DustOptions>(Particle.REDSTONE, location.add(add), 1, 0.0, 0.0, 0.0, 1.0, options, true
                     )
                 }
             }
         }
+        return true
     }
 
 }

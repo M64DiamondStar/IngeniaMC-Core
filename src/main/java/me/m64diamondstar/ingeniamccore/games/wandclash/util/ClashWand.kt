@@ -39,6 +39,6 @@ interface ClashWand {
      * This method is called when the wand is used
      * @param player the player who uses the wand
      */
-    fun execute(player: Player)
+    fun execute(player: Player): Boolean
 
 }

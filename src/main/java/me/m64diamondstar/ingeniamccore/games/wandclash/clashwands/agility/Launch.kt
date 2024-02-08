@@ -2,19 +2,18 @@ package me.m64diamondstar.ingeniamccore.games.wandclash.clashwands.agility
 
 import me.m64diamondstar.ingeniamccore.games.wandclash.util.ClashWand
 import me.m64diamondstar.ingeniamccore.games.wandclash.util.ClashWandType
-import me.m64diamondstar.ingeniamccore.utils.LocationUtils
 import org.bukkit.Particle
 import org.bukkit.entity.Player
 import kotlin.math.cos
 import kotlin.math.sin
 
-class BackStep: ClashWand {
+class Launch: ClashWand {
     override fun getID(): String {
-        return "back_step"
+        return "launch"
     }
 
     override fun getDisplayName(): String {
-        return "Back Step"
+        return "Launch"
     }
 
     override fun getType(): ClashWandType {
@@ -22,26 +21,26 @@ class BackStep: ClashWand {
     }
 
     override fun getManaCost(): Int {
-        return 20
+        return 30
     }
 
     override fun getCooldown(): Int {
-        return 5000
+        return 4000
     }
 
     override fun execute(player: Player): Boolean {
-        // Launch player backwards
-        val direction = player.location.direction.normalize().multiply(-2)
-        direction.setY(0.4) // Sets the Y so players can't just launch themselves up
+        // Launch player
+        val direction = player.location.direction.normalize().multiply(1.5)
+        direction.setY(0.6) // Sets the Y so players can't just launch themselves up
         player.velocity = direction
 
         // Cool visual effect
         for(i in 0..180) {
             for(r in 1..3) {
                 val x = sin(Math.PI * i / 90.0) * r / 3.0
-                val y = cos(Math.PI * i / 90.0) * r / 3.0
+                val z = cos(Math.PI * i / 90.0) * r / 3.0
 
-                val location = LocationUtils.getRelativeLocation(player, 1.0, x, y)
+                val location = player.location.clone().add(x, 0.0, z)
                 location.world.spawnParticle(Particle.END_ROD, location, 0, 0.0, 0.0, 0.0)
             }
         }
