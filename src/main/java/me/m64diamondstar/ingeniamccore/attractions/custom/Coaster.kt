@@ -41,8 +41,13 @@ class Coaster(category: String, name: String): Attraction(category, name) {
                         var c = attraction.getCountdownTime()
 
                         override fun run() {
-                            if (member.isUnloaded || !member.group.hasPassenger()) {
+                            if (!member.group.hasPassenger()) {
                                 usedCoaster.remove(member.group)
+                                this.cancel()
+                                return
+                            }
+
+                            if(member.isUnloaded){
                                 this.cancel()
                                 return
                             }
