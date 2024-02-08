@@ -28,4 +28,4 @@ The Core plugin of IngeniaMC.
 
 <sup>This repository is public for educational reasons only, and is not a resource.</sup>
 
-![This is an image](https://ingeniamc.net/images/Discord-Banner.png) 
+![This is an image](https://ingeniamc.net/images/discord_banner.png) 
