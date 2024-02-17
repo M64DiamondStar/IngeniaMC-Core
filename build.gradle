@@ -15,6 +15,7 @@ plugins {
 
 repositories {
     mavenCentral()
+    gradlePluginPortal()
     maven {
         url = uri("https://jitpack.io")
     }
@@ -39,6 +40,9 @@ repositories {
     maven {
         url = uri("https://repo.maven.apache.org/maven2/")
     }
+    maven {
+        url = uri("https://repo.codemc.io/repository/maven-releases/")
+    }
 }
 
 dependencies {
@@ -57,6 +61,7 @@ dependencies {
     shadow "com.opencsv:opencsv:5.9"
     shadow "com.jeff-media:custom-block-data:2.2.2"
     shadow 'org.jsoup:jsoup:1.17.2'
+    shadow 'fr.mrmicky:fastboard:2.0.2'
 
     implementation 'club.minnced:jda-ktx:0.11.0-beta.19'
     implementation "com.github.M64DiamondStar:EffectMaster:f47e6278df"
@@ -105,8 +110,8 @@ tasks {
     }
 
     reobfJar {
-        // This is an example of how you might change the output location for reobfJar. It"s recommended not to do this
-        // for a variety of reasons, however it"s asked frequently enough that an example of how to do it is included here.
+        // This is an example of how you might change the output location for reobfJar. It's recommended not to do this
+        // for a variety of reasons, however it's asked frequently enough that an example of how to do it is included here.
         outputJar.set(layout.buildDirectory.file("libs/IngeniaMC-Core.jar"))
     }
 }
@@ -119,8 +124,9 @@ shadowJar {
     configurations = [project.configurations.shadow]
 
     // Relocate packages
-    relocate("com.jeff_media", "me.m64diamondstar.ingeniamccore.libs.jeff_media")
-    relocate("me.m56738.SmoothCoastersAPI", "me.m64diamondstar.ingeniamccore.libs.smoothcoasters")
+    relocate 'com.jeff_media', 'me.m64diamondstar.ingeniamccore.libs.jeff_media'
+    relocate 'me.m56738.SmoothCoastersAPI', 'me.m64diamondstar.ingeniamccore.libs.smoothcoasters'
+    relocate 'fr.mrmicky.fastboard', 'me.m64diamondstar.fastboard'
 }
 
 tasks.withType(JavaCompile).configureEach {

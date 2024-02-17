@@ -43,11 +43,13 @@ import me.m64diamondstar.ingeniamccore.utils.gui.GuiListener
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
 import me.m64diamondstar.ingeniamccore.wands.utils.WandRegistry
 import me.m64diamondstar.ingeniamccore.wands.wandlistener.WandListener
+import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.scheduler.BukkitRunnable
 import java.util.*
+
 
 class IngeniaMC : JavaPlugin() {
 
@@ -55,6 +57,7 @@ class IngeniaMC : JavaPlugin() {
         lateinit var plugin: IngeniaMC
         lateinit var audioApi: AudioApi
         lateinit var smoothCoastersAPI: SmoothCoastersAPI
+        lateinit var miniMessage: MiniMessage
         var isDisabling: Boolean = false
         lateinit var spawn: Location
     }
@@ -64,6 +67,7 @@ class IngeniaMC : JavaPlugin() {
         plugin = this
         audioApi = AudioApi.getInstance()
         smoothCoastersAPI = SmoothCoastersAPI(this)
+        miniMessage = MiniMessage.miniMessage()
 
         Bukkit.getLogger().info("---------------------------")
         Bukkit.getLogger().info("Started loading IngeniaMC-Core!")
@@ -124,20 +128,6 @@ class IngeniaMC : JavaPlugin() {
         Bukkit.getLogger().info("Finished loading, IngeniaMC-Core is enabled!")
         Bukkit.getLogger().info("---------------------------")
 
-        /*if(BotUtils.ChatUtils.chatChannel != null) {
-            val embedBuilder = EmbedBuilder()
-            val dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")
-            val timeNow = LocalDateTime.now()
-
-            embedBuilder.setAuthor("Server Starting Up...", null, "https://ingeniamc.net/images/startup.gif")
-            embedBuilder.setFooter(
-                dateTimeFormatter.format(timeNow) + " UTC", null
-            )
-            embedBuilder.setColor(Color.decode("#f4b734"))
-            DiscordBot.jda.getTextChannelById(BotUtils.ChatUtils.chatChannel!!.id)
-                ?.sendMessageEmbeds(embedBuilder.build())?.queue()
-        }*/
-
         spawn = LocationUtils.getLocationFromString(plugin.config.getString("Spawn")) ?: Location(Bukkit.getWorlds().first(), 0.5, 52.0, 0.5)
     }
 
@@ -153,22 +143,6 @@ class IngeniaMC : JavaPlugin() {
         saveConfig()
         smoothCoastersAPI.unregister()
         SplashBattleUtils.players.forEach { SplashBattleUtils.leave(it) }
-
-        /*if(BotUtils.ChatUtils.chatChannel != null) {
-            val embedBuilder = EmbedBuilder()
-            val dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")
-            val timeNow = LocalDateTime.now()
-
-            embedBuilder.setAuthor("Server Shutting Down...", null, "https://ingeniamc.net/images/shutdown.gif")
-            embedBuilder.setFooter(
-                dateTimeFormatter.format(timeNow) + " UTC", null
-            )
-            embedBuilder.setColor(Color.decode("#f4b734"))
-            DiscordBot.jda.getTextChannelById(BotUtils.ChatUtils.chatChannel!!.id)
-                ?.sendMessageEmbeds(embedBuilder.build())?.complete()
-            // Needs to block the main thread so this message sends before the bot shuts down
-            // Shouldn't be an issue because the server is already shutting down
-        }*/
 
         // Shut the discord but down
         DiscordBot.shutdown()

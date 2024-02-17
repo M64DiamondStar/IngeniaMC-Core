@@ -1,5 +1,6 @@
 package me.m64diamondstar.ingeniamccore.general.commands
 
+import fr.mrmicky.fastboard.adventure.FastBoard
 import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.utils.LocationUtils
@@ -8,6 +9,7 @@ import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
 import me.m64diamondstar.ingeniamccore.utils.messages.Messages
 import net.kyori.adventure.audience.Audience
+import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.MiniMessage
 import net.md_5.bungee.api.ChatColor
 import net.md_5.bungee.api.chat.ClickEvent
@@ -274,6 +276,13 @@ class AdminCommand: CommandExecutor {
                 stringBuilder.append(element).append(" ")
             }
             (sender as Audience).sendMessage(MiniMessage.miniMessage().deserialize(stringBuilder.toString()))
+        }
+
+        if(args[0].equals("testboard", ignoreCase = true)){
+            val board = FastBoard(sender)
+            board.updateTitle(Messages.ingeniaMCComponent())
+            board.updateLine(0, Component.empty())
+            board.updateLine(1, Component.text("Very cool text yeah"))
         }
 
         return false

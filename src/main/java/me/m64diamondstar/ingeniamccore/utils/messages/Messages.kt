@@ -1,5 +1,8 @@
 package me.m64diamondstar.ingeniamccore.utils.messages
 
+import me.m64diamondstar.ingeniamccore.IngeniaMC
+import net.kyori.adventure.text.Component
+
 object Messages {
     @JvmStatic
     fun noPlayer(): String {
@@ -38,6 +41,10 @@ object Messages {
 
     fun requiresVIP(): String {
         return Colors.format(MessageType.ERROR + "This feature requires VIP.")
+    }
+
+    fun ingeniaMCComponent(): Component{
+        return IngeniaMC.miniMessage.deserialize("<#f4b734>IngeniaMC")
     }
 
 }
