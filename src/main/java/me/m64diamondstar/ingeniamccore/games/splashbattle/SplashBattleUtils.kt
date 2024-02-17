@@ -7,12 +7,10 @@ import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
 import net.kyori.adventure.audience.Audience
 import net.kyori.adventure.text.minimessage.MiniMessage
-import org.bukkit.Bukkit
-import org.bukkit.GameMode
-import org.bukkit.Location
-import org.bukkit.Material
-import org.bukkit.NamespacedKey
+import org.bukkit.*
 import org.bukkit.attribute.Attribute
+import org.bukkit.damage.DamageSource
+import org.bukkit.damage.DamageType
 import org.bukkit.entity.Player
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.inventory.ItemStack
@@ -159,8 +157,8 @@ object SplashBattleUtils {
 
     fun damagePlayer(player: Player, damager: Player?, damage: Int) {
         player.damage(damage.toDouble(), damager)
-        val e = EntityDamageEvent(player, EntityDamageEvent.DamageCause.PROJECTILE, 2.0)
-        player.lastDamageCause = e
+        val event = EntityDamageEvent(player, EntityDamageEvent.DamageCause.PROJECTILE, DamageSource.builder(DamageType.ARROW).build(), 2.0)
+        player.lastDamageCause = event
     }
 
     private fun hasAmmoBuckets(player: Player): Boolean{
