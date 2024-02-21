@@ -1,5 +1,6 @@
 package me.m64diamondstar.ingeniamccore.general.areas.listeners
 
+import com.bergerkiller.bukkit.tc.controller.MinecartMember
 import com.craftmend.openaudiomc.generic.media.objects.MediaOptions
 import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.general.areas.Area
@@ -40,6 +41,10 @@ class PlayerMoveListener: Listener {
 
             player.spawnParticle(Particle.BLOCK_MARKER, player.eyeLocation, 1, 0.5, 0.5, 0.5, 0.0, Material.BARRIER.createBlockData())
             event.isCancelled = true
+        }
+
+        if(player.isInsideVehicle){
+            if(player.vehicle is MinecartMember<*>) return
         }
 
         var currentArea: Area? = null
