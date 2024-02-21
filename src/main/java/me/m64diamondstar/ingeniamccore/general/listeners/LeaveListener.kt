@@ -17,7 +17,7 @@ class LeaveListener : Listener {
     fun onPlayerLeave(e: PlayerQuitEvent) {
         val bukkitPlayer = e.player
         if(bukkitPlayer.isInsideVehicle){
-            bukkitPlayer.vehicle?.eject()
+            bukkitPlayer.leaveVehicle()
         }
         val player = IngeniaPlayer(bukkitPlayer)
         player.updatePlaytime()
