@@ -33,18 +33,9 @@ import org.bukkit.inventory.ItemStack
 import java.awt.Color
 import java.util.*
 
-open class Attraction(category: String, name: String): LoadedConfiguration("rides/$category", name, false, true) {
+open class Attraction(private val category: String, name: String): LoadedConfiguration("rides/$category", name, false, true) {
 
-    private val name: String
-    private val category: String
-
-    /**
-     * Constructor for managing an attraction.
-     */
-    init {
-        this.name = name.replace(".yml", "")
-        this.category = category
-    }
+    private val name: String = name.replace(".yml", "")
 
     /**
      * Creates the attraction with a specific AttractionType in a specific World
