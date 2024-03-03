@@ -5,12 +5,62 @@ import me.m64diamondstar.ingeniamccore.games.wandclash.util.WandClashTeam
 import me.m64diamondstar.ingeniamccore.utils.LocationUtils
 import org.bukkit.Location
 
-class WandClashData(name: String): DataConfiguration("games/wandclash", name) {
+class WandClashData(name: String): DataConfiguration("games/wandclash/arenas", name) {
 
     var displayName: String
         get() = this.getConfig().getString("Display-Name")!!
         set(value) {
             this.getConfig().set("Display-Name", value)
+            this.save()
+        }
+
+    var maxPlayers: Int
+        get() = this.getConfig().getInt("Max-Players")
+        set(value) {
+            this.getConfig().set("Max-Players", value)
+            this.save()
+        }
+
+    var minPlayers: Int
+        get() = this.getConfig().getInt("Min-Players")
+        set(value) {
+            this.getConfig().set("Min-Players", value)
+            this.save()
+        }
+
+    var lobbySpawnLocation: Location?
+        get() = this.getConfig().getLocation("Lobby.Spawn")
+        set(value) {
+            this.getConfig().set("Lobby.Spawn", value)
+            this.save()
+        }
+
+
+    var leaveLocation: Location?
+        get() = this.getConfig().getLocation("Lobby.Leave")
+        set(value) {
+            this.getConfig().set("Lobby.Leave", value)
+            this.save()
+        }
+
+    var playersCountdown: Int
+        get() = this.getConfig().getInt("Lobby.Countdown.Players")
+        set(value) {
+            this.getConfig().set("Lobby.Countdown.Players", value)
+            this.save()
+        }
+
+    var gameModeCountdown: Int
+        get() = this.getConfig().getInt("Lobby.Countdown.Game-Mode")
+        set(value) {
+            this.getConfig().set("Lobby.Countdown.Game-Mode", value)
+            this.save()
+        }
+
+    var teamCountdown: Int
+        get() = this.getConfig().getInt("Lobby.Countdown.Team")
+        set(value) {
+            this.getConfig().set("Lobby.Countdown.Team", value)
             this.save()
         }
 
@@ -28,14 +78,10 @@ class WandClashData(name: String): DataConfiguration("games/wandclash", name) {
         }
 
         /**
-         * Removes the specified location from the list of spawn points for the FFA game mode.
-         *
-         * @param location the location to be removed from the spawn points list
+         * Removes all locations from the list of spawn points for the FFA game mode.
          */
-        fun removeFFASpawn(location: Location){
-            val list = getConfig().getStringList("GameModeSettings.FFA.Spawn-Points")
-            list.remove(LocationUtils.getStringFromLocation(location))
-            getConfig().set("GameModeSettings.FFA.Spawn-Points", list)
+        fun removeAllFFASpawns(){
+            getConfig().set("GameModeSettings.FFA.Spawn-Points", null)
             save()
         }
 

@@ -2,6 +2,7 @@ package me.m64diamondstar.ingeniamccore.general.commands
 
 import me.m64diamondstar.ingeniamccore.games.PhysicalGameType
 import me.m64diamondstar.ingeniamccore.games.splashbattle.SplashBattleUtils
+import me.m64diamondstar.ingeniamccore.games.wandclash.WandClashArenaManager
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
 import me.m64diamondstar.ingeniamccore.utils.messages.Messages
@@ -35,6 +36,10 @@ class LeaveCommand: CommandExecutor {
 
                 PhysicalGameType.SPLASH_BATTLE -> {
                     SplashBattleUtils.leave(sender)
+                }
+
+                PhysicalGameType.WAND_CLASH -> {
+                    WandClashArenaManager.leave(sender)
                 }
 
                 else -> {

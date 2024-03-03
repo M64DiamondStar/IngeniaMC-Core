@@ -1,6 +1,5 @@
 package me.m64diamondstar.ingeniamccore.general.commands.ingenia
 
-import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.games.guesstheword.GuessTheWord
 import me.m64diamondstar.ingeniamccore.games.guesstheword.GuessTheWordUtils
 import me.m64diamondstar.ingeniamccore.games.parkour.Parkour
@@ -9,22 +8,21 @@ import me.m64diamondstar.ingeniamccore.games.presenthunt.PresentHunt
 import me.m64diamondstar.ingeniamccore.games.presenthunt.PresentHuntUtils
 import me.m64diamondstar.ingeniamccore.games.splashbattle.SplashBattle
 import me.m64diamondstar.ingeniamccore.games.splashbattle.SplashBattleUtils
+import me.m64diamondstar.ingeniamccore.games.wandclash.WandClashRegistry
 import me.m64diamondstar.ingeniamccore.games.wandclash.util.ClashWandRegistry
+import me.m64diamondstar.ingeniamccore.games.wandclash.util.WandClashGamePhase
+import me.m64diamondstar.ingeniamccore.general.commands.ingenia.game.WandClashSubcommand
 import me.m64diamondstar.ingeniamccore.utils.IngeniaSubcommand
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
 import me.m64diamondstar.ingeniamccore.utils.messages.Messages
-import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.FluidCollisionMode
 import org.bukkit.Material
-import org.bukkit.NamespacedKey
 import org.bukkit.Particle
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.ItemFrame
 import org.bukkit.entity.Player
-import org.bukkit.inventory.ItemStack
-import org.bukkit.persistence.PersistentDataType
 
 class GameSubcommand(private val sender: CommandSender, private val args: Array<String>): IngeniaSubcommand {
 
@@ -374,23 +372,8 @@ class GameSubcommand(private val sender: CommandSender, private val args: Array<
         }
 
         else if(args[1].equals("wandclash", ignoreCase = true)) {
-            if(args.size == 4 && args[2].equals("get", ignoreCase = true)){
-                val clashWand = ClashWandRegistry.getClashWand(args[3])
-                if(clashWand == null){
-                    sender.sendMessage(Colors.format(MessageType.ERROR + "This is not a valid clash wand"))
-                    return
-                }
-
-                val item = ItemStack(Material.AMETHYST_SHARD)
-                val meta = item.itemMeta!!
-
-                meta.persistentDataContainer.set(NamespacedKey(IngeniaMC.plugin, "clash-wand"), PersistentDataType.STRING, clashWand.getID())
-                meta.displayName(MiniMessage.miniMessage().deserialize("<#c47443>${clashWand.getDisplayName()}"))
-                meta.lore(listOf(MiniMessage.miniMessage().deserialize("<#878787>Work In Progress...")))
-                item.itemMeta = meta
-
-                sender.inventory.addItem(item)
-            }
+            val wandClashSubcommand = WandClashSubcommand(args, player)
+            wandClashSubcommand.execute()
         }
 
         else{
@@ -424,7 +407,11 @@ class GameSubcommand(private val sender: CommandSender, private val args: Array<
             }
 
             if(args[1].equals("wandclash", ignoreCase = true)){
-                tabs.add("get")
+                tabs.add("create")
+                tabs.add("wand")
+                tabs.add("modify")
+                tabs.add("join")
+                tabs.add("setphase")
             }
         }
 
@@ -448,8 +435,12 @@ class GameSubcommand(private val sender: CommandSender, private val args: Array<
             }
 
             if(args[1].equals("wandclash", ignoreCase = true)){
-                if(args[2].equals("get", ignoreCase = true)){
-                    ClashWandRegistry.getClashWands().forEach { tabs.add(it.key) }
+                if(args[2].equals("wand", ignoreCase = true)){
+                    tabs.add("get")
+                }
+                if(args[2].equals("modify", ignoreCase = true) || args[2].equals("join", ignoreCase = true)
+                    || args[2].equals("delete", ignoreCase = true) || args[2].equals("setphase", ignoreCase = true)){
+                    WandClashRegistry.getArenas().forEach { tabs.add(it.name) }
                 }
             }
         }
@@ -483,6 +474,29 @@ class GameSubcommand(private val sender: CommandSender, private val args: Array<
                         tabs.add("setJoinSign")
                         tabs.add("leaderboard")
                     }
+                }
+            }
+
+            if(args[1].equals("wandclash", ignoreCase = true)){
+                if(args[2].equals("wand", ignoreCase = true)) {
+                    if (args[3].equals("get", ignoreCase = true)) {
+                        ClashWandRegistry.getClashWands().forEach { tabs.add(it.key) }
+                    }
+                }
+                else if(args[2].equals("modify", ignoreCase = true)){
+                    if(!WandClashRegistry.existsArena(args[3]))
+                        tabs.add("ARENA_DOES_NOT_EXIST")
+                    else {
+                        tabs.add("maxplayers")
+                        tabs.add("minplayers")
+                        tabs.add("lobby")
+                        tabs.add("gamemode")
+                        tabs.add("setleavelocation")
+                        tabs.add("displayname")
+                    }
+                }
+                else if(args[2].equals("setphase", ignoreCase = true)){
+                    tabs.addAll(WandClashGamePhase.values().map { it.toString() })
                 }
             }
         }
@@ -526,6 +540,27 @@ class GameSubcommand(private val sender: CommandSender, private val args: Array<
                     }
                 }
             }
+
+            if(args[1].equals("wandclash", ignoreCase = true)){
+                if(args[2].equals("modify", ignoreCase = true)){
+                    if(!WandClashRegistry.existsArena(args[3]))
+                        tabs.add("ARENA_DOES_NOT_EXIST")
+                    else {
+                        if(args[4].equals("lobby", ignoreCase = true)){
+                            tabs.add("setspawn")
+                            tabs.add("setgamemodecountdown")
+                            tabs.add("setteamcountdown")
+                            tabs.add("setplayercountdown")
+                        }
+                        else if(args[5].equals("gamemode", ignoreCase = true)){
+                            tabs.add("tdm")
+                            tabs.add("ffa")
+                            tabs.add("cp")
+                            tabs.add("mr")
+                        }
+                    }
+                }
+            }
         }
 
         if(args.size == 7) {
@@ -536,6 +571,31 @@ class GameSubcommand(private val sender: CommandSender, private val args: Array<
                     else {
                         tabs.add("setLocation")
                         tabs.add("reload")
+                    }
+                }
+            }
+
+            if(args[1].equals("wandclash", ignoreCase = true)){
+                if(args[2].equals("modify", ignoreCase = true)){
+                    if(!WandClashRegistry.existsArena(args[3]))
+                        tabs.add("ARENA_DOES_NOT_EXIST")
+                    else {
+                        if(args[5].equals("gamemode", ignoreCase = true)){
+                            if(args[6].equals("tdm", ignoreCase = true)){
+                                tabs.add("setspawn")
+                                tabs.add("setnecessarykills")
+                            }else if(args[6].equals("ffa", ignoreCase = true)){
+                                tabs.add("addspawn")
+                                tabs.add("removeallspawns")
+                                tabs.add("setnecessarykills")
+                            }else if(args[6].equals("cp", ignoreCase = true)){
+                                tabs.add("setspawn")
+                                tabs.add("setnecessarypoints")
+                            }else if(args[6].equals("mr", ignoreCase = true)){
+                                tabs.add("setspawn")
+                                tabs.add("setmanareactordurability")
+                            }
+                        }
                     }
                 }
             }

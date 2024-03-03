@@ -17,6 +17,7 @@ import me.m64diamondstar.ingeniamccore.games.presenthunt.PresentHuntUtils
 import me.m64diamondstar.ingeniamccore.games.presenthunt.listeners.PlayerInteractListener
 import me.m64diamondstar.ingeniamccore.games.splashbattle.SplashBattleUtils
 import me.m64diamondstar.ingeniamccore.games.splashbattle.listeners.*
+import me.m64diamondstar.ingeniamccore.games.wandclash.WandClashRegistry
 import me.m64diamondstar.ingeniamccore.games.wandclash.listeners.ClashWandListener
 import me.m64diamondstar.ingeniamccore.games.wandclash.util.ClashWandRegistry
 import me.m64diamondstar.ingeniamccore.general.areas.AreaUtils
@@ -106,6 +107,9 @@ class IngeniaMC : JavaPlugin() {
 
         DiscordBot.start()
         Bukkit.getLogger().info("Discord Bot loaded ✓")
+
+        WandClashRegistry.registerAllArenas()
+        Bukkit.getLogger().info("Game Arenas Loaded ✓")
 
         EmojiUtils.loadEmojis()
 
