@@ -43,6 +43,11 @@ class PlayerMoveListener: Listener {
             event.isCancelled = true
         }
 
+        // Won't run area check when the player is in a physical game
+        if(ingeniaPlayer.isInGame)
+            return
+
+        // Won't run area check when the player is inside a vehicle from TrainCarts
         if(player.isInsideVehicle){
             if(player.vehicle is MinecartMember<*>) return
         }
