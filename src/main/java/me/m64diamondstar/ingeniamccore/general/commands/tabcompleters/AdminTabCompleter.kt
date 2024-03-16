@@ -29,6 +29,12 @@ class AdminTabCompleter: TabCompleter {
             tc.add("location")
             tc.add("invsee")
             tc.add("playtime")
+            tc.add("testboard")
+            tc.add("testnpc")
+            tc.add("testmessage")
+            tc.add("testdialogue")
+            tc.add("testprogressivedialogue")
+            tc.add("disableresourcepack")
         }else if(args.size == 2){
             if(args[0].equals("invsee", ignoreCase = true) || args[0].equals("gravity", ignoreCase = true)
                 || args[0].equals("playtime", ignoreCase = true)) {
