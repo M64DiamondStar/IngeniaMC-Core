@@ -58,9 +58,8 @@ dependencies {
     compileOnly "com.fastasyncworldedit:FastAsyncWorldEdit-Core:2.8.2"
     compileOnly "com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit:2.8.2"
     compileOnly 'com.github.Mindgamesnl.OpenAudioMc:openaudiomc:6.8.10-pre2'
-    compileOnly 'com.ticxo.modelengine:ModelEngine:version'
+    compileOnly 'com.ticxo.modelengine:ModelEngine:R4.0.4'
 
-    shadow "net.dv8tion:JDA:5.0.0-beta.19"
     shadow "me.m56738:SmoothCoastersAPI:1.10"
     shadow "com.opencsv:opencsv:5.9"
     shadow "com.jeff-media:custom-block-data:2.2.2"
@@ -68,6 +67,7 @@ dependencies {
     shadow 'fr.mrmicky:fastboard:2.0.2'
     shadow 'com.github.patheloper.pathetic:pathetic-mapping:2.3'
 
+    implementation "net.dv8tion:JDA:5.0.0-beta.19" // "Shadowed" via plugin libraries in the plugin.yml
     implementation 'club.minnced:jda-ktx:0.11.0-beta.19'
     implementation "com.github.M64DiamondStar:EffectMaster:f47e6278df"
     paperweight.paperDevBundle "1.20.4-R0.1-SNAPSHOT"
@@ -89,11 +89,11 @@ tasks {
 
         // Set the release flag. This configures what version bytecode the compiler will emit, as well as what JDK APIs are usable.
         // See https://openjdk.java.net/jeps/247 for more information.
-        options.release.set(19)
+        options.release.set(17)
     }
 
     compileKotlin {
-        kotlinOptions.jvmTarget = "19"
+        kotlinOptions.jvmTarget = "17"
     }
 
     javadoc {
