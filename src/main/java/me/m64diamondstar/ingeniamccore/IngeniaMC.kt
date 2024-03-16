@@ -33,6 +33,8 @@ import me.m64diamondstar.ingeniamccore.general.listeners.InteractListener
 import me.m64diamondstar.ingeniamccore.general.listeners.InventoryListener
 import me.m64diamondstar.ingeniamccore.general.listeners.LeaveListener
 import me.m64diamondstar.ingeniamccore.general.listeners.helpers.BonemealListener
+import me.m64diamondstar.ingeniamccore.npc.commands.NpcCommand
+import me.m64diamondstar.ingeniamccore.npc.listeners.NpcListener
 import me.m64diamondstar.ingeniamccore.protect.listeners.*
 import me.m64diamondstar.ingeniamccore.protect.listeners.DamageListener
 import me.m64diamondstar.ingeniamccore.protect.moderation.ModerationRegistry
@@ -212,6 +214,8 @@ class IngeniaMC : JavaPlugin() {
         Objects.requireNonNull(getCommand("audiocredits"))?.setExecutor(AudioCreditsCommand())
         Objects.requireNonNull(getCommand("rules"))?.setExecutor(RulesCommand())
         Objects.requireNonNull(getCommand("playtime"))?.setExecutor(PlaytimeCommand())
+
+        Objects.requireNonNull(getCommand("npc"))?.setExecutor(NpcCommand())
     }
 
     private fun loadTabCompleters() {
@@ -334,6 +338,11 @@ class IngeniaMC : JavaPlugin() {
             Player Stat Events
          */
         Bukkit.getServer().pluginManager.registerEvents(ExpListener(), this)
+
+        /*
+            NPC Events
+         */
+        Bukkit.getServer().pluginManager.registerEvents(NpcListener(), this)
     }
 
     private fun loadPacketListeners(){

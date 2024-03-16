@@ -52,7 +52,7 @@ class MainInventory(player: IngeniaPlayer): Gui(player) {
         playerMeta.setDisplayName(Colors.format("#E7A300&lProfile"))
 
         playerMeta.lore = getProfileLore()
-        playerMeta.setCustomModelData(1)
+        playerMeta.setCustomModelData(20)
         playerMeta.owningPlayer = getPlayer().player
 
         playerHead.itemMeta = playerMeta
