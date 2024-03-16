@@ -17,6 +17,7 @@ abstract class DataConfiguration(private val path: String, name: String) {
 
     fun deleteFile() {
         file.delete()
+        LoadedFiles.unloadFile(file.path)
     }
 
     fun getConfig(): FileConfiguration {
