@@ -1,15 +1,21 @@
 package me.m64diamondstar.ingeniamccore.general.commands
 
+import com.ticxo.modelengine.api.ModelEngineAPI
 import fr.mrmicky.fastboard.adventure.FastBoard
 import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
+import me.m64diamondstar.ingeniamccore.npc.utils.DialogueUtils
 import me.m64diamondstar.ingeniamccore.utils.LocationUtils
 import me.m64diamondstar.ingeniamccore.utils.items.Items
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
 import me.m64diamondstar.ingeniamccore.utils.messages.Messages
 import net.kyori.adventure.audience.Audience
+import net.kyori.adventure.key.Key
 import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.NamedTextColor
+import net.kyori.adventure.text.format.TextColor
+import net.kyori.adventure.text.format.TextDecoration
 import net.kyori.adventure.text.minimessage.MiniMessage
 import net.md_5.bungee.api.ChatColor
 import net.md_5.bungee.api.chat.ClickEvent
@@ -27,6 +33,7 @@ import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import org.bukkit.craftbukkit.v1_20_R3.CraftWorld
+import org.bukkit.entity.Pig
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffect
@@ -271,11 +278,36 @@ class AdminCommand: CommandExecutor {
         }
 
         if(args[0].equals("testmessage", ignoreCase = true)){
-            val stringBuilder = StringBuilder()
-            for(element in args){
-                stringBuilder.append(element).append(" ")
+            if(args.size < 2){
+                sender.sendMessage(Messages.commandUsage("adm testmessage <message/font/negative/bunny>"))
+                return false
             }
-            (sender as Audience).sendMessage(MiniMessage.miniMessage().deserialize(stringBuilder.toString()))
+            if(args[1].equals("font", ignoreCase = true)){
+                (sender as Audience).sendMessage(Component.text("some text font").font(Key.key("ingeniamc:dialogue_line_1")))
+            }else if(args[1].equals("negative", ignoreCase = true)){
+                (sender as Audience).sendMessage(Component.text("some wierd \uF808 text"))
+            }else if(args[1].equals("bunny", ignoreCase = true)){
+                val textComponent2 = Component.text()
+                    .content("You're a ")
+                    .color(TextColor.color(0x443344))
+                    .append(Component.text().content("Bunny").color(NamedTextColor.LIGHT_PURPLE))
+                    .append(Component.text("! Press "))
+                    .append(
+                        Component.keybind().keybind("key.jump")
+                            .color(NamedTextColor.LIGHT_PURPLE)
+                            .decoration(TextDecoration.BOLD, true)
+                            .build()
+                    )
+                    .append(Component.text(" to jump!"))
+                    .build()
+                (sender as Audience).sendMessage(textComponent2)
+            }else{
+                val stringBuilder = StringBuilder()
+                for (element in args) {
+                    stringBuilder.append(element).append(" ")
+                }
+                (sender as Audience).sendMessage(MiniMessage.miniMessage().deserialize(stringBuilder.toString()))
+            }
         }
 
         if(args[0].equals("testboard", ignoreCase = true)){
@@ -283,6 +315,47 @@ class AdminCommand: CommandExecutor {
             board.updateTitle(Messages.ingeniaMCComponent())
             board.updateLine(0, Component.empty())
             board.updateLine(1, Component.text("Very cool text yeah"))
+        }
+
+        if(args[0].equals("testnpc", ignoreCase = true)){
+            val pig = sender.location.world.spawn(sender.location, Pig::class.java)
+            pig.isSilent = true
+            pig.setAI(false)
+            pig.isCollidable = false
+            pig.isPersistent = false
+            pig.setGravity(false)
+            pig.isInvisible = true
+
+            val modeledEntity = ModelEngineAPI.createModeledEntity(pig)
+            val activeModel = ModelEngineAPI.createActiveModel("female_wizard_with_hat")
+            modeledEntity.addModel(activeModel, true)
+
+        }
+
+        if(args[0].equals("disableresourcepack", ignoreCase = true)){
+            sender.clearResourcePacks()
+        }
+
+        if(args[0].equals("testdialogue", ignoreCase = true)){
+            (sender as Audience).sendActionBar(
+                DialogueUtils.getDialogueFormat(
+                    "Hello there! Welcome to IngeniaMC",
+                    "We're a custom theme park with a ton",
+                    "of cool rides!",
+                    "",
+                    "We hope you enjoy your stay!"
+                )
+            )
+        }
+
+        if(args[0].equals("testprogressivedialogue", ignoreCase = true)){
+            DialogueUtils.sendProgressiveDialogue(sender,
+                "Hello there! Welcome to",
+                "IngeniaMC! We're a custom",
+                "theme park with a ton of",
+                "cool rides! We hope you",
+                "enjoy your stay!"
+            )
         }
 
         return false
