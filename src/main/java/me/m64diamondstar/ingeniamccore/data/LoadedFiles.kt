@@ -18,4 +18,8 @@ object LoadedFiles {
         map[path] = config
     }
 
+    fun unloadFile(path: String) {
+        map.remove(path)
+    }
+
 }
