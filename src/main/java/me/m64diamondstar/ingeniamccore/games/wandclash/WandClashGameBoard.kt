@@ -14,10 +14,6 @@ class WandClashGameBoard(private val player: Player, private val game: WandClash
     private val fastBoard = FastBoard(player)
     private var shownPhase = WandClashGamePhase.DISABLED
 
-    fun getBoard(): FastBoard {
-        return fastBoard
-    }
-
     fun removeBoard(){
         fastBoard.delete()
     }
@@ -43,7 +39,7 @@ class WandClashGameBoard(private val player: Player, private val game: WandClash
                             Component.empty(),
                             Component.text("Game Mode Vote in").color(TextColor.fromHexString("#7247d6")),
                             Component.text("» ").color(TextColor.fromHexString(MessageType.BACKGROUND))
-                                .append(Component.text(if(countdown == -1) "Not enough players" else "${countdown}s").color(TextColor.fromHexString(MessageType.DEFAULT))),
+                                .append(Component.text(if(countdown == -1) "Not enough players" else "${countdown + 1}s").color(TextColor.fromHexString(MessageType.DEFAULT))),
                             Component.empty()
                         )
                     )
@@ -51,7 +47,7 @@ class WandClashGameBoard(private val player: Player, private val game: WandClash
                     fastBoard.updateLines(lines)
                 }else{
                     fastBoard.updateLine(5, Component.text("» ").color(TextColor.fromHexString(MessageType.BACKGROUND))
-                        .append(Component.text(if(countdown == -1) "Not enough players" else "${countdown}s").color(TextColor.fromHexString(MessageType.DEFAULT))))
+                        .append(Component.text(if(countdown == -1) "Not enough players" else "${countdown + 1}s").color(TextColor.fromHexString(MessageType.DEFAULT))))
                 }
 
             }
@@ -68,7 +64,7 @@ class WandClashGameBoard(private val player: Player, private val game: WandClash
                             Component.empty(),
                             Component.text("Vote Ends in").color(TextColor.fromHexString("#7247d6")),
                             Component.text("» ").color(TextColor.fromHexString(MessageType.BACKGROUND))
-                                .append(Component.text(if(countdown == -1) "Not enough players" else "${countdown}s").color(TextColor.fromHexString(MessageType.DEFAULT))),
+                                .append(Component.text(if(countdown == -1) "Not enough players" else "${countdown + 1}s").color(TextColor.fromHexString(MessageType.DEFAULT))),
                             Component.empty()
                         )
                     )
@@ -76,7 +72,7 @@ class WandClashGameBoard(private val player: Player, private val game: WandClash
                     fastBoard.updateLines(lines)
                 }else{
                     fastBoard.updateLine(5, Component.text("» ").color(TextColor.fromHexString(MessageType.BACKGROUND))
-                        .append(Component.text(if(countdown == -1) "Not enough players" else "${countdown}s").color(TextColor.fromHexString(MessageType.DEFAULT))))
+                        .append(Component.text(if(countdown == -1) "Not enough players" else "${countdown + 1}s").color(TextColor.fromHexString(MessageType.DEFAULT))))
                 }
 
             }
@@ -98,7 +94,7 @@ class WandClashGameBoard(private val player: Player, private val game: WandClash
                             Component.empty(),
                             Component.text("Choosing Ends in").color(TextColor.fromHexString("#7247d6")),
                             Component.text("» ").color(TextColor.fromHexString(MessageType.BACKGROUND))
-                                .append(Component.text(if(countdown == -1) "Not enough players" else "${countdown}s").color(TextColor.fromHexString(MessageType.DEFAULT))),
+                                .append(Component.text(if(countdown == -1) "Not enough players" else "${countdown + 1}s").color(TextColor.fromHexString(MessageType.DEFAULT))),
                             Component.empty()
                         )
                     )
@@ -106,7 +102,7 @@ class WandClashGameBoard(private val player: Player, private val game: WandClash
                     fastBoard.updateLines(lines)
                 }else{
                     fastBoard.updateLine(5, Component.text("» ").color(TextColor.fromHexString(MessageType.BACKGROUND))
-                        .append(Component.text(if(countdown == -1) "Not enough players" else "${countdown}s").color(TextColor.fromHexString(MessageType.DEFAULT))))
+                        .append(Component.text(if(countdown == -1) "Not enough players" else "${countdown + 1}s").color(TextColor.fromHexString(MessageType.DEFAULT))))
                 }
 
             }
