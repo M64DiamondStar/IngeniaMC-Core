@@ -1,14 +1,13 @@
 package me.m64diamondstar.ingeniamccore.protect.listeners
 
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
-import me.m64diamondstar.ingeniamccore.npc.utils.NpcUtils
 import org.bukkit.entity.EntityType
-import org.bukkit.entity.Pig
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.EntityDamageEvent
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause
 
 class DamageListener: Listener {
 
@@ -29,17 +28,12 @@ class DamageListener: Listener {
 
     @EventHandler
     fun onDamage(event: EntityDamageEvent){
-        if((event.cause == EntityDamageEvent.DamageCause.SUFFOCATION
-            || event.cause == EntityDamageEvent.DamageCause.FALL
-            || event.cause == EntityDamageEvent.DamageCause.FLY_INTO_WALL
-            || event.cause == EntityDamageEvent.DamageCause.DRYOUT
-            || event.cause == EntityDamageEvent.DamageCause.DROWNING
-            || event.cause == EntityDamageEvent.DamageCause.CONTACT) && event.entity is Player) {
-            event.isCancelled = true
-            return
-        }
-
-        if (event.entity is Pig && NpcUtils.isNPC(event.entity)){
+        if((event.cause == DamageCause.SUFFOCATION
+            || event.cause == DamageCause.FALL
+            || event.cause == DamageCause.FLY_INTO_WALL
+            || event.cause == DamageCause.DRYOUT
+            || event.cause == DamageCause.DROWNING
+            || event.cause == DamageCause.CONTACT) && event.entity is Player) {
             event.isCancelled = true
             return
         }
