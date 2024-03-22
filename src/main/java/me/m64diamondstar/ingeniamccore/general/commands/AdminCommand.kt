@@ -5,7 +5,6 @@ import fr.mrmicky.fastboard.adventure.FastBoard
 import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.npc.utils.DialogueUtils
-import me.m64diamondstar.ingeniamccore.utils.LocationUtils
 import me.m64diamondstar.ingeniamccore.utils.items.Items
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
@@ -17,11 +16,6 @@ import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
 import net.kyori.adventure.text.minimessage.MiniMessage
-import net.md_5.bungee.api.ChatColor
-import net.md_5.bungee.api.chat.ClickEvent
-import net.md_5.bungee.api.chat.ComponentBuilder
-import net.md_5.bungee.api.chat.HoverEvent
-import net.md_5.bungee.api.chat.TextComponent
 import net.minecraft.core.BlockPos
 import net.minecraft.world.level.block.entity.SkullBlockEntity
 import org.bukkit.Bukkit
@@ -96,16 +90,16 @@ class AdminCommand: CommandExecutor {
                 .addItem(sender.inventory.leggings!!)
             if (sender.inventory.boots != null) sender.inventory
                 .addItem(sender.inventory.boots!!)
-            sender.equipment?.helmet = ItemStack(Material.AIR)
-            sender.equipment?.chestplate = ItemStack(Material.AIR)
-            sender.equipment?.leggings = ItemStack(Material.AIR)
-            sender.equipment?.boots = ItemStack(Material.AIR)
+            sender.equipment.helmet = ItemStack(Material.AIR)
+            sender.equipment.chestplate = ItemStack(Material.AIR)
+            sender.equipment.leggings = ItemStack(Material.AIR)
+            sender.equipment.boots = ItemStack(Material.AIR)
             sender.sendMessage(Colors.format(MessageType.SUCCESS + "Undressed!"))
         }
 
         if (args[0].equals("hat", ignoreCase = true) && args.size == 1) {
             val item: ItemStack = sender.inventory.itemInMainHand
-            sender.equipment?.helmet = item
+            sender.equipment.helmet = item
             sender.sendMessage(Colors.format(MessageType.SUCCESS + "Changed hat!"))
         }
 
@@ -172,51 +166,6 @@ class AdminCommand: CommandExecutor {
             block.state.update()
         }
 
-        if(args[0].equals("location", ignoreCase = true)){
-            sender.sendMessage(Colors.format(MessageType.BACKGROUND + "-------------------"))
-            val playerTargetBlock = sender.getTargetBlockExact(50)
-
-            val playerLocation = sender.location
-            val playerBlockLocation = sender.location.block.location
-            val playerTopLocation = sender.location.clone().add(0.0, 2.0, 0.0)
-
-            var clickableComponent = TextComponent(TextComponent("Click here to copy your location."))
-            clickableComponent.color = ChatColor.of(MessageType.DEFAULT)
-            clickableComponent.clickEvent = ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, LocationUtils.getStringFromLocation(playerLocation))
-            clickableComponent.hoverEvent = HoverEvent(
-                HoverEvent.Action.SHOW_TEXT,
-                ComponentBuilder("Click to copy \"${LocationUtils.getStringFromLocation(playerLocation)}\"").create())
-            sender.spigot().sendMessage(clickableComponent)
-
-            clickableComponent = TextComponent(TextComponent("Click here to copy your block location."))
-            clickableComponent.color = ChatColor.of(MessageType.BACKGROUND)
-            clickableComponent.clickEvent = ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, LocationUtils.getStringFromLocation(playerBlockLocation))
-            clickableComponent.hoverEvent = HoverEvent(
-                HoverEvent.Action.SHOW_TEXT,
-                ComponentBuilder("Click to copy \"${LocationUtils.getStringFromLocation(playerBlockLocation)}\"").create())
-            sender.spigot().sendMessage(clickableComponent)
-
-            clickableComponent = TextComponent(TextComponent("Click here to copy your top location."))
-            clickableComponent.color = ChatColor.of(MessageType.DEFAULT)
-            clickableComponent.clickEvent = ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, LocationUtils.getStringFromLocation(playerTopLocation))
-            clickableComponent.hoverEvent = HoverEvent(
-                HoverEvent.Action.SHOW_TEXT,
-                ComponentBuilder("Click to copy \"${LocationUtils.getStringFromLocation(playerTopLocation)}\"").create())
-            sender.spigot().sendMessage(clickableComponent)
-
-            if(playerTargetBlock != null && playerTargetBlock.type != Material.AIR){
-                val playerTargetLocation = playerTargetBlock.location
-                clickableComponent = TextComponent(TextComponent("Click here to copy the location of the block you're looking at."))
-                clickableComponent.color = ChatColor.of(MessageType.BACKGROUND)
-                clickableComponent.clickEvent = ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, LocationUtils.getStringFromLocation(playerTargetLocation))
-                clickableComponent.hoverEvent = HoverEvent(
-                    HoverEvent.Action.SHOW_TEXT,
-                    ComponentBuilder("Click to copy \"${LocationUtils.getStringFromLocation(playerTargetLocation)}\"").create())
-                sender.spigot().sendMessage(clickableComponent)
-            }
-            sender.sendMessage(Colors.format(MessageType.BACKGROUND + "-------------------"))
-        }
-
         if(args[0].equals("database", ignoreCase = true)){
             if(args.size == 2 && args[1].equals("connection-test", ignoreCase = true)){
                 val url = IngeniaMC.plugin.config.getString("Database-Url")
@@ -245,16 +194,20 @@ class AdminCommand: CommandExecutor {
         }
 
         if(args[0].equals("gravity", ignoreCase = true)){
-            if(args.size == 2){
-                val player = Bukkit.getPlayerExact(args[1]) ?: return false
-                sender.sendMessage(Colors.format(MessageType.SUCCESS + "Gravity of " + player.name + ": " + player.hasGravity()))
-            }else if(args.size == 3){
-                val value = args[2].lowercase().toBooleanStrictOrNull() ?: return false
-                val player = Bukkit.getPlayerExact(args[1]) ?: return false
-                player.setGravity(value)
-                sender.sendMessage(Colors.format(MessageType.SUCCESS + "Set gravity of " + player.name + " to " + value))
-            }else{
-                sender.sendMessage(Messages.commandUsage("adm gravity <player> <true/false>"))
+            when (args.size) {
+                2 -> {
+                    val player = Bukkit.getPlayerExact(args[1]) ?: return false
+                    sender.sendMessage(Colors.format(MessageType.SUCCESS + "Gravity of " + player.name + ": " + player.hasGravity()))
+                }
+                3 -> {
+                    val value = args[2].lowercase().toBooleanStrictOrNull() ?: return false
+                    val player = Bukkit.getPlayerExact(args[1]) ?: return false
+                    player.setGravity(value)
+                    sender.sendMessage(Colors.format(MessageType.SUCCESS + "Set gravity of " + player.name + " to " + value))
+                }
+                else -> {
+                    sender.sendMessage(Messages.commandUsage("adm gravity <player> <true/false>"))
+                }
             }
         }
 
