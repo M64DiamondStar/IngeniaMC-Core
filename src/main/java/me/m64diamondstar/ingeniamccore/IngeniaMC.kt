@@ -1,5 +1,7 @@
 package me.m64diamondstar.ingeniamccore
 
+import com.comphenix.protocol.ProtocolLibrary
+import com.comphenix.protocol.ProtocolManager
 import com.craftmend.openaudiomc.api.interfaces.AudioApi
 import me.m56738.smoothcoasters.api.SmoothCoastersAPI
 import me.m64diamondstar.ingeniamccore.attractions.listeners.PlayerInteractEntityListener
@@ -35,6 +37,7 @@ import me.m64diamondstar.ingeniamccore.general.listeners.LeaveListener
 import me.m64diamondstar.ingeniamccore.general.listeners.helpers.BonemealListener
 import me.m64diamondstar.ingeniamccore.npc.commands.NpcCommand
 import me.m64diamondstar.ingeniamccore.npc.listeners.NpcListener
+import me.m64diamondstar.ingeniamccore.npc.utils.NpcRegistry
 import me.m64diamondstar.ingeniamccore.protect.listeners.*
 import me.m64diamondstar.ingeniamccore.protect.listeners.DamageListener
 import me.m64diamondstar.ingeniamccore.protect.moderation.ModerationRegistry
@@ -61,6 +64,7 @@ class IngeniaMC : JavaPlugin() {
         lateinit var audioApi: AudioApi
         lateinit var smoothCoastersAPI: SmoothCoastersAPI
         lateinit var miniMessage: MiniMessage
+        lateinit var protocolManager: ProtocolManager
         var isDisabling: Boolean = false
         lateinit var spawn: Location
     }
@@ -71,6 +75,7 @@ class IngeniaMC : JavaPlugin() {
         audioApi = AudioApi.getInstance()
         smoothCoastersAPI = SmoothCoastersAPI(this)
         miniMessage = MiniMessage.miniMessage()
+        protocolManager = ProtocolLibrary.getProtocolManager()
 
         Bukkit.getLogger().info("---------------------------")
         Bukkit.getLogger().info("Started loading IngeniaMC-Core!")
@@ -149,6 +154,7 @@ class IngeniaMC : JavaPlugin() {
         saveConfig()
         smoothCoastersAPI.unregister()
         SplashBattleUtils.players.forEach { SplashBattleUtils.leave(it) }
+        NpcRegistry.deleteAll()
 
         // Shut the discord but down
         DiscordBot.shutdown()

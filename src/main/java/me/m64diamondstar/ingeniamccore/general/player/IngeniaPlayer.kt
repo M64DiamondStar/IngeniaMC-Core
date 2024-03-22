@@ -13,7 +13,6 @@ import me.m64diamondstar.ingeniamccore.general.levels.LevelUtils.getRewards
 import me.m64diamondstar.ingeniamccore.general.levels.LevelUtils.isLevelUp
 import me.m64diamondstar.ingeniamccore.general.player.data.PlayerConfig
 import me.m64diamondstar.ingeniamccore.utils.EmojiUtils
-import me.m64diamondstar.ingeniamccore.warps.WarpUtils
 import me.m64diamondstar.ingeniamccore.utils.LocationUtils.getLocationFromString
 import me.m64diamondstar.ingeniamccore.utils.Times
 import me.m64diamondstar.ingeniamccore.utils.event.player.ReceiveExpEvent
@@ -22,6 +21,7 @@ import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageLocation
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
 import me.m64diamondstar.ingeniamccore.wands.utils.Wands.getAccessibleWands
+import me.m64diamondstar.ingeniamccore.warps.WarpUtils
 import net.kyori.adventure.audience.Audience
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
@@ -49,6 +49,8 @@ class IngeniaPlayer(val player: Player) {
         game = null
         allowDamage = false
         player.setGravity(true)
+        player.walkSpeed = 0.2f
+        player.fallDistance = 0f
         player.teleport(WarpUtils.getNearestLocation(player))
 
         val tabCompletions = ArrayList<String>()

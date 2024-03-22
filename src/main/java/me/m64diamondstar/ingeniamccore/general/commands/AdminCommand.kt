@@ -343,7 +343,9 @@ class AdminCommand: CommandExecutor {
                     "We're a custom theme park with a ton",
                     "of cool rides!",
                     "",
-                    "We hope you enjoy your stay!"
+                    "We hope you enjoy your stay!",
+                    null,
+                    null
                 )
             )
         }
@@ -354,7 +356,9 @@ class AdminCommand: CommandExecutor {
                 "IngeniaMC! We're a custom",
                 "theme park with a ton of",
                 "cool rides! We hope you",
-                "enjoy your stay!"
+                "enjoy your stay!",
+                null,
+                null
             )
         }
 

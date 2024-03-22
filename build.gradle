@@ -46,6 +46,9 @@ repositories {
     maven {
         url = uri('https://mvn.lumine.io/repository/maven-public/')
     }
+    maven {
+        url = uri("https://repo.dmulloy2.net/repository/public/")
+    }
 }
 
 dependencies {
@@ -59,6 +62,7 @@ dependencies {
     compileOnly "com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit:2.8.2"
     compileOnly 'com.github.Mindgamesnl.OpenAudioMc:openaudiomc:6.8.10-pre2'
     compileOnly 'com.ticxo.modelengine:ModelEngine:R4.0.4'
+    compileOnly 'com.comphenix.protocol:ProtocolLib:4.7.0'
 
     shadow "me.m56738:SmoothCoastersAPI:1.10"
     shadow "com.opencsv:opencsv:5.9"
