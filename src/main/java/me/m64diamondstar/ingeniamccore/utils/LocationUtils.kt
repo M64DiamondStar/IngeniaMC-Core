@@ -144,5 +144,20 @@ object LocationUtils {
         return loc
     }
 
+    fun getYawLookAt(fromLocation: Location, toLocation: Location): Float{
+        val direction = toLocation.toVector().subtract(fromLocation.toVector())
+        val yaw = (-Math.toDegrees(atan2(direction.x, direction.z))).toFloat()
+        return if (yaw < 0) yaw + 360 else yaw
+    }
+
+    fun getPitchLookAt(fromLocation: Location, toLocation: Location): Float{
+        val deltaX = toLocation.x - fromLocation.x
+        val deltaY = toLocation.y - fromLocation.y
+        val deltaZ = toLocation.z - fromLocation.z
+
+        val distFlat = sqrt(deltaX * deltaX + deltaZ * deltaZ)
+        return Math.toDegrees(-atan2(deltaY, distFlat)).toFloat()
+    }
+
 
 }
