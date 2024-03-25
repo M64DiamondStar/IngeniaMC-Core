@@ -9,6 +9,7 @@ import me.m64diamondstar.ingeniamccore.npc.utils.DialogueUtils
 import me.m64diamondstar.ingeniamccore.npc.utils.NpcRegistry
 import me.m64diamondstar.ingeniamccore.npc.utils.NpcUtils
 import me.m64diamondstar.ingeniamccore.utils.LocationUtils
+import me.m64diamondstar.ingeniamccore.utils.entities.CameraPacketEntity
 import net.kyori.adventure.audience.Audience
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
@@ -129,6 +130,8 @@ class Npc(private val id: String) {
         private var task: BukkitTask? = null
         private var ticks = 0
         private var progressiveTask: BukkitTask? = null
+        private var actionTask: BukkitTask? = null
+        private var camera: CameraPacketEntity? = null
 
         init{
             dialoguePlayers[player] = this
@@ -192,6 +195,10 @@ class Npc(private val id: String) {
                 return
             }
 
+            actionTask?.cancel()
+            if(camera != null)
+                camera!!.despawn()
+
             currentCompleted = false
             index += 1
             ticks = 0
@@ -202,15 +209,27 @@ class Npc(private val id: String) {
                 return
             }
 
-            progressiveTask = DialogueUtils.sendProgressiveDialogue(
-                player,
-                data.getDialogue(branch, index),
-                data.getDialogueBackdrop(),
-                data.getDialogueBackdropColor()
-            )
+            if(data.getActionType(branch, index) != null && data.getActionData(branch, index) != null){
+                actionTask = data.getActionType(branch, index)!!.execute(this@Npc, player, data.getActionData(branch, index)!!)
+                Bukkit.getScheduler().runTaskLater(IngeniaMC.plugin, Runnable {
+                    progressiveTask = DialogueUtils.sendProgressiveDialogue(
+                        player,
+                        data.getDialogue(branch, index),
+                        data.getDialogueBackdrop(),
+                        data.getDialogueBackdropColor()
+                    )
+                }, 10L)
+            }else{
+                progressiveTask = DialogueUtils.sendProgressiveDialogue(
+                    player,
+                    data.getDialogue(branch, index),
+                    data.getDialogueBackdrop(),
+                    data.getDialogueBackdropColor()
+                )
+            }
         }
 
-        private fun end(){
+        fun end(){
             task?.cancel()
             progressiveTask?.cancel()
             dialoguePlayers.remove(player)
@@ -220,6 +239,14 @@ class Npc(private val id: String) {
             Bukkit.getScheduler().runTask(IngeniaMC.plugin, Runnable {
                 player.removePotionEffect(PotionEffectType.SLOW)
             })
+        }
+
+        fun setBranch(branch: String){
+            this.branch = branch
+        }
+
+        fun setCamera(camera: CameraPacketEntity){
+            this.camera = camera
         }
 
     }

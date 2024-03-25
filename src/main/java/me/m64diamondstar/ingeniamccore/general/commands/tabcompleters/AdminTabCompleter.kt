@@ -26,7 +26,7 @@ class AdminTabCompleter: TabCompleter {
             tc.add("day")
             tc.add("night")
             tc.add("spawnRandomPresent")
-            tc.add("location")
+            tc.add("testcinematic")
             tc.add("invsee")
             tc.add("playtime")
             tc.add("testboard")

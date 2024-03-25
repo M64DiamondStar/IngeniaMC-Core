@@ -14,6 +14,7 @@ object Font {
         companion object {
             const val ALLOW = "\uE013"
             const val DENY = "\uE014"
+            const val COLOR_SCREEN = "\uFE00"
         }
     }
 

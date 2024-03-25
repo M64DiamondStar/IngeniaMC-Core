@@ -1,10 +1,13 @@
 package me.m64diamondstar.ingeniamccore.general.commands
 
+import com.comphenix.protocol.PacketType
+import com.comphenix.protocol.events.PacketContainer
 import com.ticxo.modelengine.api.ModelEngineAPI
 import fr.mrmicky.fastboard.adventure.FastBoard
 import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.npc.utils.DialogueUtils
+import me.m64diamondstar.ingeniamccore.utils.entities.CameraPacketEntity
 import me.m64diamondstar.ingeniamccore.utils.items.Items
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
@@ -32,6 +35,7 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
+import org.bukkit.scheduler.BukkitRunnable
 import java.sql.DriverManager
 import java.sql.SQLException
 
@@ -313,6 +317,30 @@ class AdminCommand: CommandExecutor {
                 null,
                 null
             )
+        }
+
+        if(args[0].equals("testcinematic", ignoreCase = true)){
+            val cameraPacketEntity = CameraPacketEntity(sender.world, sender.location, sender)
+            cameraPacketEntity.spawn()
+            cameraPacketEntity.watch()
+            object: BukkitRunnable(){
+                var c = 0
+                val location = sender.location
+                override fun run() {
+                    if(c == 100) {
+                        cameraPacketEntity.despawn()
+                        cancel()
+                        return
+                    }
+
+                    location.add(0.0, 0.05, 0.0)
+                    location.yaw += 1f
+                    location.pitch += 1
+                    cameraPacketEntity.setLocation(location)
+
+                    c++
+                }
+            }.runTaskTimer(IngeniaMC.plugin, 0L, 1L)
         }
 
         return false

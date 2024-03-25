@@ -98,6 +98,7 @@ object CharWidth {
         '|' to 2,
         '}' to 5,
         '~' to 7,
+        '.' to 2
     )
 
     fun getAsMap(): Map<Char, Int> {

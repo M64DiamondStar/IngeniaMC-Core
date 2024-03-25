@@ -1,7 +1,10 @@
 package me.m64diamondstar.ingeniamccore.npc
 
 import me.m64diamondstar.ingeniamccore.data.DataConfiguration
+import me.m64diamondstar.ingeniamccore.npc.utils.DialogueAction
 import me.m64diamondstar.ingeniamccore.npc.utils.DialogueBackdropType
+import me.m64diamondstar.ingeniamccore.npc.utils.DialogueOption
+import me.m64diamondstar.ingeniamccore.npc.utils.DialogueOptionType
 import net.kyori.adventure.text.format.TextColor
 import org.bukkit.Location
 
@@ -85,6 +88,43 @@ class NpcData(id: String): DataConfiguration("npc", "$id.yml") {
 
     fun getIndexes(branch: String): Collection<Int> {
         return getConfig().getConfigurationSection("Dialogue.$branch")?.getKeys(false)?.map { it.toIntOrNull() ?: 0 } ?: emptyList()
+    }
+
+    fun getActionType(branch: String, index: Int): DialogueAction? {
+        return if(DialogueAction.values().map { it.name }.contains(getConfig().getString("Dialogue.$branch.$index.Action.Type")))
+            DialogueAction.valueOf(getConfig().getString("Dialogue.$branch.$index.Action.Type") ?: return null)
+        else null
+    }
+
+    fun setActionType(branch: String, index: Int, action: DialogueAction){
+        getConfig().set("Dialogue.$branch.$index.Action.Type", action)
+        save()
+    }
+
+    fun getActionData(branch: String, index: Int): String? {
+        return getConfig().getString("Dialogue.$branch.$index.Action.Data")
+    }
+
+    fun setActionData(branch: String, index: Int, data: String){
+        getConfig().set("Dialogue.$branch.$index.Action.Data", data)
+        save()
+    }
+
+    fun getOptions(branch: String, index: Int, optionIndex: Int): DialogueOption? {
+        if(getConfig().getConfigurationSection("Dialogue.$branch.$index.Options.$optionIndex") == null) return null
+        //return DialogueOption(getConfig().getConfigurationSection("Dialogue.$branch.$index.Options.$optionIndex")!!)
+        return null
+    }
+
+    fun setOptions(branch: String, index: Int, optionIndex: Int, type: DialogueOptionType, display: String, data: String) {
+        if(this.getConfig().getConfigurationSection("Dialogue.$branch.$index.Options.$optionIndex") == null) {
+            this.getConfig().createSection("Dialogue.$branch.$index.Options.$optionIndex")
+            save()
+        }
+
+        //val dialogueOption = DialogueOption(this.getConfig().getConfigurationSection("Dialogue.$branch.$index.Options.$optionIndex")!!)
+        //dialogueOption.set(type, display, data)
+        save()
     }
 
 }
