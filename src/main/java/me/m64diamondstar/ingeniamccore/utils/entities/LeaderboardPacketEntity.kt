@@ -18,7 +18,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.MapMeta
 
 class LeaderboardPacketEntity(private val leaderboard: Leaderboard, private val world: Level?, blockPosition: BlockPos, direction: Direction)
-    : ItemFrame(EntityType.ITEM_FRAME, world, blockPosition, direction) {
+    : ItemFrame(EntityType.ITEM_FRAME, world!!, blockPosition, direction) {
 
     fun spawn(player: Player, title: String){
         val mapView = world?.let { Bukkit.createMap(it.world) }
@@ -28,6 +28,8 @@ class LeaderboardPacketEntity(private val leaderboard: Leaderboard, private val 
         mapView!!.addRenderer(renderer)
 
         player.sendMap(mapView)
+
+        this.isSilent = true
 
         val map = ItemStack(Material.FILLED_MAP)
         val meta = (map.itemMeta as MapMeta?)!!
