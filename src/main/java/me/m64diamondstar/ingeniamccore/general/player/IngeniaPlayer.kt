@@ -35,6 +35,7 @@ import org.bukkit.event.inventory.InventoryType
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
+import org.bukkit.potion.PotionEffectType
 import org.bukkit.scheduler.BukkitRunnable
 import org.bukkit.util.Vector
 import java.text.NumberFormat
@@ -51,6 +52,10 @@ class IngeniaPlayer(val player: Player) {
         player.setGravity(true)
         player.walkSpeed = 0.2f
         player.fallDistance = 0f
+        Bukkit.getScheduler().runTask(IngeniaMC.plugin, Runnable {
+            player.removePotionEffect(PotionEffectType.SLOW)
+        })
+
         player.teleport(WarpUtils.getNearestLocation(player))
 
         val tabCompletions = ArrayList<String>()
