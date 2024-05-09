@@ -1,38 +1,38 @@
 package me.m64diamondstar.ingeniamccore.utils.entities
 
 import net.minecraft.network.protocol.game.*
+import net.minecraft.world.entity.Display
 import net.minecraft.world.entity.EntityType
-import net.minecraft.world.entity.RelativeMovement
-import org.bukkit.Bukkit
 import org.bukkit.GameMode
 import org.bukkit.Location
 import org.bukkit.World
 import org.bukkit.craftbukkit.v1_20_R3.CraftWorld
 import org.bukkit.craftbukkit.v1_20_R3.entity.CraftPlayer
-import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.Player
-import org.bukkit.entity.Villager
-import kotlin.random.Random
 
-class CameraPacketEntity(world: World?, loc: Location, private val player: Player) : net.minecraft.world.entity.decoration.ArmorStand(
-    EntityType.ARMOR_STAND, (world as CraftWorld).handle) {
+class CameraPacketEntity(world: World?, loc: Location, private val player: Player) : Display.ItemDisplay(
+    EntityType.ITEM_DISPLAY, (world as CraftWorld).handle) {
 
     private val craftPlayer = player as CraftPlayer
     private var defaultGamemode = player.gameMode
+    private var isAlive = false
 
     init{
+        this.entityData.set(Display.DATA_POS_ROT_INTERPOLATION_DURATION_ID, 20)
         this.setPos(loc.x, loc.y, loc.z)
         this.moveTo(loc.x, loc.y, loc.z, loc.yaw, loc.pitch)
 
-        (this.bukkitEntity as ArmorStand).isInvisible = true
-        this.bukkitEntity.setGravity(false)
     }
 
     fun spawn(){
-        val entityData = this.getEntityData().packDirty()
+        val entityData = this.getEntityData().nonDefaultValues
 
         craftPlayer.handle.connection.send(ClientboundAddEntityPacket(this))
-        craftPlayer.handle.connection.send(ClientboundSetEntityDataPacket(this.id /*ID*/, entityData /*Data Watcher*/))
+        if (entityData != null) {
+            if(entityData.isNotEmpty())
+                craftPlayer.handle.connection.send(ClientboundSetEntityDataPacket(this.id /*ID*/, entityData /*Data Watcher*/))
+        }
+        isAlive = true
     }
 
     fun watch(){
@@ -48,7 +48,6 @@ class CameraPacketEntity(world: World?, loc: Location, private val player: Playe
     private fun setLocation(x: Double, y: Double, z: Double, yaw: Float, pitch: Float){
         this.moveTo(x, y, z, yaw, pitch)
         craftPlayer.handle.connection.send(ClientboundTeleportEntityPacket(this))
-        craftPlayer.handle.connection.send(ClientboundRotateHeadPacket(this, (yaw * 256.0F / 360.0F).toInt().toByte()))
     }
 
     fun despawn(){
@@ -62,6 +61,7 @@ class CameraPacketEntity(world: World?, loc: Location, private val player: Playe
                 GameMode.SPECTATOR -> 3.0f
             }
         ))
+        isAlive = false
     }
 
 }
