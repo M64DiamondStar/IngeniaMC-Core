@@ -5,6 +5,8 @@ import com.bergerkiller.bukkit.tc.events.SignChangeActionEvent
 import com.bergerkiller.bukkit.tc.signactions.SignAction
 import com.bergerkiller.bukkit.tc.signactions.SignActionType
 import com.bergerkiller.bukkit.tc.utils.SignBuildOptions
+import com.craftmend.openaudiomc.api.ClientApi
+import com.craftmend.openaudiomc.api.MediaApi
 import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.general.areas.AreaUtils
 
@@ -19,11 +21,11 @@ class SignActionStopAllAudio : SignAction() {
             if (!info.hasGroup()) return
             for (member in info.group) {
                 for (player in member.entity.playerPassengers) {
-                    if(IngeniaMC.audioApi.isClientConnected(player.uniqueId)) {
-                        val client = IngeniaMC.audioApi.getClient(player.uniqueId)!!
-                        IngeniaMC.audioApi.mediaApi.stopMedia(client)
+                    if(ClientApi.getInstance().isConnected(player.uniqueId)) {
+                        val client = ClientApi.getInstance().getClient(player.uniqueId)!!
+                        MediaApi.getInstance().stopFor(client)
                         AreaUtils.getAllAreasInFormat().forEach {
-                            IngeniaMC.audioApi.mediaApi.stopMedia(client, "${it}_music")
+                            MediaApi.getInstance().stopFor("${it}_music", client)
                         }
                     }
                 }
