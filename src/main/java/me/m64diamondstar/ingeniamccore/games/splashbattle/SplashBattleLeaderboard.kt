@@ -1,5 +1,6 @@
 package me.m64diamondstar.ingeniamccore.games.splashbattle
 
+import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.utils.entities.LeaderboardPacketEntity
 import me.m64diamondstar.ingeniamccore.utils.leaderboard.Leaderboard
 import me.m64diamondstar.ingeniamccore.utils.leaderboard.LeaderboardRegistry
@@ -81,7 +82,7 @@ class SplashBattleLeaderboard(private val splashBattle: SplashBattle) {
     fun spawnSoaksSign(player: Player){
 
         if(!splashBattle.existsConfig()){
-            Bukkit.getLogger().warning("The configuration of ${splashBattle.name} has not been created yet! Cannot spawn frame without needed data. " +
+            IngeniaMC.plugin.logger.warning("The configuration of ${splashBattle.name} has not been created yet! Cannot spawn frame without needed data. " +
                     "Please create this file first.")
             return
         }

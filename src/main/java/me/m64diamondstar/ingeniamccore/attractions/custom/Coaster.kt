@@ -180,7 +180,7 @@ class Coaster(category: String, name: String): Attraction(category, name) {
 
     fun activateRow(row: Int, activated: Boolean){
         if(getRowStation(row) == null) {
-            Bukkit.getLogger()
+            IngeniaMC.plugin.logger
                 .warning("Station sign for row $row for ${getName()} in ${getCategory()} still has to be made! Please do this as quickly as possible!")
             return
         }
@@ -195,7 +195,7 @@ class Coaster(category: String, name: String): Attraction(category, name) {
         if(getShow() != null) getShow()!!.play()
 
         if(getRowStation(1) == null) {
-            Bukkit.getLogger()
+            IngeniaMC.plugin.logger
                 .warning("Station sign(s) for ${getName()} in ${getCategory()} still has to be made! Please do this as quickly as possible!")
             return
         }
@@ -210,7 +210,7 @@ class Coaster(category: String, name: String): Attraction(category, name) {
         for(row in getRows()) {
 
             if (getRowSpawn(row) == null) {
-                Bukkit.getLogger()
+                IngeniaMC.plugin.logger
                     .warning("Spawn sign(s) for ${getName()} in ${getCategory()} still has to be made! Please do this as quickly as possible!")
                 return
             }
@@ -230,7 +230,7 @@ class Coaster(category: String, name: String): Attraction(category, name) {
         for(row in getRows()) {
 
             if (getRowDespawn(row) == null) {
-                Bukkit.getLogger()
+                IngeniaMC.plugin.logger
                     .warning("Depawn sign(s) for ${getName()} in ${getCategory()} still has to be made! Please do this as quickly as possible!")
                 return
             }

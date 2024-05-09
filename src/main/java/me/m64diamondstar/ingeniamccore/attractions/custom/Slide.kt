@@ -97,7 +97,7 @@ class Slide(category: String, name: String): Attraction(category, name) {
 
     fun spawn(){
         if (getSpawn() == null) {
-            Bukkit.getLogger()
+            IngeniaMC.plugin.logger
                 .warning("Spawn sign for ${getName()} in ${getCategory()} still has to be made! Please do this as quickly as possible!")
             return
         }
@@ -110,7 +110,7 @@ class Slide(category: String, name: String): Attraction(category, name) {
 
     fun despawn(){
         if (getDespawn() == null) {
-            Bukkit.getLogger()
+            IngeniaMC.plugin.logger
                 .warning("Despawn sign for ${getName()} in ${getCategory()} still has to be made! Please do this as quickly as possible!")
             return
         }
