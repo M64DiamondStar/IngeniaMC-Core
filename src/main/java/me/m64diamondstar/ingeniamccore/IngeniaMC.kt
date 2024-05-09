@@ -2,7 +2,8 @@ package me.m64diamondstar.ingeniamccore
 
 import com.comphenix.protocol.ProtocolLibrary
 import com.comphenix.protocol.ProtocolManager
-import com.craftmend.openaudiomc.api.interfaces.AudioApi
+import gg.flyte.twilight.Twilight
+import gg.flyte.twilight.twilight
 import me.m56738.smoothcoasters.api.SmoothCoastersAPI
 import me.m64diamondstar.ingeniamccore.attractions.listeners.PlayerInteractEntityListener
 import me.m64diamondstar.ingeniamccore.attractions.traincarts.SignRegistry
@@ -22,6 +23,7 @@ import me.m64diamondstar.ingeniamccore.games.splashbattle.listeners.*
 import me.m64diamondstar.ingeniamccore.games.wandclash.WandClashRegistry
 import me.m64diamondstar.ingeniamccore.games.wandclash.listeners.ClashWandListener
 import me.m64diamondstar.ingeniamccore.games.wandclash.util.ClashWandRegistry
+import me.m64diamondstar.ingeniamccore.general.areas.AreaAudioManager
 import me.m64diamondstar.ingeniamccore.general.areas.AreaUtils
 import me.m64diamondstar.ingeniamccore.general.areas.listeners.AudioConnectListener
 import me.m64diamondstar.ingeniamccore.general.areas.listeners.PlayerMoveListener
@@ -35,7 +37,7 @@ import me.m64diamondstar.ingeniamccore.general.listeners.InteractListener
 import me.m64diamondstar.ingeniamccore.general.listeners.InventoryListener
 import me.m64diamondstar.ingeniamccore.general.listeners.LeaveListener
 import me.m64diamondstar.ingeniamccore.general.listeners.helpers.BonemealListener
-import me.m64diamondstar.ingeniamccore.npc.commands.NpcCommand
+import me.m64diamondstar.ingeniamccore.general.commands.NpcCommand
 import me.m64diamondstar.ingeniamccore.npc.listeners.NpcListener
 import me.m64diamondstar.ingeniamccore.npc.utils.NpcRegistry
 import me.m64diamondstar.ingeniamccore.protect.listeners.*
@@ -60,8 +62,8 @@ import java.util.*
 class IngeniaMC : JavaPlugin() {
 
     companion object {
+        lateinit var twilight: Twilight
         lateinit var plugin: IngeniaMC
-        lateinit var audioApi: AudioApi
         lateinit var smoothCoastersAPI: SmoothCoastersAPI
         lateinit var miniMessage: MiniMessage
         lateinit var protocolManager: ProtocolManager
@@ -71,73 +73,76 @@ class IngeniaMC : JavaPlugin() {
 
     override fun onEnable() {
 
+        twilight = twilight(this)
         plugin = this
-        audioApi = AudioApi.getInstance()
         smoothCoastersAPI = SmoothCoastersAPI(this)
         miniMessage = MiniMessage.miniMessage()
         protocolManager = ProtocolLibrary.getProtocolManager()
 
-        Bukkit.getLogger().info("---------------------------")
-        Bukkit.getLogger().info("Started loading IngeniaMC-Core!")
-        Bukkit.getLogger().info(" ")
+        this.logger.info("---------------------------")
+        this.logger.info("Started loading IngeniaMC-Core!")
+        this.logger.info(" ")
 
-        Bukkit.getLogger().info("Main instances loaded ✓")
+        this.logger.info("Main instances loaded ✓")
 
         saveDefaultConfig()
-        Bukkit.getLogger().info("Config (re)loaded ✓")
+        this.logger.info("Config (re)loaded ✓")
 
         loadDefaultConfigurations()
-        Bukkit.getLogger().info("Default configurations loaded ✓")
+        this.logger.info("Default configurations loaded ✓")
 
         loadCommandExecutors()
-        Bukkit.getLogger().info("Commands loaded ✓")
+        this.logger.info("Commands loaded ✓")
 
         loadTabCompleters()
-        Bukkit.getLogger().info("Tab Completers loaded ✓")
+        this.logger.info("Tab Completers loaded ✓")
 
         loadEventListeners()
-        Bukkit.getLogger().info("Event Listeners loaded ✓")
+        this.logger.info("Event Listeners loaded ✓")
 
         loadPacketListeners()
-        Bukkit.getLogger().info("Packet Listeners loaded ✓")
+        this.logger.info("Packet Listeners loaded ✓")
 
         SignRegistry.registerSigns()
-        Bukkit.getLogger().info("TrainCarts Signs loaded ✓")
+        this.logger.info("TrainCarts Signs loaded ✓")
 
-        Bukkit.getLogger().info("Player Scoreboards loaded ✓")
+        this.logger.info("Player Scoreboards loaded ✓")
 
         Bukkit.getScheduler().scheduleSyncDelayedTask(this) { AttractionUtils.spawnAllAttractions() }
-        Bukkit.getLogger().info("Attractions loaded ✓")
+        this.logger.info("Attractions loaded ✓")
 
         AreaUtils.getAllAreasFromData().forEach { AreaUtils.addArea(it) }
-        Bukkit.getLogger().info("Areas loaded ✓")
+        this.logger.info("Areas loaded ✓")
+
+        AreaAudioManager.initialize()
+        this.logger.info("Area track timings loaded ✓")
 
         DiscordBot.start()
-        Bukkit.getLogger().info("Discord Bot loaded ✓")
+        this.logger.info("Discord Bot loaded ✓")
 
         WandClashRegistry.registerAllArenas()
-        Bukkit.getLogger().info("Game Arenas Loaded ✓")
+        this.logger.info("Game Arenas Loaded ✓")
 
         EmojiUtils.loadEmojis()
 
         loadTasks()
-        Bukkit.getLogger().info("Tasks loaded ✓")
+        this.logger.info("Tasks loaded ✓")
 
         WandRegistry.registerWands()
         ClashWandRegistry.registerClashWands()
-        Bukkit.getLogger().info("Wands loaded ✓")
+        this.logger.info("Wands loaded ✓")
 
         ModerationRegistry.registerBlockedWords()
-        Bukkit.getLogger().info("Blocked Words loaded ✓")
+        this.logger.info("Blocked Words loaded ✓")
 
         PresentHuntUtils.loadActivePresents()
         TeamHandler.load()
-        Bukkit.getLogger().info("" +
+        this.logger.info("" +
                 "Small tasks ✓")
 
-        Bukkit.getLogger().info(" ")
-        Bukkit.getLogger().info("Finished loading, IngeniaMC-Core is enabled!")
-        Bukkit.getLogger().info("---------------------------")
+        this.logger.info(" ")
+        this.logger.info("Finished loading, IngeniaMC-Core is enabled!")
+        this.logger.info("---------------------------")
 
         spawn = LocationUtils.getLocationFromString(plugin.config.getString("Spawn")) ?: Location(Bukkit.getWorlds().first(), 0.5, 52.0, 0.5)
     }
@@ -155,6 +160,8 @@ class IngeniaMC : JavaPlugin() {
         smoothCoastersAPI.unregister()
         SplashBattleUtils.players.forEach { SplashBattleUtils.leave(it) }
         NpcRegistry.deleteAll()
+
+        Bukkit.getOnlinePlayers().forEach { it.activeBossBars().forEach { bossBar -> it.hideBossBar(bossBar) } }
 
         // Shut the discord but down
         DiscordBot.shutdown()
