@@ -10,14 +10,18 @@ import me.m64diamondstar.ingeniamccore.npc.utils.NpcRegistry
 import me.m64diamondstar.ingeniamccore.npc.utils.NpcUtils
 import me.m64diamondstar.ingeniamccore.utils.LocationUtils
 import me.m64diamondstar.ingeniamccore.utils.entities.CameraPacketEntity
+import me.m64diamondstar.ingeniamccore.utils.messages.Font
 import net.kyori.adventure.audience.Audience
 import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.TextColor
+import net.kyori.adventure.title.Title
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.bukkit.scheduler.BukkitRunnable
 import org.bukkit.scheduler.BukkitTask
+import java.time.Duration
 
 class Npc(private val id: String) {
 
@@ -124,6 +128,8 @@ class Npc(private val id: String) {
      */
     inner class Dialogue(val player: Player){
 
+        private var previousNext = 0L
+        private var normalView: Boolean = true
         private var branch = "main"
         private var index = 0
         private var currentCompleted = false
@@ -132,12 +138,16 @@ class Npc(private val id: String) {
         private var progressiveTask: BukkitTask? = null
         private var actionTask: BukkitTask? = null
         private var camera: CameraPacketEntity? = null
+        private var playerInventory = player.inventory.contents
 
         init{
             dialoguePlayers[player] = this
         }
 
         fun start(){
+            player.inventory.heldItemSlot = 8
+            playerInventory = player.inventory.contents
+            player.inventory.contents = emptyArray()
             DialoguePlayerRegistry.addDialoguePlayer(player, this@Npc)
             val data = getData()
             if(data.getDialogue(branch, index).isEmpty()){ // Dialogue does not exist or has been wrongly configured
@@ -184,7 +194,8 @@ class Npc(private val id: String) {
             }.runTaskTimerAsynchronously(IngeniaMC.plugin, 0, 5)
         }
 
-        fun next(){
+        fun next(withIndex: Int?, withBranch: String?) {
+            if(System.currentTimeMillis() - previousNext < 1000) return
             val data = getData()
             if(!currentCompleted){
                 progressiveTask?.cancel()
@@ -194,14 +205,29 @@ class Npc(private val id: String) {
                 )
                 return
             }
+            if(data.hasOptions(branch, index) && withIndex == null && withBranch == null) return
 
             actionTask?.cancel()
-            if(camera != null)
-                camera!!.despawn()
+            if(camera != null && camera!!.isAlive && !normalView) {
+                Bukkit.getScheduler().runTaskLater(IngeniaMC.plugin, Runnable {
+                    camera!!.despawn()
+                }, 10L)
+                val times = Title.Times.times(Duration.ofMillis(500), Duration.ofMillis(500), Duration.ofMillis(500))
+                (player as Audience).showTitle(
+                    Title.title(
+                        Component.text(Font.Characters.COLOR_SCREEN).color(TextColor.color(0, 0, 0)),
+                        Component.empty(),
+                        times
+                    )
+                )
+            }
 
             currentCompleted = false
-            index += 1
+            if(withIndex != null) index = withIndex
+            else index += 1
+            if(withBranch != null) branch = withBranch
             ticks = 0
+            previousNext = System.currentTimeMillis()
 
             // Dialogue has ended
             if(data.getDialogue(branch, index).isEmpty()){
@@ -211,6 +237,7 @@ class Npc(private val id: String) {
 
             if(data.getActionType(branch, index) != null && data.getActionData(branch, index) != null){
                 actionTask = data.getActionType(branch, index)!!.execute(this@Npc, player, data.getActionData(branch, index)!!)
+
                 Bukkit.getScheduler().runTaskLater(IngeniaMC.plugin, Runnable {
                     progressiveTask = DialogueUtils.sendProgressiveDialogue(
                         player,
@@ -220,33 +247,71 @@ class Npc(private val id: String) {
                     )
                 }, 10L)
             }else{
-                progressiveTask = DialogueUtils.sendProgressiveDialogue(
-                    player,
-                    data.getDialogue(branch, index),
-                    data.getDialogueBackdrop(),
-                    data.getDialogueBackdropColor()
-                )
+                Bukkit.getScheduler().runTaskLater(IngeniaMC.plugin, Runnable {
+                    camera = null
+                    normalView = true
+                    progressiveTask = DialogueUtils.sendProgressiveDialogue(
+                        player,
+                        data.getDialogue(branch, index),
+                        data.getDialogueBackdrop(),
+                        data.getDialogueBackdropColor()
+                    )
+                }, if(!normalView) 10L else 0L)
             }
         }
 
         fun end(){
+            val data = getData()
+            if(data.getActionType(branch, index - 1) != null && data.getActionData(branch, index - 1) != null){
+                val times = Title.Times.times(Duration.ofMillis(500), Duration.ofMillis(500), Duration.ofMillis(500))
+                (player as Audience).showTitle(
+                    Title.title(
+                        Component.text(Font.Characters.COLOR_SCREEN).color(TextColor.color(0, 0, 0)),
+                        Component.empty(),
+                        times
+                    )
+                )
+                Bukkit.getScheduler().runTaskLaterAsynchronously(IngeniaMC.plugin, Runnable {
+                    (player as Audience).sendActionBar(Component.empty())
+                }, 10L)
+            }else{
+                (player as Audience).sendActionBar(Component.empty())
+            }
             task?.cancel()
             progressiveTask?.cancel()
             dialoguePlayers.remove(player)
             DialoguePlayerRegistry.removeDialoguePlayer(player)
+            DialoguePlayerRegistry.putOnCooldown(player)
+            player.inventory.contents = playerInventory
 
-            (player as Audience).sendActionBar(Component.empty())
+            player.walkSpeed = 0.2f
             Bukkit.getScheduler().runTask(IngeniaMC.plugin, Runnable {
                 player.removePotionEffect(PotionEffectType.SLOW)
             })
+
         }
 
         fun setBranch(branch: String){
-            this.branch = branch
+            next(0, branch)
         }
 
         fun setCamera(camera: CameraPacketEntity){
             this.camera = camera
+        }
+        
+        fun setNormalView(boolean: Boolean){
+            this.normalView = boolean
+        }
+
+        fun executeOption(optionIndex: Int){
+            val data = getData()
+            if(data.getDialogue(branch, index).isEmpty()) return
+            if(!data.hasOptions(branch, index)) return
+            if(data.getOption(branch, index, optionIndex) == null) return
+
+            val option = data.getOption(branch, index, optionIndex)!!
+            option.execute(player, this@Npc)
+
         }
 
     }

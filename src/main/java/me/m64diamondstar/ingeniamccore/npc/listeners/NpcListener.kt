@@ -4,16 +4,22 @@ import com.ticxo.modelengine.api.entity.Dummy
 import com.ticxo.modelengine.api.events.BaseEntityInteractEvent
 import com.ticxo.modelengine.api.events.ModelRegistrationEvent
 import com.ticxo.modelengine.api.generator.ModelGenerator
+import gg.flyte.twilight.scheduler.sync
+import io.papermc.paper.event.player.AsyncChatEvent
+import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.npc.utils.DialoguePlayerRegistry
 import me.m64diamondstar.ingeniamccore.npc.utils.NpcRegistry
 import me.m64diamondstar.ingeniamccore.npc.utils.NpcUtils
-import org.bukkit.Bukkit
+import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
+import net.kyori.adventure.audience.Audience
+import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.player.PlayerAnimationEvent
 import org.bukkit.event.player.PlayerAnimationType
+import org.bukkit.event.player.PlayerItemHeldEvent
 import org.bukkit.event.player.PlayerMoveEvent
 
 class NpcListener: Listener {
@@ -22,7 +28,7 @@ class NpcListener: Listener {
     fun onModelRegistration(event: ModelRegistrationEvent){
         if(event.phase == ModelGenerator.Phase.FINISHED) {
             NpcUtils.loadNpcFiles()
-            Bukkit.getLogger().info("NPCs (re)loaded ✓")
+            IngeniaMC.plugin.logger.info("NPCs (re)loaded ✓")
         }
     }
 
@@ -35,6 +41,10 @@ class NpcListener: Listener {
         if(entity !is Dummy<*>) return
         if (!NpcRegistry.isNpc(entity)) return
         if (DialoguePlayerRegistry.contains(player)) return
+        if(DialoguePlayerRegistry.isOnCooldown(player)){
+            (player as Audience).sendActionBar(MiniMessage.miniMessage().deserialize("<${MessageType.ERROR}>Please slow down a little bit!"))
+            return
+        }
 
         val dialogue = NpcRegistry.getNpc(NpcRegistry.getNpcID(entity)!!)!!.getDialogue(player)
         dialogue.start()
@@ -45,7 +55,7 @@ class NpcListener: Listener {
         val player = event.player
         if(event.animationType != PlayerAnimationType.ARM_SWING) return
         if(!DialoguePlayerRegistry.contains(player)) return
-        DialoguePlayerRegistry.getDialoguePlayer(player)!!.getDialogue(player).next()
+        DialoguePlayerRegistry.getDialoguePlayer(player)!!.getDialogue(player).next(null, null)
     }
 
     @EventHandler
@@ -61,5 +71,25 @@ class NpcListener: Listener {
 
         val player = event.player
         NpcUtils.PlayersMoved.addPlayer(player)
+    }
+
+    @EventHandler
+    fun onSwitchSlot(event: PlayerItemHeldEvent){
+        val player = event.player
+        if(!DialoguePlayerRegistry.contains(player)) return
+        DialoguePlayerRegistry.getDialoguePlayer(player)!!.getDialogue(player).executeOption(event.newSlot + 1)
+        event.isCancelled = true
+    }
+
+    @EventHandler
+    fun onChatEvent(event: AsyncChatEvent) {
+        val player = event.player
+        if (!event.signedMessage().message().first().isDigit()) return
+        if (!DialoguePlayerRegistry.contains(player)) return
+        sync {
+            DialoguePlayerRegistry.getDialoguePlayer(player)!!.getDialogue(player)
+                .executeOption(event.signedMessage().message().first().digitToInt())
+        }
+        event.isCancelled = true
     }
 }

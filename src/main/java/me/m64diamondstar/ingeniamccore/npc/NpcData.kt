@@ -79,6 +79,15 @@ class NpcData(id: String): DataConfiguration("npc", "$id.yml") {
      * @return the lines
      */
     fun getDialogue(branch: String, index: Int): List<String> {
+        if(hasOptions(branch, index)){
+            val list = ArrayList<String>()
+            list.add(getConfig().getStringList("Dialogue.$branch.$index.Text")[0] ?: "")
+            for(i in 0 until getOptions(branch, index).size){
+                if(getOptions(branch, index)[i].getDisplay() != null)
+                    list.add(" [${i + 1}] ${(getOptions(branch, index)[i].getDisplay()!!)}")
+            }
+            return list
+        }
         return getConfig().getStringList("Dialogue.$branch.$index.Text")
     }
 
@@ -110,10 +119,24 @@ class NpcData(id: String): DataConfiguration("npc", "$id.yml") {
         save()
     }
 
-    fun getOptions(branch: String, index: Int, optionIndex: Int): DialogueOption? {
+    fun removeAction(branch: String, index: Int){
+        getConfig().set("Dialogue.$branch.$index.Action", null)
+        save()
+    }
+
+    fun hasOptions(branch: String, index: Int): Boolean {
+        return getConfig().getConfigurationSection("Dialogue.$branch.$index.Options") != null
+    }
+
+    fun getOption(branch: String, index: Int, optionIndex: Int): DialogueOption? {
         if(getConfig().getConfigurationSection("Dialogue.$branch.$index.Options.$optionIndex") == null) return null
-        //return DialogueOption(getConfig().getConfigurationSection("Dialogue.$branch.$index.Options.$optionIndex")!!)
-        return null
+        return DialogueOption(getConfig().getConfigurationSection("Dialogue.$branch.$index.Options.$optionIndex") ?: return null)
+    }
+
+    fun getOptions(branch: String, index: Int): List<DialogueOption> {
+        val list = ArrayList<DialogueOption>()
+        getConfig().getConfigurationSection("Dialogue.$branch.$index.Options")?.getKeys(false)?.forEach { list.add(DialogueOption(getConfig().getConfigurationSection("Dialogue.$branch.$index.Options.$it")!!)) }
+        return list
     }
 
     fun setOptions(branch: String, index: Int, optionIndex: Int, type: DialogueOptionType, display: String, data: String) {
@@ -122,8 +145,32 @@ class NpcData(id: String): DataConfiguration("npc", "$id.yml") {
             save()
         }
 
-        //val dialogueOption = DialogueOption(this.getConfig().getConfigurationSection("Dialogue.$branch.$index.Options.$optionIndex")!!)
-        //dialogueOption.set(type, display, data)
+        val dialogueOption = DialogueOption(this.getConfig().getConfigurationSection("Dialogue.$branch.$index.Options.$optionIndex")!!)
+        dialogueOption.set(type, display, data)
+        save()
+    }
+
+    fun setOptionType(branch: String, index: Int, optionIndex: Int, type: DialogueOptionType){
+        getConfig().set("Dialogue.$branch.$index.Options.$optionIndex.Type", type.name)
+        save()
+    }
+
+    fun setOptionDisplay(branch: String, index: Int, optionIndex: Int, display: String){
+        getConfig().set("Dialogue.$branch.$index.Options.$optionIndex.Display", display)
+        save()
+    }
+
+    fun setOptionData(branch: String, index: Int, optionIndex: Int, data: String){
+        getConfig().set("Dialogue.$branch.$index.Options.$optionIndex.Data", data)
+        save()
+    }
+
+    fun getOptionIndexes(branch: String, index: Int): List<Int> {
+        return getConfig().getConfigurationSection("Dialogue.$branch.$index.Options")?.getKeys(false)?.map { it.toIntOrNull() ?: 0 } ?: emptyList()
+    }
+
+    fun removeOption(branch: String, index: Int, optionIndex: Int){
+        getConfig().set("Dialogue.$branch.$index.Options.$optionIndex", null)
         save()
     }
 
