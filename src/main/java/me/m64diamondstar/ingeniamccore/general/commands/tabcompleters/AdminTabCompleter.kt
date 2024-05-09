@@ -36,14 +36,14 @@ class AdminTabCompleter: TabCompleter {
             tc.add("testprogressivedialogue")
             tc.add("disableresourcepack")
         }else if(args.size == 2){
+            tc.clear()
             if(args[0].equals("invsee", ignoreCase = true) || args[0].equals("gravity", ignoreCase = true)
                 || args[0].equals("playtime", ignoreCase = true)) {
-                tc.clear()
                 tc.addAll(Bukkit.getOnlinePlayers().map { it.name })
             }
         }else if(args.size == 3){
+            tc.clear()
             if(args[0].equals("gravity", ignoreCase = true)){
-                tc.clear()
                 tc.add("true")
                 tc.add("false")
             }

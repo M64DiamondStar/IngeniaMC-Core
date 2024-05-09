@@ -8,23 +8,17 @@ import java.lang.Exception
 import java.nio.file.Files
 import java.nio.file.Paths
 
-abstract class LoadedConfiguration (path: String, name: String, resource: Boolean, instantCreation: Boolean) {
+abstract class LoadedConfiguration (path: String, name: String, private val resource: Boolean, instantCreation: Boolean) {
 
     private lateinit var config: FileConfiguration
-    private var path: File
+    private var path: File = File(IngeniaMC.plugin.dataFolder, path)
     private lateinit var file: File
-    private var name: String
-
-    private val resource: Boolean
+    private var name: String = name.replace(".yml", "")
 
     /**
      * Constructor for making/changing a Config File
      */
     init {
-
-        this.path = File(IngeniaMC.plugin.dataFolder, path)
-        this.name = name.replace(".yml", "")
-        this.resource = resource
 
         this.path.mkdirs()
 

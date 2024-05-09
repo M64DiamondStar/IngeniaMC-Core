@@ -5,8 +5,10 @@ import com.comphenix.protocol.events.PacketContainer
 import com.ticxo.modelengine.api.ModelEngineAPI
 import fr.mrmicky.fastboard.adventure.FastBoard
 import me.m64diamondstar.ingeniamccore.IngeniaMC
+import me.m64diamondstar.ingeniamccore.general.areas.AreaAudioManager
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.npc.utils.DialogueUtils
+import me.m64diamondstar.ingeniamccore.utils.Times
 import me.m64diamondstar.ingeniamccore.utils.entities.CameraPacketEntity
 import me.m64diamondstar.ingeniamccore.utils.items.Items
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
@@ -36,6 +38,12 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.bukkit.scheduler.BukkitRunnable
+import java.awt.Font
+import java.awt.GraphicsEnvironment
+import java.awt.font.FontRenderContext
+import java.awt.geom.AffineTransform
+import java.io.File
+import java.io.IOException
 import java.sql.DriverManager
 import java.sql.SQLException
 
@@ -341,6 +349,24 @@ class AdminCommand: CommandExecutor {
                     c++
                 }
             }.runTaskTimer(IngeniaMC.plugin, 0L, 1L)
+        }
+
+        if(args[0].equals("checkfontwidth", ignoreCase = true)){
+            if(args.size != 2){
+                sender.sendMessage(Messages.commandUsage("adm checkfontwidth <string>"))
+                return false
+            }
+            try {
+                val ge = GraphicsEnvironment.getLocalGraphicsEnvironment()
+                ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, File(IngeniaMC.plugin.dataFolder, "fonts/Minecraft.otf")).deriveFont(10F))
+            }catch (e: IOException){
+                e.printStackTrace()
+            }
+
+            val font = Font.createFont(Font.TRUETYPE_FONT, File(IngeniaMC.plugin.dataFolder, "fonts/Minecraft.otf")).deriveFont(10F)
+            val frc = FontRenderContext(AffineTransform(), true, true)
+
+            (sender as Audience).sendMessage(Component.text("${args[1]}: " + font.getStringBounds(args[1], frc).width))
         }
 
         return false

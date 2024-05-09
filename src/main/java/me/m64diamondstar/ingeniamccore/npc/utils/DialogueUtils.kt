@@ -30,7 +30,7 @@ object DialogueUtils {
         val result = Component.text()
             .append(Component.text().content(backdropType?.getBackdrop() ?: "\uFF01").color(backdropColor ?: TextColor.color(255, 255, 255)))
             .append(Component.text().content("\uF80C\uF80C\uF808\uF801"))
-            .append(Component.text().content("\uF829\uFD00\uF828\uF825"))
+            .append(Component.text().content("\uF829\uFD00\uF828\uF821"))
             .append(Component.text().content(safeLine1.map { it.first }.joinToString("")).font(Key.key("ingeniamc:dialogue_line_1")))
             .append(Component.text().content(safeLine1.map { '\uF800'.plus(it.second) }.joinToString("")).font(Key.key("minecraft:default")))
             .append(Component.text().content(safeLine2.map { it.first }.joinToString("")).font(Key.key("ingeniamc:dialogue_line_2")))
@@ -41,7 +41,7 @@ object DialogueUtils {
             .append(Component.text().content(safeLine4.map { '\uF800'.plus(it.second) }.joinToString("")).font(Key.key("minecraft:default")))
             .append(Component.text().content(safeLine5.map { it.first }.joinToString("")).font(Key.key("ingeniamc:dialogue_line_5")))
             .append(Component.text().content(safeLine5.map { '\uF800'.plus(it.second) }.joinToString("")).font(Key.key("minecraft:default")))
-            .append(Component.text().content("\uF82C\uF82C\uF828\uF821\uF809\uF80B\uF808\uF805"))
+            .append(Component.text().content("\uF82C\uF82C\uF828\uF821\uF809\uF80B\uF808\uF801"))
             .build()
 
         return result
@@ -76,7 +76,7 @@ object DialogueUtils {
                     val result = Component.text()
                         .append(Component.text().content(backdropType?.getBackdrop() ?: "\uFF01").color(backdropColor ?: TextColor.color(255, 255, 255)))
                         .append(Component.text().content("\uF80C\uF80C\uF808\uF801"))
-                        .append(Component.text().content("\uF829\uFD00\uF828\uF825"))
+                        .append(Component.text().content("\uF829\uFD00\uF828\uF821"))
                         .append(
                             Component.text().content(progressiveLine1.map { it.first }.joinToString(""))
                                 .font(Key.key("ingeniamc:dialogue_line_1"))
@@ -117,7 +117,7 @@ object DialogueUtils {
                             Component.text().content(progressiveLine5.map { '\uF800'.plus(it.second) }.joinToString(""))
                                 .font(Key.key("minecraft:default"))
                         )
-                        .append(Component.text().content("\uF82C\uF82C\uF828\uF821\uF809\uF80B\uF808\uF805"))
+                        .append(Component.text().content("\uF82C\uF82C\uF828\uF821\uF809\uF80B\uF808\uF801"))
                         .build()
 
                     if (i < (line1?.length ?: 0)) {
