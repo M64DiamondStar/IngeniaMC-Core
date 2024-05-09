@@ -27,8 +27,15 @@ enum class DialogueAction {
             val toLocation = LocationUtils.getLocationFromString(args[1]) ?: return null
             val speed = args[2].toDoubleOrNull() ?: return null
 
-            val times = Title.Times.times(Duration.ofMillis(500), Duration.ofMillis(750), Duration.ofMillis(500))
-            (player as Audience).showTitle(Title.title(Component.text(Font.Characters.COLOR_SCREEN).color(TextColor.color(0, 0, 0)), Component.empty(), times))
+            npc.getDialogue(player).setNormalView(false)
+            val times = Title.Times.times(Duration.ofMillis(500), Duration.ofMillis(500), Duration.ofMillis(500))
+            (player as Audience).showTitle(
+                Title.title(
+                    Component.text(Font.Characters.COLOR_SCREEN).color(TextColor.color(0, 0, 0)),
+                    Component.empty(),
+                    times
+                )
+            )
 
             val movementTask = object : BukkitRunnable() {
                 private var progress = 0.0
@@ -44,8 +51,12 @@ enum class DialogueAction {
                     }
 
                     if (progress >= 100.0) {
-                        (player as Audience).showTitle(Title.title(Component.text(Font.Characters.COLOR_SCREEN).color(TextColor.color(0, 0, 0)), Component.empty(), times))
-                        Bukkit.getScheduler().runTaskLaterAsynchronously(IngeniaMC.plugin, Runnable { cinematicEntity.despawn() }, 10L)
+                        val timesNormal = Title.Times.times(Duration.ofMillis(500), Duration.ofMillis(500), Duration.ofMillis(500))
+                        (player as Audience).showTitle(Title.title(Component.text(Font.Characters.COLOR_SCREEN).color(TextColor.color(0, 0, 0)), Component.empty(), timesNormal))
+                        Bukkit.getScheduler().runTaskLaterAsynchronously(IngeniaMC.plugin, Runnable {
+                            cinematicEntity.despawn()
+                            npc.getDialogue(player).setNormalView(true)
+                        }, 10L)
                         cancel()
                         return
                     }

@@ -4,7 +4,7 @@ import me.m64diamondstar.ingeniamccore.npc.Npc
 import org.bukkit.configuration.ConfigurationSection
 import org.bukkit.entity.Player
 
-class DialogueOption(private val npc: Npc, private val configurationSection: ConfigurationSection) {
+class DialogueOption(private val configurationSection: ConfigurationSection) {
 
     fun getType(): DialogueOptionType? {
         return if(configurationSection.getString("Type") != null && DialogueOptionType.values().map { it.name }.contains(configurationSection.getString("Type")?.uppercase()!!))
@@ -21,7 +21,7 @@ class DialogueOption(private val npc: Npc, private val configurationSection: Con
         return configurationSection.getString("Data")
     }
 
-    fun execute(player: Player){
+    fun execute(player: Player, npc: Npc){
         getType()?.execute(npc, player, getData())
     }
 

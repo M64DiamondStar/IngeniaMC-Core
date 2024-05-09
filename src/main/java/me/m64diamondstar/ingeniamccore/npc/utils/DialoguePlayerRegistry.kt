@@ -6,6 +6,7 @@ import org.bukkit.entity.Player
 object DialoguePlayerRegistry {
 
     private val dialoguePlayers = HashMap<Player, Npc>()
+    private val playerCooldown = HashMap<Player, Long>()
 
     fun addDialoguePlayer(player: Player, npc: Npc){
         dialoguePlayers[player] = npc
@@ -21,6 +22,14 @@ object DialoguePlayerRegistry {
 
     fun contains(player: Player): Boolean{
         return dialoguePlayers.containsKey(player)
+    }
+
+    fun putOnCooldown(player: Player){
+        playerCooldown[player] = System.currentTimeMillis() + 5000
+    }
+
+    fun isOnCooldown(player: Player): Boolean{
+        return playerCooldown.containsKey(player) && playerCooldown[player]!! > System.currentTimeMillis()
     }
 
 }
