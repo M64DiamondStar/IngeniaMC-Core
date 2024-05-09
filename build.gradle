@@ -5,6 +5,7 @@ import java.nio.charset.StandardCharsets
  */
 plugins {
     id "java"
+    id "idea"
     id "java-library"
     id "maven-publish"
     id "io.papermc.paperweight.userdev" version "1.5.11"
@@ -49,6 +50,9 @@ repositories {
     maven {
         url = uri("https://repo.dmulloy2.net/repository/public/")
     }
+    maven {
+        url = uri("https://repo.flyte.gg/releases")
+    }
 }
 
 dependencies {
@@ -60,7 +64,7 @@ dependencies {
     compileOnly "com.bergerkiller.bukkit:TrainCarts:1.19.2-v1-SNAPSHOT"
     compileOnly "com.fastasyncworldedit:FastAsyncWorldEdit-Core:2.8.2"
     compileOnly "com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit:2.8.2"
-    compileOnly 'com.github.Mindgamesnl.OpenAudioMc:openaudiomc:6.8.10-pre2'
+    compileOnly 'com.github.Mindgamesnl.OpenAudioMc:openaudiomc-api:6.10.1'
     compileOnly 'com.ticxo.modelengine:ModelEngine:R4.0.4'
     compileOnly 'com.comphenix.protocol:ProtocolLib:4.7.0'
 
@@ -70,10 +74,14 @@ dependencies {
     shadow 'org.jsoup:jsoup:1.17.2'
     shadow 'fr.mrmicky:fastboard:2.0.2'
     shadow 'com.github.patheloper.pathetic:pathetic-mapping:2.3'
+    shadow 'gg.flyte:twilight:1.1.10'
 
     implementation "net.dv8tion:JDA:5.0.0-beta.19" // "Shadowed" via plugin libraries in the plugin.yml
     implementation 'club.minnced:jda-ktx:0.11.0-beta.19'
-    implementation "com.github.M64DiamondStar:EffectMaster:f47e6278df"
+    implementation 'com.github.M64DiamondStar:EffectMaster:f47e6278df'
+
+
+
     paperweight.paperDevBundle "1.20.4-R0.1-SNAPSHOT"
 }
 
@@ -137,6 +145,14 @@ shadowJar {
     relocate 'me.m56738.SmoothCoastersAPI', 'me.m64diamondstar.ingeniamccore.libs.smoothcoasters'
     relocate 'fr.mrmicky.fastboard', 'me.m64diamondstar.fastboard'
     relocate 'com.github.patheloper.pathetic.pathetic-mapping', 'me.m64diamondstar.ingeniamccore.libs.pathetic'
+    relocate 'gg.flyte.twilight', 'me.m64diamondstar.ingeniamccore.libs.twiligt'
+}
+
+idea {
+    module {
+        downloadJavadoc = true
+        downloadSources = true
+    }
 }
 
 tasks.withType(JavaCompile).configureEach {
