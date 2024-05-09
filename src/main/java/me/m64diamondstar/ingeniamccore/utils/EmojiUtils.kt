@@ -17,7 +17,7 @@ object EmojiUtils {
     fun loadEmojis(){
         val emojis = IngeniaMC.plugin.getResource("json/emoji.json")
         if(emojis == null){
-            Bukkit.getLogger().warning("Emoji file not found, meaning emoji translations cannot be loaded!")
+            IngeniaMC.plugin.logger.warning("Emoji file not found, meaning emoji translations cannot be loaded!")
             return
         }
         val response = BufferedReader(InputStreamReader(emojis, Charsets.UTF_8)).use { it.readText() }
@@ -26,7 +26,7 @@ object EmojiUtils {
             val value = json[key].toString()
             emojiMap[key.toString()] = value
         }
-        Bukkit.getLogger().info("Emojis loaded ✓")
+        IngeniaMC.plugin.logger.info("Emojis loaded ✓")
     }
 
     /**
@@ -49,7 +49,7 @@ object EmojiUtils {
         if(emojiMap.isEmpty()) {
             val emojis = IngeniaMC.plugin.getResource("json/emoji.json")
             if(emojis == null){
-                Bukkit.getLogger().warning("Emoji file not found, meaning emoji translations cannot be loaded!")
+                IngeniaMC.plugin.logger.warning("Emoji file not found, meaning emoji translations cannot be loaded!")
                 return message
             }
             val response = BufferedReader(InputStreamReader(emojis, Charsets.UTF_8)).use { it.readText() }

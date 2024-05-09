@@ -1,6 +1,7 @@
 package me.m64diamondstar.ingeniamccore.attractions
 
 import me.m64diamondstar.effectmaster.shows.EffectShow
+import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.attractions.utils.AttractionType
 import me.m64diamondstar.ingeniamccore.attractions.utils.AttractionUtils
 import me.m64diamondstar.ingeniamccore.attractions.utils.CountdownType
@@ -393,7 +394,7 @@ open class Attraction(private val category: String, name: String): LoadedConfigu
     fun spawnRidecountSign(player: Player){
 
         if(!this.existsConfig()){
-            Bukkit.getLogger().warning("The configuration of $name in $category has not been created yet! Cannot spawn frame without needed data. " +
+            IngeniaMC.plugin.logger.warning("The configuration of $name in $category has not been created yet! Cannot spawn frame without needed data. " +
                     "Please create this file first.")
             return
         }
