@@ -7,15 +7,9 @@ import me.m64diamondstar.ingeniamccore.data.DataConfiguration
 import org.bukkit.Bukkit
 import org.bukkit.World
 
-class Area(category: String, name: String): DataConfiguration("area/$category", name.replace(".yml", "")) {
+class Area(val category: String, name: String): DataConfiguration("area/$category", name.replace(".yml", "")) {
 
-    val name: String
-    val category: String
-
-    init {
-        this.name = name.replace(".yml", "")
-        this.category = category
-    }
+    val name: String = name.replace(".yml", "")
 
     fun createArea(world: World){
         this.getConfig().set("Display-Name", name)

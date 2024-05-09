@@ -3,6 +3,7 @@ package me.m64diamondstar.ingeniamccore.general.commands.ingenia
 import com.sk89q.worldedit.bukkit.BukkitAdapter
 import com.sk89q.worldedit.regions.Polygonal2DRegion
 import me.m64diamondstar.ingeniamccore.general.areas.Area
+import me.m64diamondstar.ingeniamccore.general.areas.AreaAudioManager
 import me.m64diamondstar.ingeniamccore.general.areas.AreaUtils
 import me.m64diamondstar.ingeniamccore.utils.IngeniaSubcommand
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors

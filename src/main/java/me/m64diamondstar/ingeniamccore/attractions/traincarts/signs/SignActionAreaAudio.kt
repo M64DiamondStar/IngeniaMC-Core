@@ -5,9 +5,13 @@ import com.bergerkiller.bukkit.tc.events.SignChangeActionEvent
 import com.bergerkiller.bukkit.tc.signactions.SignAction
 import com.bergerkiller.bukkit.tc.signactions.SignActionType
 import com.bergerkiller.bukkit.tc.utils.SignBuildOptions
+import com.craftmend.openaudiomc.api.ClientApi
+import com.craftmend.openaudiomc.api.MediaApi
+import com.craftmend.openaudiomc.api.media.Media
 import com.craftmend.openaudiomc.generic.media.objects.MediaOptions
 import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.general.areas.Area
+import me.m64diamondstar.ingeniamccore.general.areas.AreaAudioManager
 import me.m64diamondstar.ingeniamccore.general.areas.AreaUtils
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 
@@ -22,8 +26,8 @@ class SignActionAreaAudio : SignAction() {
             if (!info.hasGroup()) return
             for (member in info.group) {
                 for (player in member.entity.playerPassengers) {
-                    if(IngeniaMC.audioApi.isClientConnected(player.uniqueId)) {
-                        val client = IngeniaMC.audioApi.getClient(player.uniqueId)!!
+                    if(ClientApi.getInstance().isConnected(player.uniqueId)) {
+                        val client = ClientApi.getInstance().getClient(player.uniqueId)!!
                         val ingeniaPlayer = IngeniaPlayer(player)
                         var currentArea: Area? = null
 
@@ -41,22 +45,24 @@ class SignActionAreaAudio : SignAction() {
                                 }
                             }
                         }
-                        IngeniaMC.audioApi.mediaApi.stopMedia(client)
+                        MediaApi.getInstance().stopFor(client)
 
                         AreaUtils.getAllAreasInFormat().forEach {
-                            IngeniaMC.audioApi.mediaApi.stopMedia(client, "${it}_music")
+                            MediaApi.getInstance().stopFor("${it}_music", client)
                         }
 
-                        val options = MediaOptions()
-                        options.id = "${ingeniaPlayer.currentAreaName}_music"
-                        options.isPickUp = true
-                        options.volume = 100
-                        options.fadeTime = 2
-                        options.isLoop = true
-                        options.expirationTimeout = 3600000
                         val music = currentArea?.getMusic()
-                        if(music != null)
-                            IngeniaMC.audioApi.mediaApi.playMedia(client, music, options)
+                        if(music != null) {
+                            val media = Media(music)
+                            media.mediaId = "${ingeniaPlayer.currentAreaName}_music"
+                            media.isDoPickup = true
+                            media.volume = 100
+                            media.fadeTime = 2
+                            media.isLoop = true
+                            media.keepTimeout = 3600000
+                            media.startInstant = AreaAudioManager.getStartTime()
+                            MediaApi.getInstance().playFor(media, client)
+                        }
                     }
                 }
             }
