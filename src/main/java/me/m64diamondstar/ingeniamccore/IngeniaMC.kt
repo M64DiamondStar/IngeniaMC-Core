@@ -47,6 +47,7 @@ import me.m64diamondstar.ingeniamccore.shops.listeners.ShopListener
 import me.m64diamondstar.ingeniamccore.utils.EmojiUtils
 import me.m64diamondstar.ingeniamccore.utils.LocationUtils
 import me.m64diamondstar.ingeniamccore.utils.TeamHandler
+import me.m64diamondstar.ingeniamccore.utils.entities.EntityRegistry
 import me.m64diamondstar.ingeniamccore.utils.gui.GuiListener
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
 import me.m64diamondstar.ingeniamccore.wands.utils.WandRegistry
@@ -161,6 +162,7 @@ class IngeniaMC : JavaPlugin() {
         SplashBattleUtils.players.forEach { SplashBattleUtils.leave(it) }
         NpcRegistry.deleteAll()
 
+        EntityRegistry.getBukkitMap().forEach { it.remove() }
         Bukkit.getOnlinePlayers().forEach { it.activeBossBars().forEach { bossBar -> it.hideBossBar(bossBar) } }
 
         // Shut the discord but down
@@ -356,6 +358,11 @@ class IngeniaMC : JavaPlugin() {
             NPC Events
          */
         Bukkit.getServer().pluginManager.registerEvents(NpcListener(), this)
+
+        /*
+            BossBar Updates
+         */
+        Bukkit.getServer().pluginManager.registerEvents(BossBarUpdateListener(), this)
     }
 
     private fun loadPacketListeners(){

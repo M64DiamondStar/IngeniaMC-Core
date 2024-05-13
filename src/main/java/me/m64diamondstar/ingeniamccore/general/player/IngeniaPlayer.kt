@@ -6,12 +6,14 @@ import me.m64diamondstar.ingeniamccore.games.PhysicalGameType
 import me.m64diamondstar.ingeniamccore.games.parkour.Parkour
 import me.m64diamondstar.ingeniamccore.games.parkour.ParkourUtils
 import me.m64diamondstar.ingeniamccore.games.splashbattle.SplashBattleUtils
+import me.m64diamondstar.ingeniamccore.general.areas.Area
 import me.m64diamondstar.ingeniamccore.general.levels.LevelUtils
 import me.m64diamondstar.ingeniamccore.general.levels.LevelUtils.getLevel
 import me.m64diamondstar.ingeniamccore.general.levels.LevelUtils.getLevelUpLevels
 import me.m64diamondstar.ingeniamccore.general.levels.LevelUtils.getRewards
 import me.m64diamondstar.ingeniamccore.general.levels.LevelUtils.isLevelUp
 import me.m64diamondstar.ingeniamccore.general.player.data.PlayerConfig
+import me.m64diamondstar.ingeniamccore.npc.utils.CharWidth
 import me.m64diamondstar.ingeniamccore.utils.EmojiUtils
 import me.m64diamondstar.ingeniamccore.utils.LocationUtils.getLocationFromString
 import me.m64diamondstar.ingeniamccore.utils.Times
@@ -23,8 +25,11 @@ import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
 import me.m64diamondstar.ingeniamccore.wands.utils.Wands.getAccessibleWands
 import me.m64diamondstar.ingeniamccore.warps.WarpUtils
 import net.kyori.adventure.audience.Audience
+import net.kyori.adventure.bossbar.BossBar
+import net.kyori.adventure.key.Key
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
+import net.kyori.adventure.text.format.TextDecoration
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
 import net.minecraft.network.protocol.game.ClientboundTabListPacket
@@ -65,6 +70,16 @@ class IngeniaPlayer(val player: Player) {
 
         giveMenuItem()
 
+        val bossBar = BossBar.bossBar(Component.empty(), 0.0f, BossBar.Color.YELLOW, BossBar.Overlay.PROGRESS)
+        (player as Audience).showBossBar(bossBar)
+        BossBarPlayerRegistry.addPlayer(player, bossBar)
+        updateBossBar()
+
+        val invisibleBossBar1 = BossBar.bossBar(Component.empty(), 0.0f, BossBar.Color.YELLOW, BossBar.Overlay.PROGRESS)
+        (player as Audience).showBossBar(invisibleBossBar1)
+        val invisibleBossBar2 = BossBar.bossBar(Component.empty(), 0.0f, BossBar.Color.YELLOW, BossBar.Overlay.PROGRESS)
+        //(player as Audience).showBossBar(invisibleBossBar2)
+
         val currentLevel = getLevel()
         val necessaryExp = LevelUtils.getExpRequirement(currentLevel + 1) - LevelUtils.getExpRequirement(currentLevel)
         val currentExp = exp - LevelUtils.getExpRequirement(currentLevel)
@@ -98,7 +113,8 @@ class IngeniaPlayer(val player: Player) {
         SplashBattleUtils.getAllSplashBattles().forEach { it.getLeaderboard().spawnSoaksSign(player) }
         ParkourUtils.getAllParkours().forEach { it.getLeaderboard().spawnSign(player) }
 
-        if (isLevelUp(playerConfig.getLevel(), playerConfig.getExp())) levelUp(playerConfig.getLevel(), playerConfig.getExp())
+        if (isLevelUp(playerConfig.getLevel(), playerConfig.getExp()))
+            levelUp(playerConfig.getLevel(), playerConfig.getExp())
 
         if(!(player.hasPermission("ingenia.team") || player.hasPermission("ingenia.team-trial")) && !player.isOp)
             player.gameMode = GameMode.ADVENTURE
@@ -119,6 +135,20 @@ class IngeniaPlayer(val player: Player) {
                     Colors.format("#54b0b0VIP")
                 else
                     Colors.format("#a1a1a1Visitor")
+
+    val componentPrefix: Component
+        get() = if(player.isOp)
+                    Component.text("Lead").color(TextColor.fromHexString("#c43535")).decorate(TextDecoration.BOLD)
+                else if(player.hasPermission("ingenia.team"))
+                    Component.text("Team").color(TextColor.fromHexString("#4180bf")).decorate(TextDecoration.BOLD)
+                else if(player.hasPermission("ingenia.teamtrial"))
+                    Component.text("Team Trial").color(TextColor.fromHexString("#4180bf")).decorate(TextDecoration.BOLD)
+                else if(player.hasPermission("ingenia.vip+"))
+                    Component.text("VIP+").color(TextColor.fromHexString("#9054b0")).decorate(TextDecoration.BOLD)
+                else if(player.hasPermission("ingenia.vip"))
+                    Component.text("VIP").color(TextColor.fromHexString("#54b0b0")).decorate(TextDecoration.BOLD)
+                else
+                    Component.text("Visitor").color(TextColor.fromHexString("#a1a1a1")).decorate(TextDecoration.BOLD)
 
     val rawPrefix: String
         get() = if (player.isOp)
@@ -292,15 +322,15 @@ class IngeniaPlayer(val player: Player) {
     var bal: Long
         get() = playerConfig.getBal()
         set(l) {
+            playerConfig.setBal(l)
             val receiveGoldenStarsEvent = ReceiveGoldenStarsEvent(player, l - bal)
             Bukkit.getPluginManager().callEvent(receiveGoldenStarsEvent)
-            playerConfig.setBal(l)
         }
 
     fun addBal(l: Long) {
+        playerConfig.setBal(l + bal)
         val receiveGoldenStarsEvent = ReceiveGoldenStarsEvent(player, l)
         Bukkit.getPluginManager().callEvent(receiveGoldenStarsEvent)
-        playerConfig.setBal(l + bal)
     }
 
     fun getLevel(): Int{
@@ -548,4 +578,46 @@ class IngeniaPlayer(val player: Player) {
             }
         }.runTaskTimer(IngeniaMC.plugin, 0L, 1L)
     }
+
+    fun updateBossBar(){
+        val area = if(currentAreaName != null) Area(currentAreaName!!.split("/")[0], currentAreaName!!.split("/")[1]).displayName else "Not in area"
+        val areaText = ArrayList<Pair<Char, Int>>()
+        area.forEach { if(CharWidth.getAsMap().containsKey(it)) areaText.add(Pair(it, CharWidth.getAsMap()[it]!!)) }
+
+        val rankRaw = rawPrefix
+        val rank = componentPrefix
+        val rankText = ArrayList<Pair<Char, Int>>()
+        rankRaw.forEach { if(CharWidth.getAsMap().containsKey(it)) rankText.add(Pair(it, CharWidth.getAsMap()[it]!!)) }
+
+        val stars = " ${NumberFormat.getInstance(Locale.getDefault()).format(bal)}"
+        val starsText = ArrayList<Pair<Char, Int>>()
+        stars.forEach { if(CharWidth.getAsMap().containsKey(it)) starsText.add(Pair(it, CharWidth.getAsMap()[it]!!)) }
+
+        val bossBar = BossBarPlayerRegistry.getBossBar(this.player) ?: return
+        bossBar.name(
+            Component.text("\uE022\uF801") // Left Part
+                .append(Component.text().content(areaText.joinToString("") { '\uEE00'.plus(it.second).toString() + "\uF801" }).font(Key.key("minecraft:default")))
+                .append(Component.text().content("\uE023\uF806\uF806")) // Right part
+                .append(Component.text().content(areaText.map { '\uF800'.plus(it.second) }.joinToString("")).font(Key.key("minecraft:default")))
+                .append(Component.text().content(areaText.map { it.first }.joinToString("")).font(Key.key("ingeniamc:ui_top")))
+                .append(Component.text("\uF826\uF826"))
+
+                .append(Component.text("\uF828\uE022\uF801"))
+                .append(Component.text().content(rankText.joinToString("") { '\uEE00'.plus(it.second + 1).toString() + "\uF801" }).font(Key.key("minecraft:default")))
+                .append(Component.text().content("\uE023\uF806\uF806")) // Right part
+                .append(Component.text().content(rankText.map { '\uF800'.plus(it.second + 1) }.joinToString("")).font(Key.key("minecraft:default")))
+                .append(rank.font(Key.key("ingeniamc:ui_top")))
+                .append(Component.text("\uF826\uF826"))
+
+                .append(Component.text("\uF828\uE022\uF801\uEE07\uF801")) // extra space - left part - 7px part for star - 1 back
+                .append(Component.text().content(starsText.joinToString("") { '\uEE00'.plus(it.second).toString() + "\uF801" }).font(Key.key("minecraft:default")))
+                .append(Component.text().content("\uE023\uF806\uF806")) // Right part
+                .append(Component.text().content(starsText.map { '\uF800'.plus(it.second) }.joinToString("")).font(Key.key("minecraft:default")))
+                .append(Component.text("\uF807\uE024")) // Star icon negative space and star icon
+                .append(Component.text().content(starsText.map { it.first }.joinToString("")).font(Key.key("ingeniamc:ui_top")))
+                .append(Component.text("\uF826\uF826"))
+
+        )
+    }
+
 }

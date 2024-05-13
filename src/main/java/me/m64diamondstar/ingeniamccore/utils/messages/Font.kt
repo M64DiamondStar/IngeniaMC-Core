@@ -18,4 +18,25 @@ object Font {
         }
     }
 
+    fun convertToSmallText(text: String): String {
+        val normalAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZĞŞÇÜİÖĄĆĘŁŃÓŚŹŻ"
+        val smallTextAlphabet = "ᴀʙᴄᴅᴇꜰɢʜɪᴊᴋʟᴍɴᴏᴘǫʀѕᴛᴜᴠᴡxʏᴢğşçüiöᴀᴄ́ᴌśᴏ́ᴢ̇ᴢ́"
+
+        val uppercaseText = text.uppercase()
+        var convertedText = ""
+
+        for (char in uppercaseText) {
+            val index = normalAlphabet.indexOf(char)
+
+            convertedText += if (index != -1) {
+                smallTextAlphabet[index]
+            } else {
+                char
+            }
+        }
+
+        return convertedText
+    }
+
+
 }

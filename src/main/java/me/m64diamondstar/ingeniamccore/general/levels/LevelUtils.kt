@@ -22,20 +22,14 @@ object LevelUtils {
      * Checks if a player has levelled up based on EXP
      */
     fun isLevelUp(previousExp: Long, newExp: Long): Boolean{
-        if(getLevel(previousExp) < getLevel(newExp)) {
-            return true
-        }
-        return false
+        return getLevel(previousExp) < getLevel(newExp)
     }
 
     /**
      * Checks if a player has levelled up based on previous level
      */
     fun isLevelUp(previousLevel: Int, newExp: Long): Boolean{
-        if(previousLevel < getLevel(newExp)) {
-            return true
-        }
-        return false
+        return previousLevel < getLevel(newExp)
     }
 
     fun getLevelUpLevels(previousExp: Long, newExp: Long): List<Int>{

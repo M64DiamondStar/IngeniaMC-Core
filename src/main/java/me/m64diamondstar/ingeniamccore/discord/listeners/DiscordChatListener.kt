@@ -13,7 +13,7 @@ import org.bukkit.Bukkit
 class DiscordChatListener: ListenerAdapter() {
 
     override fun onMessageReceived(event: MessageReceivedEvent) {
-        if (event.author.isBot || event.isWebhookMessage) return
+        if (event.isWebhookMessage || event.author.isBot) return
         if (event.channelType != ChannelType.TEXT) return
         if(event.channel.asTextChannel().id != BotUtils.ChatUtils.chatChannel!!.id) return
         if(event.message.contentRaw.isEmpty()) return

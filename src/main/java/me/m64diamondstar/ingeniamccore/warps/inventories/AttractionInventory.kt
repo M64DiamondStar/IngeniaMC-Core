@@ -4,31 +4,35 @@ import me.m64diamondstar.ingeniamccore.general.inventory.MainInventory
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.protect.FeatureManager
 import me.m64diamondstar.ingeniamccore.protect.FeatureType
-import me.m64diamondstar.ingeniamccore.utils.gui.Gui
+import me.m64diamondstar.ingeniamccore.utils.gui.InventoryHandler
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
 import me.m64diamondstar.ingeniamccore.utils.messages.Messages
 import me.m64diamondstar.ingeniamccore.warps.WarpManager
 import me.m64diamondstar.ingeniamccore.warps.WarpType
 import me.m64diamondstar.ingeniamccore.warps.WarpUtils
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.TextColor
 import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.event.inventory.InventoryClickEvent
+import org.bukkit.event.inventory.InventoryCloseEvent
+import org.bukkit.event.inventory.InventoryOpenEvent
 import org.bukkit.event.player.PlayerTeleportEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.ItemMeta
 
-class AttractionInventory(player: IngeniaPlayer): Gui(player) {
+class AttractionInventory(player: IngeniaPlayer): InventoryHandler(player) {
 
-    override fun setDisplayName(): String {
-        return Colors.format("&f\uF808金")
+    override fun setDisplayName(): Component {
+        return Component.text("\uF808金").color(TextColor.color(255, 255, 255))
     }
 
     override fun setSize(): Int {
         return 54
     }
 
-    override fun handleInventory(event: InventoryClickEvent) {
+    override fun onClick(event: InventoryClickEvent) {
         if(event.slot in 0..44){
             if(event.currentItem != null && WarpUtils.getIDFromItem(event.currentItem!!) != null){
                 val featureManager = FeatureManager()
@@ -46,12 +50,13 @@ class AttractionInventory(player: IngeniaPlayer): Gui(player) {
         }
 
         if(event.slot == 49){
-            val mainInventory = MainInventory(getPlayer())
+            val mainInventory = MainInventory(getPlayer(), 0)
             mainInventory.open()
         }
     }
 
-    override fun setInventoryItems() {
+    override fun onOpen(event: InventoryOpenEvent) {
+        val inventory = event.inventory
         val warpManager = WarpManager()
         warpManager.getAllIDs(WarpType.RIDE).forEach {
             if(warpManager.getWarpItem(it) != null){
@@ -68,6 +73,7 @@ class AttractionInventory(player: IngeniaPlayer): Gui(player) {
         transparentItem.itemMeta = transparentMeta
 
         inventory.setItem(49, transparentItem)
-
     }
+
+    override fun onClose(event: InventoryCloseEvent) {}
 }

@@ -1,32 +1,34 @@
 package me.m64diamondstar.ingeniamccore.attractions.operate
 
+import me.m64diamondstar.ingeniamccore.attractions.Attraction
 import me.m64diamondstar.ingeniamccore.attractions.custom.Coaster
 import me.m64diamondstar.ingeniamccore.attractions.custom.FreeFall
-import me.m64diamondstar.ingeniamccore.attractions.custom.Slide
-import me.m64diamondstar.ingeniamccore.attractions.Attraction
 import me.m64diamondstar.ingeniamccore.attractions.custom.Frisbee
+import me.m64diamondstar.ingeniamccore.attractions.custom.Slide
 import me.m64diamondstar.ingeniamccore.attractions.utils.AttractionType
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
-import me.m64diamondstar.ingeniamccore.utils.gui.Gui
+import me.m64diamondstar.ingeniamccore.utils.gui.InventoryHandler
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
 import me.m64diamondstar.ingeniamccore.utils.messages.Messages
+import net.kyori.adventure.text.Component
 import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.event.inventory.InventoryClickEvent
+import org.bukkit.event.inventory.InventoryCloseEvent
+import org.bukkit.event.inventory.InventoryOpenEvent
 import org.bukkit.inventory.ItemStack
 
-class OperateInventory(player: IngeniaPlayer, private val attraction: Attraction): Gui(player) {
-    override fun setDisplayName(): String {
-        return "Operate"
+class OperateInventory(player: IngeniaPlayer, private val attraction: Attraction): InventoryHandler(player) {
+    override fun setDisplayName(): Component {
+        return Component.text("Operate")
     }
 
     override fun setSize(): Int {
         return 45
     }
 
-    override fun handleInventory(event: InventoryClickEvent) {
-
+    override fun onClick(event: InventoryClickEvent) {
         /*
          GATES
         */
@@ -108,8 +110,8 @@ class OperateInventory(player: IngeniaPlayer, private val attraction: Attraction
         }
     }
 
-    override fun setInventoryItems() {
-
+    override fun onOpen(event: InventoryOpenEvent) {
+        val inventory = event.inventory
         val item = ItemStack(Material.RED_WOOL)
         val meta = item.itemMeta!!
         meta.setDisplayName(Colors.format(MessageType.ERROR + "Close"))
@@ -149,7 +151,8 @@ class OperateInventory(player: IngeniaPlayer, private val attraction: Attraction
         meta.setDisplayName(Colors.format(MessageType.INFO + "&lDispatch"))
         item.itemMeta = meta
         inventory.setItem(31, item)
-
     }
+
+    override fun onClose(event: InventoryCloseEvent) {}
 
 }

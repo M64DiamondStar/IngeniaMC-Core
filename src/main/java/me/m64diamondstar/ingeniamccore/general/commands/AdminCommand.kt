@@ -1,20 +1,19 @@
 package me.m64diamondstar.ingeniamccore.general.commands
 
-import com.comphenix.protocol.PacketType
-import com.comphenix.protocol.events.PacketContainer
 import com.ticxo.modelengine.api.ModelEngineAPI
 import fr.mrmicky.fastboard.adventure.FastBoard
+import gg.flyte.twilight.scheduler.delay
 import me.m64diamondstar.ingeniamccore.IngeniaMC
-import me.m64diamondstar.ingeniamccore.general.areas.AreaAudioManager
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.npc.utils.DialogueUtils
-import me.m64diamondstar.ingeniamccore.utils.Times
 import me.m64diamondstar.ingeniamccore.utils.entities.CameraPacketEntity
+import me.m64diamondstar.ingeniamccore.utils.entities.NpcPlayerEntity
 import me.m64diamondstar.ingeniamccore.utils.items.Items
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
 import me.m64diamondstar.ingeniamccore.utils.messages.Messages
 import net.kyori.adventure.audience.Audience
+import net.kyori.adventure.bossbar.BossBar
 import net.kyori.adventure.key.Key
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
@@ -328,7 +327,7 @@ class AdminCommand: CommandExecutor {
         }
 
         if(args[0].equals("testcinematic", ignoreCase = true)){
-            val cameraPacketEntity = CameraPacketEntity(sender.world, sender.location, sender)
+            val cameraPacketEntity = CameraPacketEntity(sender.world, sender.location, sender, sender.location)
             cameraPacketEntity.spawn()
             cameraPacketEntity.watch()
             object: BukkitRunnable(){
@@ -367,6 +366,23 @@ class AdminCommand: CommandExecutor {
             val frc = FontRenderContext(AffineTransform(), true, true)
 
             (sender as Audience).sendMessage(Component.text("${args[1]}: " + font.getStringBounds(args[1], frc).width))
+        }
+
+        if(args[0].equals("testbossbar", ignoreCase = true)){
+            val bossBar = BossBar.bossBar(Component.text("|"), 0.0f, BossBar.Color.YELLOW, BossBar.Overlay.PROGRESS)
+            (sender as Audience).showBossBar(bossBar)
+            delay(10, gg.flyte.twilight.time.TimeUnit.SECONDS) {
+                (sender as Audience).hideBossBar(bossBar)
+            }
+        }
+
+        if(args[0].equals("testnpcentity", ignoreCase = true)){
+            val npcEntity = NpcPlayerEntity(sender.world, sender.location, sender)
+            npcEntity.spawn()
+        }
+
+        if(args[0].equals("teststriptags", ignoreCase = true)){
+            (sender as Audience).sendMessage(Component.text(MiniMessage.miniMessage().stripTags("<red>Hello <blue>World!")))
         }
 
         return false

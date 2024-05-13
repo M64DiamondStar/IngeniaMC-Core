@@ -2,32 +2,36 @@ package me.m64diamondstar.ingeniamccore.shops.inventories
 
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.shops.Shop
-import me.m64diamondstar.ingeniamccore.utils.gui.Gui
+import me.m64diamondstar.ingeniamccore.utils.gui.InventoryHandler
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.utils.messages.Font
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
 import net.kyori.adventure.audience.Audience
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.minimessage.MiniMessage
 import net.kyori.adventure.title.Title
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
+import org.bukkit.event.inventory.InventoryCloseEvent
+import org.bukkit.event.inventory.InventoryOpenEvent
 import org.bukkit.inventory.ItemStack
 import java.text.NumberFormat
 import java.util.*
 
-class ConfirmInventory(player: Player, private val category: String, private val name: String, private val shopItemID: String): Gui(
+class ConfirmInventory(player: Player, private val category: String, private val name: String, private val shopItemID: String): InventoryHandler(
     IngeniaPlayer(player)
 ) {
-    override fun setDisplayName(): String {
-        return Colors.format("&f${Font.getGuiNegativeSpace(0)}\uEDA1")
+    override fun setDisplayName(): Component {
+        return Component.text("${Font.getGuiNegativeSpace(0)}\uEDA1").color(TextColor.color(255, 255, 255))
     }
 
     override fun setSize(): Int {
         return 54
     }
 
-    override fun handleInventory(event: InventoryClickEvent) {
+    override fun onClick(event: InventoryClickEvent) {
         val player = event.whoClicked as Player
 
         if(event.slot == 20){
@@ -84,9 +88,10 @@ class ConfirmInventory(player: Player, private val category: String, private val
         }
     }
 
-    override fun setInventoryItems() {
+    override fun onOpen(event: InventoryOpenEvent) {
         val shop = Shop(category, name)
         val item = shop.getItemStack(shopItemID, getPlayer().player)
+        val inventory = event.inventory
 
         if(item == null) {
             ShopInventory(getPlayer().player, category, name).open()
@@ -114,4 +119,6 @@ class ConfirmInventory(player: Player, private val category: String, private val
 
         inventory.setItem(20, cancel)
     }
+
+    override fun onClose(event: InventoryCloseEvent) {}
 }

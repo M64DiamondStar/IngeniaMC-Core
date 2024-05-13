@@ -37,16 +37,17 @@ enum class DialogueAction {
                 )
             )
 
+            val cinematicEntity = CameraPacketEntity(fromLocation.world, fromLocation, player, npc.getDialogue(player).getPlayerLocation())
+
             val movementTask = object : BukkitRunnable() {
                 private var progress = 0.0
                 private val maxDelta = max(max(abs(toLocation.x - fromLocation.x), abs(toLocation.y - fromLocation.y)), abs(toLocation.z - fromLocation.z))
-                val cinematicEntity = CameraPacketEntity(fromLocation.world, fromLocation, player)
 
                 override fun run() {
                     if(progress == 0.0){
+                        npc.getDialogue(player).spawnFakePlayer()
                         cinematicEntity.spawn()
                         cinematicEntity.watch()
-
                         npc.getDialogue(player).setCamera(cinematicEntity)
                     }
 
@@ -56,6 +57,7 @@ enum class DialogueAction {
                         Bukkit.getScheduler().runTaskLaterAsynchronously(IngeniaMC.plugin, Runnable {
                             cinematicEntity.despawn()
                             npc.getDialogue(player).setNormalView(true)
+                            npc.getDialogue(player).despawnFakePlayer()
                         }, 10L)
                         cancel()
                         return
@@ -87,7 +89,7 @@ enum class DialogueAction {
                 }
             }
 
-            return movementTask.runTaskTimer(IngeniaMC.plugin, 10L, 1L)
+            return movementTask.runTaskTimer(IngeniaMC.plugin, 11L, 1L)
         }
 
         override fun isCorrectFormat(data: String): Boolean {

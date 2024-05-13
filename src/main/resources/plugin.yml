@@ -12,7 +12,7 @@ depend:
   - OpenAudioMc
   - ModelEngine
 libraries:
-  - net.dv8tion:JDA:5.0.0-beta.19
+  - net.dv8tion:JDA:5.0.0-beta.23
 
 commands:
   wand:

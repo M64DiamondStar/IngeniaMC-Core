@@ -22,8 +22,9 @@ class MenuSubcommand(private val sender: CommandSender, private val args: Array<
             return
         }
 
-        if (args.size !in 1..3) {
+        if (args.size !in 1..4) {
             sender.sendMessage(Colors.format(Messages.commandUsage("ig menu [give/open] [player]")))
+            sender.sendMessage(Colors.format(Messages.commandUsage("ig menu version <version> [player]")))
             return
         }
 
@@ -37,7 +38,7 @@ class MenuSubcommand(private val sender: CommandSender, private val args: Array<
 
                 if(args.size == 2) {
                     val player = IngeniaPlayer(sender)
-                    val mainInventory = MainInventory(player)
+                    val mainInventory = MainInventory(player, 0)
                     mainInventory.open()
                 }else{
                     val target = Bukkit.getPlayer(args[2])
@@ -47,7 +48,7 @@ class MenuSubcommand(private val sender: CommandSender, private val args: Array<
                     }
                     val targetPlayer = IngeniaPlayer(target)
 
-                    val mainInventory = MainInventory(targetPlayer)
+                    val mainInventory = MainInventory(targetPlayer, 0)
                     mainInventory.open()
                 }
             } else if(args[1].equals("give", ignoreCase = true)){
@@ -68,7 +69,42 @@ class MenuSubcommand(private val sender: CommandSender, private val args: Array<
                     val targetPlayer = IngeniaPlayer(target)
                     targetPlayer.giveMenuItem()
                 }
-            } else{
+            } else if(args[1].equals("version", ignoreCase = true)){
+                if(sender !is Player){
+                    sender.sendMessage(Messages.noPlayer())
+                    return
+                }
+
+                if(args.size == 3){
+                    if(args[2].toIntOrNull() == null){
+                        sender.sendMessage(Colors.format(Messages.commandUsage("ig menu version <version>")))
+                        return
+                    }
+                    val version = args[2].toInt()
+                    val mainInventory = MainInventory(IngeniaPlayer(sender), version)
+                    mainInventory.open()
+                }
+                else if(args.size == 4){
+                    if(args[2].toIntOrNull() == null){
+                        sender.sendMessage(Colors.format(Messages.commandUsage("ig menu version <version>")))
+                        return
+                    }
+                    val target = Bukkit.getPlayer(args[3])
+                    if (target == null) {
+                        sender.sendMessage(Messages.invalidPlayer())
+                        return
+                    }
+                    val targetPlayer = IngeniaPlayer(target)
+                    val version = args[2].toInt()
+                    val mainInventory = MainInventory(targetPlayer, version)
+                    mainInventory.open()
+                }
+                else{
+                    sender.sendMessage(Colors.format(Messages.commandUsage("ig menu version <version> [player]")))
+                }
+            }
+
+            else{
                 sender.sendMessage(Colors.format(Messages.commandUsage("ig menu [give/open] [player]")))
             }
 
@@ -81,7 +117,7 @@ class MenuSubcommand(private val sender: CommandSender, private val args: Array<
             }
 
             val player = IngeniaPlayer(sender)
-            val mainInventory = MainInventory(player)
+            val mainInventory = MainInventory(player, 0)
             mainInventory.open()
         }
     }
@@ -92,11 +128,22 @@ class MenuSubcommand(private val sender: CommandSender, private val args: Array<
         if (args.size == 2) {
             tabs.add("give")
             tabs.add("open")
+            tabs.add("version")
         }
 
         if(args.size == 3){
-            for(player in Bukkit.getOnlinePlayers())
-                tabs.add(player.name)
+            if(args[1].equals("version", ignoreCase = true)){
+                tabs.addAll(listOf("0", "1"))
+            }else
+                for(player in Bukkit.getOnlinePlayers())
+                    tabs.add(player.name)
+        }
+
+        if(args.size == 4){
+            if(args[1].equals("version", ignoreCase = true)){
+                for(player in Bukkit.getOnlinePlayers())
+                    tabs.add(player.name)
+            }
         }
 
         return tabs

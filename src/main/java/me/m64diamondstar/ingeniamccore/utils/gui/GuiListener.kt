@@ -4,16 +4,23 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.inventory.InventoryClickEvent
+import org.bukkit.event.inventory.InventoryCloseEvent
+import org.bukkit.event.inventory.InventoryOpenEvent
 
 class GuiListener : Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     fun onInventoryClick(event: InventoryClickEvent){
-        val holder = event.inventory.holder
-        if(holder is Gui) {
-            event.isCancelled = true
-            if (event.slot == -999) return
-            holder.handleInventory(event)
-        }
+        GuiManager.handleClick(event)
+    }
+
+    @EventHandler
+    fun onInventoryOpen(event: InventoryOpenEvent){
+        GuiManager.handleOpen(event)
+    }
+
+    @EventHandler
+    fun onInventoryClose(event: InventoryCloseEvent){
+        GuiManager.handleClose(event)
     }
 }

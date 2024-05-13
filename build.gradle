@@ -76,8 +76,8 @@ dependencies {
     shadow 'com.github.patheloper.pathetic:pathetic-mapping:2.3'
     shadow 'gg.flyte:twilight:1.1.10'
 
-    implementation "net.dv8tion:JDA:5.0.0-beta.19" // "Shadowed" via plugin libraries in the plugin.yml
-    implementation 'club.minnced:jda-ktx:0.11.0-beta.19'
+    implementation "net.dv8tion:JDA:5.0.0-beta.23" // "Shadowed" via plugin libraries in the plugin.yml
+    implementation 'club.minnced:jda-ktx:0.11.0-beta.20'
     implementation 'com.github.M64DiamondStar:EffectMaster:f47e6278df'
 
 
@@ -145,7 +145,7 @@ shadowJar {
     relocate 'me.m56738.SmoothCoastersAPI', 'me.m64diamondstar.ingeniamccore.libs.smoothcoasters'
     relocate 'fr.mrmicky.fastboard', 'me.m64diamondstar.fastboard'
     relocate 'com.github.patheloper.pathetic.pathetic-mapping', 'me.m64diamondstar.ingeniamccore.libs.pathetic'
-    relocate 'gg.flyte.twilight', 'me.m64diamondstar.ingeniamccore.libs.twiligt'
+    //relocate 'gg.flyte.twilight', 'me.m64diamondstar.ingeniamccore.libs.twiligt'
 }
 
 idea {

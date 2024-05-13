@@ -106,7 +106,7 @@ class NpcData(id: String): DataConfiguration("npc", "$id.yml") {
     }
 
     fun setActionType(branch: String, index: Int, action: DialogueAction){
-        getConfig().set("Dialogue.$branch.$index.Action.Type", action)
+        getConfig().set("Dialogue.$branch.$index.Action.Type", action.name)
         save()
     }
 

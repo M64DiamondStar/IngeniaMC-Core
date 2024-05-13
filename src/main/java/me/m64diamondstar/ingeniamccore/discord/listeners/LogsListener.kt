@@ -60,6 +60,7 @@ class LogsListener: ListenerAdapter() {
      * Attachment & link Listener
      */
     override fun onMessageReceived(event: MessageReceivedEvent) {
+        if(event.isWebhookMessage) return
         val user = event.author
         val message = event.message
         val attachments = message.attachments

@@ -2,6 +2,7 @@ package me.m64diamondstar.ingeniamccore.npc
 
 import com.ticxo.modelengine.api.ModelEngineAPI
 import com.ticxo.modelengine.api.entity.Dummy
+import com.ticxo.modelengine.api.model.ActiveModel
 import io.papermc.paper.entity.LookAnchor
 import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.npc.utils.DialoguePlayerRegistry
@@ -10,22 +11,27 @@ import me.m64diamondstar.ingeniamccore.npc.utils.NpcRegistry
 import me.m64diamondstar.ingeniamccore.npc.utils.NpcUtils
 import me.m64diamondstar.ingeniamccore.utils.LocationUtils
 import me.m64diamondstar.ingeniamccore.utils.entities.CameraPacketEntity
+import me.m64diamondstar.ingeniamccore.utils.entities.NpcPlayerEntity
 import me.m64diamondstar.ingeniamccore.utils.messages.Font
 import net.kyori.adventure.audience.Audience
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.title.Title
 import org.bukkit.Bukkit
+import org.bukkit.Material
 import org.bukkit.entity.Player
+import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.bukkit.scheduler.BukkitRunnable
 import org.bukkit.scheduler.BukkitTask
+import org.joml.Vector3f
 import java.time.Duration
 
 class Npc(private val id: String) {
 
     private var baseEntity: Dummy<*>? = null
+    private var activeModel: ActiveModel? = null
     private val dialoguePlayers = HashMap<Player, Dialogue>()
     private var lookTask: BukkitTask? = null
 
@@ -49,9 +55,29 @@ class Npc(private val id: String) {
                 var closestPlayer: Player? = null
                 for(player in NpcUtils.PlayersMoved.getPlayers()){
                     if(player.location.distanceSquared(data.getLocation()!!) > 64) continue
+                    if(!getDialogue(player).isInNormalView()) continue
                     if(closestPlayer == null) closestPlayer = player
                     if(player.location.distanceSquared(data.getLocation()!!) < closestPlayer.location.distanceSquared(data.getLocation()!!))
                         closestPlayer = player
+
+                    val fromVector = Vector3f(player.eyeLocation.toVector().toVector3f())
+                    val directionVector = Vector3f(player.eyeLocation.direction.toVector3f())
+
+                   /*val rayTraceResult = ModelEngineAPI.getInteractionTracker()
+                        .getHitbox(
+                            /*(activeModel?.modelRenderer as DisplayRenderer)
+                                .hitbox
+                                .hitboxId*/
+                        baseEntity!!.entityId)
+                        .orientedBoundingBox
+                        ?.rayTrace(fromVector, directionVector, 6.0, null)
+
+                    if(rayTraceResult != null && rayTraceResult.hitEntity == player){
+                        player.sendMessage("Looking at npc!")
+                    }
+                    player.sendMessage((activeModel?.modelRenderer as DisplayRenderer)
+                        .hitbox
+                        .hitboxId.toString())*/
                 }
 
                 if(closestPlayer != null){
@@ -87,6 +113,7 @@ class Npc(private val id: String) {
         modeledEntity.addModel(activeModel, true)
 
         baseEntity = dummy
+        this.activeModel = activeModel
         NpcRegistry.setNpcDummy(baseEntity!!, id)
         dummy.lookController.setBodyYaw(data.getLocation()!!.yaw)
         if(lookTask == null)
@@ -139,6 +166,9 @@ class Npc(private val id: String) {
         private var actionTask: BukkitTask? = null
         private var camera: CameraPacketEntity? = null
         private var playerInventory = player.inventory.contents
+        private var playerLocation = player.location
+        private var checkLocation = true
+        private var fakePlayer: NpcPlayerEntity? = null
 
         init{
             dialoguePlayers[player] = this
@@ -171,7 +201,7 @@ class Npc(private val id: String) {
             task = object: BukkitRunnable(){
                 override fun run() {
 
-                    if(player.location.distanceSquared(baseEntity!!.location) > 36){
+                    if(player.location.distanceSquared(baseEntity!!.location) > 36 && checkLocation){
                         end()
                         return
                     }
@@ -235,10 +265,24 @@ class Npc(private val id: String) {
                 return
             }
 
+            // If the player has an option, give it numbers. If not, remove the numbers
+            if(data.hasOptions(branch, index))
+                this.setNumbers(true)
+            else
+                this.setNumbers(false)
+
+            // Dialogue has an action
             if(data.getActionType(branch, index) != null && data.getActionData(branch, index) != null){
+                // If the player is in normal view, it'll save their current location to teleport them back after
+                if(normalView)
+                    playerLocation = player.location
+
+                checkLocation = false
+
+                // Execute the action
                 actionTask = data.getActionType(branch, index)!!.execute(this@Npc, player, data.getActionData(branch, index)!!)
 
-                Bukkit.getScheduler().runTaskLater(IngeniaMC.plugin, Runnable {
+                Bukkit.getScheduler().runTaskLater(IngeniaMC.plugin, Runnable { // Start the dialogue after 10 ticks
                     progressiveTask = DialogueUtils.sendProgressiveDialogue(
                         player,
                         data.getDialogue(branch, index),
@@ -246,10 +290,15 @@ class Npc(private val id: String) {
                         data.getDialogueBackdropColor()
                     )
                 }, 10L)
-            }else{
+            }
+
+            // Dialogue has no action
+            else{
                 Bukkit.getScheduler().runTaskLater(IngeniaMC.plugin, Runnable {
                     camera = null
                     normalView = true
+                    checkLocation = true // Start checking the location again after 10 ticks if out of normal view, else start instantly
+                    despawnFakePlayer() // Despawn the fake player if there is one
                     progressiveTask = DialogueUtils.sendProgressiveDialogue(
                         player,
                         data.getDialogue(branch, index),
@@ -303,6 +352,8 @@ class Npc(private val id: String) {
             this.normalView = boolean
         }
 
+        fun isInNormalView() = normalView
+
         fun executeOption(optionIndex: Int){
             val data = getData()
             if(data.getDialogue(branch, index).isEmpty()) return
@@ -312,6 +363,36 @@ class Npc(private val id: String) {
             val option = data.getOption(branch, index, optionIndex)!!
             option.execute(player, this@Npc)
 
+        }
+
+        fun getPlayerLocation() = playerLocation.clone()
+
+        private fun setNumbers(boolean: Boolean){
+            if(boolean){
+                val item = ItemStack(Material.FEATHER)
+                val meta = item.itemMeta!!
+                meta.displayName(Component.empty())
+
+                for(i in 0.. 3) {
+                    meta.setCustomModelData(i + 4)
+                    item.itemMeta = meta
+                    player.inventory.setItem(i, item)
+                }
+            }else{
+                for(i in 0.. 3) player.inventory.setItem(i, null)
+            }
+        }
+
+        fun spawnFakePlayer(){
+            despawnFakePlayer()
+            val npcEntity = NpcPlayerEntity(player.location.world, player.location, player)
+            npcEntity.spawn()
+            this.fakePlayer = npcEntity
+        }
+
+        fun despawnFakePlayer(){
+            if(this.fakePlayer != null)
+                this.fakePlayer?.despawn()
         }
 
     }

@@ -5,42 +5,48 @@ import me.m64diamondstar.ingeniamccore.cosmetics.utils.CosmeticType
 import me.m64diamondstar.ingeniamccore.general.inventory.MainInventory
 import me.m64diamondstar.ingeniamccore.general.player.CosmeticPlayer
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
-import me.m64diamondstar.ingeniamccore.utils.gui.Gui
+import me.m64diamondstar.ingeniamccore.utils.gui.InventoryHandler
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.TextColor
 import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
+import org.bukkit.event.inventory.InventoryCloseEvent
+import org.bukkit.event.inventory.InventoryOpenEvent
 import org.bukkit.event.inventory.InventoryType
+import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.ItemMeta
 
-class CosmeticsInventory(private var player: Player, private var selected: String, private val page: Int): Gui(IngeniaPlayer(player)) {
+class CosmeticsInventory(private var player: Player, private var selected: String, private val page: Int): InventoryHandler(IngeniaPlayer(player)) {
 
     private val freeSlots = Array(21) {i -> if(i in  0..6) i + 19 else if(i in 7..13) i + 21 else i + 23}
 
     private val previousPage = intArrayOf(18, 27, 36)
     private val nextPage = intArrayOf(26, 35, 44)
 
-    override fun setDisplayName(): String {
-        return Colors.format("\uF808&f田\uF81C\uF81A\uF819\uF811$selected")
+    override fun setDisplayName(): Component {
+        return Component.text("\uF808田\uF81C\uF81A\uF819\uF811$selected").color(TextColor.color(255, 255, 255))
     }
 
     override fun setSize(): Int {
         return 54
     }
 
-    override fun handleInventory(event: InventoryClickEvent) {
+    override fun onClick(event: InventoryClickEvent) {
         val player = event.whoClicked as Player
         val ingeniaPlayer = IngeniaPlayer(player)
         val cosmeticPlayer = CosmeticPlayer(player)
+        val inventory = event.inventory
 
         if(event.slot == -999 || !event.view.title.contains("田")) return
         if(event.clickedInventory?.type == InventoryType.PLAYER) return
 
         if(event.slot == 49){
-            val mainInventory = MainInventory(getPlayer())
+            val mainInventory = MainInventory(getPlayer(), 0)
             mainInventory.open()
             return
         }
@@ -103,14 +109,14 @@ class CosmeticsInventory(private var player: Player, private var selected: Strin
         }
 
         if(nextPage.contains(event.slot) && event.currentItem != null){
-            val inventory = CosmeticsInventory(player, selected, page + 1)
-            inventory.open()
+            val cosmeticsInventory = CosmeticsInventory(player, selected, page + 1)
+            cosmeticsInventory.open()
             return
         }
 
         if(previousPage.contains(event.slot) && event.currentItem != null){
-            val inventory = CosmeticsInventory(player, selected, page - 1)
-            inventory.open()
+            val cosmeticsInventory = CosmeticsInventory(player, selected, page - 1)
+            cosmeticsInventory.open()
             return
         }
 
@@ -161,10 +167,10 @@ class CosmeticsInventory(private var player: Player, private var selected: Strin
         }
     }
 
-    override fun setInventoryItems() {
-
+    override fun onOpen(event: InventoryOpenEvent) {
         val transparentItem = ItemStack(Material.FEATHER)
         val transparentMeta = transparentItem.itemMeta as ItemMeta
+        val inventory = event.inventory
         transparentMeta.setDisplayName(Colors.format(MessageType.ERROR + "&lGo Back"))
         transparentMeta.lore = listOf(Colors.format("${MessageType.LORE}Click here to go back to the main menu."))
         transparentMeta.setCustomModelData(1)
@@ -185,7 +191,7 @@ class CosmeticsInventory(private var player: Player, private var selected: Strin
                 "Hats"))
         inventory.setItem(2,
             addEquipmentLore(CosmeticItems(CosmeticType.SHIRT).getItem(cosmeticPlayer.getEquipment().getEquippedId(CosmeticType.SHIRT)),
-            "Shirts"))
+                "Shirts"))
 
         inventory.setItem(5,
             addEquipmentLore(CosmeticItems(CosmeticType.BALLOON).getItem(cosmeticPlayer.getEquipment().getEquippedId(CosmeticType.BALLOON)),
@@ -198,19 +204,23 @@ class CosmeticsInventory(private var player: Player, private var selected: Strin
                 "Shoes"))
 
         when(selected){
-            "國" -> addCosmetics(CosmeticType.HAT)
-            "因" -> addCosmetics(CosmeticType.SHIRT)
-            "圖" -> addWands()
-            "果" -> addCosmetics(CosmeticType.BALLOON)
-            "四" -> addCosmetics(CosmeticType.PANTS)
-            "界" -> addCosmetics(CosmeticType.SHOES)
+            "國" -> addCosmetics(CosmeticType.HAT, inventory)
+            "因" -> addCosmetics(CosmeticType.SHIRT, inventory)
+            "圖" -> addWands(inventory)
+            "果" -> addCosmetics(CosmeticType.BALLOON, inventory)
+            "四" -> addCosmetics(CosmeticType.PANTS, inventory)
+            "界" -> addCosmetics(CosmeticType.SHOES, inventory)
         }
+    }
+
+    override fun onClose(event: InventoryCloseEvent) {
+
     }
 
     /**
      * Run when wand gui is chosen.
      **/
-    private fun addWands(){
+    private fun addWands(inventory: Inventory){
         val ingeniaPlayer = IngeniaPlayer(player)
 
         for(i in 0 until ingeniaPlayer.wands.size){
@@ -218,7 +228,7 @@ class CosmeticsInventory(private var player: Player, private var selected: Strin
         }
     }
 
-    private fun addCosmetics(cosmeticType: CosmeticType){
+    private fun addCosmetics(cosmeticType: CosmeticType, inventory: Inventory){
         val cosmeticPlayer = CosmeticPlayer(player)
         if(cosmeticPlayer.getAllCosmeticsAsItemStack(cosmeticType).isEmpty())
             return
@@ -227,11 +237,11 @@ class CosmeticsInventory(private var player: Player, private var selected: Strin
 
         if(maxSize > freeSlots.size) {
             maxSize = freeSlots.size
-            addNextButton()
+            addNextButton(inventory)
         }
 
         if(page > 0) {
-            addPreviousButton()
+            addPreviousButton(inventory)
         }
 
         for(i in 0 until maxSize){
@@ -241,7 +251,7 @@ class CosmeticsInventory(private var player: Player, private var selected: Strin
         }
     }
 
-    private fun addNextButton(){
+    private fun addNextButton(inventory: Inventory){
         val item = ItemStack(Material.FEATHER)
         val meta = item.itemMeta!!
         meta.setCustomModelData(1)
@@ -250,7 +260,7 @@ class CosmeticsInventory(private var player: Player, private var selected: Strin
         nextPage.forEach { inventory.setItem(it, item) }
     }
 
-    private fun addPreviousButton(){
+    private fun addPreviousButton(inventory: Inventory){
         val item = ItemStack(Material.FEATHER)
         val meta = item.itemMeta!!
         meta.setCustomModelData(1)

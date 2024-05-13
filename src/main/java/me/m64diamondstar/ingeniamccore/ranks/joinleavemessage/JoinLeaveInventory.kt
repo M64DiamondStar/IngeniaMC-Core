@@ -7,10 +7,12 @@ import me.m64diamondstar.ingeniamccore.cosmetics.utils.MessageBuilder
 import me.m64diamondstar.ingeniamccore.general.player.CosmeticPlayer
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.ranks.RankPerksInventory
-import me.m64diamondstar.ingeniamccore.utils.gui.Gui
+import me.m64diamondstar.ingeniamccore.utils.gui.InventoryHandler
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
 import net.kyori.adventure.audience.Audience
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.Color
 import org.bukkit.Material
@@ -18,14 +20,17 @@ import org.bukkit.NamespacedKey
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
+import org.bukkit.event.inventory.InventoryCloseEvent
+import org.bukkit.event.inventory.InventoryOpenEvent
 import org.bukkit.event.inventory.InventoryType
+import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.ItemMeta
 import org.bukkit.inventory.meta.LeatherArmorMeta
 import org.bukkit.persistence.PersistentDataType
 
-class JoinLeaveInventory(val player: Player, private var selected: Selected) : Gui(IngeniaPlayer(player)) {
+class JoinLeaveInventory(val player: Player, private var selected: Selected) : InventoryHandler(IngeniaPlayer(player)) {
 
     enum class Selected {
         JOIN, LEAVE
@@ -48,17 +53,19 @@ class JoinLeaveInventory(val player: Player, private var selected: Selected) : G
     private var colorScroll = 0
     private var messageScroll = 0
 
-    override fun setDisplayName(): String {
-        return if(selected == Selected.JOIN) Colors.format("&f\uF808\uEA01") else Colors.format("&f\uF808\uEA02")
+    override fun setDisplayName(): Component {
+        return if(selected == Selected.JOIN) Component.text("\uF808\uEA01").color(TextColor.color(255, 255, 255))
+        else Component.text("\uF808\uEA02").color(TextColor.color(255, 255, 255))
     }
 
     override fun setSize(): Int {
         return 54
     }
 
-    override fun handleInventory(event: InventoryClickEvent) {
+    override fun onClick(event: InventoryClickEvent) {
         if(event.clickedInventory?.type == InventoryType.PLAYER) return
         val player = event.whoClicked as Player
+        val inventory = event.inventory
 
         if(joinSlots.contains(event.slot) && selected == Selected.LEAVE){
             val joinLeaveInventory = JoinLeaveInventory(player, Selected.JOIN)
@@ -96,10 +103,10 @@ class JoinLeaveInventory(val player: Player, private var selected: Selected) : G
             val colorId = meta.persistentDataContainer.get(NamespacedKey(IngeniaMC.plugin, "color-id"), PersistentDataType.STRING) ?: return
             if(selected == Selected.JOIN){
                 ingeniaPlayer.joinColor = colorId
-                addColors(me.m64diamondstar.ingeniamccore.cosmetics.utils.MessageType.JOIN)
+                addColors(me.m64diamondstar.ingeniamccore.cosmetics.utils.MessageType.JOIN, inventory)
             }else{
                 ingeniaPlayer.leaveColor = colorId
-                addColors(me.m64diamondstar.ingeniamccore.cosmetics.utils.MessageType.LEAVE)
+                addColors(me.m64diamondstar.ingeniamccore.cosmetics.utils.MessageType.LEAVE, inventory)
             }
         }
 
@@ -109,43 +116,43 @@ class JoinLeaveInventory(val player: Player, private var selected: Selected) : G
             val messageId = meta.persistentDataContainer.get(NamespacedKey(IngeniaMC.plugin, "message-id"), PersistentDataType.STRING) ?: return
             if(selected == Selected.JOIN){
                 ingeniaPlayer.joinMessage = messageId
-                addMessages(me.m64diamondstar.ingeniamccore.cosmetics.utils.MessageType.JOIN)
+                addMessages(me.m64diamondstar.ingeniamccore.cosmetics.utils.MessageType.JOIN, inventory)
             }else{
                 ingeniaPlayer.leaveMessage = messageId
-                addMessages(me.m64diamondstar.ingeniamccore.cosmetics.utils.MessageType.LEAVE)
+                addMessages(me.m64diamondstar.ingeniamccore.cosmetics.utils.MessageType.LEAVE, inventory)
             }
         }
 
         if(event.slot == colorScrollUp && event.currentItem != null && event.currentItem!!.type != Material.BARRIER){
             colorScroll--
             if(selected == Selected.JOIN)
-                addColors(me.m64diamondstar.ingeniamccore.cosmetics.utils.MessageType.JOIN)
+                addColors(me.m64diamondstar.ingeniamccore.cosmetics.utils.MessageType.JOIN, inventory)
             else
-                addColors(me.m64diamondstar.ingeniamccore.cosmetics.utils.MessageType.LEAVE)
+                addColors(me.m64diamondstar.ingeniamccore.cosmetics.utils.MessageType.LEAVE, inventory)
         }
 
         if(event.slot == colorScrollDown && event.currentItem != null && event.currentItem!!.type != Material.BARRIER){
             colorScroll++
             if(selected == Selected.JOIN)
-                addColors(me.m64diamondstar.ingeniamccore.cosmetics.utils.MessageType.JOIN)
+                addColors(me.m64diamondstar.ingeniamccore.cosmetics.utils.MessageType.JOIN, inventory)
             else
-                addColors(me.m64diamondstar.ingeniamccore.cosmetics.utils.MessageType.LEAVE)
+                addColors(me.m64diamondstar.ingeniamccore.cosmetics.utils.MessageType.LEAVE, inventory)
         }
 
         if(event.slot == messageScrollUp && event.currentItem != null && event.currentItem!!.type != Material.BARRIER){
             messageScroll--
             if(selected == Selected.JOIN)
-                addMessages(me.m64diamondstar.ingeniamccore.cosmetics.utils.MessageType.JOIN)
+                addMessages(me.m64diamondstar.ingeniamccore.cosmetics.utils.MessageType.JOIN, inventory)
             else
-                addMessages(me.m64diamondstar.ingeniamccore.cosmetics.utils.MessageType.LEAVE)
+                addMessages(me.m64diamondstar.ingeniamccore.cosmetics.utils.MessageType.LEAVE, inventory)
         }
 
         if(event.slot == messageScrollDown && event.currentItem != null && event.currentItem!!.type != Material.BARRIER){
             messageScroll++
             if(selected == Selected.JOIN)
-                addMessages(me.m64diamondstar.ingeniamccore.cosmetics.utils.MessageType.JOIN)
+                addMessages(me.m64diamondstar.ingeniamccore.cosmetics.utils.MessageType.JOIN, inventory)
             else
-                addMessages(me.m64diamondstar.ingeniamccore.cosmetics.utils.MessageType.LEAVE)
+                addMessages(me.m64diamondstar.ingeniamccore.cosmetics.utils.MessageType.LEAVE, inventory)
         }
 
         if(event.slot == 45){
@@ -154,10 +161,10 @@ class JoinLeaveInventory(val player: Player, private var selected: Selected) : G
         }
     }
 
-    override fun setInventoryItems() {
-
+    override fun onOpen(event: InventoryOpenEvent) {
         val transparentItem = ItemStack(Material.FEATHER)
         val transparentMeta = transparentItem.itemMeta as ItemMeta
+        val inventory = event.inventory
 
         transparentMeta.setCustomModelData(1)
 
@@ -185,13 +192,14 @@ class JoinLeaveInventory(val player: Player, private var selected: Selected) : G
         inventory.setItem(45, transparentItem)
 
         if(selected == Selected.JOIN)
-            editJoin()
+            editJoin(inventory)
         else
-            editLeave()
-
+            editLeave(inventory)
     }
 
-    private fun addColors(messageType: me.m64diamondstar.ingeniamccore.cosmetics.utils.MessageType){
+    override fun onClose(event: InventoryCloseEvent) {}
+
+    private fun addColors(messageType: me.m64diamondstar.ingeniamccore.cosmetics.utils.MessageType, inventory: Inventory){
         colorSlots.forEach { inventory.setItem(it, null) }
 
         val barrier = ItemStack(Material.BARRIER)
@@ -262,7 +270,7 @@ class JoinLeaveInventory(val player: Player, private var selected: Selected) : G
         }
     }
 
-    private fun addMessages(messageType: me.m64diamondstar.ingeniamccore.cosmetics.utils.MessageType){
+    private fun addMessages(messageType: me.m64diamondstar.ingeniamccore.cosmetics.utils.MessageType, inventory: Inventory){
         messageSlots.forEach { inventory.setItem(it, null) }
 
         val barrier = ItemStack(Material.BARRIER)
@@ -348,7 +356,7 @@ class JoinLeaveInventory(val player: Player, private var selected: Selected) : G
     /**
      * Put the join items in the inventory
      */
-    private fun editJoin(){
+    private fun editJoin(inventory: Inventory){
         val transparentItem = ItemStack(Material.FEATHER)
         val transparentMeta = transparentItem.itemMeta as ItemMeta
 
@@ -384,14 +392,14 @@ class JoinLeaveInventory(val player: Player, private var selected: Selected) : G
 
         resetSlots.forEach { inventory.setItem(it, transparentItem) }
 
-        addColors(me.m64diamondstar.ingeniamccore.cosmetics.utils.MessageType.JOIN)
-        addMessages(me.m64diamondstar.ingeniamccore.cosmetics.utils.MessageType.JOIN)
+        addColors(me.m64diamondstar.ingeniamccore.cosmetics.utils.MessageType.JOIN, inventory)
+        addMessages(me.m64diamondstar.ingeniamccore.cosmetics.utils.MessageType.JOIN, inventory)
     }
 
     /**
      * Put the leave items in the inventory
      */
-    private fun editLeave(){
+    private fun editLeave(inventory: Inventory){
 
         val transparentItem = ItemStack(Material.FEATHER)
         val transparentMeta = transparentItem.itemMeta as ItemMeta
@@ -428,7 +436,7 @@ class JoinLeaveInventory(val player: Player, private var selected: Selected) : G
 
         resetSlots.forEach { inventory.setItem(it, transparentItem) }
 
-        addColors(me.m64diamondstar.ingeniamccore.cosmetics.utils.MessageType.LEAVE)
-        addMessages(me.m64diamondstar.ingeniamccore.cosmetics.utils.MessageType.LEAVE)
+        addColors(me.m64diamondstar.ingeniamccore.cosmetics.utils.MessageType.LEAVE, inventory)
+        addMessages(me.m64diamondstar.ingeniamccore.cosmetics.utils.MessageType.LEAVE, inventory)
     }
 }

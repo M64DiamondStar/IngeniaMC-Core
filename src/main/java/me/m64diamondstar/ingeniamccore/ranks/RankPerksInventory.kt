@@ -3,34 +3,38 @@ package me.m64diamondstar.ingeniamccore.ranks
 import me.m64diamondstar.ingeniamccore.general.inventory.MainInventory
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.ranks.joinleavemessage.JoinLeaveInventory
-import me.m64diamondstar.ingeniamccore.utils.gui.Gui
+import me.m64diamondstar.ingeniamccore.utils.gui.InventoryHandler
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
 import net.kyori.adventure.audience.Audience
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
+import org.bukkit.event.inventory.InventoryCloseEvent
+import org.bukkit.event.inventory.InventoryOpenEvent
 import org.bukkit.event.inventory.InventoryType
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.ItemMeta
 
-class RankPerksInventory(val player: Player) : Gui(IngeniaPlayer(player)) {
+class RankPerksInventory(val player: Player) : InventoryHandler(IngeniaPlayer(player)) {
 
     private val joinLeaveSlots = Array(10) {i -> if(i in  0..4) i + 2 else i + 6}
     private val fireworkSlots = Array(10) {i -> if(i in  0..4) i + 20 else i + 24}
     private val passiveSlots = Array(10) {i -> if(i in  0..4) i + 38 else i + 42}
     private val viewStore = Array(4) {i -> if(i in  0..1) i + 43 else i + 50}
 
-    override fun setDisplayName(): String {
-        return Colors.format("&f\uF808を")
+    override fun setDisplayName(): Component {
+        return Component.text("\uF808を").color(TextColor.color(255, 255, 255))
     }
 
     override fun setSize(): Int {
         return 54
     }
 
-    override fun handleInventory(event: InventoryClickEvent) {
+    override fun onClick(event: InventoryClickEvent) {
         if(event.clickedInventory?.type == InventoryType.PLAYER) return
         val player = event.whoClicked as Player
 
@@ -59,14 +63,15 @@ class RankPerksInventory(val player: Player) : Gui(IngeniaPlayer(player)) {
         }
 
         if(event.slot == 45){
-            val mainInventory = MainInventory(getPlayer())
+            val mainInventory = MainInventory(getPlayer(), 0)
             mainInventory.open()
         }
     }
 
-    override fun setInventoryItems() {
+    override fun onOpen(event: InventoryOpenEvent) {
         val transparentItem = ItemStack(Material.FEATHER)
         val transparentMeta = transparentItem.itemMeta as ItemMeta
+        val inventory = event.inventory
 
         transparentMeta.setCustomModelData(1)
 
@@ -121,4 +126,6 @@ class RankPerksInventory(val player: Player) : Gui(IngeniaPlayer(player)) {
 
         inventory.setItem(45, transparentItem)
     }
+
+    override fun onClose(event: InventoryCloseEvent) {}
 }

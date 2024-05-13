@@ -13,7 +13,6 @@ class PlayerConfig(uuid: UUID) : DataConfiguration("data/player", uuid.toString(
     }
 
     fun getBal(): Long {
-        reload()
         return if (getConfig().get("Economy.Golden-Stars") != null)
             getConfig().getLong("Economy.Golden-Stars")
         else
@@ -26,7 +25,6 @@ class PlayerConfig(uuid: UUID) : DataConfiguration("data/player", uuid.toString(
     }
 
     fun getExp(): Long {
-        reload()
         return if (getConfig().get("Levels.Exp") != null)
             getConfig().getLong("Levels.Exp")
         else
@@ -39,7 +37,6 @@ class PlayerConfig(uuid: UUID) : DataConfiguration("data/player", uuid.toString(
     }
 
     fun getLevel(): Int{
-        reload()
         return if (getConfig().get("Levels.Level") != null)
             getConfig().getInt("Levels.Level")
         else
@@ -59,7 +56,6 @@ class PlayerConfig(uuid: UUID) : DataConfiguration("data/player", uuid.toString(
      * @return the ID of the message in the join message configuration
      */
     fun getJoinMessage(): String? {
-        reload()
         return getConfig().getString("Messages.Join")
     }
 
@@ -76,7 +72,6 @@ class PlayerConfig(uuid: UUID) : DataConfiguration("data/player", uuid.toString(
      * @return the ID of the color in the join leave color configuration
      */
     fun getJoinColor(): String? {
-        reload()
         return getConfig().getString("Messages.JoinColor")
     }
 
@@ -95,7 +90,6 @@ class PlayerConfig(uuid: UUID) : DataConfiguration("data/player", uuid.toString(
      * @return the ID of the message in the leave message configuration
      */
     fun getLeaveMessage(): String? {
-        reload()
         return getConfig().getString("Messages.Leave")
     }
 
@@ -112,7 +106,6 @@ class PlayerConfig(uuid: UUID) : DataConfiguration("data/player", uuid.toString(
      * @return the ID of the color in the join leave color configuration
      */
     fun getLeaveColor(): String? {
-        reload()
         return getConfig().getString("Messages.LeaveColor")
     }
 

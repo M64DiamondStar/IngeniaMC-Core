@@ -8,9 +8,11 @@ import me.m64diamondstar.ingeniamccore.general.areas.Area
 import me.m64diamondstar.ingeniamccore.general.areas.AreaAudioManager
 import me.m64diamondstar.ingeniamccore.general.areas.AreaUtils
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
+import me.m64diamondstar.ingeniamccore.utils.event.player.SwitchAreaEvent
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
 import net.kyori.adventure.audience.Audience
 import net.kyori.adventure.text.minimessage.MiniMessage
+import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.event.EventHandler
@@ -105,6 +107,9 @@ class PlayerMoveListener: Listener {
             media.startInstant = AreaAudioManager.getStartTime()
             MediaApi.getInstance().playFor(media, client)
         }
+
+        val switchAreaEvent = SwitchAreaEvent(player, currentArea)
+        Bukkit.getPluginManager().callEvent(switchAreaEvent)
     }
 
 
