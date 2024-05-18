@@ -67,8 +67,6 @@ class NpcListener: Listener {
 
     @EventHandler
     fun onPlayerMove(event: PlayerMoveEvent){
-        if(!event.hasChangedPosition()) return
-
         val player = event.player
         NpcUtils.PlayersMoved.addPlayer(player)
     }

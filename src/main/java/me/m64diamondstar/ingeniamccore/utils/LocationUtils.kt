@@ -5,6 +5,7 @@ import org.bukkit.Location
 import org.bukkit.entity.Entity
 import org.bukkit.entity.LivingEntity
 import org.bukkit.util.Vector
+import org.joml.Vector3f
 import java.math.BigDecimal
 import java.math.RoundingMode
 import kotlin.math.*
@@ -157,6 +158,19 @@ object LocationUtils {
 
         val distFlat = sqrt(deltaX * deltaX + deltaZ * deltaZ)
         return Math.toDegrees(-atan2(deltaY, distFlat)).toFloat()
+    }
+
+    data class Cuboid(val bottomCorner: Vector3f, val topCorner: Vector3f)
+
+    fun isPointInsideCuboid(point: Vector3f, cuboid: Cuboid): Boolean {
+        val minX = minOf(cuboid.bottomCorner.x, cuboid.topCorner.x)
+        val maxX = maxOf(cuboid.bottomCorner.x, cuboid.topCorner.x)
+        val minY = minOf(cuboid.bottomCorner.y, cuboid.topCorner.y)
+        val maxY = maxOf(cuboid.bottomCorner.y, cuboid.topCorner.y)
+        val minZ = minOf(cuboid.bottomCorner.z, cuboid.topCorner.z)
+        val maxZ = maxOf(cuboid.bottomCorner.z, cuboid.topCorner.z)
+
+        return point.x in minX..maxX && point.y in minY..maxY && point.z in minZ..maxZ
     }
 
 

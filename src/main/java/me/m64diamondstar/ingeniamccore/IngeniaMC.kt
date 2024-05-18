@@ -14,7 +14,6 @@ import me.m64diamondstar.ingeniamccore.discord.bot.DiscordBot
 import me.m64diamondstar.ingeniamccore.discord.listeners.minecraft.ReceiveExpListener
 import me.m64diamondstar.ingeniamccore.discord.listeners.minecraft.ReceiveGoldenStarsListener
 import me.m64diamondstar.ingeniamccore.discord.listeners.minecraft.ReceiveRidecountListener
-import me.m64diamondstar.ingeniamccore.games.guesstheword.GuessTheWord
 import me.m64diamondstar.ingeniamccore.games.guesstheword.GuessTheWordListener
 import me.m64diamondstar.ingeniamccore.games.presenthunt.PresentHuntUtils
 import me.m64diamondstar.ingeniamccore.games.presenthunt.listeners.PlayerInteractListener
@@ -37,7 +36,6 @@ import me.m64diamondstar.ingeniamccore.general.listeners.InteractListener
 import me.m64diamondstar.ingeniamccore.general.listeners.InventoryListener
 import me.m64diamondstar.ingeniamccore.general.listeners.LeaveListener
 import me.m64diamondstar.ingeniamccore.general.listeners.helpers.BonemealListener
-import me.m64diamondstar.ingeniamccore.general.commands.NpcCommand
 import me.m64diamondstar.ingeniamccore.npc.listeners.NpcListener
 import me.m64diamondstar.ingeniamccore.npc.utils.NpcRegistry
 import me.m64diamondstar.ingeniamccore.protect.listeners.*
@@ -56,7 +54,6 @@ import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.plugin.java.JavaPlugin
-import org.bukkit.scheduler.BukkitRunnable
 import java.util.*
 
 
@@ -370,11 +367,11 @@ class IngeniaMC : JavaPlugin() {
     }
 
     private fun loadTasks(){
-        object: BukkitRunnable(){
+        /*object: BukkitRunnable(){
             override fun run() {
                 val guessTheWord = GuessTheWord()
                 guessTheWord.execute()
             }
-        }.runTaskTimer(this, 200L, 18000L)
+        }.runTaskTimer(this, 200L, 18000L)*/
     }
 }

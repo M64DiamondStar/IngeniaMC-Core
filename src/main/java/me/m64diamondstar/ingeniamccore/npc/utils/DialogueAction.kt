@@ -1,6 +1,8 @@
 package me.m64diamondstar.ingeniamccore.npc.utils
 
 import me.m64diamondstar.ingeniamccore.IngeniaMC
+import me.m64diamondstar.ingeniamccore.general.bossbar.BossBarIndex
+import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.npc.Npc
 import me.m64diamondstar.ingeniamccore.utils.LocationUtils
 import me.m64diamondstar.ingeniamccore.utils.entities.CameraPacketEntity
@@ -49,6 +51,9 @@ enum class DialogueAction {
                         cinematicEntity.spawn()
                         cinematicEntity.watch()
                         npc.getDialogue(player).setCamera(cinematicEntity)
+                        IngeniaPlayer(player).setBossBar(BossBarIndex.FIRST, null, false)
+                        IngeniaPlayer(player).setBossBar(BossBarIndex.SECOND, null, false)
+                        IngeniaPlayer(player).setBossBar(BossBarIndex.THIRD, null, false)
                     }
 
                     if (progress >= 100.0) {
@@ -59,6 +64,10 @@ enum class DialogueAction {
                             npc.getDialogue(player).setNormalView(true)
                             npc.getDialogue(player).despawnFakePlayer()
                         }, 10L)
+                        IngeniaPlayer(player).setBossBar(BossBarIndex.FIRST, null, true)
+                        IngeniaPlayer(player).updateMainBossBar()
+                        IngeniaPlayer(player).setBossBar(BossBarIndex.SECOND, null, true)
+                        IngeniaPlayer(player).setBossBar(BossBarIndex.THIRD, null, true)
                         cancel()
                         return
                     }

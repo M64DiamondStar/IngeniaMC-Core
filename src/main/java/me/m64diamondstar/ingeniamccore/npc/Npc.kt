@@ -3,8 +3,11 @@ package me.m64diamondstar.ingeniamccore.npc
 import com.ticxo.modelengine.api.ModelEngineAPI
 import com.ticxo.modelengine.api.entity.Dummy
 import com.ticxo.modelengine.api.model.ActiveModel
+import com.ticxo.modelengine.api.model.bone.BoneBehaviorTypes
 import io.papermc.paper.entity.LookAnchor
 import me.m64diamondstar.ingeniamccore.IngeniaMC
+import me.m64diamondstar.ingeniamccore.general.bossbar.BossBarIndex
+import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.npc.utils.DialoguePlayerRegistry
 import me.m64diamondstar.ingeniamccore.npc.utils.DialogueUtils
 import me.m64diamondstar.ingeniamccore.npc.utils.NpcRegistry
@@ -49,6 +52,7 @@ class Npc(private val id: String) {
 
     private fun startLooking(){
         lookTask = object: BukkitRunnable(){
+
             override fun run() {
                 if(baseEntity == null) return
                 val data = getData()
@@ -61,23 +65,35 @@ class Npc(private val id: String) {
                         closestPlayer = player
 
                     val fromVector = Vector3f(player.eyeLocation.toVector().toVector3f())
-                    val directionVector = Vector3f(player.eyeLocation.direction.toVector3f())
+                    val directionVector = Vector3f(player.eyeLocation.direction.toVector3f()).normalize().mul(0.1f)
 
-                   /*val rayTraceResult = ModelEngineAPI.getInteractionTracker()
-                        .getHitbox(
-                            /*(activeModel?.modelRenderer as DisplayRenderer)
-                                .hitbox
-                                .hitboxId*/
-                        baseEntity!!.entityId)
-                        .orientedBoundingBox
-                        ?.rayTrace(fromVector, directionVector, 6.0, null)
+                    if(!DialoguePlayerRegistry.contains(player)) {
+                        activeModel!!.getBone("b_origin_hitbox").ifPresent { bone ->
+                            bone.getBoneBehavior(BoneBehaviorTypes.SUB_HITBOX).ifPresent {
+                                val halfX = it.dimension.x / 2
+                                val halfZ = it.dimension.z / 2
+                                val bottomCorner = (it.location.clone() as Vector3f).sub(halfX, 0f, halfZ)
+                                val topCorner = (it.location.clone() as Vector3f).add(halfX, it.dimension.y, halfZ)
 
-                    if(rayTraceResult != null && rayTraceResult.hitEntity == player){
-                        player.sendMessage("Looking at npc!")
+                                var result = false
+
+                                for (i in 0..40) {
+                                    fromVector.add(directionVector)
+                                    if (LocationUtils.isPointInsideCuboid(fromVector, LocationUtils.Cuboid(bottomCorner, topCorner))) {
+                                        IngeniaPlayer(player).setBossBar(BossBarIndex.THIRD, Font.getWidget("Click to talk with ${data.getName()}"), true)
+                                        result = true
+                                        break
+                                    }
+                                }
+
+                                if (!result) {
+                                    IngeniaPlayer(player).setBossBar(BossBarIndex.THIRD, null, true)
+                                }
+                            }
+                        }
+                    }else{
+                        IngeniaPlayer(player).setBossBar(BossBarIndex.THIRD, null, true)
                     }
-                    player.sendMessage((activeModel?.modelRenderer as DisplayRenderer)
-                        .hitbox
-                        .hitboxId.toString())*/
                 }
 
                 if(closestPlayer != null){
@@ -175,15 +191,16 @@ class Npc(private val id: String) {
         }
 
         fun start(){
-            player.inventory.heldItemSlot = 8
-            playerInventory = player.inventory.contents
-            player.inventory.contents = emptyArray()
-            DialoguePlayerRegistry.addDialoguePlayer(player, this@Npc)
             val data = getData()
             if(data.getDialogue(branch, index).isEmpty()){ // Dialogue does not exist or has been wrongly configured
                 dialoguePlayers.remove(player)
                 return
             }
+
+            player.inventory.heldItemSlot = 8
+            playerInventory = player.inventory.contents
+            player.inventory.contents = emptyArray()
+            DialoguePlayerRegistry.addDialoguePlayer(player, this@Npc)
 
             player.lookAt(baseEntity!!.location.clone().add(0.0, 1.65, 0.0), LookAnchor.EYES)
             player.addPotionEffect(PotionEffect(PotionEffectType.SLOW, Int.MAX_VALUE, 2, false, false, false))
@@ -241,6 +258,10 @@ class Npc(private val id: String) {
             if(camera != null && camera!!.isAlive && !normalView) {
                 Bukkit.getScheduler().runTaskLater(IngeniaMC.plugin, Runnable {
                     camera!!.despawn()
+                    IngeniaPlayer(player).setBossBar(BossBarIndex.FIRST, null, true)
+                    IngeniaPlayer(player).updateMainBossBar()
+                    IngeniaPlayer(player).setBossBar(BossBarIndex.SECOND, null, true)
+                    IngeniaPlayer(player).setBossBar(BossBarIndex.THIRD, null, true)
                 }, 10L)
                 val times = Title.Times.times(Duration.ofMillis(500), Duration.ofMillis(500), Duration.ofMillis(500))
                 (player as Audience).showTitle(

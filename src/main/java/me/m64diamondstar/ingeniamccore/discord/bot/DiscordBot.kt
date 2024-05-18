@@ -25,7 +25,7 @@ object DiscordBot {
     lateinit var jda: JDA
 
     fun start() {
-        if(!IngeniaMC.plugin.config.getBoolean("Discord.Webhook.Enable"))
+        if(!IngeniaMC.plugin.config.getBoolean("Discord.Bot.Enable"))
             return
         if(IngeniaMC.plugin.config.getString("Discord.Bot.Token") == null)
             return
@@ -42,9 +42,10 @@ object DiscordBot {
     }
 
     fun shutdown(){
-        if(!IngeniaMC.plugin.config.getBoolean("Discord.Webhook.Enable"))
+        if(!IngeniaMC.plugin.config.getBoolean("Discord.Bot.Enable"))
             return
-        jda.shutdown()
+        jda.shutdownNow()
+        jda.awaitShutdown()
     }
 
 }

@@ -7,6 +7,8 @@ import me.m64diamondstar.ingeniamccore.games.parkour.Parkour
 import me.m64diamondstar.ingeniamccore.games.parkour.ParkourUtils
 import me.m64diamondstar.ingeniamccore.games.splashbattle.SplashBattleUtils
 import me.m64diamondstar.ingeniamccore.general.areas.Area
+import me.m64diamondstar.ingeniamccore.general.bossbar.BossBarIndex
+import me.m64diamondstar.ingeniamccore.general.bossbar.BossBarPlayerRegistry
 import me.m64diamondstar.ingeniamccore.general.levels.LevelUtils
 import me.m64diamondstar.ingeniamccore.general.levels.LevelUtils.getLevel
 import me.m64diamondstar.ingeniamccore.general.levels.LevelUtils.getLevelUpLevels
@@ -72,13 +74,15 @@ class IngeniaPlayer(val player: Player) {
 
         val bossBar = BossBar.bossBar(Component.empty(), 0.0f, BossBar.Color.YELLOW, BossBar.Overlay.PROGRESS)
         (player as Audience).showBossBar(bossBar)
-        BossBarPlayerRegistry.addPlayer(player, bossBar)
-        updateBossBar()
+        BossBarPlayerRegistry.addPlayer(player, BossBarIndex.FIRST, bossBar)
+        updateMainBossBar()
 
         val invisibleBossBar1 = BossBar.bossBar(Component.empty(), 0.0f, BossBar.Color.YELLOW, BossBar.Overlay.PROGRESS)
         (player as Audience).showBossBar(invisibleBossBar1)
+        BossBarPlayerRegistry.addPlayer(player, BossBarIndex.SECOND, invisibleBossBar1)
         val invisibleBossBar2 = BossBar.bossBar(Component.empty(), 0.0f, BossBar.Color.YELLOW, BossBar.Overlay.PROGRESS)
-        //(player as Audience).showBossBar(invisibleBossBar2)
+        (player as Audience).showBossBar(invisibleBossBar1)
+        BossBarPlayerRegistry.addPlayer(player, BossBarIndex.THIRD, invisibleBossBar2)
 
         val currentLevel = getLevel()
         val necessaryExp = LevelUtils.getExpRequirement(currentLevel + 1) - LevelUtils.getExpRequirement(currentLevel)
@@ -579,7 +583,7 @@ class IngeniaPlayer(val player: Player) {
         }.runTaskTimer(IngeniaMC.plugin, 0L, 1L)
     }
 
-    fun updateBossBar(){
+    fun updateMainBossBar(){
         val area = if(currentAreaName != null) Area(currentAreaName!!.split("/")[0], currentAreaName!!.split("/")[1]).displayName else "Not in area"
         val areaText = ArrayList<Pair<Char, Int>>()
         area.forEach { if(CharWidth.getAsMap().containsKey(it)) areaText.add(Pair(it, CharWidth.getAsMap()[it]!!)) }
@@ -593,7 +597,7 @@ class IngeniaPlayer(val player: Player) {
         val starsText = ArrayList<Pair<Char, Int>>()
         stars.forEach { if(CharWidth.getAsMap().containsKey(it)) starsText.add(Pair(it, CharWidth.getAsMap()[it]!!)) }
 
-        val bossBar = BossBarPlayerRegistry.getBossBar(this.player) ?: return
+        val bossBar = BossBarPlayerRegistry.getBossBar(this.player, BossBarIndex.FIRST) ?: return
         bossBar.name(
             Component.text("\uE022\uF801") // Left Part
                 .append(Component.text().content(areaText.joinToString("") { '\uEE00'.plus(it.second).toString() + "\uF801" }).font(Key.key("minecraft:default")))
@@ -618,6 +622,15 @@ class IngeniaPlayer(val player: Player) {
                 .append(Component.text("\uF826\uF826"))
 
         )
+    }
+
+    fun setBossBar(bossBarIndex: BossBarIndex, component: Component?, enable: Boolean){
+        val bossBar = BossBarPlayerRegistry.getBossBar(this.player, bossBarIndex) ?: return
+        if(!enable){
+            BossBarPlayerRegistry.hideBossBar(player, bossBarIndex)
+        }else
+            BossBarPlayerRegistry.showBossBar(player, bossBarIndex)
+        bossBar.name(component ?: Component.empty())
     }
 
 }

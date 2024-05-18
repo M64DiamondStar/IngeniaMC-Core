@@ -11,13 +11,13 @@ class BossBarUpdateListener: Listener {
     @EventHandler
     fun onReceiveGoldenStars(event: ReceiveGoldenStarsEvent){
         val player = IngeniaPlayer(event.player)
-        player.updateBossBar()
+        player.updateMainBossBar()
     }
 
     @EventHandler
     fun onSwitchArea(event: SwitchAreaEvent){
         val player = IngeniaPlayer(event.player)
-        player.updateBossBar()
+        player.updateMainBossBar()
     }
 
 }

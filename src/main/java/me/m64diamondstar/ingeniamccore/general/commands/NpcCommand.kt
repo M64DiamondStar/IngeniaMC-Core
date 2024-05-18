@@ -25,7 +25,7 @@ class NpcCommand: TabExecutor {
         val tc = ArrayList<String>()
 
         if(args.size == 1){
-            tc.addAll(listOf("create", "delete", "setlocation", "setmodel", "spawn", "despawn", "respawn", "reload", "dialogue", "pos1", "pos2"))
+            tc.addAll(listOf("create", "delete", "setlocation", "setmodel", "spawn", "despawn", "respawn", "reload", "dialogue", "pos1", "pos2", "setname"))
         }
 
         else if(args.size == 2 && !args[0].equals("create", ignoreCase = true)){
@@ -194,6 +194,19 @@ class NpcCommand: TabExecutor {
                     npc.getData().setModel(args[2])
                     npc.respawn()
                     sender.sendMessage(Colors.format(MessageType.SUCCESS + "The npc model has been set."))
+                }
+            }
+
+            "setname" -> {
+                if(args.size >= 3){
+                    if(!NpcUtils.existsNpc(args[1])){
+                        sender.sendMessage(Colors.format(MessageType.ERROR + "This npc does not exist."))
+                        return false
+                    }
+
+                    val npc = NpcRegistry.getNpc(args[1]) ?: Npc(args[1]).init()
+                    npc.getData().setName(listOf(*args.copyOfRange(2, args.size)).joinToString(" "))
+                    sender.sendMessage(Colors.format(MessageType.SUCCESS + "The npc name has been set."))
                 }
             }
 

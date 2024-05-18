@@ -8,7 +8,7 @@ import me.m64diamondstar.ingeniamccore.npc.utils.DialogueOptionType
 import net.kyori.adventure.text.format.TextColor
 import org.bukkit.Location
 
-class NpcData(id: String): DataConfiguration("npc", "$id.yml") {
+class NpcData(private val id: String): DataConfiguration("npc", "$id.yml") {
 
     fun setLocation(location: Location) {
         this.getConfig().set("Location", location)
@@ -17,6 +17,15 @@ class NpcData(id: String): DataConfiguration("npc", "$id.yml") {
 
     fun getLocation(): Location? {
         return this.getConfig().getLocation("Location")
+    }
+
+    fun setName(name: String) {
+        this.getConfig().set("Name", name)
+        this.save()
+    }
+
+    fun getName(): String {
+        return this.getConfig().getString("Name") ?: id
     }
 
     fun setModel(string: String) {
