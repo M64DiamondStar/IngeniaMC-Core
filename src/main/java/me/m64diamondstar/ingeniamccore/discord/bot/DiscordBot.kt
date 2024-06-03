@@ -44,6 +44,8 @@ object DiscordBot {
     fun shutdown(){
         if(!IngeniaMC.plugin.config.getBoolean("Discord.Bot.Enable"))
             return
+        jda.httpClient.connectionPool.evictAll()
+        jda.httpClient.dispatcher.executorService.shutdown()
         jda.shutdownNow()
         jda.awaitShutdown()
     }

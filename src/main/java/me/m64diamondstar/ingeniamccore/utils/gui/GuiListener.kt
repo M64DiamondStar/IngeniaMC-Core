@@ -5,6 +5,7 @@ import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
+import org.bukkit.event.inventory.InventoryDragEvent
 import org.bukkit.event.inventory.InventoryOpenEvent
 
 class GuiListener : Listener {
@@ -12,6 +13,11 @@ class GuiListener : Listener {
     @EventHandler(priority = EventPriority.HIGH)
     fun onInventoryClick(event: InventoryClickEvent){
         GuiManager.handleClick(event)
+    }
+
+    @EventHandler
+    fun onInventoryDrag(event: InventoryDragEvent){
+        GuiManager.handleDrag(event)
     }
 
     @EventHandler

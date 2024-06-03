@@ -90,7 +90,7 @@ class Shop(val category: String, val name: String): DataConfiguration("shops/$ca
     fun getShopItemType(shopId: String): ShopItem?{
         return try{
             ShopItem.valueOf(this.getConfig().getString("Items.$shopId.Type") ?: return null)
-        }catch (ex: IllegalArgumentException){
+        }catch (_: IllegalArgumentException){
             null
         }
     }
@@ -137,7 +137,7 @@ class Shop(val category: String, val name: String): DataConfiguration("shops/$ca
      * Gets the item stack of a shop item.
      * Used for displaying the item in the shop.
      */
-    fun getItemStack(shopId: String, player: Player): ItemStack?{
+    fun getItemStack(shopId: String, player: Player, amount: Int): ItemStack?{
         val ingeniaPlayer = IngeniaPlayer(player)
 
         val item = getShopItemType(shopId)?.getAsItemStack(getItemID(shopId) ?: return null) ?: return null
@@ -155,7 +155,7 @@ class Shop(val category: String, val name: String): DataConfiguration("shops/$ca
         if(!getShopItemType(shopId)!!.allowMultiple() && !getShopItemType(shopId)!!.alreadyBought(player, getItemID(shopId) ?: "")){
             lore.add("")
             lore.add(Colors.format(MessageType.LIGHT_GRAY) + "Price:")
-            lore.add(Colors.format("&f${if(ingeniaPlayer.bal >= getPrice(shopId)) Font.Characters.ALLOW else Font.Characters.DENY}${MessageType.DEFAULT} &f:gs:${MessageType.DEFAULT}" + numberFormat.format(getPrice(shopId))))
+            lore.add(Colors.format("&f${if(ingeniaPlayer.bal >= getPrice(shopId)) Font.Characters.ALLOW else Font.Characters.DENY}${MessageType.DEFAULT} &f:gs:${MessageType.DEFAULT}" + numberFormat.format(getPrice(shopId) * amount)))
 
             var addedRequirementsLore = false
             if(ingeniaPlayer.bal < getPrice(shopId)) hasAllRequirements = false
@@ -170,6 +170,28 @@ class Shop(val category: String, val name: String): DataConfiguration("shops/$ca
                 lore.add(Colors.format("&f${if(hasRequirement) Font.Characters.ALLOW else Font.Characters.DENY}${MessageType.DEFAULT} ${MessageType.DEFAULT}" + display))
                 if(!hasRequirement) hasAllRequirements = false
             }
+        }
+        // Player can buy multiple of this item
+        else if(getShopItemType(shopId)!!.allowMultiple()){
+            lore.add("")
+            lore.add(Colors.format(MessageType.LIGHT_GRAY) + "Price:")
+            lore.add(Colors.format("&f${if(ingeniaPlayer.bal >= getPrice(shopId)) Font.Characters.ALLOW else Font.Characters.DENY}${MessageType.DEFAULT} &f:gs:${MessageType.DEFAULT}" + numberFormat.format(getPrice(shopId) * amount)))
+
+            var addedRequirementsLore = false
+            if(ingeniaPlayer.bal < getPrice(shopId)) hasAllRequirements = false
+            getRequirements(shopId).forEach {
+                if(!addedRequirementsLore){
+                    lore.add("")
+                    lore.add(Colors.format(MessageType.LIGHT_GRAY) + "Requirements:")
+                    addedRequirementsLore = true
+                }
+                val display = getRequirementType(shopId, it)?.getDisplay(getRequirementValue(shopId, it) ?: "") ?: ""
+                val hasRequirement = getRequirementType(shopId, it)?.isCompleted(player, getRequirementValue(shopId, it) ?: "") ?: false
+                lore.add(Colors.format("&f${if(hasRequirement) Font.Characters.ALLOW else Font.Characters.DENY}${MessageType.DEFAULT} ${MessageType.DEFAULT}" + display))
+                if(!hasRequirement) hasAllRequirements = false
+            }
+            lore.add("")
+            lore.add(Colors.format(MessageType.DEFAULT + "&oYou can buy multiple of this item."))
         }
         // Player already bought this item, and it can only be purchased once
         else{
@@ -186,6 +208,7 @@ class Shop(val category: String, val name: String): DataConfiguration("shops/$ca
         meta.persistentDataContainer.set(NamespacedKey(IngeniaMC.plugin, "can-buy"), PersistentDataType.BOOLEAN, hasAllRequirements)
 
         item.itemMeta = meta
+        item.amount = amount
         return item
     }
 
@@ -251,7 +274,7 @@ class Shop(val category: String, val name: String): DataConfiguration("shops/$ca
     fun getRequirementType(shopId: String, id: String): ItemRequirement?{
         return try{
             ItemRequirement.valueOf(this.getConfig().getString("Items.$shopId.Requirements.$id.Type") ?: return null)
-        }catch (ex: IllegalArgumentException){
+        }catch (_: IllegalArgumentException){
             null
         }
     }

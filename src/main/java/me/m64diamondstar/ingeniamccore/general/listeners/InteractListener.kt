@@ -6,6 +6,8 @@ import me.m64diamondstar.ingeniamccore.protect.FeatureManager
 import me.m64diamondstar.ingeniamccore.protect.FeatureType
 import me.m64diamondstar.ingeniamccore.utils.items.ItemChecker
 import me.m64diamondstar.ingeniamccore.utils.messages.Messages
+import me.m64diamondstar.ingeniamccore.warps.inventories.AttractionInventory
+import me.m64diamondstar.ingeniamccore.warps.inventories.ShopInventory
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.Action
@@ -27,9 +29,19 @@ class InteractListener: Listener {
             return
         }
 
-        if(itemChecker.isMainInventoryItem()) {
+        if(itemChecker.isMainMenu()) {
             val mainInventory = MainInventory(IngeniaPlayer(player), 0)
             mainInventory.open()
+        }
+
+        if(itemChecker.isRidesMenu()) {
+            val ridesInventory = AttractionInventory(IngeniaPlayer(player))
+            ridesInventory.open()
+        }
+
+        if(itemChecker.isShopsMenu()) {
+            val shopInventory = ShopInventory(IngeniaPlayer(player))
+            shopInventory.open()
         }
     }
 }

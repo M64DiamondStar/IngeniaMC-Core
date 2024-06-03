@@ -1,6 +1,8 @@
 package me.m64diamondstar.ingeniamccore.general.commands.ingenia
 
+import me.m64diamondstar.ingeniamccore.cosmetics.data.BackpackItems
 import me.m64diamondstar.ingeniamccore.cosmetics.data.CosmeticItems
+import me.m64diamondstar.ingeniamccore.cosmetics.utils.BackpackItemType
 import me.m64diamondstar.ingeniamccore.cosmetics.utils.CosmeticType
 import me.m64diamondstar.ingeniamccore.utils.IngeniaSubcommand
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
@@ -17,15 +19,30 @@ class ItemSubcommand(private val sender: CommandSender, private val args: Array<
             return
         }
 
-        if(args.size != 4){
-            sender.sendMessage(Messages.commandUsage("ig item <create/delete/set/get/exists> <cosmetic type> <ID>"))
+        if(args.size == 2 && args[1].equals("reload", ignoreCase = true)){
+            for(cosmeticType in CosmeticType.values()){
+                CosmeticItems(cosmeticType).reload()
+            }
+            for(backpackType in BackpackItemType.values()){
+                BackpackItems(backpackType).reload()
+            }
+            sender.sendMessage(Colors.format(MessageType.SUCCESS + "Reloaded."))
+            return
+        }
+
+        if(args.size != 5){
+            sender.sendMessage(Messages.commandUsage("ig item <create/delete/set/get/exists> <cosmetic/backpack> <cosmetic type> <ID>"))
             return
         }
 
         try{
-            val cosmeticType = CosmeticType.valueOf(args[2])
-            val cosmeticItems = CosmeticItems(cosmeticType)
-            if(!cosmeticItems.exists(args[3]) &&
+            val cosmeticItems =
+                if(args[2].equals("cosmetic", ignoreCase = true))
+                    CosmeticItems(CosmeticType.valueOf(args[3]))
+                else
+                     BackpackItems(BackpackItemType.valueOf(args[3]))
+
+            if(!cosmeticItems.exists(args[4]) &&
                 !(args[1].equals("create", ignoreCase = true) || args[1].equals("exists", ignoreCase = true))){
                 sender.sendMessage(Colors.format(MessageType.ERROR + "This ID does not exist."))
                 return
@@ -33,36 +50,36 @@ class ItemSubcommand(private val sender: CommandSender, private val args: Array<
 
             when(args[1].lowercase()){
                 "exists" -> {
-                    if(cosmeticItems.exists(args[3])){
+                    if(cosmeticItems.exists(args[4])){
                         sender.sendMessage(Colors.format(MessageType.SUCCESS + "This ID exists."))
                     }else
                         sender.sendMessage(Colors.format(MessageType.ERROR + "This ID does not exist."))
                 }
 
                 "create" -> {
-                    cosmeticItems.create(args[3], sender.inventory.itemInMainHand, true)
-                    sender.sendMessage(Colors.format(MessageType.SUCCESS + "Successfully created the cosmetic ${args[3]} as the item " +
+                    cosmeticItems.create(args[4], sender.inventory.itemInMainHand, true)
+                    sender.sendMessage(Colors.format(MessageType.SUCCESS + "Successfully created the cosmetic ${args[4]} as the item " +
                             "${sender.inventory.itemInMainHand.type}."))
                 }
 
                 "delete" -> {
-                    cosmeticItems.delete(args[3])
-                    sender.sendMessage(Colors.format(MessageType.SUCCESS + "Successfully deleted the cosmetic ${args[3]}."))
+                    cosmeticItems.delete(args[4])
+                    sender.sendMessage(Colors.format(MessageType.SUCCESS + "Successfully deleted the cosmetic ${args[4]}."))
                 }
 
                 "get" -> {
-                    val item = cosmeticItems.getItem(args[3])
+                    val item = cosmeticItems.getItem(args[4])
                     if(item == null){
                         sender.sendMessage(Colors.format(MessageType.ERROR + "The item is null and couldn't be loaded."))
                         return
                     }
                     sender.inventory.addItem(item)
-                    sender.sendMessage(Colors.format(MessageType.SUCCESS + "Successfully added the cosmetic ${args[3]} to your inventory."))
+                    sender.sendMessage(Colors.format(MessageType.SUCCESS + "Successfully added the cosmetic ${args[4]} to your inventory."))
                 }
 
                 "set" -> {
-                    cosmeticItems.setItem(args[3], sender.inventory.itemInMainHand)
-                    sender.sendMessage(Colors.format(MessageType.SUCCESS + "Successfully set the cosmetic ${args[3]} to the item " +
+                    cosmeticItems.setItem(args[4], sender.inventory.itemInMainHand)
+                    sender.sendMessage(Colors.format(MessageType.SUCCESS + "Successfully set the cosmetic ${args[4]} to the item " +
                             "${sender.inventory.itemInMainHand.type}."))
                 }
 
@@ -71,7 +88,7 @@ class ItemSubcommand(private val sender: CommandSender, private val args: Array<
                     sender.sendMessage(Colors.format(MessageType.SUCCESS + "Successfully reloaded the saved items."))
                 }
             }
-        }catch (ex: IllegalArgumentException){
+        }catch (_: IllegalArgumentException){
             sender.sendMessage(Colors.format(MessageType.ERROR + "Please enter a valid cosmetic type."))
         }
     }
@@ -89,11 +106,19 @@ class ItemSubcommand(private val sender: CommandSender, private val args: Array<
         }
 
         if(args.size == 3){
-            if(args[1].equals("reload", ignoreCase = true)) return tabs
-            CosmeticType.values().forEach { tabs.add(it.toString()) }
+            tabs.add("cosmetic")
+            tabs.add("backpack")
         }
 
         if(args.size == 4){
+            if(args[1].equals("reload", ignoreCase = true)) return tabs
+            if(args[2].equals("cosmetic", ignoreCase = true))
+                CosmeticType.values().forEach { tabs.add(it.toString()) }
+            else if(args[2].equals("backpack", ignoreCase = true))
+                BackpackItemType.values().forEach { tabs.add(it.toString()) }
+        }
+
+        if(args.size == 5){
             if(args[1].equals("reload", ignoreCase = true)) return tabs
             try{
                 val cosmeticType = CosmeticType.valueOf(args[2])

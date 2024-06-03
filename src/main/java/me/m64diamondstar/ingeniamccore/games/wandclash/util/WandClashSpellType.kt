@@ -1,6 +1,6 @@
 package me.m64diamondstar.ingeniamccore.games.wandclash.util
 
-enum class ClashWandType {
+enum class WandClashSpellType {
     ATTACK {
         override fun getDisplayName(): String {
             return "Attack"

@@ -38,6 +38,7 @@ class AdminTabCompleter: TabCompleter {
             tc.add("testbossbar")
             tc.add("testnpcentity")
             tc.add("teststriptags")
+            tc.add("testshield")
         }else if(args.size == 2){
             tc.clear()
             if(args[0].equals("invsee", ignoreCase = true) || args[0].equals("gravity", ignoreCase = true)

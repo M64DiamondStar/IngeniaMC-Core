@@ -1,6 +1,7 @@
 package me.m64diamondstar.ingeniamccore.general.inventory
 
 import me.m64diamondstar.ingeniamccore.attractions.utils.AttractionUtils
+import me.m64diamondstar.ingeniamccore.cosmetics.inventory.BackpackInventory
 import me.m64diamondstar.ingeniamccore.cosmetics.inventory.CosmeticsInventory
 import me.m64diamondstar.ingeniamccore.general.levels.LevelUtils
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
@@ -17,6 +18,7 @@ import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.Material
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
+import org.bukkit.event.inventory.InventoryDragEvent
 import org.bukkit.event.inventory.InventoryOpenEvent
 import org.bukkit.event.inventory.InventoryType
 import org.bukkit.inventory.ItemStack
@@ -25,12 +27,13 @@ import org.bukkit.inventory.meta.SkullMeta
 
 class MainInventory(player: IngeniaPlayer, private val version: Int): InventoryHandler(player) {
 
-    private val profileSlots = if(version == 0) arrayOf(3, 4, 5, 12, 13, 14, 21, 22, 23) else if(version == 1) arrayOf(14, 15, 16, 23, 24, 25, 32, 33, 34) else arrayOf(3, 4, 5, 12, 13, 14, 20, 21, 22)
-    private val ridesSlots = if(version == 0) arrayOf(27, 28, 29) else if(version == 1) arrayOf(0, 1, 2, 3) else arrayOf(27, 28, 29)
-    private val wardrobeSlots = if(version == 0) arrayOf(30, 31, 32) else if(version == 1) arrayOf(18, 19, 20, 21) else arrayOf(30, 31, 32)
-    private val shopsSlots = if(version == 0) arrayOf(33, 34, 35) else if(version == 1) arrayOf(9, 10, 11, 12) else arrayOf(33, 34, 35)
-    private val rankSlots = if(version == 0) arrayOf(39, 40, 41) else if(version == 1) arrayOf(36, 37, 38, 39) else arrayOf(39, 40, 41)
-    private val questSlots = if(version == 0) arrayOf() else if(version == 1) arrayOf(27, 28, 29, 30) else arrayOf()
+    private val profileSlots = if(version == 0) arrayOf(3, 4, 5, 12, 13, 14, 21, 22, 23) else if(version == 1) arrayOf(14, 15, 16, 23, 24, 25, 32, 33, 34) else arrayOf()
+    private val ridesSlots = if(version == 0) arrayOf(27, 28, 29) else if(version == 1) arrayOf(0, 1, 2, 3) else arrayOf()
+    private val shopsSlots = if(version == 0) arrayOf(33, 34, 35) else if(version == 1) arrayOf(9, 10, 11, 12) else arrayOf()
+    private val wardrobeSlots = if(version == 0) arrayOf(30, 31, 32) else if(version == 1) arrayOf(18, 19, 20, 21) else arrayOf()
+    private val backpackSlots = if(version == 0) arrayOf() else if(version == 1) arrayOf(27, 28, 29, 30) else arrayOf()
+    private val questSlots = if(version == 0) arrayOf() else if(version == 1) arrayOf(36, 37, 38, 39) else arrayOf()
+    private val rankSlots = if(version == 0) arrayOf(39, 40, 41) else if(version == 1) arrayOf(45, 46, 47, 48) else arrayOf()
 
     override fun setDisplayName(): Component {
         return Component.text("${Font.getGuiNegativeSpace(0)}\uEC01${Font.getGuiNegativeSpace(1)}" + '\uEB00'.plus(version)).color(
@@ -41,13 +44,12 @@ class MainInventory(player: IngeniaPlayer, private val version: Int): InventoryH
         return 54
     }
 
+    override fun shouldCancel(): Boolean {
+        return true
+    }
+
     override fun onClick(event: InventoryClickEvent) {
         if(event.clickedInventory?.type == InventoryType.PLAYER) return
-
-        if(wardrobeSlots.contains(event.slot)){
-            val cosmeticsInventory = CosmeticsInventory(getPlayer().player, "國", 0)
-            cosmeticsInventory.open()
-        }
 
         if(ridesSlots.contains(event.slot)){
             val attractionInventory = AttractionInventory(getPlayer())
@@ -59,10 +61,29 @@ class MainInventory(player: IngeniaPlayer, private val version: Int): InventoryH
             shopInventory.open()
         }
 
+        if(wardrobeSlots.contains(event.slot)){
+            val cosmeticsInventory = CosmeticsInventory(getPlayer().player, "國", 0)
+            cosmeticsInventory.open()
+        }
+
+        if(backpackSlots.contains(event.slot)){
+            val backpackInventory = BackpackInventory(getPlayer().player, 1)
+            backpackInventory.open()
+        }
+
+        if(questSlots.contains(event.slot)){
+            //val questInventory = QuestInventory(getPlayer().player)
+            //questInventory.open()
+        }
+
         if(rankSlots.contains(event.slot)){
             val rankPerksInventory = RankPerksInventory(getPlayer().player)
             rankPerksInventory.open()
         }
+    }
+
+    override fun onDrag(event: InventoryDragEvent) {
+
     }
 
     override fun onOpen(event: InventoryOpenEvent) {
@@ -105,6 +126,12 @@ class MainInventory(player: IngeniaPlayer, private val version: Int): InventoryH
 
         wardrobeSlots.forEach { inventory.setItem(it, transparentItem) }
 
+        transparentMeta.displayName(MiniMessage.miniMessage().deserialize("<#E7A300><b>Backpack").decoration(TextDecoration.ITALIC, false))
+        transparentMeta.lore(listOf(MiniMessage.miniMessage().deserialize("<${MessageType.LORE}>Click to open your backpack.").decoration(TextDecoration.ITALIC, false)))
+        transparentItem.itemMeta = transparentMeta
+
+        backpackSlots.forEach { inventory.setItem(it, transparentItem) }
+
 
         transparentMeta.displayName(MiniMessage.miniMessage().deserialize("<#E7A300><b>Shops").decoration(TextDecoration.ITALIC, false))
         transparentMeta.lore(listOf(MiniMessage.miniMessage().deserialize("<${MessageType.LORE}>Click to view the available park shops.").decoration(TextDecoration.ITALIC, false)))
@@ -112,11 +139,13 @@ class MainInventory(player: IngeniaPlayer, private val version: Int): InventoryH
 
         shopsSlots.forEach { inventory.setItem(it, transparentItem) }
 
+
         transparentMeta.displayName(MiniMessage.miniMessage().deserialize("<#E7A300><b>Rank Perks").decoration(TextDecoration.ITALIC, false))
         transparentMeta.lore(listOf(MiniMessage.miniMessage().deserialize("<${MessageType.LORE}>Click to view your rank perks.").decoration(TextDecoration.ITALIC, false)))
         transparentItem.itemMeta = transparentMeta
 
         rankSlots.forEach { inventory.setItem(it, transparentItem) }
+
 
         transparentMeta.displayName(MiniMessage.miniMessage().deserialize("<#E7A300><b>Quests").decoration(TextDecoration.ITALIC, false))
         transparentMeta.lore(listOf(MiniMessage.miniMessage().deserialize("<${MessageType.LORE}>Click to view your quests.").decoration(TextDecoration.ITALIC, false)))

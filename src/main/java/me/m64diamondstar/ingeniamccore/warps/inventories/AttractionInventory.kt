@@ -17,6 +17,7 @@ import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
+import org.bukkit.event.inventory.InventoryDragEvent
 import org.bukkit.event.inventory.InventoryOpenEvent
 import org.bukkit.event.player.PlayerTeleportEvent
 import org.bukkit.inventory.ItemStack
@@ -30,6 +31,10 @@ class AttractionInventory(player: IngeniaPlayer): InventoryHandler(player) {
 
     override fun setSize(): Int {
         return 54
+    }
+
+    override fun shouldCancel(): Boolean {
+        return true
     }
 
     override fun onClick(event: InventoryClickEvent) {
@@ -53,6 +58,10 @@ class AttractionInventory(player: IngeniaPlayer): InventoryHandler(player) {
             val mainInventory = MainInventory(getPlayer(), 0)
             mainInventory.open()
         }
+    }
+
+    override fun onDrag(event: InventoryDragEvent) {
+
     }
 
     override fun onOpen(event: InventoryOpenEvent) {

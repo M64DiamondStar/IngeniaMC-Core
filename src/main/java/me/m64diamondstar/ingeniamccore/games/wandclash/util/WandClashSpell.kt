@@ -2,7 +2,7 @@ package me.m64diamondstar.ingeniamccore.games.wandclash.util
 
 import org.bukkit.entity.Player
 
-interface ClashWand {
+interface WandClashSpell {
 
     /**
      * The ID/Name of the wand
@@ -18,9 +18,9 @@ interface ClashWand {
 
     /**
      * Sets the type of the wand
-     * @see ClashWandType for all available types
+     * @see WandClashSpellType for all available types
      */
-    fun getType(): ClashWandType
+    fun getType(): WandClashSpellType
 
     /**
      * Sets the mana cost of the wand

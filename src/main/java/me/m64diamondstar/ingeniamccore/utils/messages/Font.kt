@@ -47,7 +47,7 @@ object Font {
         val stringText = ArrayList<Pair<Char, Int>>()
         string.forEach { if(CharWidth.getAsMap().containsKey(it)) stringText.add(Pair(it, CharWidth.getAsMap()[it]!!)) }
         return Component.text("\uE022\uF801") // Left Part
-            .append(Component.text().content(stringText.joinToString("") { '\uEE00'.plus(it.second).toString() + "\uF801" }).font(
+            .append(Component.text().content(stringText.joinToString("") { '\uEF00'.plus(it.second).toString() + "\uF801" }).font(
                 Key.key("minecraft:default")))
             .append(Component.text().content("\uE023\uF806\uF806")) // Right part
             .append(Component.text().content(stringText.map { '\uF800'.plus(it.second) }.joinToString("")).font(Key.key("minecraft:default")))

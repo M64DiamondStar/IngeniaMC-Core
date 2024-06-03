@@ -1,7 +1,7 @@
-package me.m64diamondstar.ingeniamccore.games.wandclash.clashwands.attack
+package me.m64diamondstar.ingeniamccore.games.wandclash.spells.attack
 
-import me.m64diamondstar.ingeniamccore.games.wandclash.util.ClashWand
-import me.m64diamondstar.ingeniamccore.games.wandclash.util.ClashWandType
+import me.m64diamondstar.ingeniamccore.games.wandclash.util.WandClashSpell
+import me.m64diamondstar.ingeniamccore.games.wandclash.util.WandClashSpellType
 import org.bukkit.Color
 import org.bukkit.Particle
 import org.bukkit.entity.Player
@@ -10,7 +10,7 @@ import org.bukkit.util.Vector
 /**
  * Sends Fenrir's Claws towards the enemy
  */
-class Fenrir: ClashWand {
+class Fenrir: WandClashSpell {
 
     override fun getID(): String {
         return "fenrir"
@@ -20,8 +20,8 @@ class Fenrir: ClashWand {
         return "Fenrir"
     }
 
-    override fun getType(): ClashWandType {
-        return ClashWandType.ATTACK
+    override fun getType(): WandClashSpellType {
+        return WandClashSpellType.ATTACK
     }
 
     override fun getManaCost(): Int {

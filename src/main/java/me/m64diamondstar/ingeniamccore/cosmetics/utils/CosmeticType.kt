@@ -6,7 +6,6 @@ enum class CosmeticType {
     SHIRT,
     PANTS,
     SHOES,
-    BALLOON,
-    BACKPACK
+    BALLOON
 
 }

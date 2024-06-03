@@ -15,6 +15,7 @@ import org.bukkit.Sound
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
+import org.bukkit.event.inventory.InventoryDragEvent
 import org.bukkit.event.inventory.InventoryOpenEvent
 import org.bukkit.event.inventory.InventoryType
 import org.bukkit.inventory.Inventory
@@ -34,6 +35,10 @@ class CosmeticsInventory(private var player: Player, private var selected: Strin
 
     override fun setSize(): Int {
         return 54
+    }
+
+    override fun shouldCancel(): Boolean {
+        return true
     }
 
     override fun onClick(event: InventoryClickEvent) {
@@ -74,10 +79,10 @@ class CosmeticsInventory(private var player: Player, private var selected: Strin
                 3 -> { // Wands
                     newInventory = CosmeticsInventory(player, "圖", 0)
                     if(event.isRightClick){
-                        if(player.inventory.getItem(5) != null
-                            && player.inventory.getItem(5)!!.type == Material.BLAZE_ROD
-                            && player.inventory.getItem(5)!!.hasItemMeta())
-                            player.inventory.setItem(5, null)
+                        if(player.inventory.getItem(3) != null
+                            && player.inventory.getItem(3)!!.type == Material.BLAZE_ROD
+                            && player.inventory.getItem(3)!!.hasItemMeta())
+                            player.inventory.setItem(3, null)
                         inventory.setItem(3, null)
                     }
                 }
@@ -167,6 +172,10 @@ class CosmeticsInventory(private var player: Player, private var selected: Strin
         }
     }
 
+    override fun onDrag(event: InventoryDragEvent) {
+
+    }
+
     override fun onOpen(event: InventoryOpenEvent) {
         val transparentItem = ItemStack(Material.FEATHER)
         val transparentMeta = transparentItem.itemMeta as ItemMeta
@@ -179,10 +188,10 @@ class CosmeticsInventory(private var player: Player, private var selected: Strin
 
         inventory.setItem(49, transparentItem)
 
-        if(player.inventory.getItem(5) != null
-            && player.inventory.getItem(5)!!.type == Material.BLAZE_ROD
-            && player.inventory.getItem(5)!!.hasItemMeta()){
-            inventory.setItem(3, addEquipmentLore(player.inventory.getItem(5)!!.clone(), "Wands"))
+        if(player.inventory.getItem(3) != null
+            && player.inventory.getItem(3)!!.type == Material.BLAZE_ROD
+            && player.inventory.getItem(3)!!.hasItemMeta()){
+            inventory.setItem(3, addEquipmentLore(player.inventory.getItem(3)!!.clone(), "Wands"))
         }
 
         val cosmeticPlayer = CosmeticPlayer(player)

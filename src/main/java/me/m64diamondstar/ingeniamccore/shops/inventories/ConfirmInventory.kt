@@ -15,6 +15,7 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
+import org.bukkit.event.inventory.InventoryDragEvent
 import org.bukkit.event.inventory.InventoryOpenEvent
 import org.bukkit.inventory.ItemStack
 import java.text.NumberFormat
@@ -23,12 +24,24 @@ import java.util.*
 class ConfirmInventory(player: Player, private val category: String, private val name: String, private val shopItemID: String): InventoryHandler(
     IngeniaPlayer(player)
 ) {
+
+    private var amount = 1
+
     override fun setDisplayName(): Component {
-        return Component.text("${Font.getGuiNegativeSpace(0)}\uEDA1").color(TextColor.color(255, 255, 255))
+        val shop = Shop(category, name)
+        val type = shop.getShopItemType(shopItemID)
+        return if(type != null && type.allowMultiple())
+            Component.text("${Font.getGuiNegativeSpace(0)}\uEDA2").color(TextColor.color(255, 255, 255))
+        else
+            Component.text("${Font.getGuiNegativeSpace(0)}\uEDA1").color(TextColor.color(255, 255, 255))
     }
 
     override fun setSize(): Int {
         return 54
+    }
+
+    override fun shouldCancel(): Boolean {
+        return true
     }
 
     override fun onClick(event: InventoryClickEvent) {
@@ -37,12 +50,13 @@ class ConfirmInventory(player: Player, private val category: String, private val
         if(event.slot == 20){
             ShopInventory(getPlayer().player, category, name).open()
         }
+
         if(event.slot == 24){
             val shop = Shop(category, name)
 
             player.closeInventory()
             // Check if player has enough money
-            if(getPlayer().bal < shop.getPrice(shopItemID)){
+            if(getPlayer().bal < shop.getPrice(shopItemID) * amount){
                 val mainTitle = MiniMessage.miniMessage().deserialize("<${MessageType.ERROR}>Purchase Failed")
                 val subTitle = MiniMessage.miniMessage().deserialize("<${MessageType.LIGHT_ERROR}>Missing requirements")
 
@@ -82,33 +96,62 @@ class ConfirmInventory(player: Player, private val category: String, private val
             }
 
             // Purchase was successful
-            getPlayer().bal -= shop.getPrice(shopItemID)
-            itemType.givePlayer(player, itemID)
+            getPlayer().bal -= shop.getPrice(shopItemID) * amount
+            itemType.givePlayer(player, itemID, amount)
             player.sendMessage(Colors.format(MessageType.SUCCESS + "Purchase was successful!"))
         }
+
+        // Change amount
+        if(event.slot == 21 || event.slot == 23){
+            val shop = Shop(category, name)
+            val type = shop.getShopItemType(shopItemID)
+
+            if(type != null && !type.allowMultiple()) return
+
+            if(event.slot == 21 && amount > 1) amount--
+            if(event.slot == 23 && amount < 64 && getPlayer().bal >= shop.getPrice(shopItemID) * (amount + 1)) amount++
+
+            event.inventory.setItem(22, shop.getItemStack(shopItemID, getPlayer().player, amount))
+            event.inventory.setItem(24, confirmItem(shop))
+        }
+    }
+
+    override fun onDrag(event: InventoryDragEvent) {
+
     }
 
     override fun onOpen(event: InventoryOpenEvent) {
         val shop = Shop(category, name)
-        val item = shop.getItemStack(shopItemID, getPlayer().player)
+        val item = shop.getItemStack(shopItemID, getPlayer().player, 1)
+        val type = shop.getShopItemType(shopItemID)
         val inventory = event.inventory
 
-        if(item == null) {
+        if(item == null || type == null) {
             ShopInventory(getPlayer().player, category, name).open()
             return
         }
 
         inventory.setItem(22, item)
-        val numberFormat = NumberFormat.getNumberInstance(Locale.US)
 
-        val confirm = ItemStack(Material.FEATHER)
-        val confirmMeta = confirm.itemMeta!!
-        confirmMeta.setDisplayName(Colors.format(MessageType.SUCCESS + "Confirm"))
-        confirmMeta.lore = listOf(Colors.format("&f:gs:${numberFormat.format(shop.getPrice(shopItemID))} ${MessageType.LORE}will be withdrawn from your balance."))
-        confirmMeta.setCustomModelData(1)
-        confirm.itemMeta = confirmMeta
+        if(shop.getShopItemType(shopItemID)!!.allowMultiple()){
+            val add = ItemStack(Material.FEATHER)
+            val addMeta = add.itemMeta!!
+            addMeta.setDisplayName(Colors.format(MessageType.SUCCESS + "Add one"))
+            addMeta.setCustomModelData(1)
+            add.itemMeta = addMeta
 
-        inventory.setItem(24, confirm)
+            inventory.setItem(23, add)
+
+            val reduce = ItemStack(Material.FEATHER)
+            val reduceMeta = reduce.itemMeta!!
+            reduceMeta.setDisplayName(Colors.format(MessageType.SUCCESS + "Remove one"))
+            reduceMeta.setCustomModelData(1)
+            reduce.itemMeta = reduceMeta
+
+            inventory.setItem(21, reduce)
+        }
+
+        inventory.setItem(24, confirmItem(shop))
 
         val cancel = ItemStack(Material.FEATHER)
         val cancelMeta = cancel.itemMeta!!
@@ -121,4 +164,16 @@ class ConfirmInventory(player: Player, private val category: String, private val
     }
 
     override fun onClose(event: InventoryCloseEvent) {}
+
+    private fun confirmItem(shop: Shop): ItemStack {
+        val numberFormat = NumberFormat.getNumberInstance(Locale.US)
+        val confirm = ItemStack(Material.FEATHER)
+        val confirmMeta = confirm.itemMeta!!
+        confirmMeta.setDisplayName(Colors.format(MessageType.SUCCESS + "Confirm"))
+        confirmMeta.lore = listOf(Colors.format("&f:gs:${numberFormat.format(shop.getPrice(shopItemID) * amount)} ${MessageType.LORE}will be withdrawn from your balance."))
+        confirmMeta.setCustomModelData(1)
+        confirm.itemMeta = confirmMeta
+
+        return confirm
+    }
 }

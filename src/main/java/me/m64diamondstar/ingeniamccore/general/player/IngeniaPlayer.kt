@@ -71,6 +71,8 @@ class IngeniaPlayer(val player: Player) {
         player.setCustomChatCompletions(tabCompletions)
 
         giveMenuItem()
+        giveRidesItem()
+        giveShopsItem()
 
         val bossBar = BossBar.bossBar(Component.empty(), 0.0f, BossBar.Color.YELLOW, BossBar.Overlay.PROGRESS)
         (player as Audience).showBossBar(bossBar)
@@ -438,7 +440,7 @@ class IngeniaPlayer(val player: Player) {
         get() = getAccessibleWands(player)
 
     fun setWand(item: ItemStack?) {
-        player.inventory.setItem(5, item)
+        player.inventory.setItem(3, item)
     }
 
     var joinMessage: String?
@@ -475,11 +477,34 @@ class IngeniaPlayer(val player: Player) {
     fun giveMenuItem() {
         val itemStack = ItemStack(Material.NETHER_STAR)
         val itemMeta = itemStack.itemMeta!!
-        itemMeta.setDisplayName(Colors.format("#f4b734&lIngeniaMC"))
+        itemMeta.setDisplayName(Colors.format("#f4b734&lIngeniaMC Menu"))
         itemMeta.lore =
             listOf(Colors.format(MessageType.LORE + "Click to open the IngeniaMC menu."))
+        itemMeta.persistentDataContainer.set(NamespacedKey(IngeniaMC.plugin, "menu-item"), PersistentDataType.STRING, "main")
         itemStack.itemMeta = itemMeta
-        player.inventory.setItem(4, itemStack)
+        player.inventory.setItem(0, itemStack)
+    }
+
+    fun giveRidesItem() {
+        val itemStack = ItemStack(Material.MINECART)
+        val itemMeta = itemStack.itemMeta!!
+        itemMeta.setDisplayName(Colors.format("#f4b734&lRides"))
+        itemMeta.lore =
+            listOf(Colors.format(MessageType.LORE + "Click to open the rides menu."))
+        itemMeta.persistentDataContainer.set(NamespacedKey(IngeniaMC.plugin, "menu-item"), PersistentDataType.STRING, "rides")
+        itemStack.itemMeta = itemMeta
+        player.inventory.setItem(1, itemStack)
+    }
+
+    fun giveShopsItem() {
+        val itemStack = ItemStack(Material.ENDER_CHEST)
+        val itemMeta = itemStack.itemMeta!!
+        itemMeta.setDisplayName(Colors.format("#f4b734&lShops"))
+        itemMeta.lore =
+            listOf(Colors.format(MessageType.LORE + "Click to open the shops menu."))
+        itemMeta.persistentDataContainer.set(NamespacedKey(IngeniaMC.plugin, "menu-item"), PersistentDataType.STRING, "shops")
+        itemStack.itemMeta = itemMeta
+        player.inventory.setItem(2, itemStack)
     }
 
     fun setPreviousLocation(location: Location) {
@@ -600,21 +625,21 @@ class IngeniaPlayer(val player: Player) {
         val bossBar = BossBarPlayerRegistry.getBossBar(this.player, BossBarIndex.FIRST) ?: return
         bossBar.name(
             Component.text("\uE022\uF801") // Left Part
-                .append(Component.text().content(areaText.joinToString("") { '\uEE00'.plus(it.second).toString() + "\uF801" }).font(Key.key("minecraft:default")))
+                .append(Component.text().content(areaText.joinToString("") { '\uEF00'.plus(it.second).toString() + "\uF801" }).font(Key.key("minecraft:default")))
                 .append(Component.text().content("\uE023\uF806\uF806")) // Right part
                 .append(Component.text().content(areaText.map { '\uF800'.plus(it.second) }.joinToString("")).font(Key.key("minecraft:default")))
                 .append(Component.text().content(areaText.map { it.first }.joinToString("")).font(Key.key("ingeniamc:ui_top")))
                 .append(Component.text("\uF826\uF826"))
 
                 .append(Component.text("\uF828\uE022\uF801"))
-                .append(Component.text().content(rankText.joinToString("") { '\uEE00'.plus(it.second + 1).toString() + "\uF801" }).font(Key.key("minecraft:default")))
+                .append(Component.text().content(rankText.joinToString("") { '\uEF00'.plus(it.second + 1).toString() + "\uF801" }).font(Key.key("minecraft:default")))
                 .append(Component.text().content("\uE023\uF806\uF806")) // Right part
                 .append(Component.text().content(rankText.map { '\uF800'.plus(it.second + 1) }.joinToString("")).font(Key.key("minecraft:default")))
                 .append(rank.font(Key.key("ingeniamc:ui_top")))
                 .append(Component.text("\uF826\uF826"))
 
-                .append(Component.text("\uF828\uE022\uF801\uEE07\uF801")) // extra space - left part - 7px part for star - 1 back
-                .append(Component.text().content(starsText.joinToString("") { '\uEE00'.plus(it.second).toString() + "\uF801" }).font(Key.key("minecraft:default")))
+                .append(Component.text("\uF828\uE022\uF801\uEF07\uF801")) // extra space - left part - 7px part for star - 1 back
+                .append(Component.text().content(starsText.joinToString("") { '\uEF00'.plus(it.second).toString() + "\uF801" }).font(Key.key("minecraft:default")))
                 .append(Component.text().content("\uE023\uF806\uF806")) // Right part
                 .append(Component.text().content(starsText.map { '\uF800'.plus(it.second) }.joinToString("")).font(Key.key("minecraft:default")))
                 .append(Component.text("\uF807\uE024")) // Star icon negative space and star icon

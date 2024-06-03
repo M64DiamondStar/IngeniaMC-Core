@@ -16,6 +16,7 @@ import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
+import org.bukkit.event.inventory.InventoryDragEvent
 import org.bukkit.event.inventory.InventoryOpenEvent
 import org.bukkit.inventory.ItemStack
 
@@ -26,6 +27,10 @@ class OperateInventory(player: IngeniaPlayer, private val attraction: Attraction
 
     override fun setSize(): Int {
         return 45
+    }
+
+    override fun shouldCancel(): Boolean {
+        return true
     }
 
     override fun onClick(event: InventoryClickEvent) {
@@ -108,6 +113,10 @@ class OperateInventory(player: IngeniaPlayer, private val attraction: Attraction
                 getPlayer().player.playSound(getPlayer().player.location, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 2f, 1.5f)
             }
         }
+    }
+
+    override fun onDrag(event: InventoryDragEvent) {
+
     }
 
     override fun onOpen(event: InventoryOpenEvent) {

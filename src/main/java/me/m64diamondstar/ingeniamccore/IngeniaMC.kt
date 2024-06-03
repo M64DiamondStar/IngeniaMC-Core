@@ -183,10 +183,8 @@ class IngeniaMC : JavaPlugin() {
         Objects.requireNonNull(getCommand("gma"))?.setExecutor(GamemodeCommand())
         Objects.requireNonNull(getCommand("gmsp"))?.setExecutor(GamemodeCommand())
 
-
         Objects.requireNonNull(getCommand("ingenia"))?.setExecutor(IngeniaCommand())
         Objects.requireNonNull(getCommand("admin"))?.setExecutor(AdminCommand())
-
 
         Objects.requireNonNull(getCommand("cosmetics"))?.setExecutor(MenuCommands())
 
@@ -195,10 +193,10 @@ class IngeniaMC : JavaPlugin() {
         Objects.requireNonNull(getCommand("shirts"))?.setExecutor(CosmeticCommands())
         Objects.requireNonNull(getCommand("pants"))?.setExecutor(CosmeticCommands())
         Objects.requireNonNull(getCommand("shoes"))?.setExecutor(CosmeticCommands())
+        Objects.requireNonNull(getCommand("backpack"))?.setExecutor(BackpackCommand())
 
         Objects.requireNonNull(getCommand("rides"))?.setExecutor(MenuCommands())
         Objects.requireNonNull(getCommand("shops"))?.setExecutor(MenuCommands())
-
 
         Objects.requireNonNull(getCommand("msg"))?.setExecutor(MessageCommand())
         Objects.requireNonNull(getCommand("react"))?.setExecutor(MessageCommand())
@@ -243,6 +241,8 @@ class IngeniaMC : JavaPlugin() {
         Objects.requireNonNull(getCommand("warp")?.setTabCompleter(WarpTabCompleter()))
 
         Objects.requireNonNull(getCommand("feature")?.setTabCompleter(FeatureTabCompleter()))
+
+        Objects.requireNonNull(getCommand("backpack")?.setTabCompleter(BackpackCommand()))
     }
 
     private fun loadEventListeners() {

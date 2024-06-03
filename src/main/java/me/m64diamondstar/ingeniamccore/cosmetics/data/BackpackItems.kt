@@ -1,17 +1,14 @@
 package me.m64diamondstar.ingeniamccore.cosmetics.data
 
 import me.m64diamondstar.ingeniamccore.IngeniaMC
-import me.m64diamondstar.ingeniamccore.cosmetics.utils.CosmeticType
+import me.m64diamondstar.ingeniamccore.cosmetics.utils.BackpackItemType
 import me.m64diamondstar.ingeniamccore.cosmetics.utils.TypeItems
 import me.m64diamondstar.ingeniamccore.data.DataConfiguration
 import org.bukkit.NamespacedKey
 import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
 
-/**
- * @param cosmeticType which CosmeticType to edit.
- */
-class CosmeticItems(cosmeticType: CosmeticType): DataConfiguration("data/items", cosmeticType.toString()), TypeItems {
+class BackpackItems(backpackItemType: BackpackItemType): DataConfiguration("data/backpack-items", backpackItemType.toString()), TypeItems {
 
     /**
      * Check if an ID exists

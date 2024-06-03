@@ -6,6 +6,7 @@ import me.m64diamondstar.ingeniamccore.cosmetics.utils.MessageType
 import me.m64diamondstar.ingeniamccore.discord.bot.DiscordBot
 import me.m64diamondstar.ingeniamccore.discord.commands.BotUtils
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
+import org.bukkit.Material
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
@@ -25,6 +26,14 @@ class JoinListener : Listener {
     fun onPlayerJoin(e: PlayerJoinEvent) {
         val bukkitPlayer = e.player
         val player = IngeniaPlayer(bukkitPlayer)
+
+        // Remove the legacy menu item
+        if(bukkitPlayer.inventory.getItem(4) != null && bukkitPlayer.inventory.getItem(4)!!.type == Material.NETHER_STAR && bukkitPlayer.inventory.getItem(4)!!.hasItemMeta() && bukkitPlayer.inventory.getItem(4)!!.itemMeta.hasDisplayName()
+            && bukkitPlayer.inventory.getItem(4)!!.itemMeta.displayName.contains("IngeniaMC")){
+            bukkitPlayer.inventory.setItem(4, null)
+            bukkitPlayer.inventory.setItem(5, null)
+        }
+
         e.joinMessage = MessageBuilder.JoinMessageBuilder(player.name, player.joinColor, player.joinMessage).build()
 
         player.startUp()

@@ -1,9 +1,9 @@
 package me.m64diamondstar.ingeniamccore.games.wandclash.util
 
-import me.m64diamondstar.ingeniamccore.games.wandclash.clashwands.agility.BackStep
-import me.m64diamondstar.ingeniamccore.games.wandclash.clashwands.agility.Launch
-import me.m64diamondstar.ingeniamccore.games.wandclash.clashwands.agility.Spring
-import me.m64diamondstar.ingeniamccore.games.wandclash.clashwands.attack.Fenrir
+import me.m64diamondstar.ingeniamccore.games.wandclash.spells.agility.BackStep
+import me.m64diamondstar.ingeniamccore.games.wandclash.spells.agility.Launch
+import me.m64diamondstar.ingeniamccore.games.wandclash.spells.agility.Spring
+import me.m64diamondstar.ingeniamccore.games.wandclash.spells.attack.Fenrir
 
 object ClashWandRegistry {
 
@@ -16,18 +16,18 @@ object ClashWandRegistry {
 
 
     // ID, ClashWand
-    private val clashWands: HashMap<String, ClashWand> = HashMap()
+    private val wandsClashSpell: HashMap<String, WandClashSpell> = HashMap()
 
-    fun getClashWand(clashWandID: String): ClashWand? {
-        return clashWands[clashWandID]
+    fun getClashWand(clashWandID: String): WandClashSpell? {
+        return wandsClashSpell[clashWandID]
     }
 
-    fun getClashWands(): HashMap<String, ClashWand> {
-        return clashWands
+    fun getClashWands(): HashMap<String, WandClashSpell> {
+        return wandsClashSpell
     }
 
-    private fun registerClashWand(clashWand: ClashWand) {
-        clashWands[clashWand.getID()] = clashWand
+    private fun registerClashWand(wandClashSpell: WandClashSpell) {
+        wandsClashSpell[wandClashSpell.getID()] = wandClashSpell
     }
 
 }

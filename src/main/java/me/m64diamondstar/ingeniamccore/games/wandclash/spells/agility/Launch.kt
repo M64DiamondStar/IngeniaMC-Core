@@ -1,14 +1,14 @@
-package me.m64diamondstar.ingeniamccore.games.wandclash.clashwands.agility
+package me.m64diamondstar.ingeniamccore.games.wandclash.spells.agility
 
-import me.m64diamondstar.ingeniamccore.games.wandclash.util.ClashWand
-import me.m64diamondstar.ingeniamccore.games.wandclash.util.ClashWandType
+import me.m64diamondstar.ingeniamccore.games.wandclash.util.WandClashSpell
+import me.m64diamondstar.ingeniamccore.games.wandclash.util.WandClashSpellType
 import me.m64diamondstar.ingeniamccore.utils.LocationUtils
 import org.bukkit.Particle
 import org.bukkit.entity.Player
 import kotlin.math.cos
 import kotlin.math.sin
 
-class Launch: ClashWand {
+class Launch: WandClashSpell {
     override fun getID(): String {
         return "launch"
     }
@@ -17,8 +17,8 @@ class Launch: ClashWand {
         return "Launch"
     }
 
-    override fun getType(): ClashWandType {
-        return ClashWandType.AGILITY
+    override fun getType(): WandClashSpellType {
+        return WandClashSpellType.AGILITY
     }
 
     override fun getManaCost(): Int {

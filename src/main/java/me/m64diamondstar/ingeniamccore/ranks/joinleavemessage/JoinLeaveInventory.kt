@@ -21,6 +21,7 @@ import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
+import org.bukkit.event.inventory.InventoryDragEvent
 import org.bukkit.event.inventory.InventoryOpenEvent
 import org.bukkit.event.inventory.InventoryType
 import org.bukkit.inventory.Inventory
@@ -60,6 +61,10 @@ class JoinLeaveInventory(val player: Player, private var selected: Selected) : I
 
     override fun setSize(): Int {
         return 54
+    }
+
+    override fun shouldCancel(): Boolean {
+        return true
     }
 
     override fun onClick(event: InventoryClickEvent) {
@@ -159,6 +164,10 @@ class JoinLeaveInventory(val player: Player, private var selected: Selected) : I
             val rankPerksInventory = RankPerksInventory(player)
             rankPerksInventory.open()
         }
+    }
+
+    override fun onDrag(event: InventoryDragEvent) {
+
     }
 
     override fun onOpen(event: InventoryOpenEvent) {

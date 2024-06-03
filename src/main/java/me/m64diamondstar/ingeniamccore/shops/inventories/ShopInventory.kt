@@ -14,6 +14,7 @@ import org.bukkit.NamespacedKey
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
+import org.bukkit.event.inventory.InventoryDragEvent
 import org.bukkit.event.inventory.InventoryOpenEvent
 import org.bukkit.persistence.PersistentDataType
 
@@ -28,6 +29,10 @@ class ShopInventory(player: Player, private val category: String, private val na
 
     override fun setSize(): Int {
         return 54
+    }
+
+    override fun shouldCancel(): Boolean {
+        return true
     }
 
     override fun onClick(event: InventoryClickEvent) {
@@ -49,6 +54,10 @@ class ShopInventory(player: Player, private val category: String, private val na
         }
     }
 
+    override fun onDrag(event: InventoryDragEvent) {
+
+    }
+
     override fun onOpen(event: InventoryOpenEvent) {
         val shop = Shop(category, name)
         val inventory = event.inventory
@@ -65,12 +74,12 @@ class ShopInventory(player: Player, private val category: String, private val na
         }
 
         slottedItems.forEach {
-            val item = shop.getItemStack(it, getPlayer().player)
+            val item = shop.getItemStack(it, getPlayer().player, 1)
             inventory.setItem(shop.getSlot(it)!!, item)
         }
 
         autoItems.forEach {
-            val item = shop.getItemStack(it, getPlayer().player)
+            val item = shop.getItemStack(it, getPlayer().player, 1)
             for(slot in itemSlots) {
                 if (inventory.getItem(slot) == null) {
                     inventory.setItem(slot, item)

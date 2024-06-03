@@ -85,6 +85,10 @@ commands:
     description: Open the shirt selection menu.
   shoes:
     description: Open the shoes selection menu.
+  backpack:
+    description: Manage your backpack.
+    aliases:
+      - bp
   testgui:
     description: Just a test GUI.
     permission: ingenia.admin

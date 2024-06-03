@@ -4,6 +4,8 @@ import com.ticxo.modelengine.api.ModelEngineAPI
 import fr.mrmicky.fastboard.adventure.FastBoard
 import gg.flyte.twilight.scheduler.delay
 import me.m64diamondstar.ingeniamccore.IngeniaMC
+import me.m64diamondstar.ingeniamccore.games.wandclash.gui.TeamChooseGui
+import me.m64diamondstar.ingeniamccore.games.wandclash.gui.VoteGameModeGui
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.npc.utils.DialogueUtils
 import me.m64diamondstar.ingeniamccore.utils.entities.CameraPacketEntity
@@ -23,6 +25,7 @@ import net.kyori.adventure.text.minimessage.MiniMessage
 import net.minecraft.core.BlockPos
 import net.minecraft.world.level.block.entity.SkullBlockEntity
 import org.bukkit.Bukkit
+import org.bukkit.Color
 import org.bukkit.Material
 import org.bukkit.Statistic
 import org.bukkit.block.BlockFace
@@ -31,9 +34,11 @@ import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import org.bukkit.craftbukkit.v1_20_R3.CraftWorld
+import org.bukkit.entity.ItemDisplay
 import org.bukkit.entity.Pig
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.meta.LeatherArmorMeta
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.bukkit.scheduler.BukkitRunnable
@@ -68,9 +73,9 @@ class AdminCommand: CommandExecutor {
                     sender.walkSpeed = args[1].toFloat() / 5
 
                 sender.sendMessage(Colors.format(MessageType.SUCCESS + "Speed set to ${args[1]}."))
-            }catch (e: NumberFormatException){
+            }catch (_: NumberFormatException){
                 sender.sendMessage(Messages.invalidNumber())
-            }catch (e: IllegalArgumentException){
+            }catch (_: IllegalArgumentException){
                 sender.sendMessage(Colors.format(MessageType.ERROR + "This amount of speed doesn't exist."))
             }
         }
@@ -190,7 +195,7 @@ class AdminCommand: CommandExecutor {
                         }else{
                             sender.sendMessage(Colors.format(MessageType.ERROR + "Couldn't connect to the database."))
                         }
-                    }catch (ex: SQLException){
+                    }catch (_: SQLException){
                         sender.sendMessage(Colors.format(MessageType.ERROR + "Couldn't connect to the database."))
                     }
                 })
@@ -383,6 +388,47 @@ class AdminCommand: CommandExecutor {
 
         if(args[0].equals("teststriptags", ignoreCase = true)){
             (sender as Audience).sendMessage(Component.text(MiniMessage.miniMessage().stripTags("<red>Hello <blue>World!")))
+        }
+
+        if(args[0].equals("testshield", ignoreCase = true)){
+            val location = sender.location
+            location.yaw = 0f
+            location.pitch = 0f
+
+            val itemStack = ItemStack(Material.LEATHER_HORSE_ARMOR)
+            val meta = itemStack.itemMeta!! as LeatherArmorMeta
+            meta.setColor(Color.fromRGB(120, 196, 255))
+            meta.setCustomModelData(11)
+            itemStack.itemMeta = meta
+
+            for(i in -3..3){
+                location.yaw = i.toFloat() * 14
+                location.pitch = 0f
+
+                for(i2 in -3..3) {
+                    location.pitch = i2.toFloat() * 14
+                    if(i * 14 % 28 == 0)
+                        location.pitch += 7
+
+                    val itemDisplay = sender.world.spawn(location, ItemDisplay::class.java)
+                    itemDisplay.itemStack = itemStack
+                    val transformation = itemDisplay.transformation
+                    transformation.translation.add(0f, 0f, 1.5f)
+                    transformation.scale.set(0.5f, 0.5f, 0.5f)
+                    itemDisplay.transformation = transformation
+                    sender.addPassenger(itemDisplay)
+                }
+            }
+        }
+
+        if(args[0].equals("testwcvote", ignoreCase = true)){
+            val voteGameModeGui = VoteGameModeGui(sender)
+            voteGameModeGui.open()
+        }
+
+        if(args[0].equals("testwcteam", ignoreCase = true)){
+            val teamChooseGui = TeamChooseGui(sender)
+            teamChooseGui.open()
         }
 
         return false

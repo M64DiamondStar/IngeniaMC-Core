@@ -201,26 +201,22 @@ class CosmeticPlayer(private val player: Player) {
         private fun equipUnsafeCosmetic(cosmeticType: CosmeticType, id: String) {
             when (cosmeticType) {
                 CosmeticType.HAT -> {
-                    cosmeticPlayer.player.equipment!!.helmet = CosmeticItems(cosmeticType).getItem(id)
+                    cosmeticPlayer.player.equipment.helmet = CosmeticItems(cosmeticType).getItem(id)
                 }
 
                 CosmeticType.SHIRT -> {
-                    cosmeticPlayer.player.equipment!!.chestplate = CosmeticItems(cosmeticType).getItem(id)
+                    cosmeticPlayer.player.equipment.chestplate = CosmeticItems(cosmeticType).getItem(id)
                 }
 
                 CosmeticType.PANTS -> {
-                    cosmeticPlayer.player.equipment!!.leggings = CosmeticItems(cosmeticType).getItem(id)
+                    cosmeticPlayer.player.equipment.leggings = CosmeticItems(cosmeticType).getItem(id)
                 }
 
                 CosmeticType.SHOES -> {
-                    cosmeticPlayer.player.equipment!!.boots = CosmeticItems(cosmeticType).getItem(id)
+                    cosmeticPlayer.player.equipment.boots = CosmeticItems(cosmeticType).getItem(id)
                 }
 
                 CosmeticType.BALLOON -> {
-
-                }
-
-                CosmeticType.BACKPACK -> {
 
                 }
             }
@@ -233,26 +229,22 @@ class CosmeticPlayer(private val player: Player) {
         fun unEquipCosmetic(cosmeticType: CosmeticType) {
             when (cosmeticType) {
                 CosmeticType.HAT -> {
-                    cosmeticPlayer.player.equipment!!.helmet = null
+                    cosmeticPlayer.player.equipment.helmet = null
                 }
 
                 CosmeticType.SHIRT -> {
-                    cosmeticPlayer.player.equipment!!.chestplate = null
+                    cosmeticPlayer.player.equipment.chestplate = null
                 }
 
                 CosmeticType.PANTS -> {
-                    cosmeticPlayer.player.equipment!!.leggings = null
+                    cosmeticPlayer.player.equipment.leggings = null
                 }
 
                 CosmeticType.SHOES -> {
-                    cosmeticPlayer.player.equipment!!.boots = null
+                    cosmeticPlayer.player.equipment.boots = null
                 }
 
                 CosmeticType.BALLOON -> {
-
-                }
-
-                CosmeticType.BACKPACK -> {
 
                 }
             }
@@ -275,25 +267,22 @@ class CosmeticPlayer(private val player: Player) {
         fun getEquippedId(cosmeticType: CosmeticType): String? {
             return when (cosmeticType) {
                 CosmeticType.HAT -> {
-                    val helmet = cosmeticPlayer.player.equipment!!.helmet ?: return null
+                    val helmet = cosmeticPlayer.player.equipment.helmet ?: return null
                     CosmeticItems(cosmeticType).getID(helmet)
                 }
                 CosmeticType.SHIRT -> {
-                    val chestplate = cosmeticPlayer.player.equipment!!.chestplate ?: return null
+                    val chestplate = cosmeticPlayer.player.equipment.chestplate ?: return null
                     CosmeticItems(cosmeticType).getID(chestplate)
                 }
                 CosmeticType.PANTS -> {
-                    val leggings = cosmeticPlayer.player.equipment!!.leggings ?: return null
+                    val leggings = cosmeticPlayer.player.equipment.leggings ?: return null
                     CosmeticItems(cosmeticType).getID(leggings)
                 }
                 CosmeticType.SHOES -> {
-                    val boots = cosmeticPlayer.player.equipment!!.boots ?: return null
+                    val boots = cosmeticPlayer.player.equipment.boots ?: return null
                     CosmeticItems(cosmeticType).getID(boots)
                 }
                 CosmeticType.BALLOON -> {
-                    null
-                }
-                CosmeticType.BACKPACK -> {
                     null
                 }
             }
