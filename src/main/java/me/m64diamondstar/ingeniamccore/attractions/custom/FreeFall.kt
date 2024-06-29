@@ -42,9 +42,9 @@ class FreeFall(private val category: String, private val name: String): Attracti
 
             try{
                 AttractionType.valueOf(entity.customName!!.split("-")[0])
-            }catch (e: NullPointerException){
+            }catch (_: NullPointerException){
                 return
-            }catch (e: IllegalArgumentException){
+            }catch (_: IllegalArgumentException){
                 return
             }
 
@@ -53,7 +53,7 @@ class FreeFall(private val category: String, private val name: String): Attracti
             if(AttractionType.valueOf(Objects.requireNonNull<String?>(entity.customName).split("-").toTypedArray()[0]) == AttractionType.FREEFALL){
                 val freefall = FreeFall(entity.customName!!.split("-")[3], entity.customName!!.split("-")[2])
 
-                if(entity.passengers.size != 0)
+                if(entity.passengers.isNotEmpty())
                     return
                 if(!CountdownRegistry.isCountingDown(freefall.category, freefall.name)) {
                     freefall.countdown()
@@ -74,9 +74,9 @@ class FreeFall(private val category: String, private val name: String): Attracti
             val stand = getWorld()?.spawnEntity(loc, EntityType.ARMOR_STAND) as ArmorStand
             val item = ItemStack(Material.DIAMOND_SWORD)
             val meta = item.itemMeta
-            meta!!.setCustomModelData(9)
+            meta!!.setCustomModelData(1001)
             item.itemMeta = meta
-            stand.equipment!!.helmet = item
+            stand.equipment.helmet = item
             stand.isInvisible = true
             stand.isInvulnerable = true
             stand.setGravity(false)
