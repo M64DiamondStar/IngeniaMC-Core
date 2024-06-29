@@ -64,10 +64,6 @@ enum class DialogueAction {
                             npc.getDialogue(player).setNormalView(true)
                             npc.getDialogue(player).despawnFakePlayer()
                         }, 10L)
-                        IngeniaPlayer(player).setBossBar(BossBarIndex.FIRST, null, true)
-                        IngeniaPlayer(player).updateMainBossBar()
-                        IngeniaPlayer(player).setBossBar(BossBarIndex.SECOND, null, true)
-                        IngeniaPlayer(player).setBossBar(BossBarIndex.THIRD, null, true)
                         cancel()
                         return
                     }

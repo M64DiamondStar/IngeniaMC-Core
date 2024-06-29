@@ -6,7 +6,9 @@ import com.ticxo.modelengine.api.model.ActiveModel
 import com.ticxo.modelengine.api.model.bone.BoneBehaviorTypes
 import io.papermc.paper.entity.LookAnchor
 import me.m64diamondstar.ingeniamccore.IngeniaMC
+import me.m64diamondstar.ingeniamccore.cosmetics.utils.CosmeticType
 import me.m64diamondstar.ingeniamccore.general.bossbar.BossBarIndex
+import me.m64diamondstar.ingeniamccore.general.player.CosmeticPlayer
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.npc.utils.DialoguePlayerRegistry
 import me.m64diamondstar.ingeniamccore.npc.utils.DialogueUtils
@@ -197,6 +199,8 @@ class Npc(private val id: String) {
                 return
             }
 
+            CosmeticPlayer(player).getEquipment().hideCosmetic(CosmeticType.BODY_WEAR)
+
             player.inventory.heldItemSlot = 8
             playerInventory = player.inventory.contents
             player.inventory.contents = emptyArray()
@@ -353,6 +357,7 @@ class Npc(private val id: String) {
             DialoguePlayerRegistry.removeDialoguePlayer(player)
             DialoguePlayerRegistry.putOnCooldown(player)
             player.inventory.contents = playerInventory
+            CosmeticPlayer(player).getEquipment().showCosmetic(CosmeticType.BODY_WEAR)
 
             player.walkSpeed = 0.2f
             Bukkit.getScheduler().runTask(IngeniaMC.plugin, Runnable {
@@ -407,7 +412,7 @@ class Npc(private val id: String) {
         fun spawnFakePlayer(){
             despawnFakePlayer()
             val npcEntity = NpcPlayerEntity(player.location.world, player.location, player)
-            npcEntity.spawn()
+            npcEntity.spawn(IngeniaPlayer(player).playerConfig.getShowSkinDuringDialogue())
             this.fakePlayer = npcEntity
         }
 

@@ -19,15 +19,18 @@ import org.bukkit.craftbukkit.v1_20_R3.entity.CraftPlayer
 import org.bukkit.entity.Player
 
 
-class NpcPlayerEntity(world: World, private val loc: Location, player: Player) :
-    ServerPlayer((player as CraftPlayer).handle.server, (world as CraftWorld).handle, PlayerGameProfile.getTextureProfile(player, player.name), ClientInformation.createDefault()) {
+class NpcPlayerEntity(world: World, private val loc: Location, private val owningPlayer: Player) :
+    ServerPlayer((owningPlayer as CraftPlayer).handle.server, (world as CraftWorld).handle, PlayerGameProfile.getTextureProfile(owningPlayer, owningPlayer.name), ClientInformation.createDefault()) {
 
     init {
         this.setPos(loc.x, loc.y, loc.z)
         this.moveTo(loc.x, loc.y, loc.z, loc.yaw, loc.pitch)
     }
 
-    fun spawn() {
+    /**
+     * @param alsoSelf whether the fake player should also be visible to the owner
+     */
+    fun spawn(alsoSelf: Boolean) {
 
         val serverGamePacketListener = ServerGamePacketListenerImpl(
             (Bukkit.getServer() as CraftServer).server,
@@ -44,6 +47,8 @@ class NpcPlayerEntity(world: World, private val loc: Location, player: Player) :
         this.connection = serverGamePacketListener
 
         for(player in Bukkit.getOnlinePlayers()) {
+            if(player.uniqueId == this.owningPlayer.uniqueId && alsoSelf) continue
+
             player as CraftPlayer
             player.handle.connection.send(ClientboundPlayerInfoUpdatePacket(ClientboundPlayerInfoUpdatePacket.Action.ADD_PLAYER, this))
             player.handle.connection.send(ClientboundAddEntityPacket(this))

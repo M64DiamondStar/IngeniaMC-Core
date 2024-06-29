@@ -3,17 +3,17 @@ package me.m64diamondstar.ingeniamccore.npc.utils
 enum class DialogueBackdropType {
     DEFAULT{
         override fun getBackdrop(): String {
-            return "\uFF01"
+            return "\uEE01"
         }
     },
     HIGHWAY{
         override fun getBackdrop(): String {
-            return "\uFF02"
+            return "\uEE02"
         }
     },
     INGENIAMC{
         override fun getBackdrop(): String {
-            return "\uFF03"
+            return "\uEE03"
         }
 
     };

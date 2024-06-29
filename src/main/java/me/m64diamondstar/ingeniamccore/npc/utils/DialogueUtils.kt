@@ -28,9 +28,9 @@ object DialogueUtils {
         line5?.forEach { if(CharWidth.getAsMap().containsKey(it)) safeLine5.add(Pair(it, CharWidth.getAsMap()[it]!!)) }
 
         val result = Component.text()
-            .append(Component.text().content(backdropType?.getBackdrop() ?: "\uFF01").color(backdropColor ?: TextColor.color(255, 255, 255)))
+            .append(Component.text().content(backdropType?.getBackdrop() ?: "\uEE01").color(backdropColor ?: TextColor.color(255, 255, 255)))
             .append(Component.text().content("\uF80C\uF80C\uF808\uF801"))
-            .append(Component.text().content("\uF829\uFD00\uF828\uF821"))
+            .append(Component.text().content("\uF829\uE001\uF828\uF821")) // Second char is the skin
             .append(Component.text().content(safeLine1.map { it.first }.joinToString("")).font(Key.key("ingeniamc:dialogue_line_1")))
             .append(Component.text().content(safeLine1.map { '\uF800'.plus(it.second) }.joinToString("")).font(Key.key("minecraft:default")))
             .append(Component.text().content(safeLine2.map { it.first }.joinToString("")).font(Key.key("ingeniamc:dialogue_line_2")))
@@ -74,9 +74,9 @@ object DialogueUtils {
             var i = 0
             override fun run() {
                     val result = Component.text()
-                        .append(Component.text().content(backdropType?.getBackdrop() ?: "\uFF01").color(backdropColor ?: TextColor.color(255, 255, 255)))
+                        .append(Component.text().content(backdropType?.getBackdrop() ?: "\uEE01").color(backdropColor ?: TextColor.color(255, 255, 255)))
                         .append(Component.text().content("\uF80C\uF80C\uF808\uF801"))
-                        .append(Component.text().content("\uF829\uFD00\uF828\uF821"))
+                        .append(Component.text().content("\uF829\uE001\uF828\uF821"))
                         .append(
                             Component.text().content(progressiveLine1.map { it.first }.joinToString(""))
                                 .font(Key.key("ingeniamc:dialogue_line_1"))
