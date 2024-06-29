@@ -30,7 +30,7 @@ class InteractListener: Listener {
         }
 
         if(itemChecker.isMainMenu()) {
-            val mainInventory = MainInventory(IngeniaPlayer(player), 0)
+            val mainInventory = MainInventory(IngeniaPlayer(player), 1)
             mainInventory.open()
         }
 
