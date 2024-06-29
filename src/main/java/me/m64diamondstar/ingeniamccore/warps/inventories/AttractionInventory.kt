@@ -13,6 +13,8 @@ import me.m64diamondstar.ingeniamccore.warps.WarpType
 import me.m64diamondstar.ingeniamccore.warps.WarpUtils
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
+import net.kyori.adventure.text.format.TextDecoration
+import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.event.inventory.InventoryClickEvent
@@ -26,7 +28,7 @@ import org.bukkit.inventory.meta.ItemMeta
 class AttractionInventory(player: IngeniaPlayer): InventoryHandler(player) {
 
     override fun setDisplayName(): Component {
-        return Component.text("\uF808金").color(TextColor.color(255, 255, 255))
+        return Component.text("\uF808\uEB30").color(TextColor.color(255, 255, 255))
     }
 
     override fun setSize(): Int {
@@ -55,7 +57,7 @@ class AttractionInventory(player: IngeniaPlayer): InventoryHandler(player) {
         }
 
         if(event.slot == 49){
-            val mainInventory = MainInventory(getPlayer(), 0)
+            val mainInventory = MainInventory(getPlayer(), 1)
             mainInventory.open()
         }
     }
@@ -75,8 +77,8 @@ class AttractionInventory(player: IngeniaPlayer): InventoryHandler(player) {
 
         val transparentItem = ItemStack(Material.FEATHER)
         val transparentMeta = transparentItem.itemMeta as ItemMeta
-        transparentMeta.setDisplayName(Colors.format(MessageType.ERROR + "&lGo Back"))
-        transparentMeta.lore = listOf(Colors.format("${MessageType.LORE}Click here to go back to the main menu."))
+        transparentMeta.displayName(MiniMessage.miniMessage().deserialize("<${MessageType.ERROR}><b>Go Back").decoration(TextDecoration.ITALIC, false))
+        transparentMeta.lore(listOf(MiniMessage.miniMessage().deserialize("<${MessageType.LORE}>Click here to go back to the main menu.").decoration(TextDecoration.ITALIC, false)))
         transparentMeta.setCustomModelData(1)
 
         transparentItem.itemMeta = transparentMeta

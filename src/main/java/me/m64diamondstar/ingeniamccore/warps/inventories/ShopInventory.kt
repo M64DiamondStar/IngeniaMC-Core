@@ -26,7 +26,7 @@ import org.bukkit.inventory.meta.ItemMeta
 class ShopInventory(player: IngeniaPlayer): InventoryHandler(player) {
 
     override fun setDisplayName(): Component {
-        return Component.text("\uF808港").color(TextColor.color(255, 255, 255))
+        return Component.text("\uF808\uEB31").color(TextColor.color(255, 255, 255))
     }
 
     override fun setSize(): Int {
@@ -55,7 +55,7 @@ class ShopInventory(player: IngeniaPlayer): InventoryHandler(player) {
         }
 
         if(event.slot == 49){
-            val mainInventory = MainInventory(getPlayer(), 0)
+            val mainInventory = MainInventory(getPlayer(), 1)
             mainInventory.open()
         }
     }
