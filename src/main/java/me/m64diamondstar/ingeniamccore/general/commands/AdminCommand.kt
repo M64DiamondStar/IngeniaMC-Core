@@ -8,8 +8,10 @@ import me.m64diamondstar.ingeniamccore.games.wandclash.gui.TeamChooseGui
 import me.m64diamondstar.ingeniamccore.games.wandclash.gui.VoteGameModeGui
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.npc.utils.DialogueUtils
+import me.m64diamondstar.ingeniamccore.utils.entities.BodyWearEntity
 import me.m64diamondstar.ingeniamccore.utils.entities.CameraPacketEntity
 import me.m64diamondstar.ingeniamccore.utils.entities.NpcPlayerEntity
+import me.m64diamondstar.ingeniamccore.utils.entities.NametagEntity
 import me.m64diamondstar.ingeniamccore.utils.items.Items
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
@@ -383,7 +385,7 @@ class AdminCommand: CommandExecutor {
 
         if(args[0].equals("testnpcentity", ignoreCase = true)){
             val npcEntity = NpcPlayerEntity(sender.world, sender.location, sender)
-            npcEntity.spawn()
+            npcEntity.spawn(true)
         }
 
         if(args[0].equals("teststriptags", ignoreCase = true)){
@@ -429,6 +431,34 @@ class AdminCommand: CommandExecutor {
         if(args[0].equals("testwcteam", ignoreCase = true)){
             val teamChooseGui = TeamChooseGui(sender)
             teamChooseGui.open()
+        }
+
+        if(args[0].equals("testbackpack", ignoreCase = true)){
+            val bodyWearEntity = BodyWearEntity(sender.world, sender.location, sender)
+            bodyWearEntity.setItem(ItemStack(Material.STONE))
+        }
+
+        if(args[0].equals("settitle", ignoreCase = true)){
+            val ingeniaPlayer = IngeniaPlayer(sender)
+            val nametagEntity = NametagEntity.Registry.get(sender.uniqueId)
+            if(args.size == 1){
+                nametagEntity?.setTitle(
+                    Component.text()
+                        .append(ingeniaPlayer.componentPrefix)
+                        .append(Component.text(" ${sender.name}"))
+                        .build()
+                )
+            }else{
+                nametagEntity?.setTitle(
+                    Component.text()
+                        .append(MiniMessage.miniMessage().deserialize(args.drop(1).joinToString(" ") + "<br>"))
+                        .append(ingeniaPlayer.componentPrefix)
+                        .append(Component.text(" ${sender.name}"))
+                        .build()
+                )
+            }
+
+            sender.sendMessage(Colors.format(MessageType.SUCCESS + "Title set!"))
         }
 
         return false
