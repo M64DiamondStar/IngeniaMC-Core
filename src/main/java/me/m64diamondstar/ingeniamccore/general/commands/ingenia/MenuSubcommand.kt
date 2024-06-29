@@ -38,7 +38,7 @@ class MenuSubcommand(private val sender: CommandSender, private val args: Array<
 
                 if(args.size == 2) {
                     val player = IngeniaPlayer(sender)
-                    val mainInventory = MainInventory(player, 0)
+                    val mainInventory = MainInventory(player, 1)
                     mainInventory.open()
                 }else{
                     val target = Bukkit.getPlayer(args[2])
@@ -48,7 +48,7 @@ class MenuSubcommand(private val sender: CommandSender, private val args: Array<
                     }
                     val targetPlayer = IngeniaPlayer(target)
 
-                    val mainInventory = MainInventory(targetPlayer, 0)
+                    val mainInventory = MainInventory(targetPlayer, 1)
                     mainInventory.open()
                 }
             } else if(args[1].equals("give", ignoreCase = true)){
@@ -117,7 +117,7 @@ class MenuSubcommand(private val sender: CommandSender, private val args: Array<
             }
 
             val player = IngeniaPlayer(sender)
-            val mainInventory = MainInventory(player, 0)
+            val mainInventory = MainInventory(player, 1)
             mainInventory.open()
         }
     }

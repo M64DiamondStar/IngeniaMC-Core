@@ -5,6 +5,7 @@ import me.m64diamondstar.ingeniamccore.cosmetics.inventory.BackpackInventory
 import me.m64diamondstar.ingeniamccore.cosmetics.inventory.CosmeticsInventory
 import me.m64diamondstar.ingeniamccore.general.levels.LevelUtils
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
+import me.m64diamondstar.ingeniamccore.general.player.settings.SettingsInventory
 import me.m64diamondstar.ingeniamccore.ranks.RankPerksInventory
 import me.m64diamondstar.ingeniamccore.utils.gui.InventoryHandler
 import me.m64diamondstar.ingeniamccore.utils.messages.Font
@@ -36,7 +37,7 @@ class MainInventory(player: IngeniaPlayer, private val version: Int): InventoryH
     private val rankSlots = if(version == 0) arrayOf(39, 40, 41) else if(version == 1) arrayOf(45, 46, 47, 48) else arrayOf()
 
     override fun setDisplayName(): Component {
-        return Component.text("${Font.getGuiNegativeSpace(0)}\uEC01${Font.getGuiNegativeSpace(1)}" + '\uEB00'.plus(version)).color(
+        return Component.text("${Font.getGuiNegativeSpace(0)}\uEC02${Font.getGuiNegativeSpace(1)}" + '\uEB00'.plus(version)).color(
             TextColor.color(255,255,255))
     }
 
@@ -62,7 +63,7 @@ class MainInventory(player: IngeniaPlayer, private val version: Int): InventoryH
         }
 
         if(wardrobeSlots.contains(event.slot)){
-            val cosmeticsInventory = CosmeticsInventory(getPlayer().player, "國", 0)
+            val cosmeticsInventory = CosmeticsInventory(getPlayer().player, "\uEB21", 0)
             cosmeticsInventory.open()
         }
 
@@ -79,6 +80,11 @@ class MainInventory(player: IngeniaPlayer, private val version: Int): InventoryH
         if(rankSlots.contains(event.slot)){
             val rankPerksInventory = RankPerksInventory(getPlayer().player)
             rankPerksInventory.open()
+        }
+
+        if(event.slot == 53){
+            val settingsInventory = SettingsInventory(getPlayer())
+            settingsInventory.open()
         }
     }
 
@@ -152,6 +158,13 @@ class MainInventory(player: IngeniaPlayer, private val version: Int): InventoryH
         transparentItem.itemMeta = transparentMeta
 
         questSlots.forEach { inventory.setItem(it, transparentItem) }
+
+
+        transparentMeta.displayName(MiniMessage.miniMessage().deserialize("<#bfbfbf><b>Settings").decoration(TextDecoration.ITALIC, false))
+        transparentMeta.lore(listOf(MiniMessage.miniMessage().deserialize("<${MessageType.LORE}>Click to view your settings.").decoration(TextDecoration.ITALIC, false)))
+        transparentItem.itemMeta = transparentMeta
+
+        inventory.setItem(53, transparentItem)
     }
 
     override fun onClose(event: InventoryCloseEvent) {}

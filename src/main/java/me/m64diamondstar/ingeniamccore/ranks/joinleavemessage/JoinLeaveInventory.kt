@@ -255,7 +255,7 @@ class JoinLeaveInventory(val player: Player, private var selected: Selected) : I
 
                 if(color != null) {
 
-                    colorMeta.setCustomModelData(4)
+                    colorMeta.setCustomModelData(7000)
                     colorMeta.addItemFlags(ItemFlag.HIDE_DYE)
                     colorMeta.setColor(Color.fromRGB(color.red, color.green, color.blue))
                     colorMeta.setDisplayName(Colors.format("$hexColor&l$name"))

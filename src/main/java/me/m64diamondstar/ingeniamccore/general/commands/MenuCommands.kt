@@ -30,7 +30,7 @@ class MenuCommands : CommandExecutor {
         }
 
         if(string.equals("cosmetic", ignoreCase = true) || string.equals("cosmetics", ignoreCase = true)) {
-            val inv = CosmeticsInventory(player, "國", 0)
+            val inv = CosmeticsInventory(player, "\uEB21", 0)
             inv.open()
         }
 
@@ -45,7 +45,7 @@ class MenuCommands : CommandExecutor {
         }
 
         else if(string.equals("wand", ignoreCase = true) || string.equals("wands", ignoreCase = true)){
-            val inv = CosmeticsInventory(player, "圖", 0)
+            val inv = CosmeticsInventory(player, "\uEB23", 0)
             inv.open()
         }
 
