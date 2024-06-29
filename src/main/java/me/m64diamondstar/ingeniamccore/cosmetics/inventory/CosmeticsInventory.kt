@@ -30,7 +30,7 @@ class CosmeticsInventory(private var player: Player, private var selected: Strin
     private val nextPage = intArrayOf(26, 35, 44)
 
     override fun setDisplayName(): Component {
-        return Component.text("\uF808田\uF81C\uF81A\uF819\uF811$selected").color(TextColor.color(255, 255, 255))
+        return Component.text("\uF808\uEB20\uF81C\uF81A\uF819\uF811$selected").color(TextColor.color(255, 255, 255))
     }
 
     override fun setSize(): Int {
@@ -47,37 +47,36 @@ class CosmeticsInventory(private var player: Player, private var selected: Strin
         val cosmeticPlayer = CosmeticPlayer(player)
         val inventory = event.inventory
 
-        if(event.slot == -999 || !event.view.title.contains("田")) return
         if(event.clickedInventory?.type == InventoryType.PLAYER) return
 
         if(event.slot == 49){
-            val mainInventory = MainInventory(getPlayer(), 0)
+            val mainInventory = MainInventory(getPlayer(), 1)
             mainInventory.open()
             return
         }
 
-        if(event.slot in 1..7 && event.slot != 4) {
-            var newInventory = CosmeticsInventory(player, "國", 0)
+        if(event.slot in 1..7) {
+            var newInventory = CosmeticsInventory(player, "\uEB21", 0)
 
             //All the different options
 
             when (event.slot) {
                 1 -> { // Hats
-                    newInventory = CosmeticsInventory(player, "國", 0)
+                    newInventory = CosmeticsInventory(player, "\uEB21", 0)
                     if(event.isRightClick){
                         cosmeticPlayer.getEquipment().unEquipCosmetic(CosmeticType.HAT)
                         inventory.setItem(1, null)
                     }
                 }
                 2 -> { // Shirts
-                    newInventory = CosmeticsInventory(player, "因", 0)
+                    newInventory = CosmeticsInventory(player, "\uEB22", 0)
                     if(event.isRightClick){
                         cosmeticPlayer.getEquipment().unEquipCosmetic(CosmeticType.SHIRT)
                         inventory.setItem(2, null)
                     }
                 }
                 3 -> { // Wands
-                    newInventory = CosmeticsInventory(player, "圖", 0)
+                    newInventory = CosmeticsInventory(player, "\uEB23", 0)
                     if(event.isRightClick){
                         if(player.inventory.getItem(3) != null
                             && player.inventory.getItem(3)!!.type == Material.BLAZE_ROD
@@ -86,22 +85,29 @@ class CosmeticsInventory(private var player: Player, private var selected: Strin
                         inventory.setItem(3, null)
                     }
                 }
+                4 -> { // Body wear
+                    newInventory = CosmeticsInventory(player, "\uEB24", 0)
+                    if(event.isRightClick){
+                        cosmeticPlayer.getEquipment().unEquipCosmetic(CosmeticType.BODY_WEAR)
+                        inventory.setItem(4, null)
+                    }
+                }
                 5 -> { // Balloons
-                    newInventory = CosmeticsInventory(player, "果", 0)
+                    newInventory = CosmeticsInventory(player, "\uEB25", 0)
                     if(event.isRightClick){
                         cosmeticPlayer.getEquipment().unEquipCosmetic(CosmeticType.BALLOON)
                         inventory.setItem(5, null)
                     }
                 }
                 6 -> { // Pants
-                    newInventory = CosmeticsInventory(player, "四", 0)
+                    newInventory = CosmeticsInventory(player, "\uEB26", 0)
                     if(event.isRightClick){
                         cosmeticPlayer.getEquipment().unEquipCosmetic(CosmeticType.PANTS)
                         inventory.setItem(6, null)
                     }
                 }
                 7 -> { // Shoes
-                    newInventory = CosmeticsInventory(player, "界", 0)
+                    newInventory = CosmeticsInventory(player, "\uEB27", 0)
                     if(event.isRightClick){
                         cosmeticPlayer.getEquipment().unEquipCosmetic(CosmeticType.SHOES)
                         inventory.setItem(7, null)
@@ -126,7 +132,7 @@ class CosmeticsInventory(private var player: Player, private var selected: Strin
         }
 
         when(selected){
-            "國" -> { // Hats
+            "\uEB21" -> { // Hats
                 if (freeSlots.contains(event.slot) && event.currentItem != null) {
                     cosmeticPlayer.getEquipment().equipCosmetic(CosmeticType.HAT, CosmeticItems(CosmeticType.HAT).getID(event.currentItem!!)!!)
                     player.playSound(player.location, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 2f, 1.5f)
@@ -134,7 +140,7 @@ class CosmeticsInventory(private var player: Player, private var selected: Strin
                 }
             }
 
-            "因" -> { // Shirts
+            "\uEB22" -> { // Shirts
                 if (freeSlots.contains(event.slot) && event.currentItem != null) {
                     cosmeticPlayer.getEquipment().equipCosmetic(CosmeticType.SHIRT, CosmeticItems(CosmeticType.SHIRT).getID(event.currentItem!!)!!)
                     player.playSound(player.location, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 2f, 1.5f)
@@ -142,7 +148,7 @@ class CosmeticsInventory(private var player: Player, private var selected: Strin
                 }
             }
 
-            "圖" -> { // Wands
+            "\uEB23" -> { // Wands
                 if (freeSlots.contains(event.slot) && event.currentItem != null) {
                     ingeniaPlayer.setWand(event.currentItem)
                     inventory.setItem(3, addEquipmentLore(event.currentItem!!.clone(), "Wands"))
@@ -150,11 +156,19 @@ class CosmeticsInventory(private var player: Player, private var selected: Strin
                 }
             }
 
-            "果" -> { // Balloons
+            "\uEB24" -> { // Body wear
+                if (freeSlots.contains(event.slot) && event.currentItem != null) {
+                    cosmeticPlayer.getEquipment().equipCosmetic(CosmeticType.BODY_WEAR, CosmeticItems(CosmeticType.BODY_WEAR).getID(event.currentItem!!)!!)
+                    player.playSound(player.location, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 2f, 1.5f)
+                    inventory.setItem(4, addEquipmentLore(event.currentItem!!.clone(), "Body Wear"))
+                }
+            }
+
+            "\uEB25" -> { // Balloons
 
             }
 
-            "四" -> { // Pants
+            "\uEB26" -> { // Pants
                 if (freeSlots.contains(event.slot) && event.currentItem != null) {
                     cosmeticPlayer.getEquipment().equipCosmetic(CosmeticType.PANTS, CosmeticItems(CosmeticType.PANTS).getID(event.currentItem!!)!!)
                     player.playSound(player.location, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 2f, 1.5f)
@@ -162,7 +176,7 @@ class CosmeticsInventory(private var player: Player, private var selected: Strin
                 }
             }
 
-            "界" -> { // Shoes
+            "\uEB27" -> { // Shoes
                 if (freeSlots.contains(event.slot) && event.currentItem != null) {
                     cosmeticPlayer.getEquipment().equipCosmetic(CosmeticType.SHOES, CosmeticItems(CosmeticType.SHOES).getID(event.currentItem!!)!!)
                     player.playSound(player.location, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 2f, 1.5f)
@@ -188,12 +202,6 @@ class CosmeticsInventory(private var player: Player, private var selected: Strin
 
         inventory.setItem(49, transparentItem)
 
-        if(player.inventory.getItem(3) != null
-            && player.inventory.getItem(3)!!.type == Material.BLAZE_ROD
-            && player.inventory.getItem(3)!!.hasItemMeta()){
-            inventory.setItem(3, addEquipmentLore(player.inventory.getItem(3)!!.clone(), "Wands"))
-        }
-
         val cosmeticPlayer = CosmeticPlayer(player)
         inventory.setItem(1,
             addEquipmentLore(CosmeticItems(CosmeticType.HAT).getItem(cosmeticPlayer.getEquipment().getEquippedId(CosmeticType.HAT)),
@@ -201,6 +209,14 @@ class CosmeticsInventory(private var player: Player, private var selected: Strin
         inventory.setItem(2,
             addEquipmentLore(CosmeticItems(CosmeticType.SHIRT).getItem(cosmeticPlayer.getEquipment().getEquippedId(CosmeticType.SHIRT)),
                 "Shirts"))
+        if(player.inventory.getItem(3) != null
+            && player.inventory.getItem(3)!!.type == Material.BLAZE_ROD
+            && player.inventory.getItem(3)!!.hasItemMeta()){
+            inventory.setItem(3, addEquipmentLore(player.inventory.getItem(3)!!.clone(), "Wands"))
+        }
+        inventory.setItem(4,
+            addEquipmentLore(CosmeticItems(CosmeticType.BODY_WEAR).getItem(cosmeticPlayer.getEquipment().getEquippedId(CosmeticType.BODY_WEAR)),
+                "Body Wear"))
 
         inventory.setItem(5,
             addEquipmentLore(CosmeticItems(CosmeticType.BALLOON).getItem(cosmeticPlayer.getEquipment().getEquippedId(CosmeticType.BALLOON)),
@@ -213,12 +229,13 @@ class CosmeticsInventory(private var player: Player, private var selected: Strin
                 "Shoes"))
 
         when(selected){
-            "國" -> addCosmetics(CosmeticType.HAT, inventory)
-            "因" -> addCosmetics(CosmeticType.SHIRT, inventory)
-            "圖" -> addWands(inventory)
-            "果" -> addCosmetics(CosmeticType.BALLOON, inventory)
-            "四" -> addCosmetics(CosmeticType.PANTS, inventory)
-            "界" -> addCosmetics(CosmeticType.SHOES, inventory)
+            "\uEB21" -> addCosmetics(CosmeticType.HAT, inventory)
+            "\uEB22" -> addCosmetics(CosmeticType.SHIRT, inventory)
+            "\uEB23" -> addWands(inventory)
+            "\uEB24" -> addCosmetics(CosmeticType.BODY_WEAR, inventory)
+            "\uEB25" -> addCosmetics(CosmeticType.BALLOON, inventory)
+            "\uEB26" -> addCosmetics(CosmeticType.PANTS, inventory)
+            "\uEB27" -> addCosmetics(CosmeticType.SHOES, inventory)
         }
     }
 
