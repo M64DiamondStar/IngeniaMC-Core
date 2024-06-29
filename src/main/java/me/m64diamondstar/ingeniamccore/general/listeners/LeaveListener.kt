@@ -8,6 +8,7 @@ import me.m64diamondstar.ingeniamccore.discord.commands.BotUtils
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.npc.utils.DialoguePlayerRegistry
 import me.m64diamondstar.ingeniamccore.utils.TeamHandler
+import me.m64diamondstar.ingeniamccore.utils.entities.BodyWearRegistry
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerQuitEvent
@@ -25,6 +26,12 @@ class LeaveListener : Listener {
         player.updatePlaytime()
         player.updateYearPlaytime()
 
+        if(BodyWearRegistry.contains(bukkitPlayer.uniqueId)){
+            BodyWearRegistry.get(bukkitPlayer.uniqueId)!!.remove()
+            BodyWearRegistry.get(bukkitPlayer.uniqueId)!!.unregister()
+            BodyWearRegistry.remove(bukkitPlayer.uniqueId)
+        }
+
         DialoguePlayerRegistry.getDialoguePlayer(bukkitPlayer)?.getDialogue(bukkitPlayer)?.end()
 
         e.quitMessage = MessageBuilder.LeaveMessageBuilder(player.name, player.leaveColor, player.leaveMessage).build()
@@ -39,7 +46,6 @@ class LeaveListener : Listener {
                         "${joinLeaveMessage.getMessage(player.leaveMessage ?: "default")?.replace("%player%", player.name)?.replace("_", "\\_")}"
             )?.queue()
         }
-        JoinListener.logged.remove(bukkitPlayer.uniqueId)
     }
 
 }
