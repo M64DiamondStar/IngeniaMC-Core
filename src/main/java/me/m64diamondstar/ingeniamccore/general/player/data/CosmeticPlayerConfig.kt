@@ -29,6 +29,7 @@ class CosmeticPlayerConfig(uuid: UUID) : DataConfiguration("data/cosmetic-user",
     fun addCosmetic(cosmeticType: CosmeticType, id: String){
         this.getConfig().set("$cosmeticType.$id.ObtainTime", System.currentTimeMillis())
         this.save()
+        this.reload()
     }
 
     /**
@@ -39,6 +40,7 @@ class CosmeticPlayerConfig(uuid: UUID) : DataConfiguration("data/cosmetic-user",
     fun removeCosmetic(cosmeticType: CosmeticType, id: String){
         this.getConfig().set("$cosmeticType.$id", null)
         this.save()
+        this.reload()
     }
 
     /**

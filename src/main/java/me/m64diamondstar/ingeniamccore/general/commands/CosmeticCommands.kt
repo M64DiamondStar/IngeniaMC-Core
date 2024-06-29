@@ -26,27 +26,32 @@ class CosmeticCommands: CommandExecutor {
         when(string) {
 
             "hats" -> {
-                val inv = CosmeticsInventory(sender, "國", 0)
+                val inv = CosmeticsInventory(sender, "\uEB21", 0)
                 inv.open()
             }
 
             "shirts" -> {
-                val inv = CosmeticsInventory(sender, "因", 0)
+                val inv = CosmeticsInventory(sender, "\uEB22", 0)
+                inv.open()
+            }
+
+            "bodywear" -> {
+                val inv = CosmeticsInventory(sender, "\uEB24", 0)
                 inv.open()
             }
 
             "balloons" -> {
-                val inv = CosmeticsInventory(sender, "果", 0)
+                val inv = CosmeticsInventory(sender, "\uEB25", 0)
                 inv.open()
             }
 
             "pants" -> {
-                val inv = CosmeticsInventory(sender, "四", 0)
+                val inv = CosmeticsInventory(sender, "\uEB26", 0)
                 inv.open()
             }
 
             "shoes" -> {
-                val inv = CosmeticsInventory(sender, "界", 0)
+                val inv = CosmeticsInventory(sender, "\uEB27", 0)
                 inv.open()
             }
 

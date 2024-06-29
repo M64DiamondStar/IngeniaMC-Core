@@ -4,6 +4,8 @@ import me.m64diamondstar.ingeniamccore.cosmetics.data.CosmeticItems
 import me.m64diamondstar.ingeniamccore.cosmetics.utils.CosmeticType
 import me.m64diamondstar.ingeniamccore.cosmetics.utils.MessageType
 import me.m64diamondstar.ingeniamccore.general.player.data.CosmeticPlayerConfig
+import me.m64diamondstar.ingeniamccore.utils.entities.BodyWearRegistry
+import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import java.util.*
@@ -219,6 +221,12 @@ class CosmeticPlayer(private val player: Player) {
                 CosmeticType.BALLOON -> {
 
                 }
+
+                CosmeticType.BODY_WEAR -> {
+                    BodyWearRegistry.get(cosmeticPlayer.player.uniqueId)?.setItem(CosmeticItems(cosmeticType).getItem(id))
+                    val ingeniaPlayer = IngeniaPlayer(cosmeticPlayer.player)
+                    ingeniaPlayer.bodyWearId = id
+                }
             }
         }
 
@@ -246,6 +254,12 @@ class CosmeticPlayer(private val player: Player) {
 
                 CosmeticType.BALLOON -> {
 
+                }
+
+                CosmeticType.BODY_WEAR -> {
+                    BodyWearRegistry.get(cosmeticPlayer.player.uniqueId)?.setItem(null)
+                    val ingeniaPlayer = IngeniaPlayer(cosmeticPlayer.player)
+                    ingeniaPlayer.bodyWearId = null
                 }
             }
         }
@@ -284,6 +298,56 @@ class CosmeticPlayer(private val player: Player) {
                 }
                 CosmeticType.BALLOON -> {
                     null
+                }
+                CosmeticType.BODY_WEAR -> {
+                    val ingeniaPlayer = IngeniaPlayer(cosmeticPlayer.player)
+                    ingeniaPlayer.bodyWearId
+                }
+            }
+        }
+
+        fun hideCosmetic(cosmeticType: CosmeticType){
+            when (cosmeticType) {
+                CosmeticType.HAT -> {
+                    cosmeticPlayer.player.equipment.helmet = null
+                }
+                CosmeticType.SHIRT -> {
+                    cosmeticPlayer.player.equipment.chestplate = null
+                }
+                CosmeticType.PANTS -> {
+                    cosmeticPlayer.player.equipment.leggings = null
+                }
+                CosmeticType.SHOES -> {
+                    cosmeticPlayer.player.equipment.boots = null
+                }
+                CosmeticType.BALLOON -> {
+
+                }
+                CosmeticType.BODY_WEAR -> {
+                    BodyWearRegistry.get(cosmeticPlayer.player.uniqueId)?.remove()
+                }
+            }
+        }
+
+        fun showCosmetic(cosmeticType: CosmeticType){
+            when (cosmeticType) {
+                CosmeticType.HAT -> {
+                    cosmeticPlayer.player.equipment.helmet = CosmeticItems(cosmeticType).getItem("default")
+                }
+                CosmeticType.SHIRT -> {
+                    cosmeticPlayer.player.equipment.chestplate = CosmeticItems(cosmeticType).getItem("default")
+                }
+                CosmeticType.PANTS -> {
+                    cosmeticPlayer.player.equipment.leggings = CosmeticItems(cosmeticType).getItem("default")
+                }
+                CosmeticType.SHOES -> {
+                    cosmeticPlayer.player.equipment.boots = CosmeticItems(cosmeticType).getItem("default")
+                }
+                CosmeticType.BALLOON -> {
+
+                }
+                CosmeticType.BODY_WEAR -> {
+                    BodyWearRegistry.get(cosmeticPlayer.player.uniqueId)?.spawn()
                 }
             }
         }
