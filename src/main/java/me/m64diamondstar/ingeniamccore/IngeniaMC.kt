@@ -44,6 +44,7 @@ import me.m64diamondstar.ingeniamccore.protect.moderation.ModerationRegistry
 import me.m64diamondstar.ingeniamccore.shops.listeners.ShopListener
 import me.m64diamondstar.ingeniamccore.utils.EmojiUtils
 import me.m64diamondstar.ingeniamccore.utils.LocationUtils
+import me.m64diamondstar.ingeniamccore.utils.ScoreboardTeamManager
 import me.m64diamondstar.ingeniamccore.utils.TeamHandler
 import me.m64diamondstar.ingeniamccore.utils.entities.EntityRegistry
 import me.m64diamondstar.ingeniamccore.utils.gui.GuiListener
@@ -65,6 +66,7 @@ class IngeniaMC : JavaPlugin() {
         lateinit var smoothCoastersAPI: SmoothCoastersAPI
         lateinit var miniMessage: MiniMessage
         lateinit var protocolManager: ProtocolManager
+        lateinit var scoreboardTeamManager: ScoreboardTeamManager
         var isDisabling: Boolean = false
         lateinit var spawn: Location
     }
@@ -138,6 +140,9 @@ class IngeniaMC : JavaPlugin() {
         this.logger.info("" +
                 "Small tasks ✓")
 
+        scoreboardTeamManager = ScoreboardTeamManager()
+        this.logger.info("Scoreboard teams loaded ✓")
+
         this.logger.info(" ")
         this.logger.info("Finished loading, IngeniaMC-Core is enabled!")
         this.logger.info("---------------------------")
@@ -193,10 +198,14 @@ class IngeniaMC : JavaPlugin() {
         Objects.requireNonNull(getCommand("shirts"))?.setExecutor(CosmeticCommands())
         Objects.requireNonNull(getCommand("pants"))?.setExecutor(CosmeticCommands())
         Objects.requireNonNull(getCommand("shoes"))?.setExecutor(CosmeticCommands())
+        Objects.requireNonNull(getCommand("bodywear"))?.setExecutor(CosmeticCommands())
+
         Objects.requireNonNull(getCommand("backpack"))?.setExecutor(BackpackCommand())
 
         Objects.requireNonNull(getCommand("rides"))?.setExecutor(MenuCommands())
         Objects.requireNonNull(getCommand("shops"))?.setExecutor(MenuCommands())
+
+        Objects.requireNonNull(getCommand("settings"))?.setExecutor(SettingsCommand())
 
         Objects.requireNonNull(getCommand("msg"))?.setExecutor(MessageCommand())
         Objects.requireNonNull(getCommand("react"))?.setExecutor(MessageCommand())
