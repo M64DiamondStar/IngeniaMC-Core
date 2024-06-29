@@ -39,6 +39,10 @@ class AdminTabCompleter: TabCompleter {
             tc.add("testnpcentity")
             tc.add("teststriptags")
             tc.add("testshield")
+            tc.add("testwcvote")
+            tc.add("testwcteam")
+            tc.add("testbackpack")
+            tc.add("settitle")
         }else if(args.size == 2){
             tc.clear()
             if(args[0].equals("invsee", ignoreCase = true) || args[0].equals("gravity", ignoreCase = true)
