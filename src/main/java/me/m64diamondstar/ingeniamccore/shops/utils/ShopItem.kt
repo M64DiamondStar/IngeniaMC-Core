@@ -148,6 +148,39 @@ enum class ShopItem {
 
         override fun fullBackpack(player: Player): Boolean = false
     },
+    BODY_WEAR {
+        override fun getDisplayName(): String {
+            return "Body Wear"
+        }
+
+        override fun givePlayer(player: Player, id: String, amount: Int) {
+            val cosmeticPlayer = CosmeticPlayer(player)
+            cosmeticPlayer.addCosmetic(CosmeticType.BODY_WEAR, id)
+        }
+
+        override fun getAsItemStack(id: String): ItemStack? {
+            return CosmeticItems(CosmeticType.BODY_WEAR).getItem(id)
+        }
+
+        override fun getAllItemIDs(): List<String> {
+            return CosmeticItems(CosmeticType.BODY_WEAR).getAllIDs()
+        }
+
+        override fun allowMultiple(): Boolean {
+            return false
+        }
+
+        override fun alreadyBought(player: Player, id: String): Boolean {
+            val cosmeticPlayer = CosmeticPlayer(player)
+            return cosmeticPlayer.hasCosmetic(CosmeticType.BODY_WEAR, id)
+        }
+
+        override fun getItemDisplayName(id: String): String {
+            return CosmeticItems(CosmeticType.BODY_WEAR).getItem(id)?.itemMeta?.displayName ?: "Body Wear"
+        }
+
+        override fun fullBackpack(player: Player): Boolean = false
+    },
     BALLOON {
         override fun getDisplayName(): String {
             return "Balloon"
