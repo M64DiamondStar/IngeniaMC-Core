@@ -2,6 +2,7 @@ package me.m64diamondstar.ingeniamccore.general.player
 
 import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.attractions.utils.AttractionUtils
+import me.m64diamondstar.ingeniamccore.cosmetics.utils.CosmeticType
 import me.m64diamondstar.ingeniamccore.games.PhysicalGameType
 import me.m64diamondstar.ingeniamccore.games.parkour.Parkour
 import me.m64diamondstar.ingeniamccore.games.parkour.ParkourUtils
@@ -18,9 +19,14 @@ import me.m64diamondstar.ingeniamccore.general.player.data.PlayerConfig
 import me.m64diamondstar.ingeniamccore.npc.utils.CharWidth
 import me.m64diamondstar.ingeniamccore.utils.EmojiUtils
 import me.m64diamondstar.ingeniamccore.utils.LocationUtils.getLocationFromString
+import me.m64diamondstar.ingeniamccore.utils.PlayerSelectors
 import me.m64diamondstar.ingeniamccore.utils.Times
+import me.m64diamondstar.ingeniamccore.utils.entities.BodyWearEntity
+import me.m64diamondstar.ingeniamccore.utils.entities.BodyWearRegistry
+import me.m64diamondstar.ingeniamccore.utils.entities.NametagEntity
 import me.m64diamondstar.ingeniamccore.utils.event.player.ReceiveExpEvent
 import me.m64diamondstar.ingeniamccore.utils.event.player.ReceiveGoldenStarsEvent
+import me.m64diamondstar.ingeniamccore.utils.messages.ChatIcons
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageLocation
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
@@ -34,9 +40,7 @@ import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
-import net.minecraft.network.protocol.game.ClientboundTabListPacket
 import org.bukkit.*
-import org.bukkit.craftbukkit.v1_20_R3.entity.CraftPlayer
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryType
 import org.bukkit.inventory.Inventory
@@ -65,6 +69,8 @@ class IngeniaPlayer(val player: Player) {
 
         player.teleport(WarpUtils.getNearestLocation(player))
 
+        IngeniaMC.scoreboardTeamManager.addPlayerToTeam(player)
+
         val tabCompletions = ArrayList<String>()
         tabCompletions.addAll(EmojiUtils.getAllEmojiKeys())
         tabCompletions.addAll(Bukkit.getOnlinePlayers().map { it.name })
@@ -74,17 +80,23 @@ class IngeniaPlayer(val player: Player) {
         giveRidesItem()
         giveShopsItem()
 
+
+        // Create all bossbars / HUD's
         val bossBar = BossBar.bossBar(Component.empty(), 0.0f, BossBar.Color.YELLOW, BossBar.Overlay.PROGRESS)
-        (player as Audience).showBossBar(bossBar)
         BossBarPlayerRegistry.addPlayer(player, BossBarIndex.FIRST, bossBar)
         updateMainBossBar()
 
         val invisibleBossBar1 = BossBar.bossBar(Component.empty(), 0.0f, BossBar.Color.YELLOW, BossBar.Overlay.PROGRESS)
-        (player as Audience).showBossBar(invisibleBossBar1)
         BossBarPlayerRegistry.addPlayer(player, BossBarIndex.SECOND, invisibleBossBar1)
         val invisibleBossBar2 = BossBar.bossBar(Component.empty(), 0.0f, BossBar.Color.YELLOW, BossBar.Overlay.PROGRESS)
-        (player as Audience).showBossBar(invisibleBossBar1)
         BossBarPlayerRegistry.addPlayer(player, BossBarIndex.THIRD, invisibleBossBar2)
+
+        // Only show HUD if player has setting enabled
+        if(playerConfig.getShowHud()) {
+            (player as Audience).showBossBar(bossBar)
+            (player as Audience).showBossBar(invisibleBossBar1)
+            (player as Audience).showBossBar(invisibleBossBar2)
+        }
 
         val currentLevel = getLevel()
         val necessaryExp = LevelUtils.getExpRequirement(currentLevel + 1) - LevelUtils.getExpRequirement(currentLevel)
@@ -102,19 +114,6 @@ class IngeniaPlayer(val player: Player) {
         if(leaveMessage == null)
             leaveMessage = "default"
 
-        if (player.isOp)
-            player.setPlayerListName(Colors.format("#c43535&lLead #ffdede$name"))
-        else if (player.hasPermission("ingenia.team"))
-            player.setPlayerListName(Colors.format("#4180bf&lTeam #deefff$name"))
-        else if (player.hasPermission("ingenia.teamtrial"))
-            player.setPlayerListName(Colors.format("#4180bf&lTeam Trial #deefff$name"))
-        else if (player.hasPermission("ingenia.vip+"))
-            player.setPlayerListName(Colors.format("#9054b0VIP+ #f9deff$name"))
-        else if (player.hasPermission("ingenia.vip"))
-            player.setPlayerListName(Colors.format("#54b0b0VIP #defdff$name"))
-        else
-            player.setPlayerListName(Colors.format("#a1a1a1Visitor #cccccc$name"))
-
         AttractionUtils.getAllAttractions().forEach { it.spawnRidecountSign(player) }
         SplashBattleUtils.getAllSplashBattles().forEach { it.getLeaderboard().spawnSoaksSign(player) }
         ParkourUtils.getAllParkours().forEach { it.getLeaderboard().spawnSign(player) }
@@ -124,23 +123,82 @@ class IngeniaPlayer(val player: Player) {
 
         if(!(player.hasPermission("ingenia.team") || player.hasPermission("ingenia.team-trial")) && !player.isOp)
             player.gameMode = GameMode.ADVENTURE
+
+        // Check title
+        if(NametagEntity.Registry.contains(player.uniqueId)){
+            NametagEntity.Registry.get(player.uniqueId)!!.remove()
+            NametagEntity.Registry.remove(player.uniqueId)
+        }
+
+        val nametagEntity = NametagEntity(player.world, player.location, player)
+        nametagEntity.setTitle(
+            Component.text()
+                .append(componentIconPrefix)
+                .append(Component.text(" "))
+                .append(nameLightColored)
+                .build()
+        )
+        NametagEntity.Registry.add(player.uniqueId, nametagEntity)
+
+        // Check body wear
+        if(BodyWearRegistry.contains(player.uniqueId)){
+            BodyWearRegistry.get(player.uniqueId)!!.remove()
+            BodyWearRegistry.remove(player.uniqueId)
+        }
+
+        val bodyWearEntity = BodyWearEntity(player.world, player.location, player)
+        val cosmeticPlayer = CosmeticPlayer(player)
+        BodyWearRegistry.add(player.uniqueId, bodyWearEntity)
+        if(this.bodyWearId != null){
+            cosmeticPlayer.getEquipment().equipCosmetic(CosmeticType.BODY_WEAR, this.bodyWearId!!)
+        }
+
+        // Check other online player's settings
+        Bukkit.getOnlinePlayers().forEach {
+            val otherIngeniaPlayer = IngeniaPlayer(it)
+            if((otherIngeniaPlayer.playerConfig.getShowPlayers() == PlayerSelectors.STAFF && !it.hasPermission("ingenia.team") && !it.hasPermission("ingenia.team-trial") && !it.isOp)
+                || otherIngeniaPlayer.playerConfig.getShowPlayers() == PlayerSelectors.NONE) {
+                it.hidePlayer(IngeniaMC.plugin, player)
+                return@forEach
+            }
+            else if((otherIngeniaPlayer.playerConfig.getShowNametags() == PlayerSelectors.STAFF && !it.hasPermission("ingenia.team") && !it.hasPermission("ingenia.team-trial") && !it.isOp)
+                || otherIngeniaPlayer.playerConfig.getShowNametags() == PlayerSelectors.NONE) {
+                return@forEach
+            }
+            nametagEntity.spawn(it)
+        }
+
     }
 
     val name: String
         get() = player.name
     val prefix: String
         get() = if (player.isOp)
-                    Colors.format("#c43535&lLead")
+                    Colors.format("\uE045")
                 else if (player.hasPermission("ingenia.team"))
-                    Colors.format("#4180bf&lTeam")
+                    Colors.format("\uE046")
                 else if (player.hasPermission("ingenia.teamtrial"))
-                    Colors.format("#4180bf&lTeam Trial")
+                    Colors.format("\uE046")
                 else if (player.hasPermission("ingenia.vip+"))
-                    Colors.format("#9054b0VIP+")
+                    Colors.format("\uE047")
                 else if (player.hasPermission("ingenia.vip"))
-                    Colors.format("#54b0b0VIP")
+                    Colors.format("\uE048")
                 else
-                    Colors.format("#a1a1a1Visitor")
+                    Colors.format("\uE049")
+
+    val componentIconPrefix: Component
+        get() = if(player.isOp)
+                    Component.text("\uE045")
+                else if(player.hasPermission("ingenia.team"))
+                    Component.text("\uE046")
+                else if(player.hasPermission("ingenia.teamtrial"))
+                    Component.text("\uE046")
+                else if(player.hasPermission("ingenia.vip+"))
+                    Component.text("\uE047")
+                else if(player.hasPermission("ingenia.vip"))
+                    Component.text("\uE048")
+                else
+                    Component.text("\uE049")
 
     val componentPrefix: Component
         get() = if(player.isOp)
@@ -169,6 +227,20 @@ class IngeniaPlayer(val player: Player) {
                     "VIP"
                 else
                     "Visitor"
+
+    val nameLightColored: Component
+        get() = if(player.isOp)
+            Component.text(name).color(TextColor.fromHexString("#ffdede"))
+        else if(player.hasPermission("ingenia.team"))
+            Component.text(name).color(TextColor.fromHexString("#deefff"))
+        else if(player.hasPermission("ingenia.teamtrial"))
+            Component.text(name).color(TextColor.fromHexString("#deefff"))
+        else if(player.hasPermission("ingenia.vip+"))
+            Component.text(name).color(TextColor.fromHexString("#f9deff"))
+        else if(player.hasPermission("ingenia.vip"))
+            Component.text(name).color(TextColor.fromHexString("#defdff"))
+        else
+            Component.text(name).color(TextColor.fromHexString("#cccccc"))
 
     var currentAreaName: String?
         get() {
@@ -377,7 +449,7 @@ class IngeniaPlayer(val player: Player) {
 
         playerConfig.setLevel(getLevel(newExp))
 
-        player.sendMessage(Colors.format("\uFE01"))
+        player.sendMessage(Colors.format(ChatIcons.LEVEL_UP))
         player.sendMessage(Colors.format("               ${MessageType.SUCCESS}&lLevel Up"))
         player.sendMessage(Colors.format("               ${MessageType.BACKGROUND}Level ${getLevel(previousExp)} ➜ ${getLevel(newExp)}"))
         player.sendMessage(Colors.format("               ${MessageType.BACKGROUND}Rewards: "))
@@ -400,41 +472,6 @@ class IngeniaPlayer(val player: Player) {
             container.set(
                 NamespacedKey(IngeniaMC.plugin, "allow-damage"), PersistentDataType.STRING, "$value")
         }
-
-    fun setTablist() {
-
-        val numberFormat = NumberFormat.getNumberInstance(Locale.US)
-
-        object: BukkitRunnable(){
-            override fun run() {
-
-                if(!player.isOnline){
-                    this.cancel()
-                    return
-                }
-
-                val header = net.minecraft.network.chat.Component.Serializer.fromJson(
-                    "{\"text\":\"" +
-                            "\n" +
-                            "    \uE005\uF801\uE006\uF801\uE007\uF801\uE008    " +
-                            "\n\n\n\n" +
-                            "\"}"
-                )
-
-                val footer = net.minecraft.network.chat.Component.Serializer.fromJson(
-                    "[\"\",{\"text\":\"" +
-                            "\n" +
-                            "» Golden Stars:\",\"color\":\"#F4B734\"},{\"text\":\" \uE016${numberFormat.format(bal)}\n\"},{\"text\":\"" +
-                            "» Online:\",\"color\":\"#F4B734\"},{\"text\":\" ${Bukkit.getOnlinePlayers().size}\n\n \"},{\"text\":\"" +
-                            "" +
-                            "A Theme Park With A Story...\"},{\"text\":\"" +
-                            "\nplay.ingeniamc.net\n\",\"color\":\"#F4B734\",\"font\":\"ingeniamc:ten\"}]"
-                )
-
-                (player as CraftPlayer).handle.connection.send(ClientboundTabListPacket(header, footer))
-            }
-        }.runTaskTimer(IngeniaMC.plugin, 0L, 10L)
-    }
 
     val wands: List<ItemStack>
         get() = getAccessibleWands(player)
@@ -464,6 +501,12 @@ class IngeniaPlayer(val player: Player) {
         get() = playerConfig.getLeaveColor()
         set(id) {
             playerConfig.setLeaveColor(id)
+        }
+
+    var bodyWearId: String?
+        get() = playerConfig.getBodyWearId()
+        set(id) {
+            playerConfig.setBodyWearId(id)
         }
 
     fun openInventory(inventory: Inventory?) {
