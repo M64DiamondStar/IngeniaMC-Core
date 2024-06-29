@@ -27,7 +27,7 @@ class CameraPacketEntity(private val world: World, loc: Location, private val pl
         this.entityData.set(Display.DATA_POS_ROT_INTERPOLATION_DURATION_ID, 20)
         this.setPos(loc.x, loc.y, loc.z)
         this.moveTo(loc.x, loc.y, loc.z, loc.yaw, loc.pitch)
-        chicken = world.spawnEntity(loc, org.bukkit.entity.EntityType.CHICKEN) as Chicken
+        chicken = world.spawnEntity(loc.clone().add(0.0, -2.0, 0.0), org.bukkit.entity.EntityType.CHICKEN) as Chicken
         EntityRegistry.addBukkitEntity(chicken)
         chicken.isInvisible = true
         chicken.isInvulnerable = true
@@ -67,7 +67,7 @@ class CameraPacketEntity(private val world: World, loc: Location, private val pl
         this.moveTo(x, y, z, yaw, pitch)
         craftPlayer.handle.connection.send(ClientboundTeleportEntityPacket(this))
         sync {
-            chicken.teleport(Location(world, x, y, z, yaw, pitch), TeleportFlag.EntityState.RETAIN_PASSENGERS)
+            chicken.teleport(Location(world, x, y - 2, z, yaw, pitch), TeleportFlag.EntityState.RETAIN_PASSENGERS)
         }
     }
 
