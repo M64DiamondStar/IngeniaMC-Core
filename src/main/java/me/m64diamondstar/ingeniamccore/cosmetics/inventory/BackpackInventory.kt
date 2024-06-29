@@ -43,6 +43,7 @@ class BackpackInventory(player: Player, private val page: Int): InventoryHandler
                 getPlayer().sendMessage("Please slow down!", MessageType.ERROR)
                 return
             }
+            if(!event.cursor.isEmpty()) return
             val page = event.slot - 44
             val newInventory = BackpackInventory(getPlayer().player, page)
             newInventory.open()
