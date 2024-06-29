@@ -8,11 +8,12 @@ import java.util.ArrayList
 object Font {
 
     fun getGuiNegativeSpace(index: Int): String{
-        when (index){
-            0 -> return "\uF808"
-            1 -> return "\uF80C\uF80A\uF808\uF805"
+        return when (index){
+            0 -> "\uF808"
+            1 -> "\uF80C\uF80A\uF808\uF805"
+            2 -> "\uF80C\uF80A\uF808\uF808\uF801"
+            else -> "\uF80C\uF80A\uF808\uF805"
         }
-        return "\uF808"
     }
 
     interface Characters {
