@@ -89,6 +89,8 @@ commands:
     description: Manage your backpack.
     aliases:
       - bp
+  bodywear:
+    description: Manage your bodywear.
   testgui:
     description: Just a test GUI.
     permission: ingenia.admin
@@ -118,5 +120,7 @@ commands:
     description: Manage IngeniaMC's npcs.
     aliases:
       - npcs
+  settings:
+    description: Open the settings menu.
 
 
