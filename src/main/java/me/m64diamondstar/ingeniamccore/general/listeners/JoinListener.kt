@@ -11,51 +11,40 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
-import org.bukkit.event.player.PlayerMoveEvent
-import java.util.*
 
 class JoinListener : Listener {
 
-    companion object {
-        // Used to send packets when player moves (only after joining)
-        // This is necessary to send certain packets
-        val logged = ArrayList<UUID>()
-    }
-
     @EventHandler(priority = EventPriority.HIGHEST)
     fun onPlayerJoin(e: PlayerJoinEvent) {
-        val bukkitPlayer = e.player
-        val player = IngeniaPlayer(bukkitPlayer)
+        val player = e.player
+        val ingeniaPlayer = IngeniaPlayer(player)
 
         // Remove the legacy menu item
-        if(bukkitPlayer.inventory.getItem(4) != null && bukkitPlayer.inventory.getItem(4)!!.type == Material.NETHER_STAR && bukkitPlayer.inventory.getItem(4)!!.hasItemMeta() && bukkitPlayer.inventory.getItem(4)!!.itemMeta.hasDisplayName()
-            && bukkitPlayer.inventory.getItem(4)!!.itemMeta.displayName.contains("IngeniaMC")){
-            bukkitPlayer.inventory.setItem(4, null)
-            bukkitPlayer.inventory.setItem(5, null)
+        if (player.inventory.getItem(4) != null && player.inventory.getItem(4)!!.type == Material.NETHER_STAR && player.inventory.getItem(
+                4
+            )!!.hasItemMeta() && player.inventory.getItem(4)!!.itemMeta.hasDisplayName()
+            && player.inventory.getItem(4)!!.itemMeta.displayName.contains("IngeniaMC")
+        ) {
+            player.inventory.setItem(4, null)
+            player.inventory.setItem(5, null)
         }
 
-        e.joinMessage = MessageBuilder.JoinMessageBuilder(player.name, player.joinColor, player.joinMessage).build()
+        e.joinMessage =
+            MessageBuilder.JoinMessageBuilder(ingeniaPlayer.name, ingeniaPlayer.joinColor, ingeniaPlayer.joinMessage)
+                .build()
 
-        player.startUp()
+        ingeniaPlayer.startUp()
 
-        if(BotUtils.ChatUtils.chatChannel != null){
+        if (BotUtils.ChatUtils.chatChannel != null) {
             val joinLeaveMessage = JoinLeaveMessage(MessageType.JOIN)
             DiscordBot.jda.getTextChannelById(BotUtils.ChatUtils.chatChannel!!.id)?.sendMessage(
                 "${BotUtils.EmojiUtils.getJoinEmoji()} " +
-                        "${joinLeaveMessage.getMessage(player.joinMessage ?: "default")?.replace("%player%", player.name)?.replace("_", "\\_")}"
+                        "${
+                            joinLeaveMessage.getMessage(ingeniaPlayer.joinMessage ?: "default")
+                                ?.replace("%player%", ingeniaPlayer.name)?.replace("_", "\\_")
+                        }"
             )?.queue()
         }
-    }
-
-    @EventHandler
-    fun onPlayerMove(event: PlayerMoveEvent){
-        if(logged.contains(event.player.uniqueId)) return
-
-        // Enable the tab list for the joined player
-        val ingeniaPlayer = IngeniaPlayer(event.player)
-        ingeniaPlayer.setTablist()
-
-        logged.add(event.player.uniqueId)
     }
 
 }
