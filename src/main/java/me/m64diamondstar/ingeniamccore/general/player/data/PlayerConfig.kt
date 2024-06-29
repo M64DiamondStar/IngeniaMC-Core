@@ -1,6 +1,7 @@
 package me.m64diamondstar.ingeniamccore.general.player.data
 
 import me.m64diamondstar.ingeniamccore.data.DataConfiguration
+import me.m64diamondstar.ingeniamccore.utils.PlayerSelectors
 import org.bukkit.Bukkit
 import java.util.*
 
@@ -173,6 +174,49 @@ class PlayerConfig(uuid: UUID) : DataConfiguration("data/player", uuid.toString(
      */
     fun getPlaytime(): Int{
         return getConfig().getInt("Playtime.Total")
+    }
+
+    fun getBodyWearId(): String? {
+        return getConfig().getString("External-Cosmetics.BodyWear")
+    }
+
+    fun setBodyWearId(id: String?){
+        getConfig().set("External-Cosmetics.BodyWear", id)
+        save()
+    }
+
+    fun setShowSkinDuringDialogue(boolean: Boolean) {
+        getConfig().set("Settings.ShowSkinDuringDialogue", boolean)
+    }
+
+    fun getShowSkinDuringDialogue(): Boolean {
+        if(getConfig().get("Settings.ShowSkinDuringDialogue") == null) return true
+        return getConfig().getBoolean("Settings.ShowSkinDuringDialogue")
+    }
+
+    fun setShowHud(boolean: Boolean) {
+        getConfig().set("Settings.ShowHud", boolean)
+    }
+
+    fun getShowHud(): Boolean {
+        if(getConfig().get("Settings.ShowHud") == null) return true
+        return getConfig().getBoolean("Settings.ShowHud")
+    }
+
+    fun setShowPlayers(playerSelector: PlayerSelectors) {
+        getConfig().set("Settings.ShowPlayers", playerSelector.name)
+    }
+
+    fun getShowPlayers(): PlayerSelectors {
+        return PlayerSelectors.valueOf(getConfig().getString("Settings.ShowPlayers") ?: "ALL")
+    }
+
+    fun setShowNametags(playerSelector: PlayerSelectors) {
+        getConfig().set("Settings.ShowNametags", playerSelector.name)
+    }
+
+    fun getShowNametags(): PlayerSelectors {
+        return PlayerSelectors.valueOf(getConfig().getString("Settings.ShowNametags") ?: "ALL")
     }
 
 }
