@@ -28,7 +28,7 @@ class RankPerksInventory(val player: Player) : InventoryHandler(IngeniaPlayer(pl
     private val viewStore = Array(4) {i -> if(i in  0..1) i + 43 else i + 50}
 
     override fun setDisplayName(): Component {
-        return Component.text("\uF808を").color(TextColor.color(255, 255, 255))
+        return Component.text("\uF808\uEB32").color(TextColor.color(255, 255, 255))
     }
 
     override fun setSize(): Int {
@@ -68,7 +68,7 @@ class RankPerksInventory(val player: Player) : InventoryHandler(IngeniaPlayer(pl
         }
 
         if(event.slot == 45){
-            val mainInventory = MainInventory(getPlayer(), 0)
+            val mainInventory = MainInventory(getPlayer(), 1)
             mainInventory.open()
         }
     }
