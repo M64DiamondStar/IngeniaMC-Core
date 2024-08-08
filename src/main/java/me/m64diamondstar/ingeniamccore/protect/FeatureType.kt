@@ -7,6 +7,7 @@ enum class FeatureType {
     SHOPS,
     MENU,
     WARPS,
-    DISCORD_LINKING
+    DISCORD_LINKING,
+    TRASHCANS
 
 }
