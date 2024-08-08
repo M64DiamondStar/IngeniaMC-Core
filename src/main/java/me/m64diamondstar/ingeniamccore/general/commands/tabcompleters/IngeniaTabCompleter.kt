@@ -37,6 +37,8 @@ class IngeniaTabCompleter: TabCompleter {
             tc.add("cosmeticcolor")
             tc.add("shop")
             tc.add("warp")
+            tc.add("consumable")
+            tc.add("block")
         }else if(args.size > 1){
 
             tc.clear()
@@ -91,6 +93,12 @@ class IngeniaTabCompleter: TabCompleter {
                 tc.addAll(sub.getTabCompleters())
             }else if(args[0].equals("warp", true)) {
                 val sub = WarpSubcommand(sender, args)
+                tc.addAll(sub.getTabCompleters())
+            }else if(args[0].equals("consumable", true)) {
+                val sub = ConsumableSubcommand(sender, args)
+                tc.addAll(sub.getTabCompleters())
+            }else if(args[0].equals("block", true)) {
+                val sub = BlockSubcommand(sender, args)
                 tc.addAll(sub.getTabCompleters())
             }
 

@@ -107,6 +107,16 @@ class IngeniaCommand : CommandExecutor {
                 warpSubcommand.execute()
             }
 
+            "consumable" -> {
+                val consumableSubcommand = ConsumableSubcommand(sender, args)
+                consumableSubcommand.execute()
+            }
+
+            "block" -> {
+                val blockSubcommand = BlockSubcommand(sender, args)
+                blockSubcommand.execute()
+            }
+
             else -> sender.sendMessage(invalidSubcommand("ig"))
         }
         return false
