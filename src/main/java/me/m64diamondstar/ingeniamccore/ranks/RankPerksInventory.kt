@@ -97,7 +97,7 @@ class RankPerksInventory(val player: Player) : InventoryHandler(IngeniaPlayer(pl
 
         joinLeaveSlots.forEach { inventory.setItem(it, transparentItem) }
 
-        transparentMeta.setDisplayName(Colors.format("#d4873b&lCustomize Join Firework"))
+        transparentMeta.setDisplayName(Colors.format("#ff4d4d&lNot out yet!"))
         transparentMeta.lore = listOf(
             Colors.format(MessageType.ERROR + "&oRequires VIP to enable or disable"),
             Colors.format(MessageType.ERROR + "&oRequires VIP+ to customize"),
