@@ -8,10 +8,10 @@ plugins {
     id "idea"
     id "java-library"
     id "maven-publish"
-    id "io.papermc.paperweight.userdev" version "1.5.11"
+    id "io.papermc.paperweight.userdev" version "1.7.1"
     id "xyz.jpenilla.run-paper" version "2.2.2" // Adds runServer and runMojangMappedServer tasks for testing
     id "org.jetbrains.kotlin.jvm" version "1.9.22"
-    id "com.github.johnrengelman.shadow" version "8.1.1"
+    id "io.github.goooler.shadow" version "8.1.8"
 }
 
 repositories {
@@ -61,7 +61,8 @@ dependencies {
     api "org.joml:joml:1.10.5"
     api "org.apache.commons:commons-math3:3.6.1"
 
-    compileOnly "com.bergerkiller.bukkit:TrainCarts:1.19.2-v1-SNAPSHOT"
+    compileOnly "com.bergerkiller.bukkit:TrainCarts:1.20.4-v1-SNAPSHOT"
+    compileOnly "com.bergerkiller.bukkit:TCCoasters:1.20.4-v1-SNAPSHOT"
     compileOnly "com.fastasyncworldedit:FastAsyncWorldEdit-Core:2.8.2"
     compileOnly "com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit:2.8.2"
     compileOnly 'com.github.Mindgamesnl.OpenAudioMc:openaudiomc-api:6.10.1'
@@ -74,38 +75,39 @@ dependencies {
     shadow 'org.jsoup:jsoup:1.17.2'
     shadow 'fr.mrmicky:fastboard:2.0.2'
     shadow 'com.github.patheloper.pathetic:pathetic-mapping:2.3'
-    shadow 'gg.flyte:twilight:1.1.10'
+    shadow 'gg.flyte:twilight:1.1.12'
 
     implementation "net.dv8tion:JDA:5.0.0-beta.23" // "Shadowed" via plugin libraries in the plugin.yml
     implementation 'club.minnced:jda-ktx:0.11.0-beta.20'
     implementation 'com.github.M64DiamondStar:EffectMaster:f47e6278df'
 
-
-
-    paperweight.paperDevBundle "1.20.4-R0.1-SNAPSHOT"
+    paperweight.paperDevBundle "1.21-R0.1-SNAPSHOT"
 }
 
 group = "me.m64diamondstar"
 version = "1.0"
-description = "IngeniaMC Core"
-java.sourceCompatibility = JavaVersion.VERSION_19
+description = "IngeniaMC-Core"
+java.sourceCompatibility = JavaVersion.VERSION_21
+//paperweight.reobfArtifactConfiguration = io.papermc.paperweight.userdev.ReobfArtifactConfiguration.MOJANG_PRODUCTION
+
+java {
+    // Configure the java toolchain. This allows gradle to auto-provision JDK 21 on systems that only have JDK 11 installed for example.
+    sourceCompatibility = "21"
+    targetCompatibility = "21"
+    toolchain.languageVersion = JavaLanguageVersion.of(21)
+}
 
 tasks {
-    // Configure reobfJar to run when invoking the build task
-    assemble {
-        dependsOn reobfJar
-    }
-
     compileJava {
         options.encoding = StandardCharsets.UTF_8.name() // We want UTF-8 for everything
 
         // Set the release flag. This configures what version bytecode the compiler will emit, as well as what JDK APIs are usable.
         // See https://openjdk.java.net/jeps/247 for more information.
-        options.release.set(17)
+        options.release.set(21)
     }
 
     compileKotlin {
-        kotlinOptions.jvmTarget = "17"
+        kotlinOptions.jvmTarget = "21"
     }
 
     javadoc {
@@ -125,17 +127,13 @@ tasks {
             expand(props)
         }
     }
-
-    reobfJar {
-        // This is an example of how you might change the output location for reobfJar. It's recommended not to do this
-        // for a variety of reasons, however it's asked frequently enough that an example of how to do it is included here.
-        outputJar.set(layout.buildDirectory.file("libs/IngeniaMC-Core.jar"))
-    }
 }
 
 shadowJar {
     // Rename the JAR file if needed
-    archiveBaseName.set("IngeniaMC-Shadowed")
+    archiveBaseName.set("IngeniaMC-Core")
+    archiveClassifier.set('')
+    archiveVersion.set('')
 
     // Include dependencies in the fat JAR
     configurations = [project.configurations.shadow]
@@ -145,7 +143,7 @@ shadowJar {
     relocate 'me.m56738.SmoothCoastersAPI', 'me.m64diamondstar.ingeniamccore.libs.smoothcoasters'
     relocate 'fr.mrmicky.fastboard', 'me.m64diamondstar.fastboard'
     relocate 'com.github.patheloper.pathetic.pathetic-mapping', 'me.m64diamondstar.ingeniamccore.libs.pathetic'
-    //relocate 'gg.flyte.twilight', 'me.m64diamondstar.ingeniamccore.libs.twiligt'
+    relocate 'gg.flyte.twilight', 'me.m64diamondstar.ingeniamccore.libs.twiligt'
 }
 
 idea {
@@ -153,12 +151,4 @@ idea {
         downloadJavadoc = true
         downloadSources = true
     }
-}
-
-tasks.withType(JavaCompile).configureEach {
-    options.encoding = "UTF-8"
-}
-
-tasks.withType(Javadoc).configureEach {
-    options.encoding = "UTF-8"
 }
