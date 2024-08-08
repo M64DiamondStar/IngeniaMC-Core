@@ -11,11 +11,20 @@ import org.bukkit.scheduler.BukkitTask
 
 object DialogueUtils {
 
-    fun getDialogueFormat(lines: List<String>, backdropType: DialogueBackdropType?, backdropColor: TextColor?): Component{
-        return getDialogueFormat(lines.getOrNull(0), lines.getOrNull(1), lines.getOrNull(2), lines.getOrNull(3), lines.getOrNull(4), backdropType, backdropColor)
+    fun getDialogueFormat(lines: List<String>, backdropType: DialogueBackdropType?, backdropColor: TextColor?, skin: String): Component{
+        return getDialogueFormat(
+            lines.getOrNull(0),
+            lines.getOrNull(1),
+            lines.getOrNull(2),
+            lines.getOrNull(3),
+            lines.getOrNull(4),
+            backdropType,
+            backdropColor,
+            skin
+        )
     }
 
-    fun getDialogueFormat(line1: String?, line2: String?, line3: String?, line4: String?, line5: String?, backdropType: DialogueBackdropType?, backdropColor: TextColor?): Component{
+    fun getDialogueFormat(line1: String?, line2: String?, line3: String?, line4: String?, line5: String?, backdropType: DialogueBackdropType?, backdropColor: TextColor?, skin: String): Component{
         val safeLine1 = ArrayList<Pair<Char, Int>>()
         val safeLine2 = ArrayList<Pair<Char, Int>>()
         val safeLine3 = ArrayList<Pair<Char, Int>>()
@@ -30,7 +39,7 @@ object DialogueUtils {
         val result = Component.text()
             .append(Component.text().content(backdropType?.getBackdrop() ?: "\uEE01").color(backdropColor ?: TextColor.color(255, 255, 255)))
             .append(Component.text().content("\uF80C\uF80C\uF808\uF801"))
-            .append(Component.text().content("\uF829\uE001\uF828\uF821")) // Second char is the skin
+            .append(Component.text().content("\uF829$skin\uF828\uF821")) // Second char is the skin
             .append(Component.text().content(safeLine1.map { it.first }.joinToString("")).font(Key.key("ingeniamc:dialogue_line_1")))
             .append(Component.text().content(safeLine1.map { '\uF800'.plus(it.second) }.joinToString("")).font(Key.key("minecraft:default")))
             .append(Component.text().content(safeLine2.map { it.first }.joinToString("")).font(Key.key("ingeniamc:dialogue_line_2")))
@@ -47,11 +56,21 @@ object DialogueUtils {
         return result
     }
 
-    fun sendProgressiveDialogue(player: Player, lines: List<String>, backdropType: DialogueBackdropType?, backdropColor: TextColor?): BukkitTask{
-        return sendProgressiveDialogue(player, lines.getOrNull(0), lines.getOrNull(1), lines.getOrNull(2), lines.getOrNull(3), lines.getOrNull(4), backdropType, backdropColor)
+    fun sendProgressiveDialogue(player: Player, lines: List<String>, backdropType: DialogueBackdropType?, backdropColor: TextColor?, skin: String): BukkitTask{
+        return sendProgressiveDialogue(
+            player,
+            lines.getOrNull(0),
+            lines.getOrNull(1),
+            lines.getOrNull(2),
+            lines.getOrNull(3),
+            lines.getOrNull(4),
+            backdropType,
+            backdropColor,
+            skin
+        )
     }
 
-    fun sendProgressiveDialogue(player: Player, line1: String?, line2: String?, line3: String?, line4: String?, line5: String?, backdropType: DialogueBackdropType?, backdropColor: TextColor?): BukkitTask{
+    fun sendProgressiveDialogue(player: Player, line1: String?, line2: String?, line3: String?, line4: String?, line5: String?, backdropType: DialogueBackdropType?, backdropColor: TextColor?, skin: String): BukkitTask{
         val safeLine1 = ArrayList<Pair<Char, Int>>()
         val safeLine2 = ArrayList<Pair<Char, Int>>()
         val safeLine3 = ArrayList<Pair<Char, Int>>()
@@ -76,7 +95,7 @@ object DialogueUtils {
                     val result = Component.text()
                         .append(Component.text().content(backdropType?.getBackdrop() ?: "\uEE01").color(backdropColor ?: TextColor.color(255, 255, 255)))
                         .append(Component.text().content("\uF80C\uF80C\uF808\uF801"))
-                        .append(Component.text().content("\uF829\uE001\uF828\uF821"))
+                        .append(Component.text().content("\uF829$skin\uF828\uF821"))
                         .append(
                             Component.text().content(progressiveLine1.map { it.first }.joinToString(""))
                                 .font(Key.key("ingeniamc:dialogue_line_1"))
