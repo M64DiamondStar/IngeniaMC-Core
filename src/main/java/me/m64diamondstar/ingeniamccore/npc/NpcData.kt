@@ -5,6 +5,7 @@ import me.m64diamondstar.ingeniamccore.npc.utils.DialogueAction
 import me.m64diamondstar.ingeniamccore.npc.utils.DialogueBackdropType
 import me.m64diamondstar.ingeniamccore.npc.utils.DialogueOption
 import me.m64diamondstar.ingeniamccore.npc.utils.DialogueOptionType
+import me.m64diamondstar.ingeniamccore.utils.messages.Font
 import net.kyori.adventure.text.format.TextColor
 import org.bukkit.Location
 
@@ -35,6 +36,15 @@ class NpcData(private val id: String): DataConfiguration("npc", "$id.yml") {
 
     fun getModel(): String? {
         return this.getConfig().getString("Model")
+    }
+
+    fun setSkin(string: String) {
+        this.getConfig().set("Skin", string)
+        this.save()
+    }
+
+    fun getSkin(): String {
+        return Font.convertUnicodeString(this.getConfig().getString("Skin") ?: "\uE001")
     }
 
     fun setDialogueBackdrop(backdropType: DialogueBackdropType){
