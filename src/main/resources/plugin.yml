@@ -1,11 +1,12 @@
 name: IngeniaMC-Core
-version: '1.7'
+version: '1.0'
 main: me.m64diamondstar.ingeniamccore.IngeniaMC
 api-version: '1.20'
 authors: [ M64DiamondStar ]
 description: The Core plugin of IngeniaMC.
 depend:
   - Train_Carts
+  - TCCoasters
   - FastAsyncWorldEdit
   - Animatronics
   - EffectMaster
@@ -122,5 +123,6 @@ commands:
       - npcs
   settings:
     description: Open the settings menu.
-
+  trash:
+    description: Open a virtual trash can.
 
