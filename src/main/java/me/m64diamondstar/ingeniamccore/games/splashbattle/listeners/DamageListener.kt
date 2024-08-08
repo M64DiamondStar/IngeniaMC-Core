@@ -1,5 +1,6 @@
 package me.m64diamondstar.ingeniamccore.games.splashbattle.listeners
 
+import io.papermc.paper.entity.TeleportFlag
 import me.m64diamondstar.ingeniamccore.games.splashbattle.SplashBattle
 import me.m64diamondstar.ingeniamccore.games.splashbattle.SplashBattleUtils
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
@@ -86,7 +87,7 @@ class DamageListener: Listener {
             splashBattle.getLeaderboard().spawnSoaksSign()
 
             target.sendTitle(Colors.format("#365bba&lYou got soaked!"), Colors.format("${player.name} took the last shot!"), 10, 60, 10)
-            target.teleport(splashBattle.getRandomSpawnPoint(target.location))
+            target.teleport(splashBattle.getRandomSpawnPoint(target.location), TeleportFlag.EntityState.RETAIN_PASSENGERS)
             target.health = 10.0
 
             return

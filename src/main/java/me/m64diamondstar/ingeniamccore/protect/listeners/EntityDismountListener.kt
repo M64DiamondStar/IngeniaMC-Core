@@ -1,5 +1,6 @@
 package me.m64diamondstar.ingeniamccore.protect.listeners
 
+import io.papermc.paper.entity.TeleportFlag
 import me.m64diamondstar.ingeniamccore.utils.entities.EntityUtils
 import me.m64diamondstar.ingeniamccore.warps.WarpUtils
 import org.bukkit.entity.Player
@@ -20,7 +21,7 @@ class EntityDismountListener: Listener {
             return
 
         if(EntityUtils.isLocked(entity)) {
-            player.teleport(WarpUtils.getNearestLocation(player))
+            player.teleport(WarpUtils.getNearestLocation(player), TeleportFlag.EntityState.RETAIN_PASSENGERS)
         }
     }
 
