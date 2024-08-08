@@ -3,6 +3,7 @@ package me.m64diamondstar.ingeniamccore.general.commands
 import com.ticxo.modelengine.api.ModelEngineAPI
 import fr.mrmicky.fastboard.adventure.FastBoard
 import gg.flyte.twilight.scheduler.delay
+import io.papermc.paper.entity.TeleportFlag
 import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.games.wandclash.gui.TeamChooseGui
 import me.m64diamondstar.ingeniamccore.games.wandclash.gui.VoteGameModeGui
@@ -10,8 +11,8 @@ import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.npc.utils.DialogueUtils
 import me.m64diamondstar.ingeniamccore.utils.entities.BodyWearEntity
 import me.m64diamondstar.ingeniamccore.utils.entities.CameraPacketEntity
-import me.m64diamondstar.ingeniamccore.utils.entities.NpcPlayerEntity
 import me.m64diamondstar.ingeniamccore.utils.entities.NametagEntity
+import me.m64diamondstar.ingeniamccore.utils.entities.NpcPlayerEntity
 import me.m64diamondstar.ingeniamccore.utils.items.Items
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
@@ -35,7 +36,7 @@ import org.bukkit.block.data.Rotatable
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
-import org.bukkit.craftbukkit.v1_20_R3.CraftWorld
+import org.bukkit.craftbukkit.CraftWorld
 import org.bukkit.entity.ItemDisplay
 import org.bukkit.entity.Pig
 import org.bukkit.entity.Player
@@ -145,7 +146,7 @@ class AdminCommand: CommandExecutor {
                 sender.sendMessage(Colors.format(MessageType.ERROR + "You haven't even teleported yet..."))
                 return false
             }
-            sender.teleport(player.previousLocation!!)
+            sender.teleport(player.previousLocation!!, TeleportFlag.EntityState.RETAIN_PASSENGERS)
             sender.sendMessage(Colors.format(MessageType.SUCCESS + "* poof *"))
         }
 
@@ -168,7 +169,7 @@ class AdminCommand: CommandExecutor {
             block.type = Material.PLAYER_HEAD
 
             val tileEntitySkull = (block.world as CraftWorld).handle.getBlockEntity(BlockPos(block.x, block.y, block.z), true) as SkullBlockEntity
-            tileEntitySkull.setOwner(Items.getRandomPresentProfile())
+            //tileEntitySkull.setOwner(Items.getRandomPresentProfile())
 
             val faces = BlockFace.values().toMutableList()
             faces.remove(BlockFace.DOWN)
@@ -316,20 +317,23 @@ class AdminCommand: CommandExecutor {
                     "",
                     "We hope you enjoy your stay!",
                     null,
-                    null
+                    null,
+                    "\uE001"
                 )
             )
         }
 
         if(args[0].equals("testprogressivedialogue", ignoreCase = true)){
-            DialogueUtils.sendProgressiveDialogue(sender,
+            DialogueUtils.sendProgressiveDialogue(
+                sender,
                 "Hello there! Welcome to",
                 "IngeniaMC! We're a custom",
                 "theme park with a ton of",
                 "cool rides! We hope you",
                 "enjoy your stay!",
                 null,
-                null
+                null,
+                "\uE001"
             )
         }
 
@@ -413,7 +417,7 @@ class AdminCommand: CommandExecutor {
                         location.pitch += 7
 
                     val itemDisplay = sender.world.spawn(location, ItemDisplay::class.java)
-                    itemDisplay.itemStack = itemStack
+                    itemDisplay.setItemStack(itemStack)
                     val transformation = itemDisplay.transformation
                     transformation.translation.add(0f, 0f, 1.5f)
                     transformation.scale.set(0.5f, 0.5f, 0.5f)
