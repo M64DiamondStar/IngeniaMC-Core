@@ -3,11 +3,11 @@ package me.m64diamondstar.ingeniamccore.wands.wands
 import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
-import me.m64diamondstar.ingeniamccore.wands.wandlistener.WandListener
 import me.m64diamondstar.ingeniamccore.wands.utils.Cooldowns
 import me.m64diamondstar.ingeniamccore.wands.utils.Wand
+import me.m64diamondstar.ingeniamccore.wands.wandlistener.WandListener
 import org.bukkit.Particle
-import org.bukkit.craftbukkit.v1_20_R3.entity.CraftPlayer
+import org.bukkit.craftbukkit.entity.CraftPlayer
 import org.bukkit.entity.Player
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
@@ -45,7 +45,7 @@ class Water: Wand {
         val flyspeed = player.getFlySpeed()
         player.setWalkSpeed(0f)
         player.setFlySpeed(0f)
-        player.addPotionEffect(PotionEffect(PotionEffectType.JUMP, 50, 250, false))
+        player.addPotionEffect(PotionEffect(PotionEffectType.JUMP_BOOST, 50, 250, false))
         object : BukkitRunnable() {
             var c: Long = 0
             override fun run() {
@@ -100,7 +100,7 @@ class Water: Wand {
                     if (player.isGliding()) player.setGliding(false)
                     return
                 }
-                player.getWorld().spawnParticle(Particle.WATER_SPLASH, player.getLocation(), 60, 0.2, 0.2, 0.2, 0.0)
+                player.getWorld().spawnParticle(Particle.SPLASH, player.getLocation(), 60, 0.2, 0.2, 0.2, 0.0)
                 player.setVelocity(player.getEyeLocation().direction.multiply(0.75))
                 c++
             }

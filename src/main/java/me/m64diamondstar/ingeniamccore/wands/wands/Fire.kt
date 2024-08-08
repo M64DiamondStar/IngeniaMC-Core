@@ -1,5 +1,6 @@
 package me.m64diamondstar.ingeniamccore.wands.wands
 
+import io.papermc.paper.entity.TeleportFlag
 import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.wands.utils.Cooldowns
@@ -31,7 +32,7 @@ class Fire: Wand {
 
         val s = Bukkit.getScheduler().scheduleSyncRepeatingTask(
             IngeniaMC.plugin, {
-                player.teleport(nLoc)
+                player.teleport(nLoc, TeleportFlag.EntityState.RETAIN_PASSENGERS)
             }, 0L, 1L
         )
 
@@ -92,12 +93,12 @@ class Fire: Wand {
                 val block = player.getTargetBlock(null, 21)
                 player.world.spawnParticle(Particle.CLOUD, player.location, 150, 0.35, 0.7, 0.35, 0.0)
                 player.world.spawnParticle(Particle.LAVA, player.location, 30, 0.2, 0.7, 0.2, 0.0)
-                player.teleport(block.location.setDirection(player.location.direction))
-                player.teleport(player.location.add(player.location.direction.normalize().multiply(-1)))
-                player.teleport(player.location.add(0.5, 0.0, 0.5))
-                if (player.location.block.type != Material.AIR) player.teleport(player.location.add(0.0, 1.0, 0.0))
+                player.teleport(block.location.setDirection(player.location.direction), TeleportFlag.EntityState.RETAIN_PASSENGERS)
+                player.teleport(player.location.add(player.location.direction.normalize().multiply(-1)), TeleportFlag.EntityState.RETAIN_PASSENGERS)
+                player.teleport(player.location.add(0.5, 0.0, 0.5), TeleportFlag.EntityState.RETAIN_PASSENGERS)
+                if (player.location.block.type != Material.AIR) player.teleport(player.location.add(0.0, 1.0, 0.0), TeleportFlag.EntityState.RETAIN_PASSENGERS)
                 player.world.spawnParticle(
-                    Particle.SMOKE_NORMAL,
+                    Particle.SMOKE,
                     player.location.add(0.0, 1.0, 0.0),
                     100,
                     0.3,

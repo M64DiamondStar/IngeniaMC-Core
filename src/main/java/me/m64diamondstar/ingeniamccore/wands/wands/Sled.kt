@@ -1,5 +1,6 @@
 package me.m64diamondstar.ingeniamccore.wands.wands
 
+import io.papermc.paper.entity.TeleportFlag
 import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
@@ -13,8 +14,8 @@ import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.Particle
-import org.bukkit.craftbukkit.v1_20_R3.entity.CraftEntity
-import org.bukkit.craftbukkit.v1_20_R3.entity.CraftPlayer
+import org.bukkit.craftbukkit.entity.CraftEntity
+import org.bukkit.craftbukkit.entity.CraftPlayer
 import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
@@ -63,7 +64,7 @@ class Sled: Wand {
                         )
                         sled.remove()
                         seat.remove()
-                        player.teleport(player.location.add(0.0, 0.5, 0.0))
+                        player.teleport(player.location.add(0.0, 0.5, 0.0), TeleportFlag.EntityState.RETAIN_PASSENGERS)
                         cancel()
                         return
                     }
@@ -72,7 +73,7 @@ class Sled: Wand {
                 if(IngeniaPlayer(player).isInGame){
                     sled.remove()
                     seat.remove()
-                    player.teleport(player.location.add(0.0, 0.5, 0.0))
+                    player.teleport(player.location.add(0.0, 0.5, 0.0), TeleportFlag.EntityState.RETAIN_PASSENGERS)
                     cancel()
                     return
                 }
@@ -138,7 +139,7 @@ class Sled: Wand {
                 (sled as CraftEntity).handle.move(MoverType.SELF, vec3D)
 
                 player.world.spawnParticle(
-                    Particle.BLOCK_CRACK,
+                    Particle.BLOCK,
                     player.location.add(0.0, 0.3, 0.0),
                     30,
                     0.3,
@@ -188,7 +189,7 @@ class Sled: Wand {
                         )
                         sled.remove()
                         seat.remove()
-                        player.teleport(player.location.add(0.0, 0.5, 0.0))
+                        player.teleport(player.location.add(0.0, 0.5, 0.0), TeleportFlag.EntityState.RETAIN_PASSENGERS)
                         cancel()
                         return
                     }
@@ -197,7 +198,7 @@ class Sled: Wand {
                 if(IngeniaPlayer(player).isInGame){
                     sled.remove()
                     seat.remove()
-                    player.teleport(player.location.add(0.0, 0.5, 0.0))
+                    player.teleport(player.location.add(0.0, 0.5, 0.0), TeleportFlag.EntityState.RETAIN_PASSENGERS)
                     cancel()
                     return
                 }
@@ -260,7 +261,7 @@ class Sled: Wand {
                 (seat as CraftEntity).handle.move(MoverType.SELF, vec3D)
                 (sled as CraftEntity).handle.move(MoverType.SELF, vec3D)
                 player.world.spawnParticle(
-                    Particle.BLOCK_CRACK,
+                    Particle.BLOCK,
                     player.location.add(0.0, 0.3, 0.0),
                     30,
                     0.3,
@@ -310,7 +311,7 @@ class Sled: Wand {
                         )
                         sled.remove()
                         seat.remove()
-                        player.teleport(player.location.add(0.0, 0.5, 0.0))
+                        player.teleport(player.location.add(0.0, 0.5, 0.0), TeleportFlag.EntityState.RETAIN_PASSENGERS)
                         cancel()
                         return
                     }
@@ -319,7 +320,7 @@ class Sled: Wand {
                 if(IngeniaPlayer(player).isInGame){
                     sled.remove()
                     seat.remove()
-                    player.teleport(player.location.add(0.0, 0.5, 0.0))
+                    player.teleport(player.location.add(0.0, 0.5, 0.0), TeleportFlag.EntityState.RETAIN_PASSENGERS)
                     cancel()
                     return
                 }
@@ -382,7 +383,7 @@ class Sled: Wand {
                 (seat as CraftEntity).handle.move(MoverType.SELF, vec3D)
                 (sled as CraftEntity).handle.move(MoverType.SELF, vec3D)
                 player.world.spawnParticle(
-                    Particle.BLOCK_CRACK,
+                    Particle.BLOCK,
                     player.location.add(0.0, 0.3, 0.0),
                     30,
                     0.3,
@@ -431,7 +432,7 @@ class Sled: Wand {
                         )
                         sled.remove()
                         seat.remove()
-                        player.teleport(player.location.add(0.0, 0.5, 0.0))
+                        player.teleport(player.location.add(0.0, 0.5, 0.0), TeleportFlag.EntityState.RETAIN_PASSENGERS)
                         cancel()
                         return
                     }
@@ -440,7 +441,7 @@ class Sled: Wand {
                 if(IngeniaPlayer(player).isInGame){
                     sled.remove()
                     seat.remove()
-                    player.teleport(player.location.add(0.0, 0.5, 0.0))
+                    player.teleport(player.location.add(0.0, 0.5, 0.0), TeleportFlag.EntityState.RETAIN_PASSENGERS)
                     cancel()
                     return
                 }
@@ -502,7 +503,7 @@ class Sled: Wand {
                 (seat as CraftEntity).handle.move(MoverType.SELF, vec3D)
                 (sled as CraftEntity).handle.move(MoverType.SELF, vec3D)
                 player.world.spawnParticle(
-                    Particle.BLOCK_CRACK,
+                    Particle.BLOCK,
                     player.location.add(0.0, 0.3, 0.0),
                     30,
                     0.3,

@@ -1,5 +1,6 @@
 package me.m64diamondstar.ingeniamccore.wands.wands
 
+import io.papermc.paper.entity.TeleportFlag
 import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import me.m64diamondstar.ingeniamccore.wands.utils.Cooldowns
@@ -36,7 +37,7 @@ class Music: Wand {
         db.isSilent = true
         db.setGravity(false)
         val schedule = Bukkit.getScheduler().scheduleSyncRepeatingTask(
-            IngeniaMC.plugin, { db.teleport(player.location.add(0.0, 2.5, 0.0)) }, 0L, 1L
+            IngeniaMC.plugin, { db.teleport(player.location.add(0.0, 2.5, 0.0), TeleportFlag.EntityState.RETAIN_PASSENGERS) }, 0L, 1L
         )
         Bukkit.getScheduler().scheduleSyncDelayedTask(
             IngeniaMC.plugin, {

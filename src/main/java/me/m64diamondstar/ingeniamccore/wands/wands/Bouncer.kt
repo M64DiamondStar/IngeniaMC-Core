@@ -37,7 +37,7 @@ class Bouncer: Wand {
     }
 
     override fun run(player: Player) {
-        player.addPotionEffect(PotionEffectType.JUMP.createEffect(200, 5))
+        player.addPotionEffect(PotionEffectType.JUMP_BOOST.createEffect(200, 5))
         for (i in 0..1) {
             val loc = player.location.add(0.0, -0.5, 0.0)
             loc.yaw = (i * 180).toFloat()
@@ -89,7 +89,7 @@ class Bouncer: Wand {
                     stand.teleport(loc)
                 }
                 player.world.spawnParticle(
-                    Particle.BLOCK_CRACK,
+                    Particle.BLOCK,
                     player.location,
                     20,
                     0.3,

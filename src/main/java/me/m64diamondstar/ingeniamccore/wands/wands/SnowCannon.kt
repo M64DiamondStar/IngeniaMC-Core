@@ -29,7 +29,7 @@ class SnowCannon: Wand {
         object : BukkitRunnable() {
             override fun run() {
                 player.world.spawnParticle(
-                    Particle.REDSTONE, snowball.location, 2, 0.0, 0.0, 0.0, 0.0, Particle.DustOptions(
+                    Particle.DUST, snowball.location, 2, 0.0, 0.0, 0.0, 0.0, Particle.DustOptions(
                         Color.WHITE, 1F
                     )
                 )

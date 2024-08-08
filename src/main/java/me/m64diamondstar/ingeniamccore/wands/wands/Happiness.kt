@@ -35,7 +35,7 @@ class Happiness: Wand {
                     override fun run(){
                         val loc = other.location.add(0.0, 2.5, 0.0)
                         other.world.spawnParticle(Particle.HEART, loc, 2, 0.5, 0.5, 0.5, 0.0)
-                        player.world.spawnParticle(Particle.VILLAGER_HAPPY, player.location.add(0.0, 2.0, 0.0), 5, 2.0, 2.0, 2.0, 0.0)
+                        player.world.spawnParticle(Particle.HAPPY_VILLAGER, player.location.add(0.0, 2.0, 0.0), 5, 2.0, 2.0, 2.0, 0.0)
 
                         if(c == 33){
                             this.cancel()

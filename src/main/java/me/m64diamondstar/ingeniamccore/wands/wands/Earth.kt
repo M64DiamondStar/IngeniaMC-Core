@@ -65,10 +65,10 @@ class Earth: Wand {
                 `as`.isMarker = true
                 Objects.requireNonNull(`as`.equipment)?.helmet = ItemStack(player.location.add(0.0, -1.0, 0.0).block.type)
                 `as`.world.spawnParticle(
-                    Particle.BLOCK_CRACK, `as`.location.add(0.0, 2.2, 0.0), 30, 0.0, 0.0, 0.0, 0.0,
+                    Particle.BLOCK, `as`.location.add(0.0, 2.2, 0.0), 30, 0.0, 0.0, 0.0, 0.0,
                     player.location.add(0.0, -1.0, 0.0).block.blockData
                 )
-                player.addPotionEffect(PotionEffect(PotionEffectType.JUMP, 10, 200))
+                player.addPotionEffect(PotionEffect(PotionEffectType.JUMP_BOOST, 10, 200))
                 player.fallDistance = 0f
                 Bukkit.getScheduler().scheduleSyncDelayedTask(
                     IngeniaMC.plugin, { `as`.remove() }, 15L

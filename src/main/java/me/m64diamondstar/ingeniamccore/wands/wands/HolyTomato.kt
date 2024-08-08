@@ -30,14 +30,14 @@ class HolyTomato: Wand {
         val loc = player.location.add(0.0, 1.0, 0.0)
         val item = ItemStack(Material.BAKED_POTATO)
         val meta = item.itemMeta
-        player.world.spawnParticle(Particle.REDSTONE, loc, 100, 1.0, 1.0, 1.0, 0.0, Particle.DustOptions(Color.RED, 1F))
+        player.world.spawnParticle(Particle.DUST, loc, 100, 1.0, 1.0, 1.0, 0.0, Particle.DustOptions(Color.RED, 1F))
         assert(meta != null)
         meta!!.setCustomModelData(1)
         item.itemMeta = meta
         val schedule = Bukkit.getScheduler().scheduleSyncRepeatingTask(
             IngeniaMC.plugin, {
                 player.world.spawnParticle(
-                    Particle.REDSTONE, loc, 50, 1.0, 1.0, 1.0, 0.0, Particle.DustOptions(
+                    Particle.DUST, loc, 50, 1.0, 1.0, 1.0, 0.0, Particle.DustOptions(
                         Color.RED, 1F
                     )
                 )
