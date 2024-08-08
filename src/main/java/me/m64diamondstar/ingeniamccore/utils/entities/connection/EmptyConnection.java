@@ -4,13 +4,12 @@ import java.io.IOException;
 import java.net.SocketAddress;
 
 import net.minecraft.network.Connection;
-import net.minecraft.network.PacketListener;
 import net.minecraft.network.PacketSendListener;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.PacketFlow;
 
 public class EmptyConnection extends Connection {
-    public EmptyConnection(PacketFlow flag) throws IOException {
+    public EmptyConnection(PacketFlow flag) {
         super(flag);
         channel = new EmptyChannel(null);
         address = new SocketAddress() {
@@ -37,13 +36,5 @@ public class EmptyConnection extends Connection {
 
     @Override
     public void send(Packet packet, PacketSendListener genericfuturelistener, boolean flag) {
-    }
-
-    @Override
-    public void setListener(PacketListener pl) {
-        try {
-        } catch (Throwable e) {
-            e.printStackTrace();
-        }
     }
 }
