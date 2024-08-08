@@ -70,7 +70,7 @@ enum class ItemRequirement {
             val args = value.split(",")
             if(args[2].toLongOrNull() == null) return "Internal error"
             val attraction = Attraction(args[0], args[1])
-            return "${args[2]} ridecount for ${attraction.getName()}"
+            return "${args[2]} ridecount for ${attraction.getDisplayName()}"
         }
 
         /**
