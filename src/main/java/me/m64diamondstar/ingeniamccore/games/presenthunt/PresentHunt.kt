@@ -2,7 +2,6 @@ package me.m64diamondstar.ingeniamccore.games.presenthunt
 
 import me.m64diamondstar.ingeniamccore.data.LoadedConfiguration
 import me.m64diamondstar.ingeniamccore.utils.LocationUtils
-import me.m64diamondstar.ingeniamccore.utils.items.Items
 import net.minecraft.core.BlockPos
 import net.minecraft.world.level.block.entity.SkullBlockEntity
 import org.bukkit.Bukkit
@@ -11,7 +10,7 @@ import org.bukkit.Material
 import org.bukkit.World
 import org.bukkit.block.BlockFace
 import org.bukkit.block.data.Rotatable
-import org.bukkit.craftbukkit.v1_20_R3.CraftWorld
+import org.bukkit.craftbukkit.CraftWorld
 import kotlin.random.Random
 
 class PresentHunt(val category: String, val name: String): LoadedConfiguration("games/presenthunt/$category", name, false, true)  {
@@ -91,7 +90,7 @@ class PresentHunt(val category: String, val name: String): LoadedConfiguration("
         block.type = Material.PLAYER_HEAD
 
         val tileEntitySkull = (block.world as CraftWorld).handle.getBlockEntity(BlockPos(block.x, block.y, block.z), true) as SkullBlockEntity
-        tileEntitySkull.setOwner(Items.getRandomPresentProfile())
+        //tileEntitySkull.setOwner(Items.getRandomPresentProfile())
 
         val faces = BlockFace.values().toMutableList()
         faces.remove(BlockFace.DOWN)

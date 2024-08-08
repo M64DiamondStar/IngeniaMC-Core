@@ -7,15 +7,16 @@ import net.minecraft.network.protocol.game.*
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.server.level.ClientInformation
+import net.minecraft.server.level.ServerEntity
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.server.network.CommonListenerCookie
 import net.minecraft.server.network.ServerGamePacketListenerImpl
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.World
-import org.bukkit.craftbukkit.v1_20_R3.CraftServer
-import org.bukkit.craftbukkit.v1_20_R3.CraftWorld
-import org.bukkit.craftbukkit.v1_20_R3.entity.CraftPlayer
+import org.bukkit.craftbukkit.CraftServer
+import org.bukkit.craftbukkit.CraftWorld
+import org.bukkit.craftbukkit.entity.CraftPlayer
 import org.bukkit.entity.Player
 
 
@@ -36,7 +37,7 @@ class NpcPlayerEntity(world: World, private val loc: Location, private val ownin
             (Bukkit.getServer() as CraftServer).server,
             EmptyConnection(null),
             this,
-            CommonListenerCookie.createInitial(gameProfile)
+            CommonListenerCookie.createInitial(gameProfile, true)
         )
 
         val entityData = this@NpcPlayerEntity.getEntityData()
@@ -47,11 +48,13 @@ class NpcPlayerEntity(world: World, private val loc: Location, private val ownin
         this.connection = serverGamePacketListener
 
         for(player in Bukkit.getOnlinePlayers()) {
-            if(player.uniqueId == this.owningPlayer.uniqueId && alsoSelf) continue
+            if(player.uniqueId == this.owningPlayer.uniqueId && !alsoSelf) continue
+
+            val serverEntity = ServerEntity(this.serverLevel(), this, 0, false, {}, emptySet())
 
             player as CraftPlayer
             player.handle.connection.send(ClientboundPlayerInfoUpdatePacket(ClientboundPlayerInfoUpdatePacket.Action.ADD_PLAYER, this))
-            player.handle.connection.send(ClientboundAddEntityPacket(this))
+            player.handle.connection.send(ClientboundAddEntityPacket(this, serverEntity))
 
             player.handle.connection.send(ClientboundSetEntityDataPacket(this@NpcPlayerEntity.id, packedData))
 

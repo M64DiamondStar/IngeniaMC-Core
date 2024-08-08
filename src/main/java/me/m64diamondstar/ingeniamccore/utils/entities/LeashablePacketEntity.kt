@@ -1,17 +1,18 @@
 package me.m64diamondstar.ingeniamccore.utils.entities
 
 import net.minecraft.network.protocol.game.*
+import net.minecraft.server.level.ServerEntity
 import net.minecraft.world.entity.EntityType
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.World
-import org.bukkit.craftbukkit.v1_20_R3.CraftWorld
-import org.bukkit.craftbukkit.v1_20_R3.entity.CraftEntity
-import org.bukkit.craftbukkit.v1_20_R3.entity.CraftPlayer
+import org.bukkit.craftbukkit.CraftWorld
+import org.bukkit.craftbukkit.entity.CraftEntity
+import org.bukkit.craftbukkit.entity.CraftPlayer
 import org.bukkit.entity.Entity
 import org.bukkit.entity.Slime
 
-class LeashablePacketEntity(world: World?, loc: Location, private val leashHolder: Entity) : net.minecraft.world.entity.monster.Slime(
+class LeashablePacketEntity(private val world: World?, loc: Location, private val leashHolder: Entity) : net.minecraft.world.entity.monster.Slime(
     EntityType.SLIME, (world as CraftWorld).handle) {
 
     init{
@@ -28,7 +29,8 @@ class LeashablePacketEntity(world: World?, loc: Location, private val leashHolde
         val entityData = this.getEntityData().nonDefaultValues
 
         for(player in Bukkit.getOnlinePlayers()){
-            (player as CraftPlayer).handle.connection.send(ClientboundAddEntityPacket(this))
+            val serverEntity = ServerEntity((world as CraftWorld).handle.level, this, 0, false, {}, emptySet())
+            (player as CraftPlayer).handle.connection.send(ClientboundAddEntityPacket(this, serverEntity))
             player.handle.connection.send(ClientboundSetEntityLinkPacket(this, (leashHolder as CraftEntity).handle))
             player.handle.connection.send(ClientboundSetEntityDataPacket(this.id /*ID*/, entityData /*Data Watcher*/))
         }

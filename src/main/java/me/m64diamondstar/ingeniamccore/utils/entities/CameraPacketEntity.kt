@@ -5,13 +5,14 @@ import gg.flyte.twilight.extension.showPlayer
 import gg.flyte.twilight.scheduler.sync
 import io.papermc.paper.entity.TeleportFlag
 import net.minecraft.network.protocol.game.*
+import net.minecraft.server.level.ServerEntity
 import net.minecraft.world.entity.Display
 import net.minecraft.world.entity.EntityType
 import org.bukkit.GameMode
 import org.bukkit.Location
 import org.bukkit.World
-import org.bukkit.craftbukkit.v1_20_R3.CraftWorld
-import org.bukkit.craftbukkit.v1_20_R3.entity.CraftPlayer
+import org.bukkit.craftbukkit.CraftWorld
+import org.bukkit.craftbukkit.entity.CraftPlayer
 import org.bukkit.entity.Chicken
 import org.bukkit.entity.Player
 
@@ -24,7 +25,7 @@ class CameraPacketEntity(private val world: World, loc: Location, private val pl
     private val chicken: Chicken
 
     init{
-        this.entityData.set(Display.DATA_POS_ROT_INTERPOLATION_DURATION_ID, 20)
+        this.entityData.set(Display.DATA_POS_ROT_INTERPOLATION_DURATION_ID, 20) // DO NOT REMOVE Display. OR IT WILL THROW ERRORS
         this.setPos(loc.x, loc.y, loc.z)
         this.moveTo(loc.x, loc.y, loc.z, loc.yaw, loc.pitch)
         chicken = world.spawnEntity(loc.clone().add(0.0, -2.0, 0.0), org.bukkit.entity.EntityType.CHICKEN) as Chicken
@@ -40,7 +41,8 @@ class CameraPacketEntity(private val world: World, loc: Location, private val pl
     fun spawn(){
         val entityData = this.getEntityData().nonDefaultValues
 
-        craftPlayer.handle.connection.send(ClientboundAddEntityPacket(this))
+        val serverEntity = ServerEntity((world as CraftWorld).handle.level, this, 0, false, {}, emptySet())
+        craftPlayer.handle.connection.send(ClientboundAddEntityPacket(this, serverEntity))
         if (entityData != null) {
             if(entityData.isNotEmpty())
                 craftPlayer.handle.connection.send(ClientboundSetEntityDataPacket(this.id /*ID*/, entityData /*Data Watcher*/))
@@ -87,7 +89,7 @@ class CameraPacketEntity(private val world: World, loc: Location, private val pl
         sync {
             chicken.teleportAsync(originalLocation).thenAccept {
                 chicken.remove()
-                player.teleport(originalLocation)
+                player.teleport(originalLocation, TeleportFlag.EntityState.RETAIN_PASSENGERS)
                 player.showPlayer()
             }
         }

@@ -12,6 +12,7 @@ import net.minecraft.network.protocol.game.ClientboundAddEntityPacket
 import net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket
 import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket
 import net.minecraft.network.protocol.game.ClientboundSetPassengersPacket
+import net.minecraft.server.level.ServerEntity
 import net.minecraft.world.entity.Display
 import net.minecraft.world.entity.EntityType
 import org.bukkit.Bukkit
@@ -19,8 +20,8 @@ import org.bukkit.Color
 import org.bukkit.GameMode
 import org.bukkit.Location
 import org.bukkit.World
-import org.bukkit.craftbukkit.v1_20_R3.CraftWorld
-import org.bukkit.craftbukkit.v1_20_R3.entity.CraftPlayer
+import org.bukkit.craftbukkit.CraftWorld
+import org.bukkit.craftbukkit.entity.CraftPlayer
 import org.bukkit.entity.Player
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
@@ -95,7 +96,8 @@ class NametagEntity(private val world: World, loc: Location, private val player:
         this.setPos(loc.x, loc.y, loc.z)
         this.moveTo(loc.x, loc.y, loc.z, loc.yaw, loc.pitch)
         this.text = Component.Serializer.fromJson(
-            JSONComponentSerializer.json().serialize(title)
+            JSONComponentSerializer.json().serialize(title),
+            this.level().registryAccess()
         ) as Component
         this.billboardConstraints = BillboardConstraints.CENTER
         val transformation = (this.bukkitEntity as org.bukkit.entity.TextDisplay).transformation
@@ -113,7 +115,8 @@ class NametagEntity(private val world: World, loc: Location, private val player:
         this.setPos(player.location.x, player.location.y, player.location.z)
         this.moveTo(player.location.x, player.location.y, player.location.z, player.location.yaw, player.location.pitch)
         val entityData = this.getEntityData().nonDefaultValues
-        (forPlayer as CraftPlayer).handle.connection.send(ClientboundAddEntityPacket(this))
+        val serverEntity = ServerEntity((world as CraftWorld).handle.level, this, 0, false, {}, emptySet())
+        (forPlayer as CraftPlayer).handle.connection.send(ClientboundAddEntityPacket(this, serverEntity))
         forPlayer.handle.connection.send(ClientboundSetPassengersPacket((player as CraftPlayer).handle))
         if (entityData != null) {
             if(entityData.isNotEmpty())
@@ -156,7 +159,8 @@ class NametagEntity(private val world: World, loc: Location, private val player:
     fun setTitle(component: net.kyori.adventure.text.Component){
         title = component
         this.text = Component.Serializer.fromJson(
-            JSONComponentSerializer.json().serialize(title)
+            JSONComponentSerializer.json().serialize(title),
+            this.level().registryAccess()
         ) as Component
         updateEntityData()
     }

@@ -11,8 +11,8 @@ import net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket
 import net.minecraft.world.level.Level
 import org.bukkit.Bukkit
 import org.bukkit.OfflinePlayer
-import org.bukkit.craftbukkit.v1_20_R3.CraftWorld
-import org.bukkit.craftbukkit.v1_20_R3.entity.CraftPlayer
+import org.bukkit.craftbukkit.CraftWorld
+import org.bukkit.craftbukkit.entity.CraftPlayer
 import org.bukkit.entity.Player
 import java.awt.Color
 import java.util.*
@@ -92,7 +92,9 @@ class SplashBattleLeaderboard(private val splashBattle: SplashBattle) {
 
         despawnSoaksSign(player)
 
-        val leaderboardPacketEntity = LeaderboardPacketEntity(leaderboard, getNMSWorld(),
+        if(getNMSWorld() == null) return
+
+        val leaderboardPacketEntity = LeaderboardPacketEntity(leaderboard, getNMSWorld()!!,
             getLeaderboardLocation(), getLeaderboardDirection())
         leaderboardPacketEntity.spawn(player, "Top Soaks")
         LeaderboardRegistry.setBoard(splashBattle.name, player, leaderboardPacketEntity.id)
