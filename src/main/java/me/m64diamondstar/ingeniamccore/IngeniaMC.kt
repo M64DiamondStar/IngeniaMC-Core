@@ -6,6 +6,7 @@ import gg.flyte.twilight.Twilight
 import gg.flyte.twilight.twilight
 import me.m56738.smoothcoasters.api.SmoothCoastersAPI
 import me.m64diamondstar.ingeniamccore.attractions.listeners.PlayerInteractEntityListener
+import me.m64diamondstar.ingeniamccore.attractions.tccoasters.CSVUtils
 import me.m64diamondstar.ingeniamccore.attractions.traincarts.SignRegistry
 import me.m64diamondstar.ingeniamccore.attractions.utils.AttractionUtils
 import me.m64diamondstar.ingeniamccore.cosmetics.data.JoinLeaveColor
@@ -69,12 +70,17 @@ class IngeniaMC : JavaPlugin() {
         lateinit var scoreboardTeamManager: ScoreboardTeamManager
         var isDisabling: Boolean = false
         lateinit var spawn: Location
+
+    }
+
+    override fun onLoad() {
+        CSVUtils.load()
     }
 
     override fun onEnable() {
 
-        twilight = twilight(this)
         plugin = this
+        twilight = twilight(this)
         smoothCoastersAPI = SmoothCoastersAPI(this)
         miniMessage = MiniMessage.miniMessage()
         protocolManager = ProtocolLibrary.getProtocolManager()
@@ -201,6 +207,8 @@ class IngeniaMC : JavaPlugin() {
         Objects.requireNonNull(getCommand("bodywear"))?.setExecutor(CosmeticCommands())
 
         Objects.requireNonNull(getCommand("backpack"))?.setExecutor(BackpackCommand())
+
+        Objects.requireNonNull(getCommand("trash"))?.setExecutor(TrashCommand())
 
         Objects.requireNonNull(getCommand("rides"))?.setExecutor(MenuCommands())
         Objects.requireNonNull(getCommand("shops"))?.setExecutor(MenuCommands())
@@ -369,6 +377,16 @@ class IngeniaMC : JavaPlugin() {
             BossBar Updates
          */
         Bukkit.getServer().pluginManager.registerEvents(BossBarUpdateListener(), this)
+
+        /*
+            Consume events
+         */
+        Bukkit.getServer().pluginManager.registerEvents(PlayerConsumeListener(), this)
+
+        /*
+            Trashcan events
+         */
+        Bukkit.getServer().pluginManager.registerEvents(TrashListener(), this)
     }
 
     private fun loadPacketListeners(){
