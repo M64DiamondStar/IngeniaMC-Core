@@ -2,6 +2,7 @@ package me.m64diamondstar.ingeniamccore.protect.moderation
 
 import com.opencsv.CSVReaderBuilder
 import java.io.InputStreamReader
+import java.net.HttpURLConnection
 import java.net.URL
 
 object ModerationRegistry {
@@ -12,15 +13,16 @@ object ModerationRegistry {
         return blockedWordsList
     }
 
-    /**
-     * Register all the blocked words from GamerSafer's Chat Word Filter Blocklist.
-     * https://gamersafer.com/wp-content/uploads/2022/08/Chat-Word-Filter-Blocklist.csv
-     * ONLY USE THIS ON STARTUP!
-     */
-    fun registerBlockedWords(){
+    fun registerBlockedWords() {
         try {
             val url = URL("https://gamersafer.com/wp-content/uploads/2022/08/Chat-Word-Filter-Blocklist.csv")
-            val inputStream = url.openStream()
+            val connection = url.openConnection() as HttpURLConnection
+
+            // Set timeouts
+            connection.connectTimeout = 5_000  // 10 seconds for connection timeout
+            connection.readTimeout = 5_000  // 10 seconds for read timeout
+
+            val inputStream = connection.inputStream
 
             InputStreamReader(inputStream).use { inputStreamReader ->
                 val csvReader = CSVReaderBuilder(inputStreamReader).build()
@@ -40,5 +42,6 @@ object ModerationRegistry {
             e.printStackTrace()
         }
     }
+
 
 }
