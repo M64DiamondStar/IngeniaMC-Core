@@ -7,6 +7,14 @@ import java.util.ArrayList
 
 object Font {
 
+    fun convertUnicodeString(input: String): String {
+        // Use regular expressions to find and replace Unicode sequences
+        return input.replace(Regex("""\\u([0-9A-Fa-f]{4})""")) { matchResult ->
+            val codePoint = matchResult.groupValues[1].toInt(16)
+            String(Character.toChars(codePoint))
+        }
+    }
+
     fun getGuiNegativeSpace(index: Int): String{
         return when (index){
             0 -> "\uF808"
