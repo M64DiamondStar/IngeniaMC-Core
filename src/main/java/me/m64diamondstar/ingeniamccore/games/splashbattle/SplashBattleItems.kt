@@ -28,7 +28,7 @@ object SplashBattleItems {
         val waterBalloonMeta = waterBalloon.itemMeta!!
 
         waterBalloonMeta.setDisplayName(Colors.format("#3393D4&lWater Balloon"))
-        waterBalloonMeta.setCustomModelData(1)
+        waterBalloonMeta.setCustomModelData(5000)
         waterBalloon.itemMeta = waterBalloonMeta
 
         return waterBalloon
@@ -39,7 +39,7 @@ object SplashBattleItems {
         val waterBalloonMeta = waterBalloon.itemMeta!!
 
         waterBalloonMeta.setDisplayName(Colors.format("#3393D4&lWater Balloon"))
-        waterBalloonMeta.setCustomModelData(1)
+        waterBalloonMeta.setCustomModelData(5000)
         waterBalloon.itemMeta = waterBalloonMeta
         waterBalloon.amount = 16
 
@@ -109,7 +109,7 @@ object SplashBattleItems {
         waterAmmo.itemMeta = waterAmmoMeta
 
         if(level >= 10)
-            waterAmmo.addUnsafeEnchantment(Enchantment.DURABILITY, 1)
+            waterAmmo.addUnsafeEnchantment(Enchantment.UNBREAKING, 1)
         waterAmmo.amount = level
 
         return waterAmmo
