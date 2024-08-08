@@ -27,8 +27,8 @@ import org.bukkit.World
 import org.bukkit.block.BlockFace
 import org.bukkit.block.data.type.Gate
 import org.bukkit.configuration.ConfigurationSection
-import org.bukkit.craftbukkit.v1_20_R3.CraftWorld
-import org.bukkit.craftbukkit.v1_20_R3.entity.CraftPlayer
+import org.bukkit.craftbukkit.CraftWorld
+import org.bukkit.craftbukkit.entity.CraftPlayer
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import java.awt.Color
@@ -45,7 +45,7 @@ open class Attraction(private val category: String, name: String): LoadedConfigu
 
         this.getConfig().set("Type", type.toString())
         this.getConfig().set("Name", getName())
-        this.getConfig().set("DisplayName", "&c${getName()}")
+        this.getConfig().set("DisplayName", getName())
         this.getConfig().set("World", world.name)
         this.getConfig().set("CountdownType", CountdownType.COUNTDOWN.toString())
         this.getConfig().set("CountdownTime", 15)
@@ -96,6 +96,10 @@ open class Attraction(private val category: String, name: String): LoadedConfigu
      */
     fun getName(): String{
         return name
+    }
+
+    fun getDisplayName(): String{
+        return this.getConfig().getString("DisplayName") ?: name
     }
 
     /**
@@ -407,7 +411,9 @@ open class Attraction(private val category: String, name: String): LoadedConfigu
 
         despawnRidecountSign(player)
 
-        val leaderboardPacketEntity = LeaderboardPacketEntity(leaderboard, getNMSWorld(),
+        if(getWorld() == null) return
+
+        val leaderboardPacketEntity = LeaderboardPacketEntity(leaderboard, getNMSWorld()!!,
             getLeaderboardLocation(), getLeaderboardDirection())
         leaderboardPacketEntity.spawn(player, "Top Ridecount")
         LeaderboardRegistry.setBoard(AttractionUtils.getAttractionID(this), player, leaderboardPacketEntity.id)
