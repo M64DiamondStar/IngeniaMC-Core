@@ -14,9 +14,11 @@ import me.m64diamondstar.ingeniamccore.npc.utils.NpcUtils
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
 import net.kyori.adventure.audience.Audience
 import net.kyori.adventure.text.minimessage.MiniMessage
+import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
+import org.bukkit.event.inventory.InventoryOpenEvent
 import org.bukkit.event.player.PlayerAnimationEvent
 import org.bukkit.event.player.PlayerAnimationType
 import org.bukkit.event.player.PlayerItemHeldEvent
@@ -88,6 +90,13 @@ class NpcListener: Listener {
             DialoguePlayerRegistry.getDialoguePlayer(player)!!.getDialogue(player)
                 .executeOption(event.signedMessage().message().first().digitToInt())
         }
+        event.isCancelled = true
+    }
+
+    @EventHandler
+    fun onInventoryOpenEvent(event: InventoryOpenEvent){
+        val player = event.player as Player
+        if(!DialoguePlayerRegistry.contains(player)) return
         event.isCancelled = true
     }
 }
