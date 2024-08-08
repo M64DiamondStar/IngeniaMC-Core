@@ -1,5 +1,6 @@
 package me.m64diamondstar.ingeniamccore.warps.inventories
 
+import io.papermc.paper.entity.TeleportFlag
 import me.m64diamondstar.ingeniamccore.general.inventory.MainInventory
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.protect.FeatureManager
@@ -19,7 +20,6 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.event.inventory.InventoryDragEvent
 import org.bukkit.event.inventory.InventoryOpenEvent
-import org.bukkit.event.player.PlayerTeleportEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.ItemMeta
 
@@ -49,7 +49,7 @@ class ShopInventory(player: IngeniaPlayer): InventoryHandler(player) {
                 val warpManager = WarpManager()
                 val id = WarpUtils.getIDFromItem(event.currentItem!!)!!
                 val location = warpManager.getWarpLocation(id) ?: return
-                getPlayer().player.teleport(location, PlayerTeleportEvent.TeleportCause.PLUGIN)
+                getPlayer().player.teleport(location, TeleportFlag.EntityState.RETAIN_PASSENGERS)
                 getPlayer().player.spawnParticle(Particle.PORTAL, location.clone().add(0.0, 1.0, 0.0), 20, 0.4, 0.8, 0.4, 0.0)
             }
         }

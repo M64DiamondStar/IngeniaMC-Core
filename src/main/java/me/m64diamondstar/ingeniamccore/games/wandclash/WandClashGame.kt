@@ -1,5 +1,6 @@
 package me.m64diamondstar.ingeniamccore.games.wandclash
 
+import io.papermc.paper.entity.TeleportFlag
 import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.games.PhysicalGameType
 import me.m64diamondstar.ingeniamccore.games.wandclash.util.WandClashGamePhase
@@ -38,7 +39,7 @@ class WandClashGame(val arena: WandClashArena) {
             WandClashRegistry.setPlayingGame(player, this) // Register player to this game, so it can be found from other classes
 
             if(arena.getData().lobbySpawnLocation != null)
-                player.teleport(arena.getData().lobbySpawnLocation!!)
+                player.teleport(arena.getData().lobbySpawnLocation!!, TeleportFlag.EntityState.RETAIN_PASSENGERS)
 
             
 
@@ -62,9 +63,9 @@ class WandClashGame(val arena: WandClashArena) {
 
             // Teleport player away from the game
             if(arena.getData().leaveLocation != null)
-                player.teleport(arena.getData().leaveLocation!!)
+                player.teleport(arena.getData().leaveLocation!!, TeleportFlag.EntityState.RETAIN_PASSENGERS)
             else
-                player.teleport(WarpUtils.getNearestLocation(player))
+                player.teleport(WarpUtils.getNearestLocation(player), TeleportFlag.EntityState.RETAIN_PASSENGERS)
 
             // Restart countdown if the game is still joinable and the minimum amount of players is not reached
             if (arena.getGamePhase().isPreGame()) {

@@ -1,5 +1,6 @@
 package me.m64diamondstar.ingeniamccore.general.player
 
+import io.papermc.paper.entity.TeleportFlag
 import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.attractions.utils.AttractionUtils
 import me.m64diamondstar.ingeniamccore.cosmetics.utils.CosmeticType
@@ -64,10 +65,10 @@ class IngeniaPlayer(val player: Player) {
         player.walkSpeed = 0.2f
         player.fallDistance = 0f
         Bukkit.getScheduler().runTask(IngeniaMC.plugin, Runnable {
-            player.removePotionEffect(PotionEffectType.SLOW)
+            player.removePotionEffect(PotionEffectType.SLOWNESS)
         })
 
-        player.teleport(WarpUtils.getNearestLocation(player))
+        player.teleport(WarpUtils.getNearestLocation(player), TeleportFlag.EntityState.RETAIN_PASSENGERS)
 
         IngeniaMC.scoreboardTeamManager.addPlayerToTeam(player)
 

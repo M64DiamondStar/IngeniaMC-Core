@@ -1,5 +1,6 @@
 package me.m64diamondstar.ingeniamccore.games.splashbattle
 
+import io.papermc.paper.entity.TeleportFlag
 import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.games.PhysicalGameType
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
@@ -68,7 +69,7 @@ object SplashBattleUtils {
             return
 
         playerLocation[player] = player.location
-        player.teleport(splashBattle.getRandomSpawnPoint())
+        player.teleport(splashBattle.getRandomSpawnPoint(), TeleportFlag.EntityState.RETAIN_PASSENGERS)
 
         players.add(player)
         games[player] = splashBattle.name
@@ -133,7 +134,7 @@ object SplashBattleUtils {
 
         Bukkit.getScheduler().cancelTask(playerRunnables[player]!!)
 
-        player.teleport(playerLocation[player]!!)
+        player.teleport(playerLocation[player]!!, TeleportFlag.EntityState.RETAIN_PASSENGERS)
 
         player.sendMessage(Colors.format(MessageType.PLAYER_UPDATE + "You left the game."))
 
