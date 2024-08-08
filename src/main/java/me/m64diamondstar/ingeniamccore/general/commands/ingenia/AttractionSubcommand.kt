@@ -95,7 +95,7 @@ class AttractionSubcommand(private val sender: CommandSender, private val args: 
                         it.remove()
 
                         player.sendMessage(Colors.format(MessageType.SUCCESS + "Leaderboard location has been set."))
-                        player.spawnParticle(Particle.SMOKE_NORMAL, it.location, 100, 0.23, 0.23, 0.23, 0.0)
+                        player.spawnParticle(Particle.SMOKE, it.location, 100, 0.23, 0.23, 0.23, 0.0)
 
                         attraction.setLeaderboardEnabled(true)
                         attraction.setLeaderboardLocation(it.location.blockX, it.location.blockY, it.location.blockZ)
@@ -298,7 +298,7 @@ class AttractionSubcommand(private val sender: CommandSender, private val args: 
                 else
                     player.sendMessage(Colors.format(MessageType.ERROR + "Sorry man, i couldn't find a gate on this location..."))
             }
-            player.spawnParticle(Particle.SMOKE_NORMAL, location.add(0.5, 0.5, 0.5),
+            player.spawnParticle(Particle.SMOKE, location.add(0.5, 0.5, 0.5),
                 100, 0.0, 0.2, 0.0, 0.0)
         }
 

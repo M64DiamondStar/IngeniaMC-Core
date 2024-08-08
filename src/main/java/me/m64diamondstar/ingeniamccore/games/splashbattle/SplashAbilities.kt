@@ -44,7 +44,7 @@ object SplashAbilities {
         object: BukkitRunnable() {
             override fun run() {
                 if(!bullet.isDead)
-                    bullet.world.spawnParticle(Particle.WATER_SPLASH, bullet.location, 30, 0.0, 0.0, 0.0, 0.0, null, false)
+                    bullet.world.spawnParticle(Particle.SPLASH, bullet.location, 30, 0.0, 0.0, 0.0, 0.0, null, false)
                 else
                     this.cancel()
             }
@@ -91,7 +91,7 @@ object SplashAbilities {
         object: BukkitRunnable() {
             override fun run() {
                 if(!bullet.isDead)
-                    bullet.world.spawnParticle(Particle.WATER_SPLASH, bullet.location, 30, 0.0, 0.0, 0.0, 0.0, null, false)
+                    bullet.world.spawnParticle(Particle.SPLASH, bullet.location, 30, 0.0, 0.0, 0.0, 0.0, null, false)
                 else
                     this.cancel()
             }

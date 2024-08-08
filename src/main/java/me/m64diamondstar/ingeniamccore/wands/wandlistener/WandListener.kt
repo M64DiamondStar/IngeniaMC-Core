@@ -80,7 +80,7 @@ class WandListener : Listener {
                     entity.getWorld().spawnParticle(Particle.LAVA, entity.getLocation(), 20)
                     e.isCancelled = true
                 } else if (entity.getCustomName() == "TnTWand") {
-                    entity.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, entity.getLocation(), 10)
+                    entity.getWorld().spawnParticle(Particle.EXPLOSION, entity.getLocation(), 10)
                     val loc = entity.getLocation().add(0.0, -1.0, 0.0)
                     val block = loc.block
                     e.isCancelled = true
@@ -95,7 +95,7 @@ class WandListener : Listener {
                         fb.customName = "TnTWandBlock"
                     }
                 } else if (entity.getCustomName() == "SEWand") {
-                    entity.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, entity.getLocation(), 10)
+                    entity.getWorld().spawnParticle(Particle.EXPLOSION, entity.getLocation(), 10)
                     e.isCancelled = true
                     for (i in 0..19) {
                         val sb = entity.getWorld().spawn(entity.getLocation(), Snowball::class.java)
@@ -107,7 +107,7 @@ class WandListener : Listener {
                         object : BukkitRunnable() {
                             override fun run() {
                                 entity.getWorld().spawnParticle(
-                                    Particle.REDSTONE,
+                                    Particle.DUST,
                                     sb.location, 2, 0.0, 0.0, 0.0, 0.0, Particle.DustOptions(Color.WHITE, 1f)
                                 )
                                 if (sb.isDead) cancel()

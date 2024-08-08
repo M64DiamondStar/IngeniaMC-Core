@@ -24,7 +24,7 @@ class SnowballListener: Listener {
 
 
         for(i in 0..50)
-            waterBalloon.world.spawnParticle(Particle.WATER_SPLASH, waterBalloon.location, 0,
+            waterBalloon.world.spawnParticle(Particle.SPLASH, waterBalloon.location, 0,
                 direction.x, abs(direction.y), direction.z)
     }
 

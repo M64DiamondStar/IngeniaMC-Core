@@ -43,17 +43,17 @@ class FrisbeeSubcommand(private val args: Array<String>, private val player: Pla
                 frisbee.setSpawnLocation(location)
 
                 player.sendMessage(Colors.format(MessageType.SUCCESS + "Spawn location has been set."))
-                player.spawnParticle(Particle.SMOKE_NORMAL, location, 100, 0.0, 0.5, 0.0, 0.0)
+                player.spawnParticle(Particle.SMOKE, location, 100, 0.0, 0.5, 0.0, 0.0)
             }
 
             if(args.size == 5 && args[4].equals("setaxis", ignoreCase = true)){
 
                 if(player.location.yaw in -45F..45F || player.location.yaw in 135F..180F || player.location.yaw in -180F..-135F){
                     frisbee.setAxis('z')
-                    player.spawnParticle(Particle.SMOKE_NORMAL, player.location.clone().add(0.0, 1.0, 0.0), 150, 0.0, 0.2, 2.0, 0.0)
+                    player.spawnParticle(Particle.SMOKE, player.location.clone().add(0.0, 1.0, 0.0), 150, 0.0, 0.2, 2.0, 0.0)
                 }else if(player.location.yaw in 45F..135F || player.location.yaw in 225F..315F){
                     frisbee.setAxis('x')
-                    player.spawnParticle(Particle.SMOKE_NORMAL, player.location.clone().add(0.0, 1.0, 0.0), 150, 2.0, 0.2, 0.0, 0.0)
+                    player.spawnParticle(Particle.SMOKE, player.location.clone().add(0.0, 1.0, 0.0), 150, 2.0, 0.2, 0.0, 0.0)
                 }
 
                 player.sendMessage(Colors.format(MessageType.SUCCESS + "Axis has been set"))

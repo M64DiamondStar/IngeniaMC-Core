@@ -42,7 +42,7 @@ class FreefallSubcommand(private val args: Array<String>, private val player: Pl
                 freeFall.setSpawnLocation(location)
 
                 player.sendMessage(Colors.format(MessageType.SUCCESS + "Spawn location has been set."))
-                player.spawnParticle(Particle.SMOKE_NORMAL, location, 100, 0.0, 0.5, 0.0, 0.0)
+                player.spawnParticle(Particle.SMOKE, location, 100, 0.0, 0.5, 0.0, 0.0)
             }
 
             if(args.size == 5 && args[4].equals("spawn", ignoreCase = true)){

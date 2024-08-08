@@ -46,7 +46,7 @@ class Fenrir: WandClashSpell {
 
                 for (j in 0..10) {
                     val options = Particle.DustOptions(Color.fromRGB(255, 255, 255), 0.35f)
-                    player.world.spawnParticle<Particle.DustOptions>(Particle.REDSTONE, location.add(add), 1, 0.0, 0.0, 0.0, 1.0, options, true
+                    player.world.spawnParticle<Particle.DustOptions>(Particle.DUST, location.add(add), 1, 0.0, 0.0, 0.0, 1.0, options, true
                     )
                 }
             }

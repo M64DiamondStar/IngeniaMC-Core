@@ -42,7 +42,7 @@ class SlideSubcommand(private val args: Array<String>, private val player: Playe
                 }
                 val location = block.location
                 player.spawnParticle(
-                    Particle.SMOKE_NORMAL, location.add(0.5, 0.5, 0.5),
+                    Particle.SMOKE, location.add(0.5, 0.5, 0.5),
                     100, 0.2, 0.2, 0.2, 0.0)
                 location.block.type = Material.AIR
 

@@ -144,7 +144,7 @@ class GameSubcommand(private val sender: CommandSender, private val args: Array<
                                 it.remove()
 
                                 player.sendMessage(Colors.format(MessageType.SUCCESS + "Leaderboard location has been set."))
-                                player.spawnParticle(Particle.SMOKE_NORMAL, it.location, 100, 0.23, 0.23, 0.23, 0.0)
+                                player.spawnParticle(Particle.SMOKE, it.location, 100, 0.23, 0.23, 0.23, 0.0)
 
                                 parkour.getLeaderboard().setLeaderboardEnabled(true)
                                 parkour.getLeaderboard().setLeaderboardLocation(it.location.blockX, it.location.blockY, it.location.blockZ)
@@ -222,7 +222,7 @@ class GameSubcommand(private val sender: CommandSender, private val args: Array<
                     val location = block.location
 
                     player.spawnParticle(
-                        Particle.SMOKE_NORMAL, location.add(0.5, 0.5, 0.5),
+                        Particle.SMOKE, location.add(0.5, 0.5, 0.5),
                         100, 0.2, 0.2, 0.2, 0.0)
                     location.block.type = Material.AIR
                     presentHunt.addLocation(location)
@@ -238,7 +238,7 @@ class GameSubcommand(private val sender: CommandSender, private val args: Array<
                     val location = block.location
 
                     player.spawnParticle(
-                        Particle.SMOKE_NORMAL, location.add(0.5, 0.5, 0.5),
+                        Particle.SMOKE, location.add(0.5, 0.5, 0.5),
                         100, 0.2, 0.2, 0.2, 0.0)
                     location.block.type = Material.AIR
                     val success = presentHunt.removeLocation(location)
@@ -314,7 +314,7 @@ class GameSubcommand(private val sender: CommandSender, private val args: Array<
 
                         splashBattle.joinSignLocation = location
                         player.sendMessage(Colors.format(MessageType.SUCCESS + "Set sign as join sign."))
-                        player.spawnParticle(Particle.SMOKE_NORMAL, location.add(0.5, 0.5, 0.5),
+                        player.spawnParticle(Particle.SMOKE, location.add(0.5, 0.5, 0.5),
                             100, 0.0, 0.2, 0.0, 0.0)
                     }
 
@@ -346,7 +346,7 @@ class GameSubcommand(private val sender: CommandSender, private val args: Array<
                                 it.remove()
 
                                 player.sendMessage(Colors.format(MessageType.SUCCESS + "Leaderboard location has been set."))
-                                player.spawnParticle(Particle.SMOKE_NORMAL, it.location, 100, 0.23, 0.23, 0.23, 0.0)
+                                player.spawnParticle(Particle.SMOKE, it.location, 100, 0.23, 0.23, 0.23, 0.0)
 
                                 splashBattle.getLeaderboard().setLeaderboardEnabled(true)
                                 splashBattle.getLeaderboard().setLeaderboardLocation(it.location.blockX, it.location.blockY, it.location.blockZ)

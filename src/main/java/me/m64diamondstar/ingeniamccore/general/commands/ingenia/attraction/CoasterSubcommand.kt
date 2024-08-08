@@ -62,7 +62,7 @@ class CoasterSubcommand(private val args: Array<String>, private val player: Pla
                         coaster.setRowDespawn(args[5].toInt(), location)
                         player.sendMessage(Colors.format(MessageType.SUCCESS + "Row Despawn has been set."))
                     }
-                    player.spawnParticle(Particle.SMOKE_NORMAL, location.add(0.5, 0.5, 0.5),
+                    player.spawnParticle(Particle.SMOKE, location.add(0.5, 0.5, 0.5),
                         100, 0.2, 0.2, 0.2, 0.0)
                     location.block.type = Material.AIR
                 }

@@ -207,7 +207,7 @@ class Npc(private val id: String) {
             DialoguePlayerRegistry.addDialoguePlayer(player, this@Npc)
 
             player.lookAt(baseEntity!!.location.clone().add(0.0, 1.65, 0.0), LookAnchor.EYES)
-            player.addPotionEffect(PotionEffect(PotionEffectType.SLOW, Int.MAX_VALUE, 2, false, false, false))
+            player.addPotionEffect(PotionEffect(PotionEffectType.SLOWNESS, Int.MAX_VALUE, 2, false, false, false))
 
             baseEntity!!.xHeadRot = (LocationUtils.getPitchLookAt(baseEntity!!.location.clone().add(0.0, 1.68, 0.0), player.eyeLocation))
             baseEntity!!.yHeadRot = (LocationUtils.getYawLookAt(baseEntity!!.location.clone().add(0.0, 1.68, 0.0), player.eyeLocation))
@@ -216,7 +216,8 @@ class Npc(private val id: String) {
                 player,
                 data.getDialogue(branch, index),
                 data.getDialogueBackdrop(),
-                data.getDialogueBackdropColor()
+                data.getDialogueBackdropColor(),
+                data.getSkin()
             )
 
             task = object: BukkitRunnable(){
@@ -231,7 +232,8 @@ class Npc(private val id: String) {
                             DialogueUtils.getDialogueFormat(
                                 data.getDialogue(branch, index),
                                 data.getDialogueBackdrop(),
-                                data.getDialogueBackdropColor()
+                                data.getDialogueBackdropColor(),
+                                data.getSkin()
                             )
                         )
                     }else{
@@ -252,7 +254,8 @@ class Npc(private val id: String) {
                 progressiveTask?.cancel()
                 currentCompleted = true
                 (player as Audience).sendActionBar(DialogueUtils.getDialogueFormat(
-                    data.getDialogue(branch, index), data.getDialogueBackdrop(), data.getDialogueBackdropColor())
+                    data.getDialogue(branch, index), data.getDialogueBackdrop(), data.getDialogueBackdropColor(), data.getSkin()
+                )
                 )
                 return
             }
@@ -312,7 +315,8 @@ class Npc(private val id: String) {
                         player,
                         data.getDialogue(branch, index),
                         data.getDialogueBackdrop(),
-                        data.getDialogueBackdropColor()
+                        data.getDialogueBackdropColor(),
+                        data.getSkin()
                     )
                 }, 10L)
             }
@@ -328,7 +332,8 @@ class Npc(private val id: String) {
                         player,
                         data.getDialogue(branch, index),
                         data.getDialogueBackdrop(),
-                        data.getDialogueBackdropColor()
+                        data.getDialogueBackdropColor(),
+                        data.getSkin()
                     )
                 }, if(!normalView) 10L else 0L)
             }
@@ -361,7 +366,7 @@ class Npc(private val id: String) {
 
             player.walkSpeed = 0.2f
             Bukkit.getScheduler().runTask(IngeniaMC.plugin, Runnable {
-                player.removePotionEffect(PotionEffectType.SLOW)
+                player.removePotionEffect(PotionEffectType.SLOWNESS)
             })
 
         }

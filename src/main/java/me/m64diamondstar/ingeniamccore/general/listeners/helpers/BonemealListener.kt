@@ -29,7 +29,7 @@ class BonemealListener: Listener {
                         val loc = it.location.add(0.5, 0.5, 0.5)
 
                         val dustOptions = DustOptions(Color.fromRGB(92, 161, 92), 0.8f)
-                        loc.world?.spawnParticle(Particle.REDSTONE, loc, 50, 0.2, 0.2, 0.2, dustOptions)
+                        loc.world?.spawnParticle(Particle.DUST, loc, 50, 0.2, 0.2, 0.2, dustOptions)
                     }
                 }
             }

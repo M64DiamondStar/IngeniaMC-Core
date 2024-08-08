@@ -265,10 +265,10 @@ class JoinLeaveInventory(val player: Player, private var selected: Selected) : I
                     )
 
                     if(equipped){
-                        colorMeta.addEnchant(Enchantment.DURABILITY, 1, true)
+                        colorMeta.addEnchant(Enchantment.UNBREAKING, 1, true)
                         colorMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS)
                     }else
-                        colorMeta.removeEnchant(Enchantment.DURABILITY)
+                        colorMeta.removeEnchant(Enchantment.UNBREAKING)
 
                     colorMeta.persistentDataContainer.set(NamespacedKey(IngeniaMC.plugin, "color-id"), PersistentDataType.STRING, cosmeticPlayer.getAllMessageColors().toList()[i])
 
@@ -348,10 +348,10 @@ class JoinLeaveInventory(val player: Player, private var selected: Selected) : I
                         messageMeta.setCustomModelData(3)
 
                     if(equipped){
-                        messageMeta.addEnchant(Enchantment.DURABILITY, 1, true)
+                        messageMeta.addEnchant(Enchantment.UNBREAKING, 1, true)
                         messageMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS)
                     }else
-                        messageMeta.removeEnchant(Enchantment.DURABILITY)
+                        messageMeta.removeEnchant(Enchantment.UNBREAKING)
 
                     messageMeta.persistentDataContainer.set(NamespacedKey(IngeniaMC.plugin, "message-id"), PersistentDataType.STRING, id)
 
