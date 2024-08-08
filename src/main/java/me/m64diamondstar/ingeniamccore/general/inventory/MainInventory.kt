@@ -153,8 +153,8 @@ class MainInventory(player: IngeniaPlayer, private val version: Int): InventoryH
         rankSlots.forEach { inventory.setItem(it, transparentItem) }
 
 
-        transparentMeta.displayName(MiniMessage.miniMessage().deserialize("<#E7A300><b>Quests").decoration(TextDecoration.ITALIC, false))
-        transparentMeta.lore(listOf(MiniMessage.miniMessage().deserialize("<${MessageType.LORE}>Click to view your quests.").decoration(TextDecoration.ITALIC, false)))
+        transparentMeta.displayName(MiniMessage.miniMessage().deserialize("<#ff4d4d><b>Not out yet!").decoration(TextDecoration.ITALIC, false))
+        transparentMeta.lore(listOf(MiniMessage.miniMessage().deserialize("<${MessageType.LORE}>Coming (hopefully) soon.").decoration(TextDecoration.ITALIC, false)))
         transparentItem.itemMeta = transparentMeta
 
         questSlots.forEach { inventory.setItem(it, transparentItem) }
