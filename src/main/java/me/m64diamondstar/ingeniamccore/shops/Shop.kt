@@ -206,7 +206,7 @@ class Shop(val category: String, val name: String): DataConfiguration("shops/$ca
 
         meta.persistentDataContainer.set(NamespacedKey(IngeniaMC.plugin, "shop-item-id"), PersistentDataType.STRING, shopId)
         meta.persistentDataContainer.set(NamespacedKey(IngeniaMC.plugin, "can-buy"), PersistentDataType.BOOLEAN, hasAllRequirements)
-
+        meta.setMaxStackSize(99)
         item.itemMeta = meta
         item.amount = amount
         return item
