@@ -1,6 +1,7 @@
 package me.m64diamondstar.ingeniamccore.general.commands
 
 import io.papermc.paper.entity.TeleportFlag
+import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.protect.FeatureManager
 import me.m64diamondstar.ingeniamccore.protect.FeatureType
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
@@ -34,10 +35,10 @@ class WarpCommand: CommandExecutor {
         }
 
         val warpManager = WarpManager()
+        val ingeniaPlayer = IngeniaPlayer(sender)
 
         if(warpManager.getWarpLocation(args[0]) != null){
-            sender.teleport(warpManager.getWarpLocation(args[0])!!, TeleportFlag.EntityState.RETAIN_PASSENGERS)
-            sender.spawnParticle(Particle.PORTAL, warpManager.getWarpLocation(args[0])!!.clone().add(0.0, 1.0, 0.0), 20, 0.4, 0.8, 0.4, 0.0)
+            ingeniaPlayer.teleport(warpManager.getWarpLocation(args[0])!!)
             return true
         }else{
             sender.sendMessage(Colors.format(MessageType.ERROR + "The warp ${args[0]} does not exist."))

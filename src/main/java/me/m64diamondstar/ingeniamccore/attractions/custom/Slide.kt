@@ -32,7 +32,7 @@ class Slide(category: String, name: String): Attraction(category, name) {
                     if (attraction.getType() != AttractionType.SLIDE) return
 
                     if(attraction.getShow() != null)
-                        attraction.getShow()!!.play()
+                        attraction.getShow()!!.play(null)
 
 
                     object: BukkitRunnable(){

@@ -18,7 +18,7 @@ class WandClashGame(val arena: WandClashArena) {
     private val players = ArrayList<UUID>()
     private val playerBoards = HashMap<UUID, WandClashGameBoard>()
     private val chosenTeam = HashMap<UUID, WandClashTeam>()
-    private val playerInventories = HashMap<UUID, Array<ItemStack?>>()
+    private val playerInventories = HashMap<UUID, Array<out ItemStack?>>()
     private var countdown = -1 // -1 means not enough players to start
     private var runnable: BukkitTask? = null
 
@@ -53,7 +53,7 @@ class WandClashGame(val arena: WandClashArena) {
 
             IngeniaPlayer(player).game = null
 
-            player.inventory.contents = playerInventories[player.uniqueId]
+            player.inventory.contents = playerInventories[player.uniqueId]!!
 
             if(playerBoards.containsKey(player.uniqueId))
                 playerBoards[player.uniqueId]!!.removeBoard() // Remove the scoreboard

@@ -1,5 +1,6 @@
 package me.m64diamondstar.ingeniamccore.general.player
 
+import gg.flyte.twilight.scheduler.delay
 import io.papermc.paper.entity.TeleportFlag
 import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.attractions.utils.AttractionUtils
@@ -29,6 +30,7 @@ import me.m64diamondstar.ingeniamccore.utils.event.player.ReceiveExpEvent
 import me.m64diamondstar.ingeniamccore.utils.event.player.ReceiveGoldenStarsEvent
 import me.m64diamondstar.ingeniamccore.utils.messages.ChatIcons
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
+import me.m64diamondstar.ingeniamccore.utils.messages.Font
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageLocation
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
 import me.m64diamondstar.ingeniamccore.wands.utils.Wands.getAccessibleWands
@@ -39,11 +41,14 @@ import net.kyori.adventure.key.Key
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
+import net.kyori.adventure.text.minimessage.MiniMessage
+import net.kyori.adventure.title.Title
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
 import org.bukkit.*
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryType
+import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
@@ -52,12 +57,16 @@ import org.bukkit.scheduler.BukkitRunnable
 import org.bukkit.util.Vector
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
+import java.time.Duration
 import java.util.*
 
 class IngeniaPlayer(val player: Player) {
     private var previousInventory: Inventory? = null
     val playerConfig: PlayerConfig = PlayerConfig(player.uniqueId)
 
+    /**
+     * The player startup, this is run whenever a player joins the server.
+     */
     fun startUp() {
         game = null
         allowDamage = false
@@ -68,9 +77,7 @@ class IngeniaPlayer(val player: Player) {
             player.removePotionEffect(PotionEffectType.SLOWNESS)
         })
 
-        player.teleport(WarpUtils.getNearestLocation(player), TeleportFlag.EntityState.RETAIN_PASSENGERS)
-
-        IngeniaMC.scoreboardTeamManager.addPlayerToTeam(player)
+        player.teleportAsync(WarpUtils.getNearestLocation(player), TeleportCause.PLUGIN, TeleportFlag.EntityState.RETAIN_PASSENGERS)
 
         val tabCompletions = ArrayList<String>()
         tabCompletions.addAll(EmojiUtils.getAllEmojiKeys())
@@ -80,7 +87,6 @@ class IngeniaPlayer(val player: Player) {
         giveMenuItem()
         giveRidesItem()
         giveShopsItem()
-
 
         // Create all bossbars / HUD's
         val bossBar = BossBar.bossBar(Component.empty(), 0.0f, BossBar.Color.YELLOW, BossBar.Overlay.PROGRESS)
@@ -131,8 +137,17 @@ class IngeniaPlayer(val player: Player) {
             NametagEntity.Registry.remove(player.uniqueId)
         }
 
+        // Create new nametag entity
         val nametagEntity = NametagEntity(player.world, player.location, player)
         nametagEntity.setTitle(
+            if(playerConfig.getTitle() != null)
+            Component.text()
+                .append(MiniMessage.miniMessage().deserialize(playerConfig.getTitle()!! + "<br>"))
+                .append(componentIconPrefix)
+                .append(Component.text(" "))
+                .append(nameLightColored)
+                .build()
+            else
             Component.text()
                 .append(componentIconPrefix)
                 .append(Component.text(" "))
@@ -171,8 +186,15 @@ class IngeniaPlayer(val player: Player) {
 
     }
 
+    /**
+     * The name of the player.
+     */
     val name: String
         get() = player.name
+
+    /**
+     * The prefix of the player. This is only the icon (so it requires the resourcepack).
+     **/
     val prefix: String
         get() = if (player.isOp)
                     Colors.format("\uE045")
@@ -187,6 +209,10 @@ class IngeniaPlayer(val player: Player) {
                 else
                     Colors.format("\uE049")
 
+    /**
+     * The prefix icon as a Component.
+     * @see Component
+     */
     val componentIconPrefix: Component
         get() = if(player.isOp)
                     Component.text("\uE045")
@@ -201,6 +227,10 @@ class IngeniaPlayer(val player: Player) {
                 else
                     Component.text("\uE049")
 
+    /**
+     * The prefix of the player as a Component.
+     * @see Component
+     **/
     val componentPrefix: Component
         get() = if(player.isOp)
                     Component.text("Lead").color(TextColor.fromHexString("#c43535")).decorate(TextDecoration.BOLD)
@@ -215,6 +245,9 @@ class IngeniaPlayer(val player: Player) {
                 else
                     Component.text("Visitor").color(TextColor.fromHexString("#a1a1a1")).decorate(TextDecoration.BOLD)
 
+    /**
+     * The raw prefix of a player without any text decorations.
+     */
     val rawPrefix: String
         get() = if (player.isOp)
                     "Lead"
@@ -229,6 +262,9 @@ class IngeniaPlayer(val player: Player) {
                 else
                     "Visitor"
 
+    /**
+     * The name of the player as a Component with the color based on the rank.
+     */
     val nameLightColored: Component
         get() = if(player.isOp)
             Component.text(name).color(TextColor.fromHexString("#ffdede"))
@@ -243,6 +279,9 @@ class IngeniaPlayer(val player: Player) {
         else
             Component.text(name).color(TextColor.fromHexString("#cccccc"))
 
+    /**
+     * The area the player is currently in, formatted as "category,area".
+     */
     var currentAreaName: String?
         get() {
             val container = player.persistentDataContainer
@@ -257,38 +296,41 @@ class IngeniaPlayer(val player: Player) {
                 container.set(
                     NamespacedKey(IngeniaMC.plugin, "current-area"), PersistentDataType.STRING, "null")
             else
-                container.set(
-                    NamespacedKey(IngeniaMC.plugin, "current-area"), PersistentDataType.STRING, "$value")
+                container.set(NamespacedKey(IngeniaMC.plugin, "current-area"), PersistentDataType.STRING, value)
         }
 
-    var rideSeat: UUID?
-        get() {
-            val container = player.persistentDataContainer
-            val uuid = container.get(NamespacedKey(IngeniaMC.plugin, "ride-seat"), PersistentDataType.STRING)
-            if(uuid.equals("null", ignoreCase = true))
-                return null
-            return UUID.fromString(uuid)
+    /**
+     * Teleports the player to the given location.
+     * Retains passengers and vehicles
+     * Takes fancy teleport setting into account when teleporting.
+     */
+    fun teleport(location: Location) {
+        if(!playerConfig.getFancyTeleport())
+            player.teleport(location, TeleportFlag.EntityState.RETAIN_PASSENGERS, TeleportFlag.EntityState.RETAIN_VEHICLE)
+        else {
+            val times = Title.Times.times(Duration.ofMillis(1000), Duration.ofMillis(500), Duration.ofMillis(1000))
+            val title = Title.title(Component.text(Font.Characters.COLOR_SCREEN).color(TextColor.color(0, 0, 0)), Component.empty(), times)
+            (player as Audience).showTitle(title)
+            player.world.spawnParticle(Particle.PORTAL, location.clone().add(0.0, 1.0, 0.0), 300, 0.2, 0.8, 0.2, 1.0)
+            delay(30){
+                player.teleport(location, TeleportFlag.EntityState.RETAIN_PASSENGERS, TeleportFlag.EntityState.RETAIN_VEHICLE)
+            }
         }
-        set(uuid) {
-            val container = player.persistentDataContainer
-            if(uuid == null)
-                container.remove(
-                    NamespacedKey(IngeniaMC.plugin, "current-area"))
-            else
-                container.set(
-                    NamespacedKey(IngeniaMC.plugin, "current-area"), PersistentDataType.STRING, "$uuid")
-        }
-
-    fun sendMessage(string: String) {
-        player.sendMessage(Colors.format(string))
     }
 
+    /**
+     * Sets a new link attempt for the player, giving them a cooldown.
+     */
     fun setNewLinkAttempt(){
         val container = player.persistentDataContainer
         container.set(
             NamespacedKey(IngeniaMC.plugin, "discord-link-cooldown"), PersistentDataType.LONG, System.currentTimeMillis())
     }
 
+    /**
+     * Checks if a new linking attempt is available, or if the player is still on cooldown
+     * @return true if the player can attempt a new linking session
+     */
     fun isNewLinkingAttemptAvailable(): Boolean{
         val container = player.persistentDataContainer
         val cooldown = container.get(NamespacedKey(IngeniaMC.plugin, "discord-link-cooldown"), PersistentDataType.LONG)
@@ -298,6 +340,9 @@ class IngeniaPlayer(val player: Player) {
         return true // Difference in time is bigger than 1 day -> May attempt new linking session
     }
 
+    /**
+     * Gets the time left on the linking cooldown
+     */
     fun getLinkingCooldown(): String{
         val container = player.persistentDataContainer
         val cooldown = container.get(NamespacedKey(IngeniaMC.plugin, "discord-link-cooldown"), PersistentDataType.LONG)!! + 82800000 - System.currentTimeMillis()
@@ -306,15 +351,31 @@ class IngeniaPlayer(val player: Player) {
         return "${args[0]}h ${args[1]}m ${args[2]}s"
     }
 
+    /**
+     * Resets the linking cooldown
+     */
     fun resetLinkingCooldown(){
         val container = player.persistentDataContainer
         container.remove(NamespacedKey(IngeniaMC.plugin, "discord-link-cooldown"),)
     }
 
+    /**
+     * Send a message to the player which is formatted.
+     */
+    fun sendMessage(string: String) {
+        player.sendMessage(Colors.format(string))
+    }
+
+    /**
+     * Send a message to the player which is formatted with a specific message type.
+     */
     fun sendMessage(string: String, messageType: MessageType) {
         player.sendMessage(Colors.format(string, messageType))
     }
 
+    /**
+     * Send a message to the player which is formatted with a specific message location.
+     */
     fun sendMessage(string: String, messageLocation: MessageLocation) {
         if (messageLocation == MessageLocation.CHAT) player.sendMessage(Colors.format(string))
         if (messageLocation == MessageLocation.HOTBAR) player.spigot().sendMessage(
@@ -326,6 +387,16 @@ class IngeniaPlayer(val player: Player) {
         if (messageLocation == MessageLocation.SUBTITLE) player.sendTitle("", Colors.format(string), 10, 50, 10)
     }
 
+    /**
+     * Send a message to the player which is formatted with a specific color.
+     */
+    fun sendMessage(s: String, color: String) {
+        this.sendMessage(Colors.format(color + s))
+    }
+
+    /**
+     * Sets the player's gamemode and sends a gamemode message.
+     */
     fun setGameMode(gameMode: GameMode) {
         player.gameMode = gameMode
         this.sendMessage(
@@ -334,10 +405,9 @@ class IngeniaPlayer(val player: Player) {
         )
     }
 
-    fun sendMessage(s: String, color: String) {
-        this.sendMessage(Colors.format(color + s))
-    }
-
+    /**
+     * Checks if the player is in a game.
+     */
     val isInGame: Boolean
         get() {
             val container = player.persistentDataContainer
@@ -350,6 +420,9 @@ class IngeniaPlayer(val player: Player) {
             return true
         }
 
+    /**
+     * Gets and sets the player's current game.
+     */
     var game: PhysicalGameType?
         get(){
             val container = player.persistentDataContainer
@@ -357,7 +430,7 @@ class IngeniaPlayer(val player: Player) {
                 container.get(NamespacedKey(IngeniaMC.plugin, "current-game"), PersistentDataType.STRING) ?: return null
             return try {
                 PhysicalGameType.valueOf(name)
-            }catch (ex: IllegalArgumentException){
+            }catch (_: IllegalArgumentException){
                 null
             }
         }
@@ -368,6 +441,9 @@ class IngeniaPlayer(val player: Player) {
             )
         }
 
+    /**
+     * Checks if the player is in a game leaving state. Or sets the state.
+     */
     var isInGameLeavingState: Boolean
         get() {
             val container = player.persistentDataContainer
@@ -381,6 +457,9 @@ class IngeniaPlayer(val player: Player) {
             )
         }
 
+    /**
+     * Gets and sets the player's experience.
+     */
     var exp: Long
         get() = playerConfig.getExp()
         set(l) {
@@ -390,6 +469,9 @@ class IngeniaPlayer(val player: Player) {
             Bukkit.getPluginManager().callEvent(receiveExpEvent)
         }
 
+    /**
+     * Adds experience to the player.
+     */
     fun addExp(l: Long) {
         if (isLevelUp(exp, exp + l)) levelUp(exp, exp + l)
         val newExp = l + exp
@@ -398,6 +480,9 @@ class IngeniaPlayer(val player: Player) {
         Bukkit.getPluginManager().callEvent(receiveExpEvent)
     }
 
+    /**
+     * Gets and sets the player's balance.
+     */
     var bal: Long
         get() = playerConfig.getBal()
         set(l) {
@@ -406,16 +491,25 @@ class IngeniaPlayer(val player: Player) {
             Bukkit.getPluginManager().callEvent(receiveGoldenStarsEvent)
         }
 
+    /**
+     * Adds balance to the player.
+     */
     fun addBal(l: Long) {
         playerConfig.setBal(l + bal)
         val receiveGoldenStarsEvent = ReceiveGoldenStarsEvent(player, l)
         Bukkit.getPluginManager().callEvent(receiveGoldenStarsEvent)
     }
 
+    /**
+     * Gets the player's level.
+     */
     fun getLevel(): Int{
         return getLevel(exp)
     }
 
+    /**
+     * Updates the player's year and playtime.
+     */
     fun updateYearPlaytime(){
         val year = Calendar.getInstance().get(Calendar.YEAR)
         var reducer = 0
@@ -428,10 +522,16 @@ class IngeniaPlayer(val player: Player) {
         playerConfig.setYearPlaytime(year, player.getStatistic(Statistic.PLAY_ONE_MINUTE) - reducer)
     }
 
+    /**
+     * Updates the player's playtime.
+     */
     fun updatePlaytime(){
         playerConfig.setPlaytime(player.getStatistic(Statistic.PLAY_ONE_MINUTE))
     }
 
+    /**
+     * Checks if the player can level up, and if so, execute all the things that need to be executed.
+     */
     private fun levelUp(previousExp: Long, newExp: Long) {
         for (level in getLevelUpLevels(previousExp, newExp)) {
             for (reward in getRewards(level)) {
@@ -459,10 +559,16 @@ class IngeniaPlayer(val player: Player) {
 
     }
 
+    /**
+     * Checks if the player can level up, and if so, execute all the things that need to be executed.
+     */
     private fun levelUp(previousLevel: Int, newExp: Long) {
         levelUp(LevelUtils.getExpRequirement(previousLevel), newExp)
     }
 
+    /**
+     * Gets and sets if the player can damage.
+     */
     var allowDamage: Boolean
         get() {
             val container = player.persistentDataContainer
@@ -474,42 +580,67 @@ class IngeniaPlayer(val player: Player) {
                 NamespacedKey(IngeniaMC.plugin, "allow-damage"), PersistentDataType.STRING, "$value")
         }
 
+    /**
+     * Gets the player's wands.
+     */
     val wands: List<ItemStack>
         get() = getAccessibleWands(player)
 
+    /**
+     * Sets the currently selected wand.
+     */
     fun setWand(item: ItemStack?) {
         player.inventory.setItem(3, item)
     }
 
+    /**
+     * Gets and sets the player's join message.
+     */
     var joinMessage: String?
         get() = playerConfig.getJoinMessage()
         set(id) {
             playerConfig.setJoinMessage(id)
         }
+
+    /**
+     * Gets and sets the player's leave message.
+     */
     var leaveMessage: String?
         get() = playerConfig.getLeaveMessage()
         set(id) {
             playerConfig.setLeaveMessage(id)
         }
 
+    /**
+     * Gets and sets the player's join color.
+     */
     var joinColor: String?
         get() = playerConfig.getJoinColor()
         set(id) {
             playerConfig.setJoinColor(id)
         }
 
+    /**
+     * Gets and sets the player's leave color.
+     */
     var leaveColor: String?
         get() = playerConfig.getLeaveColor()
         set(id) {
             playerConfig.setLeaveColor(id)
         }
 
+    /**
+     * Gets and sets the player's bodywear.
+     */
     var bodyWearId: String?
         get() = playerConfig.getBodyWearId()
         set(id) {
             playerConfig.setBodyWearId(id)
         }
 
+    /**
+     * Opens an inventory and saves the previous one in a variable.
+     */
     fun openInventory(inventory: Inventory?) {
         Bukkit.getScheduler().runTask(IngeniaMC.plugin, Runnable {
             if (player.openInventory.type != InventoryType.CRAFTING) previousInventory =
@@ -518,6 +649,9 @@ class IngeniaPlayer(val player: Player) {
         })
     }
 
+    /**
+     * Give the Ingenia menu item to the player.
+     */
     fun giveMenuItem() {
         val itemStack = ItemStack(Material.NETHER_STAR)
         val itemMeta = itemStack.itemMeta!!
@@ -529,6 +663,9 @@ class IngeniaPlayer(val player: Player) {
         player.inventory.setItem(0, itemStack)
     }
 
+    /**
+     * Give the rides item to the player.
+     */
     fun giveRidesItem() {
         val itemStack = ItemStack(Material.MINECART)
         val itemMeta = itemStack.itemMeta!!
@@ -540,6 +677,9 @@ class IngeniaPlayer(val player: Player) {
         player.inventory.setItem(1, itemStack)
     }
 
+    /**
+     * Give the shops item to the player.
+     */
     fun giveShopsItem() {
         val itemStack = ItemStack(Material.ENDER_CHEST)
         val itemMeta = itemStack.itemMeta!!
@@ -551,6 +691,9 @@ class IngeniaPlayer(val player: Player) {
         player.inventory.setItem(2, itemStack)
     }
 
+    /**
+     * Set the player's previous location. (Used for /back)
+     */
     fun setPreviousLocation(location: Location) {
         val container = player.persistentDataContainer
         container.set(
@@ -564,6 +707,9 @@ class IngeniaPlayer(val player: Player) {
         )
     }
 
+    /**
+     * Gets the player's previous location. (Used for /back)
+     */
     val previousLocation: Location?
         get() {
             val container = player.persistentDataContainer
@@ -573,6 +719,9 @@ class IngeniaPlayer(val player: Player) {
             } else null
         }
 
+    /**
+     * Give a permission to the player.
+     */
     fun givePermission(permission: String) {
         Bukkit.getScheduler().runTask(IngeniaMC.plugin, Runnable {
             Bukkit.dispatchCommand(
@@ -582,6 +731,9 @@ class IngeniaPlayer(val player: Player) {
         })
     }
 
+    /**
+     * Start a parkour.
+     */
     fun startParkour(parkour: Parkour){
         player.velocity = Vector(0.0, 0.0, 0.0)
         game = PhysicalGameType.PARKOUR
@@ -652,6 +804,9 @@ class IngeniaPlayer(val player: Player) {
         }.runTaskTimer(IngeniaMC.plugin, 0L, 1L)
     }
 
+    /**
+     * Update the main boss bar.
+     */
     fun updateMainBossBar(){
         val area = if(currentAreaName != null) Area(currentAreaName!!.split("/")[0], currentAreaName!!.split("/")[1]).displayName else "Not in area"
         val areaText = ArrayList<Pair<Char, Int>>()
@@ -693,6 +848,13 @@ class IngeniaPlayer(val player: Player) {
         )
     }
 
+    /**
+     * Sets the boss bar of the player.
+     *
+     * @param bossBarIndex The index of the boss bar.
+     * @param component The component of which the title needs to be set to.
+     * @param enable If the boss bar should be enabled.
+     */
     fun setBossBar(bossBarIndex: BossBarIndex, component: Component?, enable: Boolean){
         val bossBar = BossBarPlayerRegistry.getBossBar(this.player, bossBarIndex) ?: return
         if(!enable){

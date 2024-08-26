@@ -45,8 +45,6 @@ import me.m64diamondstar.ingeniamccore.protect.moderation.ModerationRegistry
 import me.m64diamondstar.ingeniamccore.shops.listeners.ShopListener
 import me.m64diamondstar.ingeniamccore.utils.EmojiUtils
 import me.m64diamondstar.ingeniamccore.utils.LocationUtils
-import me.m64diamondstar.ingeniamccore.utils.ScoreboardTeamManager
-import me.m64diamondstar.ingeniamccore.utils.TeamHandler
 import me.m64diamondstar.ingeniamccore.utils.entities.EntityRegistry
 import me.m64diamondstar.ingeniamccore.utils.gui.GuiListener
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
@@ -56,6 +54,7 @@ import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.plugin.java.JavaPlugin
+import org.bukkit.util.Vector
 import java.util.*
 
 
@@ -67,7 +66,6 @@ class IngeniaMC : JavaPlugin() {
         lateinit var smoothCoastersAPI: SmoothCoastersAPI
         lateinit var miniMessage: MiniMessage
         lateinit var protocolManager: ProtocolManager
-        lateinit var scoreboardTeamManager: ScoreboardTeamManager
         var isDisabling: Boolean = false
         lateinit var spawn: Location
 
@@ -114,9 +112,6 @@ class IngeniaMC : JavaPlugin() {
 
         this.logger.info("Player Scoreboards loaded ✓")
 
-        Bukkit.getScheduler().scheduleSyncDelayedTask(this) { AttractionUtils.spawnAllAttractions() }
-        this.logger.info("Attractions loaded ✓")
-
         AreaUtils.getAllAreasFromData().forEach { AreaUtils.addArea(it) }
         this.logger.info("Areas loaded ✓")
 
@@ -142,12 +137,8 @@ class IngeniaMC : JavaPlugin() {
         this.logger.info("Blocked Words loaded ✓")
 
         PresentHuntUtils.loadActivePresents()
-        TeamHandler.load()
         this.logger.info("" +
                 "Small tasks ✓")
-
-        scoreboardTeamManager = ScoreboardTeamManager()
-        this.logger.info("Scoreboard teams loaded ✓")
 
         this.logger.info(" ")
         this.logger.info("Finished loading, IngeniaMC-Core is enabled!")
@@ -163,7 +154,6 @@ class IngeniaMC : JavaPlugin() {
         AttractionUtils.despawnAllAttractions()
         SignRegistry.unregisterSigns()
         PresentHuntUtils.saveActivePresents()
-        TeamHandler.unload()
         reloadConfig()
         saveConfig()
         smoothCoastersAPI.unregister()

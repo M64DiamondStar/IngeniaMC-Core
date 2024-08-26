@@ -21,7 +21,7 @@ object NpcRegistry {
 
     fun removeNpc(id: String){
         map.remove(id)
-        entityMap.remove(getNpc(id)!!.getBaseEntity()!!)
+        entityMap.remove(getNpc(id)?.getBaseEntity())
     }
 
     fun setNpcDummy(dummy: Dummy<*>, id: String){

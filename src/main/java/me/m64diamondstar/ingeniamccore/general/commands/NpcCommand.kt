@@ -151,6 +151,8 @@ class NpcCommand: TabExecutor {
                     if(sender is Player){
                         npc.getData().setLocation(sender.location)
                     }
+
+                    sender.sendMessage(Colors.format(MessageType.SUCCESS + "Npc ${args[1]} has been created."))
                 }
             }
 
@@ -163,6 +165,7 @@ class NpcCommand: TabExecutor {
 
                     val npc = NpcRegistry.getNpc(args[1]) ?: Npc(args[1])
                     npc.delete()
+                    sender.sendMessage(Colors.format(MessageType.SUCCESS + "Npc ${args[1]} has been deleted."))
                 }
             }
 
@@ -177,7 +180,6 @@ class NpcCommand: TabExecutor {
                         val npc = NpcRegistry.getNpc(args[1]) ?: Npc(args[1]).init()
                         npc.getData().setLocation(sender.location)
                         sender.sendMessage(Colors.format(MessageType.SUCCESS + "The npc location has been set."))
-                        npc.respawn()
                     }else
                         sender.sendMessage(Colors.format(MessageType.ERROR + "You must be a player to execute this command."))
                 }
@@ -192,7 +194,6 @@ class NpcCommand: TabExecutor {
 
                     val npc = NpcRegistry.getNpc(args[1]) ?: Npc(args[1]).init()
                     npc.getData().setModel(args[2])
-                    npc.respawn()
                     sender.sendMessage(Colors.format(MessageType.SUCCESS + "The npc model has been set."))
                 }
             }

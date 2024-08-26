@@ -47,6 +47,7 @@ class Npc(private val id: String) {
     fun init(): Npc {
         getData()
         spawn()
+        if(baseEntity == null) return this
         NpcRegistry.addNpc(id, this)
         startLooking()
         return this
@@ -116,7 +117,7 @@ class Npc(private val id: String) {
 
     fun spawn(){
         val data = getData()
-        if (data.getLocation() == null)
+        if (data.getLocation() == null || data.getModel() == null)
             return
 
         if (baseEntity != null)

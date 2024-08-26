@@ -85,6 +85,24 @@ class PlayerConfig(uuid: UUID) : DataConfiguration("data/player", uuid.toString(
     }
 
 
+    /**
+     * Gets the title of the player.
+     * @return the title as a string, but it's a minimessage
+     */
+    fun getTitle(): String? {
+        return getConfig().getString("Titles.Title")
+    }
+
+
+    /**
+     * Sets the title of the player.
+     */
+    fun setPlayerTitle(title: String?){
+        getConfig().set("Titles.Title", title)
+        save()
+    }
+
+
 
     /**
      * Gets the message when a player leaves.
@@ -201,6 +219,15 @@ class PlayerConfig(uuid: UUID) : DataConfiguration("data/player", uuid.toString(
     fun getShowHud(): Boolean {
         if(getConfig().get("Settings.ShowHud") == null) return true
         return getConfig().getBoolean("Settings.ShowHud")
+    }
+
+    fun setFancyTeleport(boolean: Boolean) {
+        getConfig().set("Settings.FancyTeleport", boolean)
+    }
+
+    fun getFancyTeleport(): Boolean {
+        if(getConfig().get("Settings.FancyTeleport") == null) return true
+        return getConfig().getBoolean("Settings.FancyTeleport")
     }
 
     fun setShowPlayers(playerSelector: PlayerSelectors) {

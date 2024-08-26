@@ -5,7 +5,7 @@ import me.m64diamondstar.ingeniamccore.cosmetics.inventory.BackpackInventory
 import me.m64diamondstar.ingeniamccore.cosmetics.inventory.CosmeticsInventory
 import me.m64diamondstar.ingeniamccore.general.levels.LevelUtils
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
-import me.m64diamondstar.ingeniamccore.general.player.settings.SettingsInventory
+import me.m64diamondstar.ingeniamccore.general.inventory.settings.SettingsInventory
 import me.m64diamondstar.ingeniamccore.ranks.RankPerksInventory
 import me.m64diamondstar.ingeniamccore.utils.gui.InventoryHandler
 import me.m64diamondstar.ingeniamccore.utils.messages.Font

@@ -382,7 +382,7 @@ class AttractionSubcommand(private val sender: CommandSender, private val args: 
                     return
                 }
 
-                val effectShow = EffectShow(args[5], args[6], null)
+                val effectShow = EffectShow(args[5], args[6])
                 attraction.setShow(effectShow)
                 player.sendMessage(Colors.format(MessageType.SUCCESS + "Successfully set the show of this ride to ${args[6]} from category ${args[5]}."))
             }

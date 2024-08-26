@@ -11,7 +11,7 @@ plugins {
     id "io.papermc.paperweight.userdev" version "1.7.1"
     id "xyz.jpenilla.run-paper" version "2.2.2" // Adds runServer and runMojangMappedServer tasks for testing
     id "org.jetbrains.kotlin.jvm" version "1.9.22"
-    id "io.github.goooler.shadow" version "8.1.8"
+    id "com.gradleup.shadow" version "8.3.0"
 }
 
 repositories {
@@ -73,19 +73,19 @@ dependencies {
     shadow "com.opencsv:opencsv:5.9"
     shadow "com.jeff-media:custom-block-data:2.2.2"
     shadow 'org.jsoup:jsoup:1.17.2'
-    shadow 'fr.mrmicky:fastboard:2.0.2'
+    shadow 'fr.mrmicky:fastboard:2.1.3'
     shadow 'com.github.patheloper.pathetic:pathetic-mapping:2.3'
     shadow 'gg.flyte:twilight:1.1.12'
 
     implementation "net.dv8tion:JDA:5.0.0-beta.23" // "Shadowed" via plugin libraries in the plugin.yml
     implementation 'club.minnced:jda-ktx:0.11.0-beta.20'
-    implementation 'com.github.M64DiamondStar:EffectMaster:f47e6278df'
+    implementation 'com.github.M64DiamondStar:EffectMaster:1.4.1'
 
     paperweight.paperDevBundle "1.21-R0.1-SNAPSHOT"
 }
 
 group = "me.m64diamondstar"
-version = "1.0"
+version = "1.21-R0.1-SNAPSHOT"
 description = "IngeniaMC-Core"
 java.sourceCompatibility = JavaVersion.VERSION_21
 //paperweight.reobfArtifactConfiguration = io.papermc.paperweight.userdev.ReobfArtifactConfiguration.MOJANG_PRODUCTION
@@ -131,9 +131,7 @@ tasks {
 
 shadowJar {
     // Rename the JAR file if needed
-    archiveBaseName.set("IngeniaMC-Core")
-    archiveClassifier.set('')
-    archiveVersion.set('')
+    archiveFileName.set("IngeniaMC-" + project.version + ".jar")
 
     // Include dependencies in the fat JAR
     configurations = [project.configurations.shadow]

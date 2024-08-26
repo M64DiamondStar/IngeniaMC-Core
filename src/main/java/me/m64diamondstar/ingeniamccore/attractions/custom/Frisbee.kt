@@ -184,7 +184,7 @@ class Frisbee(private val category: String, private val name: String): Attractio
         if(getSpawnLocation() == null) return
         CountdownRegistry.setCountingDown(category, name, false)
         AttractionManager.setLocked(this@Frisbee, locked = true)
-        if(getShow() != null) getShow()!!.play()
+        if(getShow() != null) getShow()!!.play(null)
 
         object : BukkitRunnable() {
             var c = 1

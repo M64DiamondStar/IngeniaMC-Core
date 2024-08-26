@@ -107,7 +107,7 @@ class SplashBattle(val name: String): LoadedConfiguration("games/splashbattle", 
             val dx = loc1.x - loc2.x
             val dy = loc1.y - loc2.y
             val dz = loc1.z - loc2.z
-            return sqrt(dx * dx + dy * dy + dz * dz)
+            return dx * dx + dy * dy + dz * dz
         }
 
         // Helper class to wrap a location with its distance from the specific location

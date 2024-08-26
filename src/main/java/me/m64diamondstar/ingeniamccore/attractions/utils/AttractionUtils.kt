@@ -2,12 +2,16 @@ package me.m64diamondstar.ingeniamccore.attractions.utils
 
 import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.attractions.Attraction
+import me.m64diamondstar.ingeniamccore.attractions.custom.Coaster
 import me.m64diamondstar.ingeniamccore.attractions.custom.FreeFall
 import me.m64diamondstar.ingeniamccore.attractions.custom.Frisbee
+import me.m64diamondstar.ingeniamccore.attractions.custom.Slide
 import org.bukkit.entity.Player
 import java.io.File
 
 object AttractionUtils {
+
+    private var areSpawnedIn = false
 
     fun getCategories(): ArrayList<File> {
         val file = File(IngeniaMC.plugin.dataFolder, "rides")
@@ -65,9 +69,25 @@ object AttractionUtils {
         return i
     }
 
+    fun startUp(){
+        if(areSpawnedIn) return
+        spawnAllAttractions()
+        areSpawnedIn = true
+
+        IngeniaMC.plugin.logger.info("First player joined after restart. Spawning all rides.")
+    }
+
     fun spawnAllAttractions(){
         for(attraction in getAllAttractions()){
             when(attraction.getType()){
+                AttractionType.COASTER -> {
+                    val coaster = Coaster(attraction.getCategory(), attraction.getName())
+                    coaster.spawn()
+                }
+                AttractionType.SLIDE -> {
+                    val slide = Slide(attraction.getCategory(), attraction.getName())
+                    slide.spawn()
+                }
                 AttractionType.FREEFALL -> {
                     val freeFall = FreeFall(attraction.getCategory(), attraction.getName())
                     freeFall.spawn()

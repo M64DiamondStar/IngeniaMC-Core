@@ -162,8 +162,7 @@ open class Attraction(private val category: String, name: String): LoadedConfigu
         return if(!this.getConfig().getBoolean("Show.Enabled")) null
         else EffectShow(
             this.getConfig().getString("Show.Category")!!,
-            this.getConfig().getString("Show.Name")!!,
-            null
+            this.getConfig().getString("Show.Name")!!
         )
     }
 

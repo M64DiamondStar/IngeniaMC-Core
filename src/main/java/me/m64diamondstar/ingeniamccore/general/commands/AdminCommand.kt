@@ -446,21 +446,23 @@ class AdminCommand: CommandExecutor {
             val ingeniaPlayer = IngeniaPlayer(sender)
             val nametagEntity = NametagEntity.Registry.get(sender.uniqueId)
             if(args.size == 1){
-                nametagEntity?.setTitle(
-                    Component.text()
-                        .append(ingeniaPlayer.componentPrefix)
-                        .append(Component.text(" ${sender.name}"))
-                        .build()
-                )
+                Component.text()
+                    .append(ingeniaPlayer.componentIconPrefix)
+                    .append(Component.text(" "))
+                    .append(ingeniaPlayer.nameLightColored)
+                    .build()
             }else{
                 nametagEntity?.setTitle(
                     Component.text()
                         .append(MiniMessage.miniMessage().deserialize(args.drop(1).joinToString(" ") + "<br>"))
-                        .append(ingeniaPlayer.componentPrefix)
-                        .append(Component.text(" ${sender.name}"))
+                        .append(ingeniaPlayer.componentIconPrefix)
+                        .append(Component.text(" "))
+                        .append(ingeniaPlayer.nameLightColored)
                         .build()
                 )
             }
+
+            ingeniaPlayer.playerConfig.setPlayerTitle(args.drop(1).joinToString(" "))
 
             sender.sendMessage(Colors.format(MessageType.SUCCESS + "Title set!"))
         }

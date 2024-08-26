@@ -140,7 +140,7 @@ class FreeFall(private val category: String, private val name: String): Attracti
     override fun dispatch() {
         CountdownRegistry.setCountingDown(category, name, false)
         AttractionManager.setLocked(this@FreeFall, locked = true)
-        if(getShow() != null) getShow()!!.play()
+        if(getShow() != null) getShow()!!.play(null)
         object : BukkitRunnable() {
             var c = 0.0
             val radius = 3.75f

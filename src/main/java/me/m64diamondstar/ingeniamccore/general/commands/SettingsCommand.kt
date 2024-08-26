@@ -1,7 +1,7 @@
 package me.m64diamondstar.ingeniamccore.general.commands
 
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
-import me.m64diamondstar.ingeniamccore.general.player.settings.SettingsInventory
+import me.m64diamondstar.ingeniamccore.general.inventory.settings.SettingsInventory
 import me.m64diamondstar.ingeniamccore.utils.messages.Messages
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor

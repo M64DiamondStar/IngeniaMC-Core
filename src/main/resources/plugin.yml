@@ -1,5 +1,5 @@
 name: IngeniaMC-Core
-version: '1.0'
+version: '${version}'
 main: me.m64diamondstar.ingeniamccore.IngeniaMC
 api-version: '1.20'
 authors: [ M64DiamondStar ]

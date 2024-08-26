@@ -1,4 +1,4 @@
-package me.m64diamondstar.ingeniamccore.general.player.settings
+package me.m64diamondstar.ingeniamccore.general.inventory.settings
 
 import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.general.bossbar.BossBarIndex
@@ -6,6 +6,7 @@ import me.m64diamondstar.ingeniamccore.general.inventory.MainInventory
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.utils.PlayerSelectors
 import me.m64diamondstar.ingeniamccore.utils.SettingButtons
+import me.m64diamondstar.ingeniamccore.utils.entities.BodyWearRegistry
 import me.m64diamondstar.ingeniamccore.utils.entities.NametagEntity
 import me.m64diamondstar.ingeniamccore.utils.gui.InventoryHandler
 import me.m64diamondstar.ingeniamccore.utils.messages.Font
@@ -30,17 +31,29 @@ class SettingsInventory(player: IngeniaPlayer): InventoryHandler(player) {
     private val row2 = intArrayOf(15, 16, 17)
     private val row3 = intArrayOf(24, 25, 26)
     private val row4 = intArrayOf(33, 34, 35)
-    // private val ROW_5 = intArrayOf(42, 43, 44)
+    private val row5 = intArrayOf(42, 43, 44)
 
     override fun setDisplayName(): Component {
         return Component.text("${Font.getGuiNegativeSpace(0)}\uEB04${Font.getGuiNegativeSpace(2)}" +
+                //ROW 1
                 (if(ingeniaPlayer.playerConfig.getShowSkinDuringDialogue()) SettingButtons.TOGGLE_1_ON.getUnicode() else SettingButtons.TOGGLE_1_OFF.getUnicode()) +
                 Font.getGuiNegativeSpace(2) +
+
+                // ROW 2
                 (if(ingeniaPlayer.playerConfig.getShowHud()) SettingButtons.TOGGLE_2_ON.getUnicode() else SettingButtons.TOGGLE_2_OFF.getUnicode()) +
                 Font.getGuiNegativeSpace(2) +
-                (SettingButtons.getFromPlayerSelector(ingeniaPlayer.playerConfig.getShowNametags(), 3).getUnicode()) +
+
+                // ROW 3
+                (if(ingeniaPlayer.playerConfig.getFancyTeleport()) SettingButtons.TOGGLE_3_ON.getUnicode() else SettingButtons.TOGGLE_3_OFF.getUnicode()) +
                 Font.getGuiNegativeSpace(2) +
-                (SettingButtons.getFromPlayerSelector(ingeniaPlayer.playerConfig.getShowPlayers(), 4).getUnicode()))
+
+                // ROW 4
+                (SettingButtons.getFromPlayerSelector(ingeniaPlayer.playerConfig.getShowNametags(), 4).getUnicode()) +
+                Font.getGuiNegativeSpace(2) +
+
+                // ROW 5
+                (SettingButtons.getFromPlayerSelector(ingeniaPlayer.playerConfig.getShowPlayers(), 5).getUnicode()))
+
             .color(TextColor.color(255,255,255))
     }
 
@@ -53,7 +66,7 @@ class SettingsInventory(player: IngeniaPlayer): InventoryHandler(player) {
     }
 
     override fun onClick(event: InventoryClickEvent) {
-        if(event.slot in row1 || event.slot in row2 || event.slot in row3 || event.slot in row4) {
+        if(event.slot in row1 || event.slot in row2 || event.slot in row3 || event.slot in row4 || event.slot in row5) {
             if (event.slot in row1) { // Show skin during dialogue
                 ingeniaPlayer.playerConfig.setShowSkinDuringDialogue(ingeniaPlayer.playerConfig.getShowSkinDuringDialogue().not())
             }
@@ -72,12 +85,16 @@ class SettingsInventory(player: IngeniaPlayer): InventoryHandler(player) {
                 }
             }
 
-            if (event.slot in row3) { // Show nametags
-                ingeniaPlayer.playerConfig.setShowNametags(ingeniaPlayer.playerConfig.getShowNametags().next())
-                updateNametags()
+            if (event.slot in row3) { // Fancy teleport
+                ingeniaPlayer.playerConfig.setFancyTeleport(ingeniaPlayer.playerConfig.getFancyTeleport().not())
             }
 
-            if (event.slot in row4) { // Show players
+            if (event.slot in row4) { // Show nametags
+                ingeniaPlayer.playerConfig.setShowNametags(ingeniaPlayer.playerConfig.getShowNametags().next())
+                updatePlayerAttachments()
+            }
+
+            if (event.slot in row5) { // Show players
                 ingeniaPlayer.playerConfig.setShowPlayers(ingeniaPlayer.playerConfig.getShowPlayers().next())
                 Bukkit.getOnlinePlayers().forEach {
                     if(it.uniqueId == ingeniaPlayer.player.uniqueId) return@forEach
@@ -95,7 +112,7 @@ class SettingsInventory(player: IngeniaPlayer): InventoryHandler(player) {
                     }
                 }
 
-                updateNametags()
+                updatePlayerAttachments()
             }
 
             val settingsInventory = SettingsInventory(ingeniaPlayer)
@@ -108,33 +125,46 @@ class SettingsInventory(player: IngeniaPlayer): InventoryHandler(player) {
         }
     }
 
-    private fun updateNametags(){
+    private fun updatePlayerAttachments(){
         Bukkit.getOnlinePlayers().forEach {
 
             val nameTag = NametagEntity.Registry.get(it.uniqueId) ?: return@forEach
+            val bodyWear = BodyWearRegistry.get(it.uniqueId)
 
             when(ingeniaPlayer.playerConfig.getShowNametags()){
                 PlayerSelectors.ALL -> {
                     if(ingeniaPlayer.playerConfig.getShowPlayers() == PlayerSelectors.STAFF && !it.hasPermission("ingenia.team") && !it.hasPermission("ingenia.team-trial") && !it.isOp) {
                         nameTag.remove(ingeniaPlayer.player)
+                        bodyWear?.remove(ingeniaPlayer.player)
                         return@forEach
                     }
                     if(ingeniaPlayer.playerConfig.getShowPlayers() == PlayerSelectors.NONE) {
                         nameTag.remove(ingeniaPlayer.player)
+                        bodyWear?.remove(ingeniaPlayer.player)
                         return@forEach
                     }
                     nameTag.spawn(ingeniaPlayer.player)
+                    bodyWear?.spawn(ingeniaPlayer.player)
                 }
                 PlayerSelectors.STAFF -> {
                     if(ingeniaPlayer.playerConfig.getShowPlayers() == PlayerSelectors.NONE) {
                         nameTag.remove(ingeniaPlayer.player)
+                        bodyWear?.remove(ingeniaPlayer.player)
                         return@forEach
                     }
-                    if(it.hasPermission("ingenia.team") || it.hasPermission("ingenia.team-trial") || it.isOp) nameTag.spawn(ingeniaPlayer.player)
-                    else nameTag.remove(ingeniaPlayer.player)
+                    if(it.hasPermission("ingenia.team") || it.hasPermission("ingenia.team-trial") || it.isOp) {
+                        nameTag.spawn(ingeniaPlayer.player)
+                        bodyWear?.spawn(ingeniaPlayer.player)
+                    }
+                    else {
+                        nameTag.remove(ingeniaPlayer.player)
+                        bodyWear?.remove(ingeniaPlayer.player)
+                    }
+
                 }
                 PlayerSelectors.NONE -> {
                     nameTag.remove(ingeniaPlayer.player)
+                    bodyWear?.remove(ingeniaPlayer.player)
                 }
             }
         }

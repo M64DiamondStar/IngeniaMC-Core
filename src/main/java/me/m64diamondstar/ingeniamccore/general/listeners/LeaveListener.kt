@@ -7,7 +7,6 @@ import me.m64diamondstar.ingeniamccore.discord.bot.DiscordBot
 import me.m64diamondstar.ingeniamccore.discord.commands.BotUtils
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.npc.utils.DialoguePlayerRegistry
-import me.m64diamondstar.ingeniamccore.utils.TeamHandler
 import me.m64diamondstar.ingeniamccore.utils.entities.BodyWearRegistry
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -35,9 +34,6 @@ class LeaveListener : Listener {
         DialoguePlayerRegistry.getDialoguePlayer(bukkitPlayer)?.getDialogue(bukkitPlayer)?.end()
 
         e.quitMessage = MessageBuilder.LeaveMessageBuilder(player.name, player.leaveColor, player.leaveMessage).build()
-
-        if(TeamHandler.containsPlayer(bukkitPlayer))
-            TeamHandler.removePlayer(bukkitPlayer)
 
         if(BotUtils.ChatUtils.chatChannel != null){
             val joinLeaveMessage = JoinLeaveMessage(MessageType.LEAVE)

@@ -49,8 +49,8 @@ class ShopInventory(player: IngeniaPlayer): InventoryHandler(player) {
                 val warpManager = WarpManager()
                 val id = WarpUtils.getIDFromItem(event.currentItem!!)!!
                 val location = warpManager.getWarpLocation(id) ?: return
-                getPlayer().player.teleport(location, TeleportFlag.EntityState.RETAIN_PASSENGERS)
-                getPlayer().player.spawnParticle(Particle.PORTAL, location.clone().add(0.0, 1.0, 0.0), 20, 0.4, 0.8, 0.4, 0.0)
+                getPlayer().teleport(location)
+                getPlayer().player.closeInventory()
             }
         }
 

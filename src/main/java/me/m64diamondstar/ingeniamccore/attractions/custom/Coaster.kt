@@ -192,7 +192,7 @@ class Coaster(category: String, name: String): Attraction(category, name) {
     }
 
     fun dispatch(){
-        if(getShow() != null) getShow()!!.play()
+        if(getShow() != null) getShow()!!.play(null)
 
         if(getRowStation(1) == null) {
             IngeniaMC.plugin.logger
