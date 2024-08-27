@@ -1,15 +1,14 @@
 package me.m64diamondstar.ingeniamccore.general.commands
 
 import me.m64diamondstar.ingeniamccore.IngeniaMC
+import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.protect.FeatureManager
 import me.m64diamondstar.ingeniamccore.protect.FeatureType
 import me.m64diamondstar.ingeniamccore.utils.messages.Messages
-import org.bukkit.Particle
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
-import org.bukkit.event.player.PlayerTeleportEvent
 
 class SpawnCommand: CommandExecutor {
 
@@ -25,9 +24,8 @@ class SpawnCommand: CommandExecutor {
             sender.sendMessage(Messages.featureDisabled())
             return false
         }
-
-        sender.teleport(IngeniaMC.spawn, PlayerTeleportEvent.TeleportCause.PLUGIN)
-        sender.spawnParticle(Particle.PORTAL, sender.location.clone().add(0.0, 1.0, 0.0), 20, 0.4, 0.8, 0.4, 0.0)
+        val ingeniaPlayer = IngeniaPlayer(sender)
+        ingeniaPlayer.teleport(IngeniaMC.spawn)
 
         return false
     }
