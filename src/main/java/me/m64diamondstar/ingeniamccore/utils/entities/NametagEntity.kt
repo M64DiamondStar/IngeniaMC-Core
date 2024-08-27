@@ -2,8 +2,6 @@ package me.m64diamondstar.ingeniamccore.utils.entities
 
 import gg.flyte.twilight.event.TwilightListener
 import gg.flyte.twilight.event.event
-import gg.flyte.twilight.scheduler.delay
-import gg.flyte.twilight.scheduler.sync
 import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.npc.utils.DialoguePlayerRegistry
@@ -25,9 +23,7 @@ import org.bukkit.World
 import org.bukkit.craftbukkit.CraftWorld
 import org.bukkit.craftbukkit.entity.CraftPlayer
 import org.bukkit.entity.Player
-import org.bukkit.event.entity.EntityDismountEvent
 import org.bukkit.event.player.PlayerJoinEvent
-import org.bukkit.event.player.PlayerMoveEvent
 import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.scheduler.BukkitRunnable
 import java.util.UUID
@@ -57,24 +53,13 @@ class NametagEntity(private val world: World, loc: Location, private val player:
 
     }
 
+
     private var isOpaque = false
     private var isRiding = false
     private var title: net.kyori.adventure.text.Component = net.kyori.adventure.text.Component.text(player.name)
-    private var spawned = false
 
-    private val dismountListener: TwilightListener = event<EntityDismountEvent>{
-        if(this.entity != player) return@event
-        delay(1){
-            spawn()
-            isRiding = true
-        }
-    }
-
-    private val moveListener: TwilightListener = event<PlayerMoveEvent>{
-            if(!spawned){
-                spawn(this.player)
-                spawned = true
-            }
+    private val listener: TwilightListener = event<PlayerJoinEvent>{
+        spawn(this.player)
     }
 
     private val leaveListener: TwilightListener = event<PlayerQuitEvent>{
@@ -86,12 +71,12 @@ class NametagEntity(private val world: World, loc: Location, private val player:
 
     private val runnable = object: BukkitRunnable(){
         override fun run(){
-            if((DialoguePlayerRegistry.contains(player) || player.gameMode == GameMode.SPECTATOR) || player.isInsideVehicle && isRiding){
+            if((DialoguePlayerRegistry.contains(player) || player.gameMode == GameMode.SPECTATOR) && isRiding){
                 remove()
                 isRiding = false
             }
 
-            else if(!DialoguePlayerRegistry.contains(player) && player.gameMode != GameMode.SPECTATOR && !player.isInsideVehicle &&  !isRiding){
+            else if(!DialoguePlayerRegistry.contains(player) && player.gameMode != GameMode.SPECTATOR && !isRiding){
                 spawn()
                 setOpaque(false)
                 isRiding = true
@@ -121,26 +106,26 @@ class NametagEntity(private val world: World, loc: Location, private val player:
         (this.bukkitEntity as org.bukkit.entity.TextDisplay).transformation = transformation
         (this.bukkitEntity as org.bukkit.entity.TextDisplay).backgroundColor = Color.fromARGB(0, 0, 0, 0)
         (this.bukkitEntity as org.bukkit.entity.TextDisplay).isShadowed = true
+
+        player.addPassenger(this.bukkitEntity)
         isRiding = true
     }
 
     fun spawn(forPlayer: Player){
-            setPos(player.location.x, player.location.y, player.location.z)
-            moveTo(player.location.x, player.location.y, player.location.z, player.location.yaw, player.location.pitch)
-            startRiding((player as CraftPlayer).handle, true)
-            val entityData = getEntityData().nonDefaultValues
-            val serverEntity = ServerEntity((world as CraftWorld).handle.level, this@NametagEntity, 0, false, {}, emptySet())
-            (forPlayer as CraftPlayer).handle.connection.send(ClientboundAddEntityPacket(this@NametagEntity, serverEntity))
-            forPlayer.handle.connection.send(ClientboundSetPassengersPacket(player.handle))
-            if (entityData != null) {
-                if(entityData.isNotEmpty())
-                    forPlayer.handle.connection.send(ClientboundSetEntityDataPacket(id /*ID*/, entityData /*Data Watcher*/))
-            }
-
-            sync { stopRiding() }
+        this.setPos(player.location.x, player.location.y, player.location.z)
+        this.moveTo(player.location.x, player.location.y, player.location.z, player.location.yaw, player.location.pitch)
+        val serverEntity = ServerEntity((world as CraftWorld).handle.level, this, 0, false, {}, emptySet())
+        val entityData = this.getEntityData().nonDefaultValues
+        (forPlayer as CraftPlayer).handle.connection.send(ClientboundAddEntityPacket(this, serverEntity))
+        forPlayer.handle.connection.send(ClientboundSetPassengersPacket((player as CraftPlayer).handle))
+        if (entityData != null) {
+            if(entityData.isNotEmpty())
+                forPlayer.handle.connection.send(ClientboundSetEntityDataPacket(this.id /*ID*/, entityData /*Data Watcher*/))
+        }
     }
 
     fun spawn(){
+        player.addPassenger(this.bukkitEntity)
         Bukkit.getOnlinePlayers().forEach {
             when(IngeniaPlayer(it).playerConfig.getShowNametags()){
                 PlayerSelectors.ALL -> {
@@ -193,9 +178,8 @@ class NametagEntity(private val world: World, loc: Location, private val player:
     }
 
     fun unregister(){
-        dismountListener.unregister()
-        moveListener.unregister()
         leaveListener.unregister()
+        listener.unregister()
         runnable.cancel()
     }
 
