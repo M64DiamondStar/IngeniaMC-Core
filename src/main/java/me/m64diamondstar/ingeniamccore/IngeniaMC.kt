@@ -72,7 +72,7 @@ class IngeniaMC : JavaPlugin() {
     }
 
     override fun onLoad() {
-        CSVUtils.load()
+        //CSVUtils.load()
     }
 
     override fun onEnable() {
