@@ -6,7 +6,6 @@ import gg.flyte.twilight.Twilight
 import gg.flyte.twilight.twilight
 import me.m56738.smoothcoasters.api.SmoothCoastersAPI
 import me.m64diamondstar.ingeniamccore.attractions.listeners.PlayerInteractEntityListener
-import me.m64diamondstar.ingeniamccore.attractions.tccoasters.CSVUtils
 import me.m64diamondstar.ingeniamccore.attractions.traincarts.SignRegistry
 import me.m64diamondstar.ingeniamccore.attractions.utils.AttractionUtils
 import me.m64diamondstar.ingeniamccore.cosmetics.data.JoinLeaveColor
@@ -54,7 +53,6 @@ import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.plugin.java.JavaPlugin
-import org.bukkit.util.Vector
 import java.util.*
 
 
@@ -214,6 +212,12 @@ class IngeniaMC : JavaPlugin() {
 
         Objects.requireNonNull(getCommand("link"))?.setExecutor(LinkCommand())
         Objects.requireNonNull(getCommand("unlink"))?.setExecutor(LinkCommand())
+        Objects.requireNonNull(getCommand("website"))?.setExecutor(MediaCommands())
+        Objects.requireNonNull(getCommand("store"))?.setExecutor(MediaCommands())
+        Objects.requireNonNull(getCommand("discord"))?.setExecutor(MediaCommands())
+        Objects.requireNonNull(getCommand("tiktok"))?.setExecutor(MediaCommands())
+        Objects.requireNonNull(getCommand("youtube"))?.setExecutor(MediaCommands())
+        Objects.requireNonNull(getCommand("instagram"))?.setExecutor(MediaCommands())
 
         Objects.requireNonNull(getCommand("dispatch"))?.setExecutor(AttractionCommands())
         Objects.requireNonNull(getCommand("operate"))?.setExecutor(AttractionCommands())

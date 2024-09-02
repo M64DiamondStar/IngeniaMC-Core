@@ -125,4 +125,22 @@ commands:
     description: Open the settings menu.
   trash:
     description: Open a virtual trash can.
+  website:
+    description: Sends you a link to the website.
+    aliases:
+      - web
+  store:
+    description: Sends you a link to the store.
+    aliases:
+      - shop
+  discord:
+    description: Sends you a link to the discord server.
+  youtube:
+    description: Sends you a link to the youtube channel.
+  tiktok:
+    description: Sends you a link to the tiktok channel.
+  instagram:
+    description: Sends you a link to the instagram channel.
+    aliases:
+      - insta
 
