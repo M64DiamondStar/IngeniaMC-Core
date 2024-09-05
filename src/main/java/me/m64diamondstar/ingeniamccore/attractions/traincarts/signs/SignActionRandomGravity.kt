@@ -20,7 +20,7 @@ class SignActionRandomGravity: SignAction() {
             if (!info.hasGroup()) return
 
             val times = if(Random.nextBoolean()) 1 else -1
-            val distance = Random.nextDouble(0.0, info.getLine(3).toDouble()) * times
+            val distance = Random.nextDouble(0.0, info.getLine(2).toDouble()) * times
             val range = Random.nextDouble(0.0, info.getLine(3).toDouble()) * times
             info.group.properties.gravity += distance + range
         }
