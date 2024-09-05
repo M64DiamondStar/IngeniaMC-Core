@@ -94,7 +94,7 @@ class TicketCommand: ListenerAdapter() {
                     event.deferReply(true).queue()
 
                     if (event.guild?.getCategoriesByName("tickets", true) == null ||
-                        event.guild?.getCategoriesByName("tickets", true)!!.size == 0
+                        event.guild?.getCategoriesByName("tickets", true)!!.isEmpty()
                     ) { // Create category if it doesn't exist
                         event.guild?.createCategory("tickets")?.complete()
                     }
@@ -157,17 +157,22 @@ class TicketCommand: ListenerAdapter() {
                 val embedBuilder = EmbedBuilder()
 
                 embedBuilder.setTitle("${event.user.name}'s Team Apply")
-                embedBuilder.setDescription("Please answer the questions below.\n\n" +
-                        "1) What is your Minecraft Username?\n" +
-                        "2) What should we call you?\n" +
-                        "3) How old are you?\n" +
-                        "4) How do you want to help us? (building, modelling, coding, ...)\n" +
-                        "5) Do you already have experience? Proof will also help!\n" +
-                        "6) What is your motivation to work with us?\n" +
+                embedBuilder.setDescription("Thank you for your interest in joining the IngeniaMC team! Please answer the questions below to help us get to know you better.\n\n" +
+                        "1. What is your Minecraft Username?\n" +
+                        "2. What name or nickname should we call you?\n" +
+                        "3. How old are you?\n" +
+                        "4. Which time zone are you located in?\n" +
+                        "5. How do you want to contribute to the team? (Building, modeling, coding, etc.)\n" +
+                        "6. How many years of experience do you have in this field? Feel free to share any proof or examples in picture, video or any other format!\n" +
+                        "7. What motivates you to work with us at IngeniaMC?\n" +
+                        "8. How much time can you dedicate to the team each week?\n" +
+                        "9. What sets you apart from other people in this field?\n" +
+                        "10. What are your strong and weak points?\n" +
+                        "11. Is there anything else you’d like us to know about you?\n" +
                         "\n" +
-                        "Thank you very much for applying, we'll get in contact as soon as possible!" +
-                        "\n" +
-                        "By applying you agree to our [Terms and Conditions](https://ingeniamc.net/team-tac).")
+                        "Thank you very much for applying! We'll review your application and get in contact with you as soon as possible.\n" +
+                        "**By applying, you agree to our [Terms and Conditions](https://ingeniamc.net/team-tac)**.")
+
                 embedBuilder.setThumbnail("https://ingeniamc.net/images/bricks.png")
                 embedBuilder.setColor(Color.decode("#ffb833"))
 
@@ -186,9 +191,9 @@ class TicketCommand: ListenerAdapter() {
 
                 embedBuilder.setTitle("${event.user.name}'s Purchase Error")
                 embedBuilder.setDescription("Please answer the questions below.\n\n" +
-                        "1) What is your Minecraft Username?\n" +
-                        "2) What is your order ID?\n" +
-                        "3) What went wrong? (Ex. package not received)\n" +
+                        "1. What is your Minecraft Username?\n" +
+                        "2. What is your order ID?\n" +
+                        "3. What went wrong? (e.g. package not received)\n" +
                         "\n" +
                         "Thank you very much, we'll get in contact as soon as possible!")
                 embedBuilder.setThumbnail("https://ingeniamc.net/images/ender_chest.png")
@@ -210,15 +215,16 @@ class TicketCommand: ListenerAdapter() {
                 embedBuilder.setTitle("${event.user.name}'s Player Report")
                 embedBuilder.setDescription("Please answer the questions below.\n\n" +
                         "**For Discord:**\n" +
-                        "1) What is the full username? (ex. abc#1234)\n" +
-                        "2) Which rule did this person violate?\n" +
-                        "3) Do you have proof? (Picture or video)\n" +
+                        "1. What is the name? (e.g. @ingeniamc)\n" +
+                        "2. Which rule did this person violate?\n" +
+                        "3. Do you have proof? (Picture or video)\n" +
                         "\n" +
                         "**For Minecraft:**\n" +
-                        "1) What is the Minecraft Username of the rule breaker?\n" +
-                        "2) Which rule did this person break?\n" +
-                        "3) Do you have proof? (Picture or video)\n" +
+                        "1. What is the Minecraft Username of the rule breaker?\n" +
+                        "2. Which rule did this person break?\n" +
+                        "3. Do you have proof? (Picture or video)\n" +
                         "\n" +
+                        "[View our rules](https://ingeniamc.net/rules).\n" +
                         "**Please ping us if it is urgent!**\n" +
                         "Thank you very much, we'll get in contact as soon as possible!")
                 embedBuilder.setThumbnail("https://ingeniamc.net/images/anvil.png")
@@ -239,9 +245,9 @@ class TicketCommand: ListenerAdapter() {
 
                 embedBuilder.setTitle("${event.user.name}'s Bug Report")
                 embedBuilder.setDescription("Please answer the questions below.\n\n" +
-                        "1) Is it a bug in the Minecraft or Discord server?\n" +
-                        "2) Please explain the bug.\n" +
-                        "3) Do you have a picture or video demonstrating it?\n" +
+                        "1. Is it a bug in the Minecraft or Discord server?\n" +
+                        "2. Please explain the bug.\n" +
+                        "3. Do you have a picture or video demonstrating it?\n" +
                         "\n" +
                         "**Please ping us if it is urgent!**\n" +
                         "Thank you very much, we'll get in contact as soon as possible!")
