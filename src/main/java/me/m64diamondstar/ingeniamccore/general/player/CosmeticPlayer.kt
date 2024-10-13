@@ -3,9 +3,9 @@ package me.m64diamondstar.ingeniamccore.general.player
 import me.m64diamondstar.ingeniamccore.cosmetics.data.CosmeticItems
 import me.m64diamondstar.ingeniamccore.cosmetics.utils.CosmeticType
 import me.m64diamondstar.ingeniamccore.cosmetics.utils.MessageType
+import me.m64diamondstar.ingeniamccore.entity.body.BodyWearEntity
 import me.m64diamondstar.ingeniamccore.general.player.data.CosmeticPlayerConfig
-import me.m64diamondstar.ingeniamccore.utils.entities.BodyWearRegistry
-import org.bukkit.Bukkit
+import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import java.util.*
@@ -223,7 +223,8 @@ class CosmeticPlayer(private val player: Player) {
                 }
 
                 CosmeticType.BODY_WEAR -> {
-                    BodyWearRegistry.get(cosmeticPlayer.player.uniqueId)?.setItem(CosmeticItems(cosmeticType).getItem(id))
+                    BodyWearEntity.BodyWearManager.setItem(cosmeticPlayer.player, CosmeticItems(cosmeticType).getItem(id) ?: ItemStack(Material.AIR))
+                    //BodyWearRegistry.get(cosmeticPlayer.player.uniqueId)?.setItem(CosmeticItems(cosmeticType).getItem(id))
                     val ingeniaPlayer = IngeniaPlayer(cosmeticPlayer.player)
                     ingeniaPlayer.bodyWearId = id
                 }
@@ -257,7 +258,8 @@ class CosmeticPlayer(private val player: Player) {
                 }
 
                 CosmeticType.BODY_WEAR -> {
-                    BodyWearRegistry.get(cosmeticPlayer.player.uniqueId)?.setItem(null)
+                    BodyWearEntity.BodyWearManager.setItem(cosmeticPlayer.player, ItemStack(Material.AIR))
+                    //BodyWearRegistry.get(cosmeticPlayer.player.uniqueId)?.setItem(null)
                     val ingeniaPlayer = IngeniaPlayer(cosmeticPlayer.player)
                     ingeniaPlayer.bodyWearId = null
                 }
@@ -311,20 +313,25 @@ class CosmeticPlayer(private val player: Player) {
                 CosmeticType.HAT -> {
                     cosmeticPlayer.player.equipment.helmet = null
                 }
+
                 CosmeticType.SHIRT -> {
                     cosmeticPlayer.player.equipment.chestplate = null
                 }
+
                 CosmeticType.PANTS -> {
                     cosmeticPlayer.player.equipment.leggings = null
                 }
+
                 CosmeticType.SHOES -> {
                     cosmeticPlayer.player.equipment.boots = null
                 }
+
                 CosmeticType.BALLOON -> {
 
                 }
+
                 CosmeticType.BODY_WEAR -> {
-                    BodyWearRegistry.get(cosmeticPlayer.player.uniqueId)?.remove()
+
                 }
             }
         }
@@ -347,7 +354,7 @@ class CosmeticPlayer(private val player: Player) {
 
                 }
                 CosmeticType.BODY_WEAR -> {
-                    BodyWearRegistry.get(cosmeticPlayer.player.uniqueId)?.spawn()
+
                 }
             }
         }
