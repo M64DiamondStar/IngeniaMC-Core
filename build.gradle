@@ -53,6 +53,9 @@ repositories {
     maven {
         url = uri("https://repo.flyte.gg/releases")
     }
+    maven {
+        url = uri("https://maven.evokegames.gg/snapshots")
+    }
 }
 
 dependencies {
@@ -76,6 +79,10 @@ dependencies {
     shadow 'fr.mrmicky:fastboard:2.1.3'
     shadow 'com.github.patheloper.pathetic:pathetic-mapping:2.3'
     shadow 'gg.flyte:twilight:1.1.12'
+
+    // Dependencies which need to be updated frequently
+    shadow 'com.github.retrooper:packetevents-spigot:2.5.0'
+    shadow 'me.tofaa.entitylib:spigot:2.4.9-SNAPSHOT'
 
     implementation "net.dv8tion:JDA:5.0.0-beta.23" // "Shadowed" via plugin libraries in the plugin.yml
     implementation 'club.minnced:jda-ktx:0.11.0-beta.20'
@@ -142,6 +149,8 @@ shadowJar {
     relocate 'fr.mrmicky.fastboard', 'me.m64diamondstar.fastboard'
     relocate 'com.github.patheloper.pathetic.pathetic-mapping', 'me.m64diamondstar.ingeniamccore.libs.pathetic'
     relocate 'gg.flyte.twilight', 'me.m64diamondstar.ingeniamccore.libs.twiligt'
+    relocate 'com.github.retrooper.packetevents', 'me.m64diamondstar.ingeniamccore.libs.packetevents'
+    relocate 'me.tofaa.entitylib', 'me.m64diamondstar.ingeniamccore.libs.entitylib'
 }
 
 idea {
