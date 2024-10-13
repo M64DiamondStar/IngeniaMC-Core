@@ -4,7 +4,6 @@ import gg.flyte.twilight.scheduler.delay
 import io.papermc.paper.entity.TeleportFlag
 import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.attractions.utils.AttractionUtils
-import me.m64diamondstar.ingeniamccore.cosmetics.utils.CosmeticType
 import me.m64diamondstar.ingeniamccore.games.PhysicalGameType
 import me.m64diamondstar.ingeniamccore.games.parkour.Parkour
 import me.m64diamondstar.ingeniamccore.games.parkour.ParkourUtils
@@ -21,11 +20,7 @@ import me.m64diamondstar.ingeniamccore.general.player.data.PlayerConfig
 import me.m64diamondstar.ingeniamccore.npc.utils.CharWidth
 import me.m64diamondstar.ingeniamccore.utils.EmojiUtils
 import me.m64diamondstar.ingeniamccore.utils.LocationUtils.getLocationFromString
-import me.m64diamondstar.ingeniamccore.utils.PlayerSelectors
 import me.m64diamondstar.ingeniamccore.utils.Times
-import me.m64diamondstar.ingeniamccore.utils.entities.BodyWearEntity
-import me.m64diamondstar.ingeniamccore.utils.entities.BodyWearRegistry
-import me.m64diamondstar.ingeniamccore.utils.entities.NametagEntity
 import me.m64diamondstar.ingeniamccore.utils.event.player.ReceiveExpEvent
 import me.m64diamondstar.ingeniamccore.utils.event.player.ReceiveGoldenStarsEvent
 import me.m64diamondstar.ingeniamccore.utils.messages.ChatIcons
@@ -41,7 +36,6 @@ import net.kyori.adventure.key.Key
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
-import net.kyori.adventure.text.minimessage.MiniMessage
 import net.kyori.adventure.title.Title
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
@@ -68,6 +62,7 @@ class IngeniaPlayer(val player: Player) {
      * The player startup, this is run whenever a player joins the server.
      */
     fun startUp() {
+        // Fix default player properties
         game = null
         allowDamage = false
         player.setGravity(true)
@@ -77,13 +72,16 @@ class IngeniaPlayer(val player: Player) {
             player.removePotionEffect(PotionEffectType.SLOWNESS)
         })
 
+        // Teleport player to the nearest warp
         player.teleportAsync(WarpUtils.getNearestLocation(player), TeleportCause.PLUGIN, TeleportFlag.EntityState.RETAIN_PASSENGERS)
 
+        // Add emoji tab completions
         val tabCompletions = ArrayList<String>()
         tabCompletions.addAll(EmojiUtils.getAllEmojiKeys())
         tabCompletions.addAll(Bukkit.getOnlinePlayers().map { it.name })
         player.setCustomChatCompletions(tabCompletions)
 
+        // Give menu items
         giveMenuItem()
         giveRidesItem()
         giveShopsItem()
@@ -105,6 +103,7 @@ class IngeniaPlayer(val player: Player) {
             (player as Audience).showBossBar(invisibleBossBar2)
         }
 
+        // Fix player level
         val currentLevel = getLevel()
         val necessaryExp = LevelUtils.getExpRequirement(currentLevel + 1) - LevelUtils.getExpRequirement(currentLevel)
         val currentExp = exp - LevelUtils.getExpRequirement(currentLevel)
@@ -112,6 +111,10 @@ class IngeniaPlayer(val player: Player) {
         val visualExp = currentExp.toFloat() / necessaryExp
         player.exp = if(0 < visualExp && visualExp < 1) currentExp.toFloat() / necessaryExp else 0.01f
 
+        if (isLevelUp(playerConfig.getLevel(), playerConfig.getExp()))
+            levelUp(playerConfig.getLevel(), playerConfig.getExp())
+
+        // Fix join and leave messages when null
         if(joinColor == null)
             joinColor = "default"
         if(leaveColor == null)
@@ -121,69 +124,14 @@ class IngeniaPlayer(val player: Player) {
         if(leaveMessage == null)
             leaveMessage = "default"
 
+        // Spawn all top signs
         AttractionUtils.getAllAttractions().forEach { it.spawnRidecountSign(player) }
         SplashBattleUtils.getAllSplashBattles().forEach { it.getLeaderboard().spawnSoaksSign(player) }
         ParkourUtils.getAllParkours().forEach { it.getLeaderboard().spawnSign(player) }
 
-        if (isLevelUp(playerConfig.getLevel(), playerConfig.getExp()))
-            levelUp(playerConfig.getLevel(), playerConfig.getExp())
-
+        // Put player into right game mode
         if(!(player.hasPermission("ingenia.team") || player.hasPermission("ingenia.team-trial")) && !player.isOp)
             player.gameMode = GameMode.ADVENTURE
-
-        // Check title
-        if(NametagEntity.Registry.contains(player.uniqueId)){
-            NametagEntity.Registry.get(player.uniqueId)!!.remove()
-            NametagEntity.Registry.remove(player.uniqueId)
-        }
-
-        // Create new nametag entity
-        val nametagEntity = NametagEntity(player.world, player.location, player)
-        nametagEntity.setTitle(
-            if(playerConfig.getTitle() != null)
-            Component.text()
-                .append(MiniMessage.miniMessage().deserialize(playerConfig.getTitle()!! + "<br>"))
-                .append(componentIconPrefix)
-                .append(Component.text(" "))
-                .append(nameLightColored)
-                .build()
-            else
-            Component.text()
-                .append(componentIconPrefix)
-                .append(Component.text(" "))
-                .append(nameLightColored)
-                .build()
-        )
-        NametagEntity.Registry.add(player.uniqueId, nametagEntity)
-
-        // Check body wear
-        if(BodyWearRegistry.contains(player.uniqueId)){
-            BodyWearRegistry.get(player.uniqueId)!!.remove()
-            BodyWearRegistry.remove(player.uniqueId)
-        }
-
-        val bodyWearEntity = BodyWearEntity(player.world, player.location, player)
-        val cosmeticPlayer = CosmeticPlayer(player)
-        BodyWearRegistry.add(player.uniqueId, bodyWearEntity)
-        if(this.bodyWearId != null){
-            cosmeticPlayer.getEquipment().equipCosmetic(CosmeticType.BODY_WEAR, this.bodyWearId!!)
-        }
-
-        // Check other online player's settings
-        Bukkit.getOnlinePlayers().forEach {
-            val otherIngeniaPlayer = IngeniaPlayer(it)
-            if((otherIngeniaPlayer.playerConfig.getShowPlayers() == PlayerSelectors.STAFF && !it.hasPermission("ingenia.team") && !it.hasPermission("ingenia.team-trial") && !it.isOp)
-                || otherIngeniaPlayer.playerConfig.getShowPlayers() == PlayerSelectors.NONE) {
-                it.hidePlayer(IngeniaMC.plugin, player)
-                return@forEach
-            }
-            else if((otherIngeniaPlayer.playerConfig.getShowNametags() == PlayerSelectors.STAFF && !it.hasPermission("ingenia.team") && !it.hasPermission("ingenia.team-trial") && !it.isOp)
-                || otherIngeniaPlayer.playerConfig.getShowNametags() == PlayerSelectors.NONE) {
-                return@forEach
-            }
-            nametagEntity.spawn(it)
-        }
-
     }
 
     /**
@@ -655,7 +603,7 @@ class IngeniaPlayer(val player: Player) {
     fun giveMenuItem() {
         val itemStack = ItemStack(Material.NETHER_STAR)
         val itemMeta = itemStack.itemMeta!!
-        itemMeta.setDisplayName(Colors.format("#f4b734&lIngeniaMC Menu"))
+        itemMeta.setDisplayName(Colors.format("#f4b734&lɪɴɢᴇɴɪᴀᴍᴄ ᴍᴇɴᴜ"))
         itemMeta.lore =
             listOf(Colors.format(MessageType.LORE + "Click to open the IngeniaMC menu."))
         itemMeta.persistentDataContainer.set(NamespacedKey(IngeniaMC.plugin, "menu-item"), PersistentDataType.STRING, "main")
@@ -669,7 +617,7 @@ class IngeniaPlayer(val player: Player) {
     fun giveRidesItem() {
         val itemStack = ItemStack(Material.MINECART)
         val itemMeta = itemStack.itemMeta!!
-        itemMeta.setDisplayName(Colors.format("#f4b734&lRides"))
+        itemMeta.setDisplayName(Colors.format("#f4b734&lʀɪᴅᴇѕ"))
         itemMeta.lore =
             listOf(Colors.format(MessageType.LORE + "Click to open the rides menu."))
         itemMeta.persistentDataContainer.set(NamespacedKey(IngeniaMC.plugin, "menu-item"), PersistentDataType.STRING, "rides")
@@ -683,7 +631,7 @@ class IngeniaPlayer(val player: Player) {
     fun giveShopsItem() {
         val itemStack = ItemStack(Material.ENDER_CHEST)
         val itemMeta = itemStack.itemMeta!!
-        itemMeta.setDisplayName(Colors.format("#f4b734&lShops"))
+        itemMeta.setDisplayName(Colors.format("#f4b734&lѕʜᴏᴘѕ"))
         itemMeta.lore =
             listOf(Colors.format(MessageType.LORE + "Click to open the shops menu."))
         itemMeta.persistentDataContainer.set(NamespacedKey(IngeniaMC.plugin, "menu-item"), PersistentDataType.STRING, "shops")

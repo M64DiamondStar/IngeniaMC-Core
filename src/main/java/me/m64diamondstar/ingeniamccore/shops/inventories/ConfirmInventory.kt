@@ -68,7 +68,7 @@ class ConfirmInventory(player: Player, private val category: String, private val
             val itemType = shop.getShopItemType(shopItemID)
 
             if(itemID == null || itemType == null){
-                val mainTitle = MiniMessage.miniMessage().deserialize("<${MessageType.ERROR}>Purchase Failed")
+                val mainTitle = MiniMessage.miniMessage().deserialize("<${MessageType.ERROR}>ᴘᴜʀᴄʜᴀѕᴇ ꜰᴀɪʟᴇᴅ")
                 val subTitle = MiniMessage.miniMessage().deserialize("<${MessageType.LIGHT_ERROR}>Internal error")
 
                 (player as Audience).showTitle(Title.title(mainTitle, subTitle))
@@ -76,7 +76,7 @@ class ConfirmInventory(player: Player, private val category: String, private val
             }
 
             if(!itemType.allowMultiple() && itemType.alreadyBought(player, itemID)){
-                val mainTitle = MiniMessage.miniMessage().deserialize("<${MessageType.ERROR}>Purchase Failed")
+                val mainTitle = MiniMessage.miniMessage().deserialize("<${MessageType.ERROR}>ᴘᴜʀᴄʜᴀѕᴇ ꜰᴀɪʟᴇᴅ")
                 val subTitle = MiniMessage.miniMessage().deserialize("<${MessageType.LIGHT_ERROR}>You can only buy this once")
 
                 (player as Audience).showTitle(Title.title(mainTitle, subTitle))
@@ -87,7 +87,7 @@ class ConfirmInventory(player: Player, private val category: String, private val
             shop.getRequirements(shopItemID).forEach {
                 val requirementType = shop.getRequirementType(shopItemID, it) ?: return@forEach
                 if(!requirementType.isCompleted(player, shop.getRequirementValue(shopItemID, it) ?: "")){
-                    val mainTitle = MiniMessage.miniMessage().deserialize("<${MessageType.ERROR}>Purchase Failed")
+                    val mainTitle = MiniMessage.miniMessage().deserialize("<${MessageType.ERROR}>ᴘᴜʀᴄʜᴀѕᴇ ꜰᴀɪʟᴇᴅ")
                     val subTitle = MiniMessage.miniMessage().deserialize("<${MessageType.LIGHT_ERROR}>You don't meet the requirements")
 
                     (player as Audience).showTitle(Title.title(mainTitle, subTitle))
@@ -136,7 +136,7 @@ class ConfirmInventory(player: Player, private val category: String, private val
         if(shop.getShopItemType(shopItemID)!!.allowMultiple()){
             val add = ItemStack(Material.FEATHER)
             val addMeta = add.itemMeta!!
-            addMeta.setDisplayName(Colors.format(MessageType.SUCCESS + "Add one"))
+            addMeta.setDisplayName(Colors.format(MessageType.SUCCESS + "ᴀᴅᴅ ᴏɴᴇ"))
             addMeta.setCustomModelData(1)
             add.itemMeta = addMeta
 
@@ -144,7 +144,7 @@ class ConfirmInventory(player: Player, private val category: String, private val
 
             val reduce = ItemStack(Material.FEATHER)
             val reduceMeta = reduce.itemMeta!!
-            reduceMeta.setDisplayName(Colors.format(MessageType.SUCCESS + "Remove one"))
+            reduceMeta.setDisplayName(Colors.format(MessageType.SUCCESS + "ʀᴇᴍᴏᴠᴇ ᴏɴᴇ"))
             reduceMeta.setCustomModelData(1)
             reduce.itemMeta = reduceMeta
 
@@ -155,7 +155,7 @@ class ConfirmInventory(player: Player, private val category: String, private val
 
         val cancel = ItemStack(Material.FEATHER)
         val cancelMeta = cancel.itemMeta!!
-        cancelMeta.setDisplayName(Colors.format(MessageType.ERROR + "Cancel"))
+        cancelMeta.setDisplayName(Colors.format(MessageType.ERROR + "ᴄᴀɴᴄᴇʟ"))
         cancelMeta.lore = listOf(Colors.format("${MessageType.LORE}You'll be sent back to the shop page."))
         cancelMeta.setCustomModelData(1)
         cancel.itemMeta = cancelMeta
@@ -169,7 +169,7 @@ class ConfirmInventory(player: Player, private val category: String, private val
         val numberFormat = NumberFormat.getNumberInstance(Locale.US)
         val confirm = ItemStack(Material.FEATHER)
         val confirmMeta = confirm.itemMeta!!
-        confirmMeta.setDisplayName(Colors.format(MessageType.SUCCESS + "Confirm"))
+        confirmMeta.setDisplayName(Colors.format(MessageType.SUCCESS + "ᴄᴏɴꜰɪʀᴍ"))
         confirmMeta.lore = listOf(Colors.format("&f:gs:${numberFormat.format(shop.getPrice(shopItemID) * amount)} ${MessageType.LORE}will be withdrawn from your balance."))
         confirmMeta.setCustomModelData(1)
         confirm.itemMeta = confirmMeta

@@ -97,7 +97,7 @@ class MainInventory(player: IngeniaPlayer, private val version: Int): InventoryH
         val transparentMeta = transparentItem.itemMeta as ItemMeta
         val inventory = event.inventory
 
-        transparentMeta.displayName(MiniMessage.miniMessage().deserialize("<#E7A300><b>Profile").decoration(TextDecoration.ITALIC, false))
+        transparentMeta.displayName(MiniMessage.miniMessage().deserialize("<#E7A300><b>ᴘʀᴏꜰɪʟᴇ").decoration(TextDecoration.ITALIC, false))
         transparentMeta.lore(getProfileLore())
         transparentMeta.setCustomModelData(1)
 
@@ -108,7 +108,7 @@ class MainInventory(player: IngeniaPlayer, private val version: Int): InventoryH
         val playerHead = ItemStack(Material.PLAYER_HEAD)
         val playerMeta = playerHead.itemMeta as SkullMeta
 
-        playerMeta.displayName(MiniMessage.miniMessage().deserialize("<#E7A300><b>Profile").decoration(TextDecoration.ITALIC, false))
+        playerMeta.displayName(MiniMessage.miniMessage().deserialize("<#E7A300><b>ᴘʀᴏꜰɪʟᴇ").decoration(TextDecoration.ITALIC, false))
         playerMeta.lore(getProfileLore())
         playerMeta.setCustomModelData(20)
         playerMeta.owningPlayer = getPlayer().player
@@ -119,48 +119,48 @@ class MainInventory(player: IngeniaPlayer, private val version: Int): InventoryH
 
 
 
-        transparentMeta.displayName(MiniMessage.miniMessage().deserialize("<#E7A300><b>Rides").decoration(TextDecoration.ITALIC, false))
+        transparentMeta.displayName(MiniMessage.miniMessage().deserialize("<#E7A300><b>ʀɪᴅᴇѕ").decoration(TextDecoration.ITALIC, false))
         transparentMeta.lore(listOf(MiniMessage.miniMessage().deserialize("<${MessageType.LORE}>Click to view the available rides.").decoration(TextDecoration.ITALIC, false)))
         transparentItem.itemMeta = transparentMeta
 
         ridesSlots.forEach { inventory.setItem(it, transparentItem) }
 
 
-        transparentMeta.displayName(MiniMessage.miniMessage().deserialize("<#E7A300><b>Wardrobe").decoration(TextDecoration.ITALIC, false))
+        transparentMeta.displayName(MiniMessage.miniMessage().deserialize("<#E7A300><b>ᴡᴀʀᴅʀᴏʙᴇ").decoration(TextDecoration.ITALIC, false))
         transparentMeta.lore(listOf(MiniMessage.miniMessage().deserialize("<${MessageType.LORE}>Click to view your wardrobe.").decoration(TextDecoration.ITALIC, false)))
         transparentItem.itemMeta = transparentMeta
 
         wardrobeSlots.forEach { inventory.setItem(it, transparentItem) }
 
-        transparentMeta.displayName(MiniMessage.miniMessage().deserialize("<#E7A300><b>Backpack").decoration(TextDecoration.ITALIC, false))
+        transparentMeta.displayName(MiniMessage.miniMessage().deserialize("<#E7A300><b>ʙᴀᴄᴋᴘᴀᴄᴋ").decoration(TextDecoration.ITALIC, false))
         transparentMeta.lore(listOf(MiniMessage.miniMessage().deserialize("<${MessageType.LORE}>Click to open your backpack.").decoration(TextDecoration.ITALIC, false)))
         transparentItem.itemMeta = transparentMeta
 
         backpackSlots.forEach { inventory.setItem(it, transparentItem) }
 
 
-        transparentMeta.displayName(MiniMessage.miniMessage().deserialize("<#E7A300><b>Shops").decoration(TextDecoration.ITALIC, false))
+        transparentMeta.displayName(MiniMessage.miniMessage().deserialize("<#E7A300><b>ѕʜᴏᴘѕ").decoration(TextDecoration.ITALIC, false))
         transparentMeta.lore(listOf(MiniMessage.miniMessage().deserialize("<${MessageType.LORE}>Click to view the available park shops.").decoration(TextDecoration.ITALIC, false)))
         transparentItem.itemMeta = transparentMeta
 
         shopsSlots.forEach { inventory.setItem(it, transparentItem) }
 
 
-        transparentMeta.displayName(MiniMessage.miniMessage().deserialize("<#E7A300><b>Rank Perks").decoration(TextDecoration.ITALIC, false))
+        transparentMeta.displayName(MiniMessage.miniMessage().deserialize("<#E7A300><b>ʀᴀɴᴋ ᴘᴇʀᴋѕ").decoration(TextDecoration.ITALIC, false))
         transparentMeta.lore(listOf(MiniMessage.miniMessage().deserialize("<${MessageType.LORE}>Click to view your rank perks.").decoration(TextDecoration.ITALIC, false)))
         transparentItem.itemMeta = transparentMeta
 
         rankSlots.forEach { inventory.setItem(it, transparentItem) }
 
 
-        transparentMeta.displayName(MiniMessage.miniMessage().deserialize("<#ff4d4d><b>Not out yet!").decoration(TextDecoration.ITALIC, false))
+        transparentMeta.displayName(MiniMessage.miniMessage().deserialize("<#ff4d4d><b>ɴᴏᴛ ᴏᴜᴛ ʏᴇᴛ").decoration(TextDecoration.ITALIC, false))
         transparentMeta.lore(listOf(MiniMessage.miniMessage().deserialize("<${MessageType.LORE}>Coming (hopefully) soon.").decoration(TextDecoration.ITALIC, false)))
         transparentItem.itemMeta = transparentMeta
 
         questSlots.forEach { inventory.setItem(it, transparentItem) }
 
 
-        transparentMeta.displayName(MiniMessage.miniMessage().deserialize("<#bfbfbf><b>Settings").decoration(TextDecoration.ITALIC, false))
+        transparentMeta.displayName(MiniMessage.miniMessage().deserialize("<#bfbfbf><b>ѕᴇᴛᴛɪɴɢѕ").decoration(TextDecoration.ITALIC, false))
         transparentMeta.lore(listOf(MiniMessage.miniMessage().deserialize("<${MessageType.LORE}>Click to view your settings.").decoration(TextDecoration.ITALIC, false)))
         transparentItem.itemMeta = transparentMeta
 
@@ -178,13 +178,13 @@ class MainInventory(player: IngeniaPlayer, private val version: Int): InventoryH
             expToNext = "At max level!"
 
 
-        lore.add(MiniMessage.miniMessage().deserialize("<${MessageType.INGENIA}>» Name: <white>" + getPlayer().name).decoration(TextDecoration.ITALIC, false))
-        lore.add(MiniMessage.miniMessage().deserialize("<${MessageType.INGENIA}>» Golden Stars: <white>\uE016${getPlayer().bal}").decoration(TextDecoration.ITALIC, false))
-        lore.add(MiniMessage.miniMessage().deserialize("<${MessageType.INGENIA}>» Level: <white>${getPlayer().getLevel()}").decoration(TextDecoration.ITALIC, false))
-        lore.add(MiniMessage.miniMessage().deserialize("<${MessageType.INGENIA}>» Total Exp: <white>${getPlayer().exp}").decoration(TextDecoration.ITALIC, false))
-        lore.add(MiniMessage.miniMessage().deserialize("<${MessageType.INGENIA}>» Exp Until Next Level: <white>" + expToNext).decoration(TextDecoration.ITALIC, false))
-        lore.add(MiniMessage.miniMessage().deserialize("<${MessageType.INGENIA}>» Rank: <white>").append(getPlayer().componentPrefix).decoration(TextDecoration.ITALIC, false))
-        lore.add(MiniMessage.miniMessage().deserialize("<${MessageType.INGENIA}>» Total Ridecount: <white>" + AttractionUtils.getTotalRidecount(getPlayer().player)).decoration(TextDecoration.ITALIC, false))
+        lore.add(MiniMessage.miniMessage().deserialize("<${MessageType.INGENIA}>» ɴᴀᴍᴇ: <white>" + getPlayer().name).decoration(TextDecoration.ITALIC, false))
+        lore.add(MiniMessage.miniMessage().deserialize("<${MessageType.INGENIA}>» ɢᴏʟᴅᴇɴ ѕᴛᴀʀѕ: <white>\uE016${getPlayer().bal}").decoration(TextDecoration.ITALIC, false))
+        lore.add(MiniMessage.miniMessage().deserialize("<${MessageType.INGENIA}>» ʟᴇᴠᴇʟ: <white>${getPlayer().getLevel()}").decoration(TextDecoration.ITALIC, false))
+        lore.add(MiniMessage.miniMessage().deserialize("<${MessageType.INGENIA}>» ᴛᴏᴛᴀʟ ᴇxᴘ: <white>${getPlayer().exp}").decoration(TextDecoration.ITALIC, false))
+        lore.add(MiniMessage.miniMessage().deserialize("<${MessageType.INGENIA}>» ᴇxᴘ ᴜɴᴛɪʟ ɴᴇxᴛ ʟᴇᴠᴇʟ: <white>" + expToNext).decoration(TextDecoration.ITALIC, false))
+        lore.add(MiniMessage.miniMessage().deserialize("<${MessageType.INGENIA}>» ʀᴀɴᴋ: <white>").append(getPlayer().componentIconPrefix.color(TextColor.color(255, 255, 255))).decoration(TextDecoration.ITALIC, false))
+        lore.add(MiniMessage.miniMessage().deserialize("<${MessageType.INGENIA}>» ᴛᴏᴛᴀʟ ʀɪᴅᴇᴄᴏᴜɴᴛ: <white>" + AttractionUtils.getTotalRidecount(getPlayer().player)).decoration(TextDecoration.ITALIC, false))
         return lore
     }
 
