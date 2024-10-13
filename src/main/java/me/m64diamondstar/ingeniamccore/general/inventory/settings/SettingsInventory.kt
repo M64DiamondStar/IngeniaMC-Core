@@ -1,13 +1,13 @@
 package me.m64diamondstar.ingeniamccore.general.inventory.settings
 
 import me.m64diamondstar.ingeniamccore.IngeniaMC
+import me.m64diamondstar.ingeniamccore.entity.body.BodyWearEntity
+import me.m64diamondstar.ingeniamccore.entity.body.NametagEntity
 import me.m64diamondstar.ingeniamccore.general.bossbar.BossBarIndex
 import me.m64diamondstar.ingeniamccore.general.inventory.MainInventory
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.utils.PlayerSelectors
 import me.m64diamondstar.ingeniamccore.utils.SettingButtons
-import me.m64diamondstar.ingeniamccore.utils.entities.BodyWearRegistry
-import me.m64diamondstar.ingeniamccore.utils.entities.NametagEntity
 import me.m64diamondstar.ingeniamccore.utils.gui.InventoryHandler
 import me.m64diamondstar.ingeniamccore.utils.messages.Font
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
@@ -128,43 +128,40 @@ class SettingsInventory(player: IngeniaPlayer): InventoryHandler(player) {
     private fun updatePlayerAttachments(){
         Bukkit.getOnlinePlayers().forEach {
 
-            val nameTag = NametagEntity.Registry.get(it.uniqueId) ?: return@forEach
-            val bodyWear = BodyWearRegistry.get(it.uniqueId)
-
             when(ingeniaPlayer.playerConfig.getShowNametags()){
                 PlayerSelectors.ALL -> {
                     if(ingeniaPlayer.playerConfig.getShowPlayers() == PlayerSelectors.STAFF && !it.hasPermission("ingenia.team") && !it.hasPermission("ingenia.team-trial") && !it.isOp) {
-                        nameTag.remove(ingeniaPlayer.player)
-                        bodyWear?.remove(ingeniaPlayer.player)
+                        NametagEntity.NametagManager.blockPlayer(ingeniaPlayer.player)
+                        BodyWearEntity.BodyWearManager.blockPlayer(ingeniaPlayer.player)
                         return@forEach
                     }
                     if(ingeniaPlayer.playerConfig.getShowPlayers() == PlayerSelectors.NONE) {
-                        nameTag.remove(ingeniaPlayer.player)
-                        bodyWear?.remove(ingeniaPlayer.player)
+                        NametagEntity.NametagManager.blockPlayer(ingeniaPlayer.player)
+                        BodyWearEntity.BodyWearManager.blockPlayer(ingeniaPlayer.player)
                         return@forEach
                     }
-                    nameTag.spawn(ingeniaPlayer.player)
-                    bodyWear?.spawn(ingeniaPlayer.player)
+                    NametagEntity.NametagManager.unblockPlayer(ingeniaPlayer.player)
+                    BodyWearEntity.BodyWearManager.unblockPlayer(ingeniaPlayer.player)
                 }
                 PlayerSelectors.STAFF -> {
                     if(ingeniaPlayer.playerConfig.getShowPlayers() == PlayerSelectors.NONE) {
-                        nameTag.remove(ingeniaPlayer.player)
-                        bodyWear?.remove(ingeniaPlayer.player)
+                        NametagEntity.NametagManager.blockPlayer(ingeniaPlayer.player)
+                        BodyWearEntity.BodyWearManager.blockPlayer(ingeniaPlayer.player)
                         return@forEach
                     }
                     if(it.hasPermission("ingenia.team") || it.hasPermission("ingenia.team-trial") || it.isOp) {
-                        nameTag.spawn(ingeniaPlayer.player)
-                        bodyWear?.spawn(ingeniaPlayer.player)
+                        NametagEntity.NametagManager.unblockPlayer(ingeniaPlayer.player)
+                        BodyWearEntity.BodyWearManager.unblockPlayer(ingeniaPlayer.player)
                     }
                     else {
-                        nameTag.remove(ingeniaPlayer.player)
-                        bodyWear?.remove(ingeniaPlayer.player)
+                        NametagEntity.NametagManager.blockPlayer(ingeniaPlayer.player)
+                        BodyWearEntity.BodyWearManager.blockPlayer(ingeniaPlayer.player)
                     }
 
                 }
                 PlayerSelectors.NONE -> {
-                    nameTag.remove(ingeniaPlayer.player)
-                    bodyWear?.remove(ingeniaPlayer.player)
+                    NametagEntity.NametagManager.blockPlayer(ingeniaPlayer.player)
+                    BodyWearEntity.BodyWearManager.blockPlayer(ingeniaPlayer.player)
                 }
             }
         }

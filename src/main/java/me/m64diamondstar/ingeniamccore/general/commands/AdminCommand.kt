@@ -9,9 +9,7 @@ import me.m64diamondstar.ingeniamccore.games.wandclash.gui.TeamChooseGui
 import me.m64diamondstar.ingeniamccore.games.wandclash.gui.VoteGameModeGui
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.npc.utils.DialogueUtils
-import me.m64diamondstar.ingeniamccore.utils.entities.BodyWearEntity
 import me.m64diamondstar.ingeniamccore.utils.entities.CameraPacketEntity
-import me.m64diamondstar.ingeniamccore.utils.entities.NametagEntity
 import me.m64diamondstar.ingeniamccore.utils.entities.NpcPlayerEntity
 import me.m64diamondstar.ingeniamccore.utils.items.Items
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
@@ -437,31 +435,8 @@ class AdminCommand: CommandExecutor {
             teamChooseGui.open()
         }
 
-        if(args[0].equals("testbackpack", ignoreCase = true)){
-            val bodyWearEntity = BodyWearEntity(sender.world, sender.location, sender)
-            bodyWearEntity.setItem(ItemStack(Material.STONE))
-        }
-
         if(args[0].equals("settitle", ignoreCase = true)){
             val ingeniaPlayer = IngeniaPlayer(sender)
-            val nametagEntity = NametagEntity.Registry.get(sender.uniqueId)
-            if(args.size == 1){
-                Component.text()
-                    .append(ingeniaPlayer.componentIconPrefix)
-                    .append(Component.text(" "))
-                    .append(ingeniaPlayer.nameLightColored)
-                    .build()
-            }else{
-                nametagEntity?.setTitle(
-                    Component.text()
-                        .append(MiniMessage.miniMessage().deserialize(args.drop(1).joinToString(" ") + "<br>"))
-                        .append(ingeniaPlayer.componentIconPrefix)
-                        .append(Component.text(" "))
-                        .append(ingeniaPlayer.nameLightColored)
-                        .build()
-                )
-            }
-
             ingeniaPlayer.playerConfig.setPlayerTitle(args.drop(1).joinToString(" "))
 
             sender.sendMessage(Colors.format(MessageType.SUCCESS + "Title set!"))
