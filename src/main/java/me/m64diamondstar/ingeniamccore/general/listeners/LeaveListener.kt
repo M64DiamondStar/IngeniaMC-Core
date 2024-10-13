@@ -7,7 +7,6 @@ import me.m64diamondstar.ingeniamccore.discord.bot.DiscordBot
 import me.m64diamondstar.ingeniamccore.discord.commands.BotUtils
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.npc.utils.DialoguePlayerRegistry
-import me.m64diamondstar.ingeniamccore.utils.entities.BodyWearRegistry
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerQuitEvent
@@ -24,12 +23,6 @@ class LeaveListener : Listener {
         val player = IngeniaPlayer(bukkitPlayer)
         player.updatePlaytime()
         player.updateYearPlaytime()
-
-        if(BodyWearRegistry.contains(bukkitPlayer.uniqueId)){
-            BodyWearRegistry.get(bukkitPlayer.uniqueId)!!.remove()
-            BodyWearRegistry.get(bukkitPlayer.uniqueId)!!.unregister()
-            BodyWearRegistry.remove(bukkitPlayer.uniqueId)
-        }
 
         DialoguePlayerRegistry.getDialoguePlayer(bukkitPlayer)?.getDialogue(bukkitPlayer)?.end()
 
