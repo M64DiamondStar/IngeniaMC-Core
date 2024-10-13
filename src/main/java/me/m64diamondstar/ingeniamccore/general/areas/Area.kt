@@ -50,7 +50,7 @@ class Area(val category: String, name: String): DataConfiguration("area/$categor
         }
 
     var displayName: String
-        get() = this.getConfig().getString("Display-Name")!!
+        get() = this.getConfig().getString("Display-Name") ?: "Invalid Area"
         set(value) {
             this.getConfig().set("Display-Name", value)
             this.save()
