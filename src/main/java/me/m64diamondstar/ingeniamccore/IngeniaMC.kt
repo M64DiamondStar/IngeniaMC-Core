@@ -2,8 +2,10 @@ package me.m64diamondstar.ingeniamccore
 
 import com.comphenix.protocol.ProtocolLibrary
 import com.comphenix.protocol.ProtocolManager
+import com.github.retrooper.packetevents.PacketEvents
 import gg.flyte.twilight.Twilight
 import gg.flyte.twilight.twilight
+import io.github.retrooper.packetevents.factory.spigot.SpigotPacketEventsBuilder
 import me.m56738.smoothcoasters.api.SmoothCoastersAPI
 import me.m64diamondstar.ingeniamccore.attractions.listeners.PlayerInteractEntityListener
 import me.m64diamondstar.ingeniamccore.attractions.traincarts.SignRegistry
@@ -14,6 +16,7 @@ import me.m64diamondstar.ingeniamccore.discord.bot.DiscordBot
 import me.m64diamondstar.ingeniamccore.discord.listeners.minecraft.ReceiveExpListener
 import me.m64diamondstar.ingeniamccore.discord.listeners.minecraft.ReceiveGoldenStarsListener
 import me.m64diamondstar.ingeniamccore.discord.listeners.minecraft.ReceiveRidecountListener
+import me.m64diamondstar.ingeniamccore.entity.EntityTasks
 import me.m64diamondstar.ingeniamccore.games.guesstheword.GuessTheWordListener
 import me.m64diamondstar.ingeniamccore.games.presenthunt.PresentHuntUtils
 import me.m64diamondstar.ingeniamccore.games.presenthunt.listeners.PlayerInteractListener
@@ -49,10 +52,14 @@ import me.m64diamondstar.ingeniamccore.utils.gui.GuiListener
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
 import me.m64diamondstar.ingeniamccore.wands.utils.WandRegistry
 import me.m64diamondstar.ingeniamccore.wands.wandlistener.WandListener
+import me.tofaa.entitylib.APIConfig
+import me.tofaa.entitylib.EntityLib
+import me.tofaa.entitylib.spigot.SpigotEntityLibPlatform
 import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.plugin.java.JavaPlugin
+import org.bukkit.scheduler.BukkitTask
 import java.util.*
 
 
@@ -67,10 +74,39 @@ class IngeniaMC : JavaPlugin() {
         var isDisabling: Boolean = false
         lateinit var spawn: Location
 
+        private val enableRunnables = HashSet<Runnable>()
+        private val disableTasks = HashSet<BukkitTask>()
+        private val disableRunnables = HashSet<Runnable>()
+
+        /**
+         * Add a runnable which should be executed when the plugin is shutting down
+         */
+        fun addOnEnableRunnable(runnable: Runnable){
+            enableRunnables.add(runnable)
+        }
+
+        /**
+         * Cancels the task when the plugin is shutting down
+         * @param task the task to cancel
+         */
+        fun addOnDisableTask(task: BukkitTask) {
+            disableTasks.add(task)
+        }
+
+        /**
+         * Add a runnable which should be executed when the plugin is shutting down
+         */
+        fun addOnDisableRunnable(runnable: Runnable){
+            disableRunnables.add(runnable)
+        }
     }
 
     override fun onLoad() {
         //CSVUtils.load()
+
+        // Load PacketEvents initialization
+        PacketEvents.setAPI(SpigotPacketEventsBuilder.build(this))
+        PacketEvents.getAPI().load()
     }
 
     override fun onEnable() {
@@ -87,6 +123,9 @@ class IngeniaMC : JavaPlugin() {
 
         this.logger.info("Main instances loaded ✓")
 
+        enableRunnables.forEach { it.run() }
+        this.logger.info("Tasks loaded ✓")
+
         saveDefaultConfig()
         this.logger.info("Config (re)loaded ✓")
 
@@ -101,9 +140,6 @@ class IngeniaMC : JavaPlugin() {
 
         loadEventListeners()
         this.logger.info("Event Listeners loaded ✓")
-
-        loadPacketListeners()
-        this.logger.info("Packet Listeners loaded ✓")
 
         SignRegistry.registerSigns()
         this.logger.info("TrainCarts Signs loaded ✓")
@@ -123,9 +159,7 @@ class IngeniaMC : JavaPlugin() {
         this.logger.info("Game Arenas Loaded ✓")
 
         EmojiUtils.loadEmojis()
-
-        loadTasks()
-        this.logger.info("Tasks loaded ✓")
+        this.logger.info("Emojis loaded ✓")
 
         WandRegistry.registerWands()
         ClashWandRegistry.registerClashWands()
@@ -133,6 +167,11 @@ class IngeniaMC : JavaPlugin() {
 
         ModerationRegistry.registerBlockedWords()
         this.logger.info("Blocked Words loaded ✓")
+
+        PacketEvents.getAPI().init()
+        EntityLib.init(SpigotEntityLibPlatform(this), APIConfig(PacketEvents.getAPI()).usePlatformLogger())
+        EntityTasks.startUp()
+        this.logger.info("PacketEvents loaded ✓")
 
         PresentHuntUtils.loadActivePresents()
         this.logger.info("" +
@@ -148,6 +187,10 @@ class IngeniaMC : JavaPlugin() {
     override fun onDisable() {
         isDisabling = true
 
+        // Cancel all tasks
+        disableTasks.forEach { it.cancel() }
+        disableRunnables.forEach { it.run() }
+
         // Basic shutdown properties
         AttractionUtils.despawnAllAttractions()
         SignRegistry.unregisterSigns()
@@ -157,6 +200,9 @@ class IngeniaMC : JavaPlugin() {
         smoothCoastersAPI.unregister()
         SplashBattleUtils.players.forEach { SplashBattleUtils.leave(it) }
         NpcRegistry.deleteAll()
+
+        // Disable PacketEvents
+        PacketEvents.getAPI().terminate()
 
         EntityRegistry.getBukkitMap().forEach { it.remove() }
         Bukkit.getOnlinePlayers().forEach { it.activeBossBars().forEach { bossBar -> it.hideBossBar(bossBar) } }
@@ -316,6 +362,7 @@ class IngeniaMC : JavaPlugin() {
         Bukkit.getServer().pluginManager.registerEvents(DamageListener(), this)
         Bukkit.getServer().pluginManager.registerEvents(HungerListener(), this)
         Bukkit.getServer().pluginManager.registerEvents(EntityDismountListener(), this)
+        Bukkit.getServer().pluginManager.registerEvents(EntityMountListener(), this)
         Bukkit.getServer().pluginManager.registerEvents(BoatListener(), this)
         Bukkit.getServer().pluginManager.registerEvents(EntityListener(), this)
         Bukkit.getServer().pluginManager.registerEvents(PlayerListeners(), this)
@@ -381,18 +428,10 @@ class IngeniaMC : JavaPlugin() {
             Trashcan events
          */
         Bukkit.getServer().pluginManager.registerEvents(TrashListener(), this)
-    }
 
-    private fun loadPacketListeners(){
-
-    }
-
-    private fun loadTasks(){
-        /*object: BukkitRunnable(){
-            override fun run() {
-                val guessTheWord = GuessTheWord()
-                guessTheWord.execute()
-            }
-        }.runTaskTimer(this, 200L, 18000L)*/
+        /*
+            Entity Events
+         */
+        EntityTasks.loadListeners()
     }
 }
