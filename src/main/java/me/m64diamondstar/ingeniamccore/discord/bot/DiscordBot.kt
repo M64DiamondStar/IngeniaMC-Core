@@ -37,7 +37,7 @@ object DiscordBot {
                 LogsListener(), ChatCommand(), DiscordChatListener(), PlaytimeCommand()
             )
             .enableCache(CacheFlag.EMOJI)
-            .setActivity(Activity.playing("play.IngeniaMC.net on 1.20.4"))
+            .setActivity(Activity.playing("play.IngeniaMC.net on 1.21.1"))
             .build()
     }
 
