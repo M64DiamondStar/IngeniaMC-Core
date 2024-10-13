@@ -17,7 +17,11 @@ class PlaytimeCommand: ListenerAdapter() {
         event.deferReply(false).queue()
 
         if(!BotUtils.LinkedUtils.isLinked(event.user.idLong) || BotUtils.LinkedUtils.getLinked(event.user.idLong) == null || !Bukkit.getOfflinePlayer(BotUtils.LinkedUtils.getLinked(event.user.idLong)!!).hasPlayedBefore()){
-            event.hook.sendMessage("You are not linked with a Minecraft account.").queue()
+            val embedBuilder = EmbedBuilder()
+            embedBuilder.setTitle("Not linked!")
+            embedBuilder.setDescription("You are not linked with a Minecraft account. \n" +
+                    "Use `/link ${event.user.idLong}` in the minecraft server to link your Minecraft account.")
+            event.hook.sendMessageEmbeds(embedBuilder.build()).queue()
             return
         }
 
