@@ -8,6 +8,8 @@ import me.m64diamondstar.ingeniamccore.cosmetics.utils.MessageType
 import me.m64diamondstar.ingeniamccore.discord.bot.DiscordBot
 import me.m64diamondstar.ingeniamccore.discord.commands.BotUtils
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
+import me.m64diamondstar.ingeniamccore.protect.FeatureManager
+import me.m64diamondstar.ingeniamccore.protect.FeatureType
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -42,7 +44,7 @@ class JoinListener : Listener {
 
         ingeniaPlayer.startUp()
 
-        if (BotUtils.ChatUtils.chatChannel != null) {
+        if (FeatureManager().isFeatureEnabled(FeatureType.DISCORD_CHAT_SYNC) && BotUtils.ChatUtils.chatChannel != null) {
             val joinLeaveMessage = JoinLeaveMessage(MessageType.JOIN)
             DiscordBot.jda.getTextChannelById(BotUtils.ChatUtils.chatChannel!!.id)?.sendMessage(
                 "${BotUtils.EmojiUtils.getJoinEmoji()} " +

@@ -11,6 +11,8 @@ import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.npc.utils.DialoguePlayerRegistry
 import me.m64diamondstar.ingeniamccore.npc.utils.NpcRegistry
 import me.m64diamondstar.ingeniamccore.npc.utils.NpcUtils
+import me.m64diamondstar.ingeniamccore.protect.FeatureManager
+import me.m64diamondstar.ingeniamccore.protect.FeatureType
 import me.m64diamondstar.ingeniamccore.utils.messages.MessageType
 import net.kyori.adventure.audience.Audience
 import net.kyori.adventure.text.minimessage.MiniMessage
@@ -38,11 +40,15 @@ class NpcListener: Listener {
     fun onNPCInteract(event: BaseEntityInteractEvent) {
         val entity = event.baseEntity
         val player = event.player
+        val featureManager = FeatureManager()
         IngeniaPlayer(player)
 
         if(entity !is Dummy<*>) return
         if (!NpcRegistry.isNpc(entity)) return
         if (DialoguePlayerRegistry.contains(player)) return
+        if(featureManager.isFeatureEnabled(FeatureType.DIALOGUES)){
+            featureManager.sendMessage(player)
+        }
         if(DialoguePlayerRegistry.isOnCooldown(player)){
             (player as Audience).sendActionBar(MiniMessage.miniMessage().deserialize("<${MessageType.ERROR}>Please slow down a little bit!"))
             return

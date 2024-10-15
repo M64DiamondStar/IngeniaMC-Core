@@ -4,6 +4,8 @@ import me.m64diamondstar.ingeniamccore.IngeniaMC
 import me.m64diamondstar.ingeniamccore.discord.bot.DiscordBot
 import me.m64diamondstar.ingeniamccore.discord.commands.BotUtils
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
+import me.m64diamondstar.ingeniamccore.protect.FeatureManager
+import me.m64diamondstar.ingeniamccore.protect.FeatureType
 import me.m64diamondstar.ingeniamccore.utils.EmojiUtils
 import me.m64diamondstar.ingeniamccore.utils.messages.Colors
 import org.bukkit.ChatColor
@@ -20,7 +22,7 @@ class ChatListener: Listener {
         val player = event.player
         val ingeniaPlayer = IngeniaPlayer(player)
 
-        if(BotUtils.ChatUtils.chatChannel != null && !event.isCancelled && event.message.replace("\\", "").isNotBlank()){
+        if(FeatureManager().isFeatureEnabled(FeatureType.DISCORD_CHAT_SYNC) && BotUtils.ChatUtils.chatChannel != null && !event.isCancelled && event.message.replace("\\", "").isNotBlank()){
             DiscordBot.jda.getTextChannelById(BotUtils.ChatUtils.chatChannel!!.id)?.sendMessage(
                 "**${ingeniaPlayer.rawPrefix}** ${player.name.replace("_", "\\_")} » ${addBracketsToUrls(event.message
                     .replace("@", "`@`")

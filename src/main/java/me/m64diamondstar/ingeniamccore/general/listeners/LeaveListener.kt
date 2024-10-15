@@ -7,6 +7,8 @@ import me.m64diamondstar.ingeniamccore.discord.bot.DiscordBot
 import me.m64diamondstar.ingeniamccore.discord.commands.BotUtils
 import me.m64diamondstar.ingeniamccore.general.player.IngeniaPlayer
 import me.m64diamondstar.ingeniamccore.npc.utils.DialoguePlayerRegistry
+import me.m64diamondstar.ingeniamccore.protect.FeatureManager
+import me.m64diamondstar.ingeniamccore.protect.FeatureType
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerQuitEvent
@@ -28,7 +30,7 @@ class LeaveListener : Listener {
 
         e.quitMessage = MessageBuilder.LeaveMessageBuilder(player.name, player.leaveColor, player.leaveMessage).build()
 
-        if(BotUtils.ChatUtils.chatChannel != null){
+        if(FeatureManager().isFeatureEnabled(FeatureType.DISCORD_CHAT_SYNC) && BotUtils.ChatUtils.chatChannel != null){
             val joinLeaveMessage = JoinLeaveMessage(MessageType.LEAVE)
             DiscordBot.jda.getTextChannelById(BotUtils.ChatUtils.chatChannel!!.id)?.sendMessage(
                 "${BotUtils.EmojiUtils.getLeaveEmoji()} " +

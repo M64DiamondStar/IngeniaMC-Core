@@ -8,6 +8,9 @@ enum class FeatureType {
     MENU,
     WARPS,
     DISCORD_LINKING,
-    TRASHCANS
+    TRASHCANS,
+    DIALOGUES,
+    DISCORD_CHAT_SYNC,
+    LEVELING_EVENTS
 
 }

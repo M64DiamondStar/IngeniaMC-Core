@@ -2,6 +2,8 @@ package me.m64diamondstar.ingeniamccore.discord.listeners
 
 import me.m64diamondstar.ingeniamccore.discord.commands.BotUtils
 import me.m64diamondstar.ingeniamccore.general.player.data.DiscordUserConfig
+import me.m64diamondstar.ingeniamccore.protect.FeatureManager
+import me.m64diamondstar.ingeniamccore.protect.FeatureType
 import me.m64diamondstar.ingeniamccore.utils.EmojiUtils
 import net.dv8tion.jda.api.entities.channel.ChannelType
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
@@ -17,6 +19,7 @@ class DiscordChatListener: ListenerAdapter() {
         if (event.channelType != ChannelType.TEXT) return
         if(event.channel.asTextChannel().id != BotUtils.ChatUtils.chatChannel!!.id) return
         if(event.message.contentRaw.isEmpty()) return
+        if(!FeatureManager().isFeatureEnabled(FeatureType.DISCORD_CHAT_SYNC)) return
         val resultMessage = if(event.message.contentRaw.length > 200)
             event.author.name + " » " + event.message.contentRaw.substring(0, 200) + "..."
         else

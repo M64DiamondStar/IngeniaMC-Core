@@ -15,14 +15,14 @@ class FeatureCommand: CommandExecutor {
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
 
         if(args.isEmpty()) {
-            sender.sendMessage(Messages.commandUsage("/feature <enable/disable/info> [feature]"))
+            sender.sendMessage(Messages.commandUsage("feature <enable/disable/info> [feature]"))
             return false
         }
 
         when(args[0]) {
             "enable" -> {
                 if(args[1].isEmpty() || !EnumUtilities.enumContains<FeatureType>(args[1])) {
-                    sender.sendMessage(Messages.commandUsage("/feature enable <feature>"))
+                    sender.sendMessage(Messages.commandUsage("feature enable <feature>"))
                     return false
                 }
 
@@ -32,7 +32,7 @@ class FeatureCommand: CommandExecutor {
             }
             "disable" -> {
                 if(args[1].isEmpty() || !EnumUtilities.enumContains<FeatureType>(args[1])) {
-                    sender.sendMessage(Messages.commandUsage("/feature disable <feature>"))
+                    sender.sendMessage(Messages.commandUsage("feature disable <feature>"))
                     return false
                 }
 
@@ -43,7 +43,7 @@ class FeatureCommand: CommandExecutor {
             "info" -> {
                 val featureManager = FeatureManager()
                 sender.sendMessage(Colors.format(MessageType.BACKGROUND + "------ Features ------"))
-                FeatureType.values().forEach {
+                FeatureType.entries.forEach {
                     sender.sendMessage(
                         Colors.format("${it.name}: ${
                             if(featureManager.isFeatureEnabled(it)) 
@@ -54,7 +54,7 @@ class FeatureCommand: CommandExecutor {
                 sender.sendMessage(Colors.format(MessageType.BACKGROUND + "------ -------- ------"))
             }
             else -> {
-                sender.sendMessage(Messages.commandUsage("/feature <enable/disable/info> [feature]"))
+                sender.sendMessage(Messages.commandUsage("feature <enable/disable/info> [feature]"))
             }
         }
 
