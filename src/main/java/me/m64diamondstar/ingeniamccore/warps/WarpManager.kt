@@ -73,4 +73,16 @@ class WarpManager: DataConfiguration("", "warps.yml") {
         return list
     }
 
+    /**
+     * Returns a list of pairs with all the warps and their locations.
+     */
+    fun getAllWarpPairs(): List<Pair<String, Location>> {
+        return this.getConfig().getKeys(false).mapNotNull { key ->
+            this.getWarpLocation(key)?.let { location ->
+                Pair(key, location)
+            }
+        }
+    }
+
+
 }

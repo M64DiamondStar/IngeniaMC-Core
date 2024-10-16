@@ -29,4 +29,18 @@ object WarpUtils {
         return if(warpManager.existsWarp(id)) id else null
     }
 
+    fun getNearestPair(player: Player): Pair<String, Location>{
+        val warpManager = WarpManager()
+        val locations = warpManager.getAllWarpPairs()
+        val playerLocation = player.location
+        var nearestPair = locations[0]
+
+        locations.forEach {
+            if(playerLocation.distanceSquared(it.second) < playerLocation.distanceSquared(nearestPair.second))
+                nearestPair = it
+        }
+
+        return nearestPair
+    }
+
 }

@@ -274,6 +274,7 @@ class IngeniaMC : JavaPlugin() {
         Objects.requireNonNull(getCommand("testgui"))?.setExecutor(TestGuiCommand())
 
         Objects.requireNonNull(getCommand("warp"))?.setExecutor(WarpCommand())
+        Objects.requireNonNull(getCommand("nearestwarp"))?.setExecutor(NearestWarpCommand())
 
         Objects.requireNonNull(getCommand("feature"))?.setExecutor(FeatureCommand())
 

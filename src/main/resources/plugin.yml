@@ -143,4 +143,8 @@ commands:
     description: Sends you a link to the instagram channel.
     aliases:
       - insta
+  nearestwarp:
+    description: Teleport to the nearest warp.
+    aliases:
+      - stuck
 
