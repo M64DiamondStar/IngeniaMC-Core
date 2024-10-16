@@ -24,10 +24,10 @@ class BodyWearListener : Listener {
         }, 1)
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     fun onPlayerQuit(event: PlayerQuitEvent) {
         Bukkit.getScheduler().runTaskLaterAsynchronously(IngeniaMC.plugin, Runnable {
-            BodyWearEntity.BodyWearManager.removePlayer(event.player) // Handles de-spawning of body wear
+            BodyWearEntity.BodyWearManager.removePlayer(event.player.uniqueId) // Handles de-spawning of body wear
         }, 1)
     }
 
@@ -58,8 +58,6 @@ class BodyWearListener : Listener {
         if(event.entity !is Player) return
         val player = event.entity as Player
 
-        player.sendMessage("Entered vehicle")
-
         if(BodyWearEntity.BodyWearManager.getPacketEntity(player) == null) return
         BodyWearEntity.BodyWearManager.updateMounted(player, true) // Handles de-spawning of body wear
 
@@ -69,8 +67,6 @@ class BodyWearListener : Listener {
     fun onPlayerLeaveVehicle(event: EntityDismountEvent){ // Re-spawn body wear when player leaves a vehicle
         if(event.entity !is Player) return
         val player = event.entity as Player
-
-        player.sendMessage("Exited vehicle")
 
         if(BodyWearEntity.BodyWearManager.getPacketEntity(player) == null) return
         Bukkit.getScheduler().runTaskLaterAsynchronously(IngeniaMC.plugin, Runnable {

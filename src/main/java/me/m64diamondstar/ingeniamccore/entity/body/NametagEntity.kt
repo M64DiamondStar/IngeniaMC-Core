@@ -61,7 +61,7 @@ class NametagEntity(private val owner: Player): PassengerEntity(owner = owner) {
         }
 
         fun addPlayer(player: Player){
-            if(nametags.contains(player.uniqueId)) return
+            if(nametags.containsKey(player.uniqueId)) return
             if(blocked.contains(player.uniqueId)) return
             if(player.hasPotionEffect(PotionEffectType.INVISIBILITY)) return
 
@@ -76,12 +76,8 @@ class NametagEntity(private val owner: Player): PassengerEntity(owner = owner) {
             entityIdToDisplay[entity.entity.entityId] = entity
         }
 
-        fun removePlayer(player: Player){
-            removePlayer(player.uniqueId)
-        }
-
         fun removePlayer(uniqueId: UUID){
-            if(!nametags.contains(uniqueId)) return
+            if(!nametags.containsKey(uniqueId)) return
 
             val entity = nametags[uniqueId]!!
             nametags.remove(uniqueId)
@@ -222,6 +218,7 @@ class NametagEntity(private val owner: Player): PassengerEntity(owner = owner) {
     }
 
     override fun remove() {
+        entity.viewers.forEach { entity.removeViewer(it) }
         entity.remove()
         PassengerPacketManager.removePassenger(owner, entity.entityId)
         entity.refresh()

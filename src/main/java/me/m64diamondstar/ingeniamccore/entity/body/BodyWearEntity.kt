@@ -63,7 +63,7 @@ class BodyWearEntity(private val owner: Player): PassengerEntity(owner) {
         }
 
         fun addPlayer(player: Player) {
-            if(bodyWears.contains(player.uniqueId)) return
+            if(bodyWears.containsKey(player.uniqueId)) return
             if(blocked.contains(player.uniqueId)) return
             if(player.hasPotionEffect(PotionEffectType.INVISIBILITY)) return
 
@@ -78,17 +78,13 @@ class BodyWearEntity(private val owner: Player): PassengerEntity(owner) {
             entityIdToDisplay[entity.entity.entityId] = entity
         }
 
-        fun removePlayer(player: Player) {
-            removePlayer(player.uniqueId)
-        }
-
         fun removePlayer(uniqueId: UUID){
-            if(!bodyWears.contains(uniqueId)) return
+            if(!bodyWears.containsKey(uniqueId)) return
 
             val entity = bodyWears[uniqueId]!!
-            bodyWears.remove(uniqueId)
             entityIdToDisplay.remove(entity.entity.entityId)
             entity.remove()
+            bodyWears.remove(uniqueId)
         }
 
         private fun handleVanish(player: Player, display: BodyWearEntity) {
@@ -225,6 +221,7 @@ class BodyWearEntity(private val owner: Player): PassengerEntity(owner) {
     }
 
     override fun remove() {
+        entity.viewers.forEach { entity.removeViewer(it) }
         entity.remove()
         PassengerPacketManager.removePassenger(owner, entity.entityId)
         entity.refresh()
