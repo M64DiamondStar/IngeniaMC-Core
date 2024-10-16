@@ -248,8 +248,8 @@ class FreeFall(private val category: String, private val name: String): Attracti
                     }
                     (stand as CraftArmorStand).handle.move(MoverType.SELF, Vec3(deltaX, y, deltaZ))
                     if(c == 1159.0){
-                        if (stand.getPassengers().isNotEmpty()) {
-                            val passenger = stand.getPassengers()[0] as Player
+                        if (stand.passengers.isNotEmpty()) {
+                            val passenger = stand.passengers[0] as Player
                             if (passenger.isInsideVehicle) {
                                 addRidecount(passenger, 1)
                                 IngeniaPlayer(passenger).addBal(6)
