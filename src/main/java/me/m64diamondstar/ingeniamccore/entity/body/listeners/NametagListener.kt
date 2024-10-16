@@ -28,7 +28,7 @@ class NametagListener: Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     fun onPlayerQuit(event: PlayerQuitEvent) {
         Bukkit.getScheduler().runTaskLaterAsynchronously(IngeniaMC.plugin, Runnable {
-            NametagEntity.NametagManager.removePlayer(event.player) // Handles de-spawning of nametag
+            NametagEntity.NametagManager.removePlayer(event.player.uniqueId) // Handles de-spawning of nametag
         }, 1)
     }
 
