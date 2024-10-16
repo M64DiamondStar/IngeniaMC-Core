@@ -106,7 +106,7 @@ class FreeFall(private val category: String, private val name: String): Attracti
 
     override fun hasPassengers(): Boolean {
         var hasPassengers = false
-        getSeats().forEach { if(it.passengers.size > 0) hasPassengers = true }
+        getSeats().forEach { if(it.passengers.isNotEmpty()) hasPassengers = true }
 
         return hasPassengers
     }
@@ -219,7 +219,7 @@ class FreeFall(private val category: String, private val name: String): Attracti
                     AttractionManager.setLocked(this@FreeFall, locked = false)
                 }
 
-                // RUN FOR EVERY ARMORSTAND
+                // RUN FOR EVERY ARMOR STAND
                 for (stand in getSeats()) {
                     val standYaw = stand.location.yaw
                     val x = radius * sin(
