@@ -57,7 +57,7 @@ class ConfirmInventory(player: Player, private val category: String, private val
             player.closeInventory()
             // Check if player has enough money
             if(getPlayer().bal < shop.getPrice(shopItemID) * amount){
-                val mainTitle = MiniMessage.miniMessage().deserialize("<${MessageType.ERROR}>Purchase Failed")
+                val mainTitle = MiniMessage.miniMessage().deserialize("<${MessageType.ERROR}>ᴘᴜʀᴄʜᴀѕᴇ ꜰᴀɪʟᴇᴅ")
                 val subTitle = MiniMessage.miniMessage().deserialize("<${MessageType.LIGHT_ERROR}>Missing requirements")
 
                 (player as Audience).showTitle(Title.title(mainTitle, subTitle))

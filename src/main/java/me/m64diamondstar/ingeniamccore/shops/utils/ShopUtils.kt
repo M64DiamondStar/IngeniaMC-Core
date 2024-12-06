@@ -60,15 +60,4 @@ object ShopUtils {
         )
     }
 
-    fun getAllShops(): List<Parkour>{
-        val list = ArrayList<Parkour>()
-        for(category in getCategories()){
-            category.listFiles()?.forEach {
-                if(!it.name.contains(".DS_Store"))
-                    list.add(Parkour(category.name, it.name))
-            }
-        }
-        return list
-    }
-
 }

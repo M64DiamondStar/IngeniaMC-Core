@@ -27,9 +27,6 @@ repositories {
         url = uri("https://oss.sonatype.org/content/groups/public/")
     }
     maven {
-        url = uri("https://ci.mg-dev.eu/plugin/repository/everything")
-    }
-    maven {
         url = uri("https://ci.mg-dev.eu/plugin/repository/everything/")
     }
     maven {
@@ -71,6 +68,7 @@ dependencies {
     compileOnly 'com.github.Mindgamesnl.OpenAudioMc:openaudiomc-api:6.10.1'
     compileOnly 'com.ticxo.modelengine:ModelEngine:R4.0.4'
     compileOnly 'com.comphenix.protocol:ProtocolLib:4.7.0'
+    compileOnly 'me.m56738:easyarmorstands-api:2.3.0'
 
     shadow "me.m56738:SmoothCoastersAPI:1.10"
     shadow "com.opencsv:opencsv:5.9"
