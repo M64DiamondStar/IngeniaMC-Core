@@ -83,6 +83,7 @@ dependencies {
     shadow 'me.tofaa.entitylib:spigot:2.4.9-SNAPSHOT'
 
     implementation "net.dv8tion:JDA:5.0.0-beta.23" // "Shadowed" via plugin libraries in the plugin.yml
+    implementation 'org.springframework:spring-expression:6.0.12'
     implementation 'club.minnced:jda-ktx:0.11.0-beta.20'
     implementation 'com.github.M64DiamondStar:EffectMaster:1.4.1'
 
