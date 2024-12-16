@@ -202,7 +202,7 @@ class Shop(val category: String, val name: String): DataConfiguration("shops/$ca
 
         meta.lore = lore
 
-        ItemFlag.values().forEach { meta.addItemFlags(it) }
+        ItemFlag.entries.forEach { meta.addItemFlags(it) }
 
         meta.persistentDataContainer.set(NamespacedKey(IngeniaMC.plugin, "shop-item-id"), PersistentDataType.STRING, shopId)
         meta.persistentDataContainer.set(NamespacedKey(IngeniaMC.plugin, "can-buy"), PersistentDataType.BOOLEAN, hasAllRequirements)

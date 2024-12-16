@@ -46,8 +46,9 @@ class NpcListener: Listener {
         if(entity !is Dummy<*>) return
         if (!NpcRegistry.isNpc(entity)) return
         if (DialoguePlayerRegistry.contains(player)) return
-        if(featureManager.isFeatureEnabled(FeatureType.DIALOGUES)){
+        if(!featureManager.isFeatureEnabled(FeatureType.DIALOGUES)){
             featureManager.sendMessage(player)
+            return
         }
         if(DialoguePlayerRegistry.isOnCooldown(player)){
             (player as Audience).sendActionBar(MiniMessage.miniMessage().deserialize("<${MessageType.ERROR}>Please slow down a little bit!"))

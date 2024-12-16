@@ -1,4 +1,4 @@
-package me.m64diamondstar.ingeniamccore.attractions.traincarts.signs
+package me.m64diamondstar.ingeniamccore.rides.traincarts.signs
 
 import com.bergerkiller.bukkit.tc.events.SignActionEvent
 import com.bergerkiller.bukkit.tc.events.SignChangeActionEvent
