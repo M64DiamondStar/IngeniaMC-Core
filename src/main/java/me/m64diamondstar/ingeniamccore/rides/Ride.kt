@@ -66,7 +66,7 @@ class Ride(val id: String) {
 
     private val rideConfiguration = RideConfiguration(this)
     private val rideLeaderboard = RideLeaderboard(this)
-    private val rideVariables = ArrayList<RideVariable>()
+    private val rideVariables = HashMap<String, RideVariable>()
 
     var displayName: String
         /**
@@ -85,17 +85,45 @@ class Ride(val id: String) {
         }
 
     /**
+     * Sets a ride variable. Variables are used to store values that can be used in expressions
+     * @param variableName the name of the variable
+     * @param value the value of the variable
+     * @param variableType the type of the variable
+     */
+    fun setVariable(variableName: String, value: String, variableType: RideVariableType){
+        rideVariables[variableName] = RideVariable(value, variableType)
+    }
+
+    /**
+     * @param variableName the name of the variable
+     * @return the variable with the specified name
+     */
+    fun getVariable(variableName: String): RideVariable?{
+        return rideVariables[variableName]
+    }
+
+    /**
+     * @return all variables
+     */
+    fun getVariables(): HashMap<String, RideVariable>{
+        return rideVariables
+    }
+
+    /**
+     * Removes a variable
+     * @param variableName the name of the variable
+     */
+    fun removeVariable(variableName: String){
+        rideVariables.remove(variableName)
+    }
+
+    /**
      * Gets the configuration section containing all the properties for an execution
      * @param id the id of the execution
      * @return the configuration section
      */
     fun getExecutionSection(id: String): ConfigurationSection?{
         return rideConfiguration.getConfig().getConfigurationSection("executions.$id")
-    }
-
-    fun setVariable(variableName: String, value: String){
-        rideVariables.add(RideVariable(variableName, value))
-        rideVariables.filter
     }
 
     /**
