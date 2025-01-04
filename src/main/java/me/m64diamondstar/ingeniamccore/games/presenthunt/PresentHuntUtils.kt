@@ -92,4 +92,8 @@ object PresentHuntUtils {
         return list
     }
 
+    fun getPresentHuntID(presentHunt: PresentHunt): String{
+        return "${presentHunt.category}_${presentHunt.name}"
+    }
+
 }

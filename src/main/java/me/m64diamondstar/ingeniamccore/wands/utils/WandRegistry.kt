@@ -39,6 +39,7 @@ object WandRegistry {
         registerWand("speed", Speed())
         registerWand("tnt", TNT())
         registerWand("water", Water())
+        registerWand("frostspray", FrostSpray())
     }
 
 }

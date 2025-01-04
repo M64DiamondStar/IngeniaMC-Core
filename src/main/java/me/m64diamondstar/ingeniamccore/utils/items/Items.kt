@@ -1,7 +1,10 @@
 package me.m64diamondstar.ingeniamccore.utils.items
 
+import com.destroystokyo.paper.profile.PlayerProfile
+import com.destroystokyo.paper.profile.ProfileProperty
 import com.mojang.authlib.GameProfile
 import com.mojang.authlib.properties.Property
+import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.SkullMeta
@@ -41,23 +44,15 @@ object Items {
         return skull
     }
 
-    fun getRandomPresentProfile(): GameProfile{
-        val randomTexture = listOf("1c6274c22d726fc120ce25736030cc8af238b44bcbf56655207953c414422f",
-            "6c8652bfdb7adde128e7eacc50d16eb9f487a3209b304de3b9697cebf13323b",
-            "4acb3c1e1b34f8734aedfabd1e1f5e0b280bef924fb8bbf3e692d2538266f4",
-            "928e692d86e224497915a39583dbe38edffd39cbba457cc95a7ac3ea25d445",
-            "6cef9aa14e884773eac134a4ee8972063f466de678363cf7b1a21a85b7",
-            "ed97f4f44e796f79ca43097faa7b4fe91c445c76e5c26a5ad794f5e479837",).shuffled().first()
+    fun getRandomPresentProfile(): PlayerProfile{
+        val randomTexture = listOf("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNTcyNmQ5ZDA2MzJlNDBiZGE1YmNmNjU4MzliYTJjYzk4YTg3YmQ2MTljNTNhZGYwMDMxMGQ2ZmM3MWYwNDJiNSJ9fX0=",
+            "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTM3NTA2MWQwOGYxZDdiMzE3Njc1YWE3ZmE4ODAwZDZmMjA2NmUwMThkOWY5MWVjZGRmOWNhZjMwNGU5N2U5MiJ9fX0=",
+            "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvODFlNDJlMzcyNWMyYjRhZTY5MDA1ODBjNGUyYTZiODMwZjZlY2EwMjExZjdhMzY0MTQzM2ZjNjdmYmM0M2QzZiJ9fX0=",
+            "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDZlMTJmZGFlMWZjZWJhNjg3OWY2NTk3OTYxMzJhN2ZmYTA4Y2Q5MmEyNmNiN2ExMDY3ZDQ5NzAzZDdiMWI0YiJ9fX0=",
+            "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOGQyOWIwNmM3YzM3Y2JkMmE3NjU5MDgyNzdmYThlYWQwZTRkYzY2YTExM2YzNDdkZTNiYWI5MWZhZGU0NjkxMiJ9fX0=").shuffled().first()
 
-        val profile = GameProfile(UUID.randomUUID(), null)
-        val encodedData: ByteArray = Base64.getEncoder().encode(
-            java.lang.String.format(
-                "{textures:{SKIN:{url:\"%s\"}}}",
-                "http://textures.minecraft.net/texture/$randomTexture"
-            ).toByteArray()
-        )
-
-        profile.properties.put("textures", Property("textures", String(encodedData)))
-        return profile
+        val playerProfile = Bukkit.createProfile(UUID.randomUUID())
+        playerProfile.setProperty(ProfileProperty("textures", randomTexture))
+        return playerProfile
     }
 }

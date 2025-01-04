@@ -213,6 +213,11 @@ class GameSubcommand(private val sender: CommandSender, private val args: Array<
 
                 val presentHunt = PresentHunt(args[3], args[4])
 
+                if(args[5].equals("reload", ignoreCase = true) && args.size == 6){
+                    presentHunt.reload()
+                    player.sendMessage(Colors.format(MessageType.SUCCESS + "Config has been reloaded"))
+                }
+
                 if(args[5].equals("addPresent", ignoreCase = true) && args.size == 6){
                     val block = player.getTargetBlockExact(5)
                     if(block == null || block.type == Material.AIR){
@@ -262,6 +267,49 @@ class GameSubcommand(private val sender: CommandSender, private val args: Array<
                             PresentHuntUtils.removeActivePresent(it)
                             it.block.type = Material.AIR
                         }
+                    }
+                }
+
+                /*
+    Leaderboard subcommand
+    Manage/reload the leaderboard of given splash battle
+ */
+                if(args[5].equals("leaderboard", ignoreCase = true)){
+                    if(args.size == 7 && args[6].equals("setlocation", true)){
+
+                        player.getNearbyEntities(5.0, 5.0, 5.0).forEach {
+                            if(it.type != EntityType.ITEM_FRAME)
+                                return@forEach
+                            it as ItemFrame
+
+                            val toFrame = it.location.toVector().subtract(player.eyeLocation.toVector())
+                            val dot = toFrame.normalize().dot(player.eyeLocation.direction)
+
+                            //if the player looks at the direction of the itemframe
+                            if(dot > 0.95){
+                                it.remove()
+
+                                player.sendMessage(Colors.format(MessageType.SUCCESS + "Leaderboard location has been set."))
+                                player.spawnParticle(Particle.SMOKE, it.location, 100, 0.23, 0.23, 0.23, 0.0)
+
+                                presentHunt.getLeaderboard().setLeaderboardEnabled(true)
+                                presentHunt.getLeaderboard().setLeaderboardLocation(it.location.blockX, it.location.blockY, it.location.blockZ)
+                                presentHunt.getLeaderboard().setLeaderboardDirection(it.facing.toString())
+                                presentHunt.getLeaderboard().spawnSign()
+
+                                return
+                            }
+                        }
+
+                        player.sendMessage(Colors.format(MessageType.ERROR + "Didn't find an ItemFrame, please place an ItemFrame" +
+                                " and look at it while executing this command."))
+
+
+                    }else if(args.size == 7 && args[6].equals("reload", true)){
+                        presentHunt.reload()
+                        presentHunt.getLeaderboard().spawnSign()
+
+                        player.sendMessage(Colors.format(MessageType.SUCCESS + "Leaderboard has been reloaded."))
                     }
                 }
 
@@ -526,6 +574,7 @@ class GameSubcommand(private val sender: CommandSender, private val args: Array<
                         tabs.add("removePresent")
                         tabs.add("spawnRandomPresent")
                         tabs.add("despawnAllPresents")
+                        tabs.add("leaderboard")
                     }
                 }
             }
@@ -568,6 +617,17 @@ class GameSubcommand(private val sender: CommandSender, private val args: Array<
                 if (args[2].equals("modify", ignoreCase = true)) {
                     if (!ParkourUtils.existsParkour(args[3], args[4]))
                         tabs.add("PARKOUR_DOES_NOT_EXIST")
+                    else {
+                        tabs.add("setLocation")
+                        tabs.add("reload")
+                    }
+                }
+            }
+
+            if (args[1].equals("presenthunt", ignoreCase = true)) {
+                if (args[2].equals("modify", ignoreCase = true)) {
+                    if (!ParkourUtils.existsParkour(args[3], args[4]))
+                        tabs.add("HUNT_DOES_NOT_EXIST")
                     else {
                         tabs.add("setLocation")
                         tabs.add("reload")
