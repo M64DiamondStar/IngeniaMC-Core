@@ -7,6 +7,7 @@ import me.m64diamondstar.ingeniamccore.attractions.utils.AttractionUtils
 import me.m64diamondstar.ingeniamccore.games.PhysicalGameType
 import me.m64diamondstar.ingeniamccore.games.parkour.Parkour
 import me.m64diamondstar.ingeniamccore.games.parkour.ParkourUtils
+import me.m64diamondstar.ingeniamccore.games.presenthunt.PresentHuntUtils
 import me.m64diamondstar.ingeniamccore.games.splashbattle.SplashBattleUtils
 import me.m64diamondstar.ingeniamccore.general.areas.Area
 import me.m64diamondstar.ingeniamccore.general.bossbar.BossBarIndex
@@ -128,6 +129,7 @@ class IngeniaPlayer(val player: Player) {
         AttractionUtils.getAllAttractions().forEach { it.spawnRidecountSign(player) }
         SplashBattleUtils.getAllSplashBattles().forEach { it.getLeaderboard().spawnSoaksSign(player) }
         ParkourUtils.getAllParkours().forEach { it.getLeaderboard().spawnSign(player) }
+        PresentHuntUtils.getAllPresentHunts().forEach { it.getLeaderboard().spawnSign(player) }
 
         // Put player into right game mode
         if(!(player.hasPermission("ingenia.team") || player.hasPermission("ingenia.team-trial")) && !player.isOp)
@@ -226,6 +228,13 @@ class IngeniaPlayer(val player: Player) {
             Component.text(name).color(TextColor.fromHexString("#defdff"))
         else
             Component.text(name).color(TextColor.fromHexString("#cccccc"))
+
+    /**
+     * @return the statistic container of the player
+     */
+    fun getStatisticContainer(): PlayerConfig.StatisticContainer {
+        return playerConfig.StatisticContainer()
+    }
 
     /**
      * The area the player is currently in, formatted as "category,area".

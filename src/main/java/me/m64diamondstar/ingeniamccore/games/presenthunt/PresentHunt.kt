@@ -1,19 +1,24 @@
 package me.m64diamondstar.ingeniamccore.games.presenthunt
 
+import gg.flyte.twilight.scheduler.delay
+import me.m64diamondstar.ingeniamccore.data.DataConfiguration
 import me.m64diamondstar.ingeniamccore.data.LoadedConfiguration
 import me.m64diamondstar.ingeniamccore.utils.LocationUtils
-import net.minecraft.core.BlockPos
-import net.minecraft.world.level.block.entity.SkullBlockEntity
+import me.m64diamondstar.ingeniamccore.utils.items.Items
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.World
 import org.bukkit.block.BlockFace
+import org.bukkit.block.Skull
 import org.bukkit.block.data.Rotatable
-import org.bukkit.craftbukkit.CraftWorld
+import org.bukkit.entity.Player
+import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.meta.SkullMeta
+import java.util.UUID
 import kotlin.random.Random
 
-class PresentHunt(val category: String, val name: String): LoadedConfiguration("games/presenthunt/$category", name, false, true)  {
+class PresentHunt(val category: String, val name: String): DataConfiguration("games/presenthunt/$category", name)  {
 
     /**
      * Generate the config file
@@ -28,7 +33,7 @@ class PresentHunt(val category: String, val name: String): LoadedConfiguration("
 
         this.getConfig().options().setHeader(list)
 
-        this.reloadConfig()
+        this.save()
     }
 
     /**
@@ -45,7 +50,7 @@ class PresentHunt(val category: String, val name: String): LoadedConfiguration("
         val list = this.getConfig().getStringList("Locations")
         list.add("${location.blockX}, ${location.blockY}, ${location.blockZ}")
         this.getConfig().set("Locations", list)
-        this.reloadConfig()
+        this.save()
     }
 
     /**
@@ -55,7 +60,7 @@ class PresentHunt(val category: String, val name: String): LoadedConfiguration("
         val list = this.getConfig().getStringList("Locations")
         val success = list.remove("${location.blockX}, ${location.blockY}, ${location.blockZ}")
         this.getConfig().set("Locations", list)
-        this.reloadConfig()
+        this.save()
         return success
     }
 
@@ -89,8 +94,11 @@ class PresentHunt(val category: String, val name: String): LoadedConfiguration("
         val block = randomLocation.block
         block.type = Material.PLAYER_HEAD
 
-        val tileEntitySkull = (block.world as CraftWorld).handle.getBlockEntity(BlockPos(block.x, block.y, block.z), true) as SkullBlockEntity
-        //tileEntitySkull.setOwner(Items.getRandomPresentProfile())
+        val randomProfile = Items.getRandomPresentProfile()
+
+        val skullBlock = block.state as Skull
+        skullBlock.setPlayerProfile(randomProfile)
+        skullBlock.update()
 
         val faces = BlockFace.values().toMutableList()
         faces.remove(BlockFace.DOWN)
@@ -118,7 +126,7 @@ class PresentHunt(val category: String, val name: String): LoadedConfiguration("
             }
         }
 
-        this.reloadConfig()
+        this.save()
     }
 
     fun loadActivePresents(){
@@ -132,7 +140,20 @@ class PresentHunt(val category: String, val name: String): LoadedConfiguration("
         }
 
         this.getConfig().set("Saved-Locations", null)
-        this.reloadConfig()
+        this.save()
+    }
+
+    fun getPlayerPresents(uuid: UUID): Long{
+        return this.getConfig().getLong("players.$uuid")
+    }
+
+    fun addPlayerPresent(player: Player){
+        this.getConfig().set("players.${player.uniqueId}", getPlayerPresents(player.uniqueId) + 1)
+        this.save()
+    }
+
+    fun getLeaderboard(): PresentHuntLeaderboard{
+        return PresentHuntLeaderboard(this)
     }
 
 }
