@@ -1,6 +1,8 @@
 package me.m64diamondstar.ingeniamccore.general.player.data
 
 import me.m64diamondstar.ingeniamccore.data.DataConfiguration
+import me.m64diamondstar.ingeniamccore.general.player.StatisticKey
+import me.m64diamondstar.ingeniamccore.general.player.StatisticType
 import me.m64diamondstar.ingeniamccore.utils.PlayerSelectors
 import org.bukkit.Bukkit
 import java.util.*
@@ -245,5 +247,43 @@ class PlayerConfig(uuid: UUID) : DataConfiguration("data/player", uuid.toString(
     fun getShowNametags(): PlayerSelectors {
         return PlayerSelectors.valueOf(getConfig().getString("Settings.ShowNametags") ?: "ALL")
     }
+
+    /**
+     * Holds all statistics for a player
+     */
+    inner class StatisticContainer {
+
+        fun <T> set(key: StatisticKey<T>, value: T) {
+            // Ensure value matches the type defined in the key
+            if (!isValueOfType(value, key.type)) {
+                throw IllegalArgumentException("Invalid value type for key '${key.name}': expected ${key.type::class.simpleName}, got ${value!!::class.simpleName}")
+            }
+            // Store the value in the config
+            getConfig().set("statistics.${key.name}", value)
+            save()
+        }
+
+        @Suppress("UNCHECKED_CAST")
+        fun <T> get(key: StatisticKey<T>): T? {
+            val value = getConfig().get("statistics.${key.name}")
+            if (value == null) return null
+
+            // Check if the value retrieved from config matches the expected type
+            return if (isValueOfType(value, key.type)) {
+                value as T
+            } else {
+                throw IllegalStateException("Stored value for key '${key.name}' is of incorrect type. Expected ${key.type::class.simpleName}, but got ${value::class.simpleName}")
+            }
+        }
+
+        private fun <T> isValueOfType(value: Any?, type: StatisticType<T>): Boolean {
+            return when (type) {
+                is StatisticType.IntType -> value is Int
+                is StatisticType.StringType -> value is String
+                // Add checks for additional types here
+            }
+        }
+    }
+
 
 }
