@@ -17,6 +17,9 @@ class MediaCommands: CommandExecutor {
             "store" -> (sender as Audience).sendMessage(MiniMessage.miniMessage()
                 .deserialize("<${MessageType.INGENIA}><click:open_url:\"https://store.ingeniamc.net\">Click to visit our <#ffffff>store!"))
 
+            "map" -> (sender as Audience).sendMessage(MiniMessage.miniMessage()
+                .deserialize("<${MessageType.INGENIA}><click:open_url:\"https://map.ingeniamc.net\">Click to visit our <#ffffff>map!"))
+
             "discord" -> (sender as Audience).sendMessage(MiniMessage.miniMessage()
                 .deserialize("<#7289DA><click:open_url:\"https://discord.com/invite/qv2vsAsDs8\">Click to join our <#ffffff>discord server!"))
 
