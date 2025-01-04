@@ -67,6 +67,7 @@ class WandListener : Listener {
                 if (player.inventory.itemInMainHand.itemMeta!!.customModelData == 18) SnowExplosion().run(player)
                 if (player.inventory.itemInMainHand.itemMeta!!.customModelData == 19) Sled().run(player)
                 if (player.inventory.itemInMainHand.itemMeta!!.customModelData == 20) Grapple().run(player)
+                if (player.inventory.itemInMainHand.itemMeta!!.customModelData == 21) FrostSpray().run(player)
             }
         }
     }
